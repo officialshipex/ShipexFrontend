@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" viewBox="0 0 60 60">
+    <defs>
+        <style>
+            .cls-1{fill:#fff}.cls-5{fill:none;stroke:#fff;stroke-linecap:round}
+        </style>
+    </defs>
+    <g id="Group_16293" data-name="Group 16293" transform="translate(-441 -178)">
+        <path id="Rectangle_5798" data-name="Rectangle 5798" class="cls-1" transform="translate(441 178)" d="M0 0h60v60H0z"/>
+        <g id="Group_8793" data-name="Group 8793" transform="translate(451.673 191.282)">
+            <circle id="Ellipse_633" data-name="Ellipse 633" cx="26" cy="26" r="26" transform="translate(-6.673 -9.282)" style="fill:rgba(227,221,255,.5)"/>
+            <g id="Group_16302" data-name="Group 16302" transform="translate(-1)">
+                <g id="g20571" transform="translate(4.472 4.601)">
+                    <path id="path8081-77" d="M3.964 280.6h17.655a2.637 2.637 0 0 1 2.7 2.577V300.9a2.637 2.637 0 0 1-2.7 2.577H3.964a2.637 2.637 0 0 1-2.7-2.577v-17.728a2.637 2.637 0 0 1 2.7-2.572z" transform="translate(-1.26 -280.596)" style="fill:#3a0e96"/>
+                    <path id="path8083-26" class="cls-1" d="M6.883 280.6v6.84a1.208 1.208 0 0 0 1.211 1.21h3.348a1.208 1.208 0 0 0 1.211-1.21v-6.84z" transform="translate(1.762 -280.595)"/>
+                </g>
+                <circle id="Ellipse_626" data-name="Ellipse 626" cx="8.5" cy="8.5" r="8.5" transform="translate(19.327 14.718)" style="fill:#957eff"/>
+                <path id="Line_277" data-name="Line 277" class="cls-5" transform="translate(25.099 20.665)" d="m0 0 4.797 4.317"/>
+                <path id="Line_278" data-name="Line 278" class="cls-5" transform="translate(25.099 20.665)" d="M4.797 0 0 4.317"/>
+            </g>
+        </g>
+    </g>
+</svg>

@@ -1,0 +1,41 @@
+{
+  // 🚀 Disable watching heavy folders
+  "files.watcherExclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.git": true,
+    "**/.next": true,
+    "**/.cache": true
+  },
+
+  // 🚀 Don't search inside big folders
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.git": true,
+    "**/.next": true,
+    "**/.cache": true
+  },
+
+  // 🚀 Disable auto type acquisition to reduce TypeScript/JS indexing load
+  "typescript.disableAutomaticTypeAcquisition": true,
+
+  // 🚀 Lower IntelliSense resource usage
+  "typescript.tsserver.maxTsServerMemory": 2048,
+
+  // 🚀 Disable Git tracking if repo is large (enable if you need Git inside VS Code)
+  "git.enabled": false,
+
+  // 🚀 Reduce extension load (disable error squiggles if not needed)
+  "javascript.validate.enable": false,
+  "typescript.validate.enable": false,
+
+  // 🚀 Make explorer faster by not fetching metadata for all files
+  "explorer.autoReveal": false,
+
+  // 🚀 Auto save to avoid heavy undo stacks
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000
+}
