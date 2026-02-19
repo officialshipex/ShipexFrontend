@@ -16,11 +16,11 @@ const OrderAwbFilter = ({
   width
 }) => {
   return (
-    <div className={`flex w-full ${width}`} ref={dropdownRef}>
+    <div className={`flex ${width}`} ref={dropdownRef}>
       {/* Wrapper */}
       <div
         className={`flex w-full ${heightClass}
-          border rounded-lg
+          border rounded-lg border-gray-300
           bg-white transition-colors
           focus-within:border-[#0CBB7D]`}
       >

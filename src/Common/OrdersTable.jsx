@@ -65,7 +65,9 @@ const OrdersTable = ({
                     )}
                     <th className="py-2 px-3 text-left">Order Details</th>
                     <th className="py-2 px-3 text-left">Product Details</th>
-                    <th className="py-2 px-3 text-left">Package Details</th>
+                    {!showNdrDetails && (
+                        <th className="py-2 px-3 text-left">Package Details</th>
+                    )}
                     <th className="py-2 px-3 text-left">Payment</th>
                     <th className="py-2 px-3 text-left">Customer Details</th>
                     <th className="py-2 px-3 text-left">Pickup Address</th>
@@ -285,23 +287,25 @@ const OrdersTable = ({
                             </td>
 
                             {/* PACKAGE DETAILS */}
-                            <td className="py-2 px-3 whitespace-nowrap">
-                                {order.orderType === "B2B" ? (
-                                    <>
-                                        <p>
-                                            {order.B2BPackageDetails?.packages?.reduce((acc, pkg) => acc + (pkg.noOfBox || 0), 0) || 0} Boxes | {order.B2BPackageDetails?.packages?.reduce((acc, pkg) => acc + (pkg.weightPerBox || 0) * (pkg.noOfBox || 0), 0) || 0} KG
-                                        </p>
-                                        <p>Weight: {order.B2BPackageDetails?.applicableWeight || 0} KG</p>
-                                        <p>Vol. Weight: {Number(order.B2BPackageDetails?.volumetricWeight || 0).toFixed(2)} KG</p>
-                                    </>
-                                ) : (
-                                    <>
-                                        <p>Weight: {order.packageDetails?.applicableWeight} KG</p>
-                                        <p>L*W*H: {order.packageDetails?.volumetricWeight?.length}*{order.packageDetails?.volumetricWeight?.width}*{order.packageDetails?.volumetricWeight?.height}</p>
-                                        <p>Vol. Weight: {((order.packageDetails?.volumetricWeight?.length * order.packageDetails?.volumetricWeight?.width * order.packageDetails?.volumetricWeight?.height) / 5000).toFixed(2)} KG</p>
-                                    </>
-                                )}
-                            </td>
+                            {!showNdrDetails && (
+                                <td className="py-2 px-3 whitespace-nowrap">
+                                    {order.orderType === "B2B" ? (
+                                        <>
+                                            <p>
+                                                {order.B2BPackageDetails?.packages?.reduce((acc, pkg) => acc + (pkg.noOfBox || 0), 0) || 0} Boxes | {order.B2BPackageDetails?.packages?.reduce((acc, pkg) => acc + (pkg.weightPerBox || 0) * (pkg.noOfBox || 0), 0) || 0} KG
+                                            </p>
+                                            <p>Weight: {order.B2BPackageDetails?.applicableWeight || 0} KG</p>
+                                            <p>Vol. Weight: {Number(order.B2BPackageDetails?.volumetricWeight || 0).toFixed(2)} KG</p>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <p>Weight: {order.packageDetails?.applicableWeight} KG</p>
+                                            <p>L*W*H: {order.packageDetails?.volumetricWeight?.length}*{order.packageDetails?.volumetricWeight?.width}*{order.packageDetails?.volumetricWeight?.height}</p>
+                                            <p>Vol. Weight: {((order.packageDetails?.volumetricWeight?.length * order.packageDetails?.volumetricWeight?.width * order.packageDetails?.volumetricWeight?.height) / 5000).toFixed(2)} KG</p>
+                                        </>
+                                    )}
+                                </td>
+                            )}
 
                             {/* PAYMENT */}
                             <td className="py-2 px-3">

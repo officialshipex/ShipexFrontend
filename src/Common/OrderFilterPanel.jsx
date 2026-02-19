@@ -21,7 +21,7 @@ const OrderFilterPanel = ({
     showCourier = true,
     showUserSearch = false,
     searchLabel = "Customer Search",
-    searchPlaceholder = "Name, Email, or Phone",
+    searchPlaceholder = "Name, Email or Phone",
     selectedUserId: initialSelectedUserId,
 }) => {
     // Local state for filters
@@ -208,11 +208,11 @@ const OrderFilterPanel = ({
                             <div className="relative">
                                 <input
                                     type="text"
-                                    placeholder="Name or Email"
+                                    placeholder="Name, Email or Phone"
                                     className={`${fieldStyle} bg-white border text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D]`}
                                     value={localFilters.searchUser}
                                     onChange={(e) => {
-                                        setLocalFilters({ ...localFilters, searchUser: e.target.value });
+                                        setLocalFilters({ ...localFilters, searchUser: e.target.value, selectedUserId: null });
                                         setShowUserSuggestions(true);
                                     }}
                                     onFocus={() => localFilters.searchUser.length >= 2 && setShowUserSuggestions(true)}
@@ -225,20 +225,40 @@ const OrderFilterPanel = ({
                             </div>
 
                             {showUserSuggestions && userSuggestions.length > 0 && (
-                                <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-[110] py-1 animate-popup-in max-h-60 overflow-y-auto">
+                                <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-[110] overflow-hidden animate-popup-in max-h-60 overflow-y-auto">
                                     {userSuggestions.map((user, idx) => (
                                         <div
                                             key={idx}
                                             onClick={() => {
-                                                setLocalFilters({ ...localFilters, searchUser: `${user.fullname} (${user.email})`, selectedUserId: user._id });
+                                                setLocalFilters({
+                                                    ...localFilters,
+                                                    searchUser: `${user.fullname} (${user.email})`,
+                                                    selectedUserId: user._id
+                                                });
                                                 setShowUserSuggestions(false);
                                             }}
-                                            className="px-3 py-2 border-b border-gray-50 last:border-0 hover:bg-green-50 cursor-pointer transition-colors"
+                                            className={`flex cursor-pointer group transition-colors duration-300 ${idx !== userSuggestions.length - 1
+                                                ? "border-b border-gray-200 hover:bg-gray-100"
+                                                : "hover:bg-gray-100"
+                                                }`}
                                         >
-                                            <div className="text-[12px] font-[600] text-gray-700">{user.fullname}</div>
-                                            <div className="text-[10px] text-[#0CBB7D]">{user.userId}</div>
-                                            <div className="text-[10px] text-gray-400">
-                                                {user.email} | {user.phoneNumber}
+                                            <div className="w-1/4 flex items-center justify-center p-2 bg-gray-50 group-hover:bg-gray-100 transition-colors">
+                                                <p className="text-[12px] text-gray-500 group-hover:text-[#0CBB7D] font-medium truncate text-center">
+                                                    {user.userId}
+                                                </p>
+                                            </div>
+                                            <div className="w-3/4 flex flex-col justify-center py-2 px-3 leading-tight">
+                                                <p className="text-[13px] text-gray-700 group-hover:text-[#0CBB7D] font-[600] truncate">
+                                                    {user.fullname}
+                                                </p>
+                                                <div className="flex flex-col gap-0.5 mt-0.5">
+                                                    <p className="text-[11px] text-gray-400 truncate flex items-center gap-1">
+                                                        <span className="w-10">Email:</span> {user.email}
+                                                    </p>
+                                                    <p className="text-[11px] text-gray-400 truncate flex items-center gap-1">
+                                                        <span className="w-10">Phone:</span> {user.phoneNumber}
+                                                    </p>
+                                                </div>
                                             </div>
                                         </div>
                                     ))}

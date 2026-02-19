@@ -113,7 +113,7 @@ export default function Signup({ setIsAuthenticated }) {
     } catch (err) {
       Notification(
         err?.response?.data?.message ||
-          "An error occurred. Please try again later.",
+        "An error occurred. Please try again later.",
         "error"
       );
       setSuccess(false);
@@ -144,7 +144,7 @@ export default function Signup({ setIsAuthenticated }) {
   };
 
   return (
-    <div className="flex-col md:flex-row bg-green-50 flex-grow">
+    <div className="flex-col md:flex-row bg-green-50 flex-grow page-slide-in">
       <div className="w-full flex flex-row px-2 py-6 md:p-6 justify-center items-center">
         <div className="w-full max-w-sm md:max-w-md lg:max-w-xl p-4 md:p-6 rounded-lg shadow-sm bg-white">
           <div className="flex justify-between items-center mb-2">
@@ -170,7 +170,6 @@ export default function Signup({ setIsAuthenticated }) {
                 value={formData.fullName}
                 onChange={handleChange}
                 placeholder="Enter Full Name"
-                required
                 className="w-full py-2 px-3 border text-gray-700 rounded-lg font-[600] text-[12px] outline-none"
               />
             </div>
@@ -184,7 +183,7 @@ export default function Signup({ setIsAuthenticated }) {
                 value={formData.companyName}
                 onChange={handleChange}
                 placeholder="Enter Company Name"
-                required
+
                 className="w-full py-2 px-3 border rounded-lg text-[12px] font-[600] text-gray-700 outline-none"
               />
             </div>
@@ -215,7 +214,7 @@ export default function Signup({ setIsAuthenticated }) {
                   setFormData({ ...formData, phoneNumber: value });
                 }}
                 placeholder="Enter Phone Number"
-                required
+
                 className="w-full py-2 px-3 border rounded-lg text-[12px] font-[600] text-gray-700 outline-none"
               />
             </div>
@@ -229,7 +228,6 @@ export default function Signup({ setIsAuthenticated }) {
                 value={formData.email}
                 onChange={handleChange}
                 placeholder="Enter Email"
-                required
                 className="w-full py-2 px-3 border rounded-lg text-[12px] font-[600] text-gray-700 outline-none"
               />
             </div>
@@ -243,7 +241,7 @@ export default function Signup({ setIsAuthenticated }) {
                 value={formData.password}
                 onChange={handleChange}
                 placeholder="Enter Password"
-                required
+
                 className="w-full py-2 px-3 pr-10 border rounded-lg text-[12px] font-[600] text-gray-700 outline-none"
               />
               <span
@@ -263,7 +261,7 @@ export default function Signup({ setIsAuthenticated }) {
                 value={formData.confirmedPassword}
                 onChange={handleChange}
                 placeholder="Confirm Password"
-                required
+
                 className="w-full py-2 px-3 pr-10 border rounded-lg text-[12px] font-[600] text-gray-700 outline-none"
               />
               {/* <span
@@ -294,13 +292,22 @@ export default function Signup({ setIsAuthenticated }) {
             <button
               type="submit"
               disabled={!isTermsAccepted || loadingRegister}
-              className={`w-full py-2 px-3 text-[12px] font-[600] rounded-lg hover:bg-opacity-90 transition ${
-                isTermsAccepted && !loadingRegister
-                  ? "bg-[#0CBB7D] text-white"
-                  : "bg-gray-400 text-gray-200 cursor-not-allowed"
-              }`}
+              className={`w-full py-2 px-3 text-[12px] font-[600] rounded-lg transition ${isTermsAccepted && !loadingRegister
+                ? "bg-[#0CBB7D] text-white hover:bg-opacity-90"
+                : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                }`}
             >
-              {loadingRegister ? "Registering..." : "Sign Up"}
+              {loadingRegister ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+
+                </span>
+              ) : (
+                "Sign Up"
+              )}
             </button>
           </form>
         </div>

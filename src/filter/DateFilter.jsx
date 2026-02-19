@@ -140,11 +140,11 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter }) => {
     };
 
     return (
-        <div className="w-full">
+        <div className="">
             <div className="relative sm:w-[200px] w-full" ref={dateRef}>
                 {/* Button */}
                 <button
-                    className={`w-full bg-white py-2 px-3 sm:text-[12px] text-[10px] font-[600] border rounded-lg focus:outline-none text-left flex items-center justify-between text-gray-400 ${showDropdown ? "border border-[#0CBB7D]" : ""}`}
+                    className={`w-full bg-white py-2 px-3 sm:text-[12px] text-[10px] font-[600] border rounded-lg focus:outline-none text-left flex items-center justify-between text-gray-400 ${showDropdown ? "border-[#0CBB7D]" : "border-gray-300"}`}
                     onClick={() => {
                         if (showCustom) {
                             setShowDropdown(false);

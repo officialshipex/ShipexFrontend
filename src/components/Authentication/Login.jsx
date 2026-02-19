@@ -12,6 +12,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
   const [error, setError] = useState({});
   const [message, setMessage] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -104,6 +105,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
       return;
     }
 
+    setIsLoading(true);
     try {
       const response = await axios.post(
         `${REACT_APP_BACKEND_URL}/external/login`,
@@ -132,6 +134,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
       } else {
         // setMessage(response?.data?.message || "Invalid login attempt");
         Notification(response?.data?.message || "Invalid login attempt", "error");
+        setIsLoading(false);
       }
     } catch (err) {
       // setMessage(
@@ -142,11 +145,12 @@ const LoginPage = ({ setIsAuthenticated }) => {
         err?.response?.data?.message || "An error occurred. Please try again later.",
         "error"
       );
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col min-h-screen overflow-hidden ">
+    <div className="flex flex-col min-h-screen overflow-hidden page-slide-in">
       {/* Main Content */}
       <div className="flex flex-col md:flex-row bg-green-50 flex-grow">
         {/* Left Section */}
@@ -201,10 +205,10 @@ const LoginPage = ({ setIsAuthenticated }) => {
                   </span>
                 </label>
 
+                <label className="block text-gray-700 text-[12px] font-[600]">
+                  Password
+                </label>
                 <div className="relative">
-                  <label className="block text-gray-700 text-[12px] font-[600]">
-                    Password
-                  </label>
                   <input
                     type={showPassword ? "text" : "password"}
                     name="password"
@@ -215,7 +219,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                   />
                   <span
                     onClick={togglePasswordVisibility}
-                    className="absolute right-3 top-2.5 cursor-pointer text-[#0CBB7D]"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-[#0CBB7D]"
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
@@ -238,9 +242,23 @@ const LoginPage = ({ setIsAuthenticated }) => {
               <button
                 type="button"
                 onClick={handleSubmit}
-                className="bg-[#0CBB7D] text-white py-2 px-3 text-[12px] font-[600] rounded-lg w-full mt-4 hover:bg-opacity-90 transition"
+                disabled={isLoading}
+                className={`py-2 px-3 text-[12px] font-[600] rounded-lg w-full mt-4 transition ${isLoading
+                  ? "bg-gray-400 text-gray-200 cursor-not-allowed"
+                  : "bg-[#0CBB7D] text-white hover:bg-opacity-90"
+                  }`}
               >
-                Log In
+                {isLoading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    
+                  </span>
+                ) : (
+                  "Log In"
+                )}
               </button>
 
               {/* Signup Link */}

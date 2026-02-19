@@ -1,13 +1,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { ChevronDown } from "lucide-react";
-import ThreeDotLoader from "../../Loader"
+import { ChevronDown, Filter } from "lucide-react";
+import ThreeDotLoader from "../../Loader";
 import { HiOutlineDownload } from "react-icons/hi";
-import { FaFilter, FaBars } from "react-icons/fa";
-import NotFound from "../../assets/nodatafound.png"
+import { FaBars } from "react-icons/fa";
+import NotFound from "../../assets/nodatafound.png";
 import PaginationFooter from "../../Common/PaginationFooter";
-
+import InvoicesFilterPanel from "../../Common/InvoicesFilterPanel";
+import dayjs from "dayjs";
+import { FiCopy, FiCheck } from "react-icons/fi";
+import { Notification } from "../../Notification";
 
 const MONTHS = [
   { label: "January", value: "01" },
@@ -24,91 +27,71 @@ const MONTHS = [
   { label: "December", value: "12" },
 ];
 
-const Invoices = () => {
+const Invoices = ({
+  setFiltersApplied,
+  clearFiltersTrigger,
+  setClearFiltersTrigger,
+}) => {
   const [invoices, setInvoices] = useState([]);
   const [loading, setLoading] = useState(false);
   const [clearFilterFlag, setClearFilterFlag] = useState(0);
 
   // Filters
-  const [userId, setUserId] = useState("");
   const [invoiceNumber, setInvoiceNumber] = useState("");
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
-  const [selectedUserId, setSelectedUserId] = useState(null);
   const [selectedInvoices, setSelectedInvoices] = useState([]);
+  const [copiedId, setCopiedId] = useState(null);
 
-  const [monthOpen, setMonthOpen] = useState(false);
-  const [yearOpenDesktop, setYearOpenDesktop] = useState(false);
-  const [yearOpenMobile, setYearOpenMobile] = useState(false);
-
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [actionOpen, setActionOpen] = useState(false);
   const actionRef = useRef(null);
-  const hasFilter = selectedInvoices.length > 0
+
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
   const token = Cookies.get("session");
 
-  // dropdown refs for outside click
-  const monthRef = useRef(null);
-  const yearRef = useRef(null);
-  const yearRef1 = useRef(null);
-
-  // years from 2023 to current year
   const currentYear = new Date().getFullYear();
   const years = [];
   for (let y = 2023; y <= currentYear; y++) years.push(y.toString());
 
-  // Close dropdowns on outside click
   useEffect(() => {
-    const handler = (e) => {
-      if (monthRef.current && !monthRef.current.contains(e.target)) {
-        setMonthOpen(false);
-      }
-      if (yearRef.current && !yearRef.current.contains(e.target)) {
-        setYearOpenDesktop(false);
-      }
-      if (yearRef1.current && !yearRef1.current.contains(e.target)) {
-        setYearOpenMobile(false);
-      }
-
-      if (actionRef.current && !actionRef.current.contains(e.target)) {
+    const handler = (event) => {
+      if (actionRef.current && !actionRef.current.contains(event.target)) {
         setActionOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-
-  // when child sends a selected user id update our userId filter
   useEffect(() => {
-    if (selectedUserId) setUserId(selectedUserId);
-    else setUserId("");
-  }, [selectedUserId]);
+    if (clearFiltersTrigger) {
+      handleClearFilters();
+      if (setFiltersApplied) setFiltersApplied(false);
+      if (setClearFiltersTrigger) setClearFiltersTrigger(false);
+    }
+  }, [clearFiltersTrigger]);
 
-  // fetch when filters change (debounce could be added if needed)
   useEffect(() => {
     fetchData();
-    // eslint-disable-next-line
-  }, [userId, invoiceNumber, month, year, page, limit]);
-
+    if (invoiceNumber || month || year) {
+      if (setFiltersApplied) setFiltersApplied(true);
+    } else {
+      if (setFiltersApplied) setFiltersApplied(false);
+    }
+  }, [invoiceNumber, month, year, page, limit]);
 
   const fetchData = async () => {
     try {
       setLoading(true);
-
       const params = {
         page,
         limit,
       };
-
-      if (userId) params.userId = userId;
       if (invoiceNumber) params.invoiceNumber = invoiceNumber;
       if (month) params.month = month;
       if (year) params.year = year;
@@ -120,7 +103,6 @@ const Invoices = () => {
           params,
         }
       );
-
       setInvoices(data.invoices || []);
       setTotalPages(data.page || 1);
     } catch (err) {
@@ -130,9 +112,8 @@ const Invoices = () => {
     }
   };
 
-
   const handleSelectAll = () => {
-    if (selectedInvoices.length === invoices.length) {
+    if (selectedInvoices.length === invoices.length && invoices.length > 0) {
       setSelectedInvoices([]);
     } else {
       setSelectedInvoices(invoices.map((inv) => inv._id));
@@ -147,420 +128,268 @@ const Invoices = () => {
     );
   };
 
-  const clearFilters = () => {
+  const handleCopy = (text, id) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    Notification("Copied to clipboard!", "success");
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleClearFilters = () => {
     setInvoiceNumber("");
     setMonth("");
     setYear("");
-    // after clearing, re-fetch
-    fetchData();
     setPage(1);
+    setClearFilterFlag((prev) => prev + 1);
   };
 
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case "paid":
-        return "bg-[#0CBB7D] text-white";
+        return "bg-green-100 text-[#0CBB7D] border-[#0CBB7D]/20";
       case "pending":
-        return "bg-red-500 text-white";
+        return "bg-red-100 text-red-600 border-red-200";
       case "partially_paid":
-        return "bg-yellow-500 text-white";
+        return "bg-yellow-100 text-yellow-600 border-yellow-200";
       default:
-        return "bg-gray-100 text-gray-700";
+        return "bg-gray-100 text-gray-700 border-gray-200";
     }
   };
 
+  const isAnyFilterApplied = invoiceNumber || month || year;
 
   return (
-    <div className="max-w-full mx-auto space-y-2">
+    <div className="space-y-2">
+      {/* Desktop Filter Section */}
+      <div className="hidden md:flex gap-2 relative sm:items-center">
+        <button
+          onClick={() => setIsFilterPanelOpen(true)}
+          className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-9"
+        >
+          <Filter className="w-4 h-4 text-[#0CBB7D]" />
+          More Filters
+        </button>
 
-      {/* Desktop Filters */}
-      <div className="hidden sm:flex gap-2 flex-col w-full sm:flex-row sm:justify-between sm:items-center">
-
-        <div className="flex sm:flex-row flex-col gap-2">
-
-
-          <div className="flex gap-2">
-            {/* INVOICE NUMBER */}
-            <input
-              type="text"
-              placeholder="Invoice Number"
-              className="w-full px-3 py-2 rounded-lg text-[12px] text-gray-700 font-[600] border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
-              value={invoiceNumber}
-              onChange={(e) => setInvoiceNumber(e.target.value)}
-            />
-
-            {/* MONTH DROPDOWN */}
-            <div className="relative sm:w-48 w-full" ref={monthRef}>
-              <button
-                type="button"
-                className="w-full h-9 border font-[600] text-gray-400 bg-white rounded-lg flex items-center justify-between px-3 text-[12px]"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setMonthOpen((prev) => !prev);
-                }}
-              >
-                <span>{month ? MONTHS.find(m => m.value === month)?.label : "Select Month"}</span>
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform duration-200 ${monthOpen ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              {monthOpen && (
-                <div
-                  className="absolute left-0 z-30 right-0 top-full bg-white border rounded-lg mt-1 max-h-40 overflow-y-auto shadow"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {MONTHS.map((m) => (
-                    <div
-                      key={m.value}
-                      className="px-3 py-2 hover:bg-green-100 text-[12px] text-gray-500 font-[600] cursor-pointer"
-                      onClick={() => {
-                        setMonth(m.value);
-
-                        // ⭐ Auto-select YEAR immediately
-                        if (!year) {
-                          setYear(new Date().getFullYear());
-                        }
-
-                        setMonthOpen(false);
-                      }}
-                    >
-                      {m.label}
-                    </div>
-                  ))}
-
-                </div>
-              )}
-            </div>
-          </div>
-
-          {/* YEAR DROPDOWN */}
-          <div className="relative w-40" ref={yearRef}>
+        <div className="flex items-center gap-2 ml-auto" ref={actionRef}>
+          {isAnyFilterApplied && (
             <button
-              type="button"
-              className="w-full h-9 border bg-white font-[600] text-gray-400 rounded-lg flex items-center justify-between px-3 text-[12px]"
-              onClick={(e) => {
-                e.stopPropagation();
-                setYearOpenDesktop((prev) => !prev);
-              }}
+              onClick={handleClearFilters}
+              className="text-[12px] text-red-500 hover:underline font-[600] px-2 whitespace-nowrap"
             >
-              <span>{year || "Select Year"}</span>
+              Clear All Filters
+            </button>
+          )}
+
+          <div className="relative">
+            <button
+              disabled={selectedInvoices.length === 0}
+              onClick={() => setActionOpen(!actionOpen)}
+              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedInvoices.length > 0
+                ? "border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50 shadow-sm"
+                : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+                }`}
+            >
+              Actions
               <ChevronDown
-                className={`w-4 h-4 transition-transform duration-200 ${yearOpenDesktop ? "rotate-180" : ""}`}
+                className={`w-4 h-4 transition-transform ${actionOpen ? "rotate-180" : ""
+                  }`}
               />
             </button>
 
-            {yearOpenDesktop && (
-              <div
-                className="absolute left-0 right-0 top-full z-30 bg-white border rounded-lg mt-1 max-h-40 overflow-y-auto shadow"
-                onClick={(e) => e.stopPropagation()}
-              >
-                {years.map((y) => (
-                  <div
-                    key={y}
-                    className="px-3 py-2 hover:bg-green-100 text-[12px] text-gray-500 font-[600] cursor-pointer"
-                    onClick={() => {
-                      setYear(y);
-                      setYearOpenDesktop(false);
-                    }}
-                  >
-                    {y}
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="flex flex-row gap-2">
-          {/* CLEAR BUTTON */}
-          <button
-            onClick={clearFilters}
-            className="py-2 px-3 rounded-lg border text-[12px] font-[600] bg-[#0CBB7D] hover:opacity-90 transition text-white"
-          >
-            Clear
-          </button>
-
-          {/* ACTION BUTTON */}
-          <div className="relative" ref={actionRef}>
-            <button
-              disabled={!hasFilter}
-              onClick={() => setActionOpen(!actionOpen)}
-              className={`py-2 px-3 rounded-lg text-[12px] font-[600] ${hasFilter ? "bg-[#0CBB7D] text-white" : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                }`}
-            >
-              Action
-            </button>
-
-            {actionOpen && hasFilter && (
-              <div className="absolute right-0 mt-1 bg-white border rounded-lg shadow-lg w-32 text-[12px] z-50">
+            {actionOpen && (
+              <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[12px] z-[100] animate-popup-in overflow-hidden">
                 <div
-                  className="px-3 py-2 hover:bg-green-100 cursor-pointer"
+                  className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
                   onClick={() => {
                     setActionOpen(false);
-
                     if (!selectedInvoices.length) return;
-
-                    const url = `${REACT_APP_BACKEND_URL}/invoice/bulk-download?invoiceNumbers=${selectedInvoices.join(",")}`;
-
+                    const url = `${REACT_APP_BACKEND_URL}/invoice/bulk-download?invoiceNumbers=${selectedInvoices.join(
+                      ","
+                    )}`;
                     window.open(url, "_blank");
                   }}
                 >
-                  Download Invoice
+                  Bulk Download
                 </div>
               </div>
             )}
           </div>
         </div>
-
       </div>
 
-      {/* Mobile Filters */}
-      <div className="flex w-full flex-col sm:hidden">
-        {/* Top Row: Invoice Number Search + Filter Button + Actions */}
-        <div className="flex items-center justify-between gap-2 relative">
-          <input
-            type="text"
-            placeholder="Invoice Number"
-            className="flex-1 px-3 py-2 h-9 rounded-lg text-[12px] text-gray-700 font-[600] border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
-            value={invoiceNumber}
-            onChange={(e) => setInvoiceNumber(e.target.value)}
-          />
-
-          {/* Filter Button */}
-          <button
-            className="px-3 flex items-center justify-center text-white bg-[#0CBB7D] h-[34px] rounded-lg transition text-[12px] font-[600]"
-            onClick={() => setShowMobileFilters((prev) => !prev)}
-          >
-            <FaFilter className="text-white" size={14} />
-          </button>
-
-          {/* Actions Button */}
-          <div ref={actionRef}>
+      {/* Mobile Filter Section */}
+      <div className="flex w-full flex-col md:hidden mb-2">
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
             <button
-              disabled={!hasFilter}
+              onClick={() => setIsFilterPanelOpen(true)}
+              className="w-full flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 shadow-sm h-9"
+            >
+              <Filter className="w-4 h-4 text-[#0CBB7D]" />
+              More Filters
+            </button>
+          </div>
+          <div className="relative" ref={actionRef}>
+            <button
+              disabled={selectedInvoices.length === 0}
               onClick={() => setActionOpen(!actionOpen)}
-              className={`px-3 h-[34px] border rounded-lg font-[600] flex items-center gap-1 ${selectedInvoices.length === 0
-                ? "border-gray-300 text-[12px] cursor-not-allowed text-gray-400"
-                : "text-[#0CBB7D] border-[#0CBB7D] text-[12px]"
+              className={`h-9 px-3 rounded-lg flex items-center justify-center border transition-all ${selectedInvoices.length > 0
+                ? "border-[#0CBB7D] text-[#0CBB7D] bg-white shadow-sm"
+                : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
-              <FaBars
-                className={`sm:hidden ${selectedInvoices.length === 0
-                  ? "text-gray-400"
-                  : "text-[#0CBB7D]"
-                  }`}
-              />
-              <span className="hidden sm:inline">Actions▼</span>
+              <FaBars className="w-3 h-3" />
             </button>
-            {actionOpen && hasFilter && (
-              <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-[60]">
-                <ul className="py-2 font-[600]">
-                  <li
-                    className="px-3 py-2 text-gray-700 hover:bg-green-100 cursor-pointer text-[10px]"
-                    onClick={() => {
-                      setActionOpen(false);
-                      if (!selectedInvoices.length) return;
-                      const url = `${REACT_APP_BACKEND_URL}/invoice/bulk-download?invoiceNumbers=${selectedInvoices.join(",")}`;
-                      window.open(url, "_blank");
-                    }}
-                  >
-                    Download Invoice
-                  </li>
-                </ul>
+            {actionOpen && (
+              <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[11px] z-[100] animate-popup-in overflow-hidden">
+                <div
+                  className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                  onClick={() => {
+                    setActionOpen(false);
+                    if (!selectedInvoices.length) return;
+                    const url = `${REACT_APP_BACKEND_URL}/invoice/bulk-download?invoiceNumbers=${selectedInvoices.join(
+                      ","
+                    )}`;
+                    window.open(url, "_blank");
+                  }}
+                >
+                  Bulk Download
+                </div>
               </div>
             )}
           </div>
         </div>
 
-        {/* Expandable Filters */}
-        <div
-          className={`transition-all duration-300 ease-in-out ${showMobileFilters ? "max-h-[1000px] overflow-visible" : "max-h-0 overflow-hidden"}`}
-        >
-          <div className="flex flex-col gap-2 overflow-visible mt-2">
-            {/* Month Dropdown */}
-            <div className="relative w-full" ref={monthRef}>
-              <button
-                type="button"
-                className="w-full h-9 border font-[600] text-gray-400 bg-white rounded-lg flex items-center justify-between px-3 text-[12px]"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setMonthOpen((prev) => !prev);
-                }}
-              >
-                <span>{month ? MONTHS.find(m => m.value === month)?.label : "Select Month"}</span>
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform ${monthOpen ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              {monthOpen && (
-                <div
-                  className="absolute left-0 z-40 right-0 top-full bg-white border rounded-lg mt-1 max-h-40 overflow-y-auto shadow"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {MONTHS.map((m) => (
-                    <div
-                      key={m.value}
-                      className="px-3 py-2 hover:bg-green-100 text-[12px] text-gray-500 font-[600] cursor-pointer"
-                      onClick={() => {
-                        setMonth(m.value);
-                        if (!year) {
-                          setYear(new Date().getFullYear());
-                        }
-                        setMonthOpen(false);
-                      }}
-                    >
-                      {m.label}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Year Dropdown */}
-            <div className="relative w-full" ref={yearRef1}>
-              <button
-                type="button"
-                className="w-full h-9 border bg-white font-[600] text-gray-400 rounded-lg flex items-center justify-between px-3 text-[12px]"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setYearOpenMobile((prev) => !prev);
-                }}
-              >
-                <span>{year || "Select Year"}</span>
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform ${yearOpenMobile ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              {yearOpenMobile && (
-                <div
-                  className="absolute left-0 right-0 z-40 top-full bg-white border rounded-lg mt-1 max-h-40 overflow-y-auto shadow"
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  {years.map((y) => (
-                    <div
-                      key={y}
-                      className="px-3 py-2 hover:bg-green-100 text-[12px] text-gray-500 font-[600] cursor-pointer"
-                      onClick={() => {
-                        setYear(y);
-                        setYearOpenMobile(false);
-                      }}
-                    >
-                      {y}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Clear Button */}
+        {isAnyFilterApplied && (
+          <div className="flex justify-end mt-1 px-1">
             <button
-              onClick={() => {
-                clearFilters();
-                setShowMobileFilters(false);
-              }}
-              className="px-3 bg-[#0CBB7D] py-2 text-[12px] font-[600] rounded-lg text-white border hover:opacity-90 transition"
+              onClick={handleClearFilters}
+              className="text-[11px] font-[600] text-red-500 hover:text-red-600 transition-colors"
             >
-              Clear
+              Clear All Filters
             </button>
           </div>
-        </div>
+        )}
       </div>
 
-
-
-
-      {/* Loader */}
-      {/* {loading && <p className="text-center py-10">Loading...</p>} */}
-
-      {/* DESKTOP TABLE */}
-      <div className="hidden md:block">
-        <div className="relative overflow-x-auto bg-white overflow-y-auto h-[calc(100vh-320px)]">
-          <table className="min-w-full text-[12px] text-left border-collapse">
-            <thead className="sticky top-0 z-20 bg-[#0CBB7D]">
-              <tr className="text-white text-[12px] font-[600]">
-                <th className="py-2 px-3 text-left">
-                  <input
-                    type="checkbox"
-                    checked={
-                      invoices.length > 0 &&
-                      selectedInvoices.length === invoices.length
-                    }
-                    onChange={handleSelectAll}
-                    className="cursor-pointer accent-[#0CBB7D] w-4"
-                  />
+      {/* Desktop Table */}
+      <div className="hidden md:block relative">
+        <div className="h-[calc(100vh-285px)] overflow-y-auto bg-white border rounded-lg shadow-sm">
+          <table className="w-full text-left border-collapse text-[12px] relative">
+            <thead className="sticky top-0 z-40 bg-[#0CBB7D] text-white font-[600]">
+              <tr>
+                <th className="py-2 px-3 w-10">
+                  <div className="flex items-center justify-center">
+                    <input
+                      type="checkbox"
+                      checked={
+                        invoices.length > 0 &&
+                        selectedInvoices.length === invoices.length
+                      }
+                      onChange={handleSelectAll}
+                      className="cursor-pointer accent-[#0CBB7D] w-4 h-4"
+                    />
+                  </div>
                 </th>
-
                 <th className="px-3 py-2">Invoice No</th>
                 <th className="px-3 py-2">Shipments</th>
-                <th className="px-3 py-2">Amount</th>
+                <th className="px-3 py-2">Amount Details</th>
                 <th className="px-3 py-2">Created On</th>
                 <th className="px-3 py-2">Invoice Period</th>
                 <th className="px-3 py-2">Status</th>
-                <th className="px-3 py-2">Action</th>
+                <th className="px-3 py-2 text-center">Action</th>
               </tr>
             </thead>
-            <tbody>
+            <tbody className="divide-y divide-gray-100">
               {loading ? (
                 <tr>
-                  <td colSpan={9} className="py-6 text-center">
+                  <td colSpan={8} className="py-10 text-center">
                     <ThreeDotLoader />
                   </td>
                 </tr>
               ) : invoices.length === 0 ? (
                 <tr>
-                  <td colSpan={9} className="px-3 py-6 text-center text-gray-500">
+                  <td colSpan={8} className="py-10 text-center">
                     <div className="flex flex-col items-center justify-center">
                       <img
                         src={NotFound}
-                        alt="No Data Found"
-                        className="w-60 h-60 object-contain mb-2"
+                        alt="No Data"
+                        className="mx-auto w-[250px]"
                       />
                     </div>
                   </td>
                 </tr>
               ) : (
                 invoices.map((inv) => (
-                  <tr key={inv.invoiceNumber || inv._id} className="border-b text-[12px]">
-                    <td className="py-2 px-3 whitespace-nowrap align-middle">
+                  <tr
+                    key={inv._id}
+                    className="hover:bg-gray-50 text-[12px] transition-colors border-b border-gray-200 text-gray-600"
+                  >
+                    <td className="py-2 px-3 text-center">
                       <input
                         type="checkbox"
                         checked={selectedInvoices.includes(inv._id)}
                         onChange={() => handleCheckboxChange(inv._id)}
-                        className="cursor-pointer accent-[#0CBB7D] w-4"
+                        className="cursor-pointer accent-[#0CBB7D] w-4 h-4"
                       />
                     </td>
-
-                    <td className="px-3 py-2">{inv.invoiceNumber}</td>
-                    <td className="px-3 py-2">{inv.totalShipments}</td>
-                    <td className="px-3 py-2">₹{inv.amount}</td>
-                    <td className="px-3 py-2">{inv.invoiceDate}</td>
                     <td className="px-3 py-2">
-                      {new Date(inv.periodEnd).toLocaleString("en-IN", {
-                        month: "long",
-                        year: "numeric",
-                      })}
+                      <div className="flex items-center gap-1 group">
+                        <span className="font-[600] text-[#0CBB7D]">
+                          {inv.invoiceNumber}
+                        </span>
+                        <button
+                          onClick={() => handleCopy(inv.invoiceNumber, inv._id)}
+                        >
+                          {copiedId === inv._id ? (
+                            <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                          ) : (
+                            <FiCopy className="w-3 h-3 text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity" />
+                          )}
+                        </button>
+                      </div>
                     </td>
-
+                    <td className="px-3 py-2 font-[600]">
+                      {inv.totalShipments}
+                    </td>
+                    <td className="px-3 py-2 font-[700] text-gray-700">
+                      ₹{Number(inv.amount).toFixed(2)}
+                    </td>
                     <td className="px-3 py-2">
-                      <span className={`px-2 py-1 rounded-lg text-[12px] font-medium border ${getStatusColor(inv.status)}`}>
+                      <p className="text-gray-700 font-[600] whitespace-nowrap">
+                        {dayjs(inv.invoiceDate || inv.createdAt).format(
+                          "DD MMM YYYY"
+                        )}
+                      </p>
+                    </td>
+                    <td className="px-3 py-2">
+                      <p className="text-gray-700 font-[600] whitespace-nowrap">
+                        {dayjs(inv.periodEnd).format("MMMM YYYY")}
+                      </p>
+                    </td>
+                    <td className="px-3 py-2">
+                      <span
+                        className={`px-2 py-0.5 rounded-full text-[10px] font-[700] uppercase border ${getStatusColor(
+                          inv.status
+                        )}`}
+                      >
                         {inv.status}
                       </span>
                     </td>
                     <td className="px-3 py-2">
-                      {inv.invoiceUrl && (
-                        <a
-                          href={inv.invoiceUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center justify-center bg-[#0CBB7D] text-white w-7 h-7 rounded-full hover:opacity-90 transition"
-                          title="Download Invoice"
-                        >
-                          <HiOutlineDownload className="w-4 h-4" />
-                        </a>
-                      )}
+                      <div className="flex justify-center">
+                        {inv.invoiceUrl && (
+                          <a
+                            href={inv.invoiceUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center justify-center bg-[#0CBB7D] text-white w-8 h-8 rounded-lg hover:shadow-md hover:bg-opacity-90 transition-all shadow-sm"
+                            title="Download Invoice"
+                          >
+                            <HiOutlineDownload className="w-4 h-4" />
+                          </a>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -570,115 +399,128 @@ const Invoices = () => {
         </div>
       </div>
 
-      {/* MOBILE CARDS */}
-      <div className="md:hidden w-full">
-        <div className="p-1 bg-green-100 rounded-lg flex gap-2 items-center mb-2">
+      {/* Mobile View */}
+      <div className="md:hidden flex flex-col">
+        <div className="p-2 gap-2 bg-white rounded-lg flex items-center border border-gray-100 mb-2 shadow-sm">
           <input
             type="checkbox"
             checked={
-              invoices.length > 0 &&
-              selectedInvoices.length === invoices.length
+              invoices.length > 0 && selectedInvoices.length === invoices.length
             }
             onChange={handleSelectAll}
-            className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
+            className="cursor-pointer accent-[#0CBB7D] w-4 h-4 ml-1"
           />
-          <span className="text-[10px] text-gray-700 font-[600]">Select All</span>
+          <span className="text-[11px] font-[600] text-gray-700">
+            Select All
+          </span>
         </div>
-
-        {/* INVOICE CARDS */}
-        <div className="space-y-2 h-[calc(100vh-290px)] overflow-y-auto">
-          {/* LOADER */}
-          {loading && (
+        <div className="h-[calc(100vh-260px)] overflow-y-auto space-y-2">
+          {loading ? (
             <div className="flex justify-center py-10">
               <ThreeDotLoader />
             </div>
-          )}
-
-          {/* NO DATA */}
-          {!loading && invoices.length === 0 && (
-            <div className="text-center text-gray-500 py-6"><img
-              src={NotFound}
-              alt="No Data Found"
-              className="w-60 h-60 object-contain mb-2"
-            /></div>
-          )}
-
-          {/* INVOICE CARDS */}
-          {!loading &&
-            invoices.map((inv) => {
-              return (
-                <div
-                  key={inv.invoiceNumber || inv._id}
-                  className="bg-white shadow-sm rounded-lg px-3 py-2 text-[12px] border"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedInvoices.includes(inv._id)}
-                    onChange={() => handleCheckboxChange(inv._id)}
-                    className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
-                  />
-                  {/* ================= HEADER (LEFT INFO + RIGHT DOWNLOAD ICON) ================= */}
-                  <div className="flex justify-between items-start mb-3">
-                    {/* LEFT INFO */}
-                    <div className="space-y-0.5">
-                      <div className="text-gray-700">#{inv.invoiceNumber}</div>
-                      <div className="text-gray-500">Shipments : {inv.totalShipments}</div>
-                      <div className="text-gray-500">
-                        Invoice Period:{" "}
-                        {new Date(inv.periodEnd || inv.createdAt).toLocaleString("en-IN", {
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </div>
-
+          ) : invoices.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-10 bg-white rounded-xl border border-dashed border-gray-200">
+              <img
+                src={NotFound}
+                alt="No Data Found"
+                className="w-[180px] opacity-60"
+              />
+              <p className="text-gray-400 font-[600] mt-2">No records found</p>
+            </div>
+          ) : (
+            invoices.map((inv) => (
+              <div
+                key={inv._id}
+                className="bg-white rounded-xl shadow-sm p-3 border border-gray-100 text-[11px] animate-popup-in"
+              >
+                <div className="flex justify-between mb-3 items-start">
+                  <div className="flex items-start gap-3">
+                    <div className="mt-1">
+                      <input
+                        type="checkbox"
+                        checked={selectedInvoices.includes(inv._id)}
+                        onChange={() => handleCheckboxChange(inv._id)}
+                        className="cursor-pointer accent-[#0CBB7D] w-4 h-4"
+                      />
                     </div>
-
-                    {/* RIGHT SIDE — DOWNLOAD ICON & PERIOD END */}
-                    <div className="text-right space-y-2">
-                      {/* Download Icon */}
-                      {inv.invoiceUrl && (
-                        <a
-                          href={inv.invoiceUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-block"
-                          title="Download Invoice"
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-1">
+                        <span className="text-[#0CBB7D] font-[700] text-[12px]">
+                          #{inv.invoiceNumber}
+                        </span>
+                        <button
+                          onClick={() =>
+                            handleCopy(inv.invoiceNumber, inv._id + "_mob")
+                          }
                         >
-                          <HiOutlineDownload className="w-6 h-6 text-[#0CBB7D]" />
-                        </a>
-                      )}
-
-                      {/* Period End */}
-                      <div className="text-gray-500">
-                        Created On: {inv.periodEnd || "-"}
+                          {copiedId === inv._id + "_mob" ? (
+                            <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                          ) : (
+                            <FiCopy className="w-3 h-3 text-gray-300" />
+                          )}
+                        </button>
                       </div>
+                      <p className="text-gray-400 text-[10px] font-[600]">
+                        Created:{" "}
+                        {dayjs(inv.invoiceDate || inv.createdAt).format(
+                          "DD MMM YYYY"
+                        )}
+                      </p>
                     </div>
                   </div>
-
-                  {/* ================= GREEN USER DETAILS BOX ================= */}
-                  <div className="bg-green-200 rounded-lg p-2">
-                    {/* TOP ROW: AMOUNT + STATUS */}
-                    <div className="flex flex-row items-center justify-between">
-                      {/* AMOUNT */}
-                      <div className="text-[12px] text-gray-700">
-                        ₹{inv.amount}
-                      </div>
-
-                      {/* STATUS BADGE */}
-                      <div
-                        className={`inline-block px-2 py-0.5 rounded-lg text-[10px] border ${getStatusColor(
-                          inv.status
-                        )}`}
-                      >
-                        {inv.status}
-                      </div>
-                    </div>
+                  <div className="text-right">
+                    <p className="font-[800] text-gray-700 text-[13px]">
+                      ₹{Number(inv.amount).toFixed(2)}
+                    </p>
+                    <span
+                      className={`px-2 py-0.5 rounded-full text-[9px] font-[700] uppercase inline-block mt-1 border ${getStatusColor(
+                        inv.status
+                      )}`}
+                    >
+                      {inv.status}
+                    </span>
                   </div>
                 </div>
-              );
-            })}
+
+                <div className="grid grid-cols-2 gap-3 mb-3 bg-gray-50/50 p-2.5 rounded-xl border border-gray-100">
+                  <div className="space-y-0.5">
+                    <p className="text-gray-400 text-[9px] font-[700] uppercase tracking-wider">
+                      Shipments
+                    </p>
+                    <p className="text-gray-700 font-[700] text-[11px]">
+                      {inv.totalShipments}
+                    </p>
+                  </div>
+                  <div className="text-right space-y-0.5">
+                    <p className="text-gray-400 text-[9px] font-[700] uppercase tracking-wider">
+                      Period
+                    </p>
+                    <p className="text-gray-700 font-[700] text-[11px]">
+                      {dayjs(inv.periodEnd).format("MMMM YYYY")}
+                    </p>
+                  </div>
+                </div>
+
+                {inv.invoiceUrl && (
+                  <div className="pt-2 border-t border-gray-50 flex justify-end">
+                    <a
+                      href={inv.invoiceUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-1.5 bg-green-50 text-[#0CBB7D] border border-green-100 rounded-lg flex items-center gap-2 font-[700] text-[10px] hover:bg-green-100 transition-colors"
+                    >
+                      <HiOutlineDownload className="w-3.5 h-3.5" />
+                      Download Invoice
+                    </a>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
         </div>
       </div>
+
       <PaginationFooter
         page={page}
         setPage={setPage}
@@ -686,9 +528,27 @@ const Invoices = () => {
         limit={limit}
         setLimit={setLimit}
       />
+
+      <InvoicesFilterPanel
+        isOpen={isFilterPanelOpen}
+        onClose={() => setIsFilterPanelOpen(false)}
+        selectedUserId={null}
+        invoiceNumber={invoiceNumber}
+        month={month}
+        year={year}
+        MONTHS={MONTHS}
+        years={years}
+        onClearFilters={handleClearFilters}
+        showUserFilter={false}
+        onApplyFilters={(filters) => {
+          setInvoiceNumber(filters.invoiceNumber || "");
+          setMonth(filters.month || "");
+          setYear(filters.year || "");
+          setPage(1);
+          setIsFilterPanelOpen(false);
+        }}
+      />
     </div>
-
-
   );
 };
 

@@ -58,7 +58,7 @@ const PickupManifestOrders = ({ orderType = "B2C", userId: initialUserId }) => {
             const activeRef = window.innerWidth >= 768 ? tableRef : mobileTableRef;
             if (activeRef?.current) {
                 const top = activeRef.current.getBoundingClientRect().top;
-                const remainingHeight = window.innerHeight - top - 60;
+                const remainingHeight = window.innerHeight - top - 50;
                 setTableHeight(`${remainingHeight}px`);
             }
         };

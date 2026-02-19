@@ -72,7 +72,7 @@ const EarlyCODModal = ({ isOpen, onClose, userId }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center bg-gray-700 justify-center bg-opacity-50 px-2 z-50">
+    <div className="fixed animate-popup-in inset-0 flex items-center bg-gray-700 justify-center bg-opacity-50 px-2 z-50">
       <div className="bg-white rounded-lg p-4 w-full max-w-[95%] md:max-w-[70%] lg:max-w-[55%] xl:max-w-[65%] relative max-h-[85dvh] flex flex-col">
         {/* Close Button */}
         <button

@@ -150,7 +150,7 @@ const Billing = () => {
     }
   };
 
-  const tabs = ["Shipping", "COD Remittance", "PassBook", "Wallet History","Invoices"];
+  const tabs = ["Shipping", "COD Remittance", "PassBook", "Wallet History", "Invoices"];
 
   const renderComponent = () => {
     switch (selectedItem) {
@@ -165,10 +165,21 @@ const Billing = () => {
           />
         );
       case "Invoices":
-        return <InvoicesComponent />;
+        return (
+          <InvoicesComponent
+            setFiltersApplied={setFiltersApplied}
+            clearFiltersTrigger={clearFiltersTrigger}
+            setClearFiltersTrigger={setClearFiltersTrigger}
+          />
+        );
       case "COD Remittance":
-        return <RemittanceComponent />;
-      // return ""
+        return (
+          <RemittanceComponent
+            setFiltersApplied={setFiltersApplied}
+            clearFiltersTrigger={clearFiltersTrigger}
+            setClearFiltersTrigger={setClearFiltersTrigger}
+          />
+        );
       case "PassBook":
         return (
           <PassbookComponent
@@ -180,7 +191,13 @@ const Billing = () => {
           />
         );
       case "Wallet History":
-        return <WalletHistory />;
+        return (
+          <WalletHistory
+            setFiltersApplied={setFiltersApplied}
+            clearFiltersTrigger={clearFiltersTrigger}
+            setClearFiltersTrigger={setClearFiltersTrigger}
+          />
+        );
       // case "Downgrade":
       //   return <DowngradeComponent />;
       default:
@@ -189,11 +206,11 @@ const Billing = () => {
   };
 
   return (
-    <div className="sm:px-2 p-1 w-full">
+    <div className="sm:px-2 w-full">
       <div className="flex flex-row items-center sm:items-start justify-between w-full">
         {!id && (
           <div className="">
-            <h1 className="text-[14px] text-gray-700 font-[600]">Billings</h1>
+            <h1 className="sm:text-[14px] text-[12px] text-gray-700 font-[600]">Billings</h1>
           </div>
         )}
 
@@ -206,7 +223,7 @@ const Billing = () => {
             <div className="w-full sm:w-full">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="w-full bg-[#0CBB7D] mb-2 sm:mb-0 text-white font-[600] px-3 py-2 rounded-lg text-[12px]"
+                className="w-full bg-[#0CBB7D] mb-2 sm:mb-0 text-white font-[600] px-3 py-2 rounded-lg text-[10px]"
               >
                 Early COD
               </button>
@@ -305,17 +322,18 @@ const Billing = () => {
       </div>
       <div className="relative md:hidden mb-[-15px]">
         <button
-          className="w-full px-3 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] flex justify-between items-center font-[600]"
+          className="w-full px-3 py-2 bg-white border border-gray-200 shadow-sm rounded-lg text-[12px] font-[600] text-gray-700 flex justify-between items-center"
           onClick={() => setShowDropdown(!showDropdown)}
         >
-          {selectedItem} <span className="ml-2"><ChevronDown className="w-4 h-4" /></span>
+          {selectedItem} <ChevronDown className={`w-4 h-4 transition-transform ${showDropdown ? "rotate-180" : ""}`} />
         </button>
         {showDropdown && (
-          <div className="absolute top-full left-0 w-full mt-1 bg-white border rounded-lg shadow-lg z-10 font-[600]">
+          <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[100] overflow-hidden animate-popup-in max-h-80 overflow-y-auto">
             {tabs.map((tab) => (
               <button
                 key={tab}
-                className={`w-full text-gray-700 text-left px-3 py-2 text-[12px] ${selectedItem === tab ? "bg-green-200" : "hover:bg-green-100"}`}
+                className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${selectedItem === tab ? "bg-green-50 text-[#0CBB7D]" : "text-gray-700 hover:bg-gray-50"
+                  }`}
                 onClick={() => {
                   setSelectedItem(tab);
                   setShowDropdown(false);

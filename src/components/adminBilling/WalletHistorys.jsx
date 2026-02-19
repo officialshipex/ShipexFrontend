@@ -1,618 +1,520 @@
 import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
-import { FaCalendarAlt, FaWallet, FaRupeeSign } from "react-icons/fa";
-// import { toast } from "react-toastify";
 import dayjs from "dayjs";
-import { DateRange } from 'react-date-range';
-import 'react-date-range/dist/styles.css'; // main style file
-import 'react-date-range/dist/theme/default.css'; // theme css file
 import { useNavigate } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
-import ThreeDotLoader from "../../Loader"
+import { ChevronDown, Filter, X } from "lucide-react";
+import Cookies from "js-cookie";
+import ThreeDotLoader from "../../Loader";
 import WalletHistoryForm from "./WalletHistoryForm";
 import { motion, AnimatePresence } from "framer-motion";
-import Cookies from "js-cookie";
-import {Notification} from "../../Notification"
-
-
+import { Notification } from "../../Notification";
+import DateFilter from "../../filter/DateFilter";
+import WalletHistoryFilterPanel from "../../Common/WalletHistoryFilterPanel";
+import PaginationFooter from "../../Common/PaginationFooter";
+import NotFound from "../../assets/nodatafound.png";
+import { FiCopy, FiCheck } from "react-icons/fi";
+import { FaBars } from "react-icons/fa";
 
 const WalletHistorys = () => {
-  const [transactions, setTransactions] = useState([]);
-  const [userQuery, setUserQuery] = useState("");
-  const [userSuggestions, setUserSuggestions] = useState([]);
-  const [selectedUserId, setSelectedUserId] = useState(null);
-  const [dateRange, setDateRange] = useState("");
-  const [status, setStatus] = useState("");
-  const [paymentId, setPaymentId] = useState("");
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
-  const [total, setTotal] = useState(0);
-  const [customDateLabel, setCustomDateLabel] = useState('');
-  const [transactionId, setTransactionId] = useState("");
-  const dateDropdownRef = useRef()
-  const [showDateDropdown, setShowDateDropdown] = useState(false);
-  const [showStatusDropdown, setShowStatusDropdown] = useState(false);
-  const [customRange, setCustomRange] = useState([
-    {
-      startDate: new Date(),
-      endDate: new Date(),
-      key: "selection",
-    },
-  ]);
-  const [showCalendar, setShowCalendar] = useState(false);
-  const calendarRef = useRef();
-  const statusRef = useRef();
-  const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const navigate = useNavigate()
+    const [transactions, setTransactions] = useState([]);
+    const [selectedUserId, setSelectedUserId] = useState(null);
+    const [dateRange, setDateRange] = useState(null);
+    const [status, setStatus] = useState("");
+    const [paymentId, setPaymentId] = useState("");
+    const [transactionId, setTransactionId] = useState("");
+    const [page, setPage] = useState(1);
+    const [limit, setLimit] = useState(20);
+    const [total, setTotal] = useState(0);
+    const [loading, setLoading] = useState(true);
+    const [showForm, setShowForm] = useState(false);
+    const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+    const [clearTrigger, setClearTrigger] = useState(0);
+    const [copiedId, setCopiedId] = useState(null);
+    const [actionOpen, setActionOpen] = useState(false);
+    const actionRef = useRef(null);
+    const [selectedTransactions, setSelectedTransactions] = useState([]);
+    const navigate = useNavigate();
 
+    const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-  const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+    const fetchTransactions = async () => {
+        try {
+            const token = Cookies.get("session");
+            let fromDate = "";
+            let toDate = "";
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dateDropdownRef.current && !dateDropdownRef.current.contains(event.target) && statusRef.current && !statusRef.current.contains(event.target)) {
-        setShowStatusDropdown(false);
-        setShowDateDropdown(false)
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+            if (dateRange && dateRange[0]) {
+                fromDate = dayjs(dateRange[0].startDate).startOf("day").toISOString();
+                toDate = dayjs(dateRange[0].endDate).endOf("day").toISOString();
+            }
 
-  const getDateRange = () => {
-    const today = dayjs();
-    switch (dateRange) {
-      case "today":
-        return {
-          fromDate: today.startOf("day").toISOString(),
-          toDate: today.endOf("day").toISOString(),
-        };
-      case "yesterday":
-        return {
-          fromDate: today.subtract(1, "day").startOf("day").toISOString(),
-          toDate: today.subtract(1, "day").endOf("day").toISOString(),
-        };
-      case "last5days":
-        return {
-          fromDate: today.subtract(5, "day").startOf("day").toISOString(),
-          toDate: today.endOf("day").toISOString(),
-        };
-      case "thisMonth":
-        return {
-          fromDate: today.startOf("month").toISOString(),
-          toDate: today.endOf("month").toISOString(),
-        };
-      case "lastMonth":
-        const lastMonth = today.subtract(1, "month");
-        return {
-          fromDate: lastMonth.startOf("month").toISOString(),
-          toDate: lastMonth.endOf("month").toISOString(),
-        };
-      case "custom":
-        return {
-          fromDate: customRange[0].startDate.toISOString(),
-          toDate: customRange[0].endDate.toISOString(),
-        };
-      default:
-        return {};
-    }
-  };
-
-
-  const fetchTransactions = async () => {
-    try {
-      const token = Cookies.get("session");
-      const { fromDate, toDate } = getDateRange();
-      setLoading(true)
-      const response = await axios.get(
-        `${REACT_APP_BACKEND_URL}/adminBilling/allTransactionHistory`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          params: {
-            userSearch: selectedUserId || "",
-            fromDate,
-            toDate,
-            status,
-            page,
-            limit,
-            paymentId: paymentId.trim(),
-            transactionId: transactionId.trim()
-          },
+            setLoading(true);
+            const response = await axios.get(
+                `${REACT_APP_BACKEND_URL}/adminBilling/allTransactionHistory`,
+                {
+                    headers: { Authorization: `Bearer ${token}` },
+                    params: {
+                        userSearch: selectedUserId || "",
+                        fromDate,
+                        toDate,
+                        status,
+                        page,
+                        limit,
+                        paymentId: paymentId.trim(),
+                        transactionId: transactionId.trim()
+                    },
+                }
+            );
+            setTransactions(response.data.results || []);
+            setTotal(response.data.total || 0);
+            setLoading(false);
+        } catch (error) {
+            Notification("Error fetching transactions", "error");
+            setLoading(false);
         }
-      );
-      console.log("trans", response.data.results)
-      setTransactions(response.data.results || []);
-      setTotal(response.data.total || 0);
-      setLoading(false)
-    } catch (error) {
-      Notification("Error fetching transactions","error");
-    }
-  };
+    };
 
-  const handleUserSearch = async (query) => {
-    setUserQuery(query);
-    if (query.length < 2) {
-      setUserSuggestions([]);
-      setSelectedUserId(null);
-      return;
-    }
-    try {
-      const res = await axios.get(`${REACT_APP_BACKEND_URL}/admin/searchUser`, {
-        params: { query },
-      });
-      setUserSuggestions(res.data.users || []);
-    } catch {
-      setUserSuggestions([]);
-    }
-  };
+    useEffect(() => {
+        fetchTransactions();
+    }, [selectedUserId, dateRange, status, page, limit, paymentId, transactionId]);
 
-  const fetchTransactionsManually = async (userId) => {
-    try {
-      const token = Cookies.get("session");
-      const { fromDate, toDate } = getDateRange();
-      setLoading(true);
-      const response = await axios.get(
-        `${REACT_APP_BACKEND_URL}/adminBilling/allTransactionHistory`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-          params: {
-            userSearch: userId || "",
-            fromDate,
-            toDate,
-            status,
-            page: 1, // when manually triggered, reset to first page
-            limit,
-            paymentId: paymentId.trim(),
-          },
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (actionRef.current && !actionRef.current.contains(event.target)) {
+                setActionOpen(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const handleClearFilters = () => {
+        setTransactionId("");
+        setPaymentId("");
+        setDateRange(null);
+        setStatus("");
+        setSelectedUserId(null);
+        setClearTrigger(prev => prev + 1);
+        setPage(1);
+    };
+
+    const handleCopy = (text, id) => {
+        navigator.clipboard.writeText(text);
+        setCopiedId(id);
+        setTimeout(() => setCopiedId(null), 2000);
+    };
+
+    const handleSelectAll = () => {
+        if (selectedTransactions.length === transactions.length && transactions.length > 0) {
+            setSelectedTransactions([]);
+        } else {
+            setSelectedTransactions(transactions.map((t) => t._id));
         }
-      );
-      setTransactions(response.data.results || []);
-      setTotal(response.data.total || 0);
-      setLoading(false)
-    } catch (error) {
-      Notification("Error fetching transactions","error");
-    }
-  };
-  const handleApplyCustomDate = () => {
-    setShowCalendar(false);
-    const start = dayjs(customRange[0].startDate).format("MMM D");
-    const end = dayjs(customRange[0].endDate).format("MMM D");
-
-    setCustomDateLabel(`${start} - ${end}`);
-    setDateRange("custom"); // Ensure it's always "custom"
-    fetchTransactions();
-  };
-
-  const handleDateRangeChange = (e) => {
-    const value = e.target.value;
-
-    // If the selected value is "custom"
-    if (value === "custom") {
-      // Toggle the calendar visibility
-      setShowCalendar(!showCalendar);
-    } else {
-      setShowCalendar(false); // Hide calendar for other selections
-    }
-
-    setDateRange(value);
-  };
-
-  // Close calendar on outside click
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (calendarRef.current && !calendarRef.current.contains(event.target)) {
-        setShowCalendar(false);
-      }
     };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+
+    const handleCheckboxChange = (id) => {
+        setSelectedTransactions((prev) =>
+            prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+        );
     };
-  }, []);
 
-  const handleHistory = () => {
-    setShowForm(true);
-  }
+    const handleExport = () => {
+        Notification(`Exporting ${selectedTransactions.length} selected transactions`, "success");
+        setActionOpen(false);
+    };
 
-  useEffect(() => {
-    fetchTransactions();
-  }, [selectedUserId, dateRange, status, page, limit, paymentId, transactionId]);
+    const isAnyFilterApplied = selectedUserId || status || paymentId || transactionId;
 
-  const pageOptions = [20, 50, 75, 100, "all"];
-  const handleClearFilters = () => {
-    setTransactionId("");
-    setPaymentId("");
-    setDateRange([{ startDate: null, endDate: null, key: "selection" }]);
-    setStatus("")
-    setUserQuery("");
-  }
-
-  return (
-    <div className="space-y-2">
-      {/* Filter Section */}
-      <div className="flex gap-2 sm:flex-row flex-col relative">
-        <div className="flex gap-2">
-          {/* User Search */}
-          <div className="relative w-full">
-            <input
-              type="text"
-              value={userQuery}
-              onChange={(e) => handleUserSearch(e.target.value)}
-              placeholder="Search user by ID, name, or email"
-              className="w-[240px] sm:w-auto px-3 focus:outline-none rounded-lg border-2 placeholder:text-[12px] placeholder:text-gray-400 text-gray-700 h-9 text-[12px] border-gray-300 font-[600]"
-            />
-            {userSuggestions.length > 0 && (
-              <div className="absolute left-0 right-0 top-full bg-white shadow-lg rounded-md mt-1 z-20 max-h-60 overflow-y-auto">
-                {userSuggestions.map((user, index) => (
-                  <div
-                    key={user._id}
-                    className={`flex cursor-pointer group transition-colors duration-200 ${index !== userSuggestions.length
-                      ? "border-b border-gray-200  hover:bg-gray-100"
-                      : ""
-                      }`}
-                    onClick={() => {
-                      setSelectedUserId(user._id);
-                      setUserQuery(`${user.fullname} (${user.email})`);
-                      setUserSuggestions([]);
-                      setPage(1);
+    return (
+        <div className="space-y-2">
+            {/* Desktop Filter Section */}
+            <div className="hidden md:flex gap-2 relative sm:items-center">
+                <DateFilter
+                    onDateChange={(range) => {
+                        setDateRange(range);
+                        setPage(1);
                     }}
-                  >
-                    {/* Left column: User ID */}
-                    <div className="w-1/4 flex items-center justify-center p-2 transition-colors duration-300">
-                      <p className="text-[12px] text-gray-400 group-hover:text-[#0CBB7D] font-medium truncate text-center transition-colors duration-200">
-                        {user.userId}
-                      </p>
-                    </div>
-
-                    {/* Right column: Name, Email, Phone */}
-                    <div className="w-3/4 flex flex-col justify-center py-[7px] pr-2 leading-tight">
-                      <p className="text-[13px] text-gray-500 group-hover:text-[#0CBB7D] font-medium truncate transition-colors duration-200">
-                        {user.fullname}
-                      </p>
-                      <p className="text-[11px] text-gray-400 truncate">
-                        {user.email}
-                      </p>
-                      <p className="text-[11px] text-gray-400 truncate">
-                        {user.phoneNumber}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-          {/* Status Filter */}
-          <div className="relative w-full" ref={statusRef}>
-            <button
-              onClick={() => setShowStatusDropdown((prev) => !prev)}
-              className="w-full h-9 px-3 border-2 border-gray-300 rounded-lg text-left sm:text-[12px] text-[12px] bg-white flex justify-between items-center font-[600] text-gray-400"
-              type="button"
-            >
-              <span>{status || "Status"}</span>
-              <ChevronDown
-                className={`w-4 h-4 transition-transform duration-200 ${showStatusDropdown ? "rotate-180" : ""}`}
-              />
-            </button>
-
-            {showStatusDropdown && (
-              <ul className="absolute z-30 w-full mt-1 bg-white border rounded-lg shadow max-h-60 overflow-y-auto text-[12px]">
-                {[
-                  "success", "failed"
-                ].map((s) => (
-                  <li
-                    key={s || "empty"}
-                    className={`px-3 py-2 text-gray-500 cursor-pointer hover:bg-green-100 ${status === s ? "bg-green-100 font-[600]" : ""}`}
-                    onClick={() => {
-                      setStatus(s);
-                      setShowStatusDropdown(false);
-                    }}
-                  >
-                    {s || "Status"}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        </div>
-
-        <div className="flex gap-2 w-full sm:w-auto">
-          <input
-            type="text"
-            placeholder="Search Transaction ID"
-            value={transactionId}
-            onChange={(e) => setTransactionId(e.target.value)}
-            className="px-3 w-full sm:w-auto border-2 border-gray-300 focus:outline-none placeholder:text-gray-400 text-gray-700 rounded-lg placeholder:text-[12px] h-9 text-[12px] font-[600]"
-          />
-          {/* Payment ID Filter */}
-          <input
-            type="text"
-            placeholder="Search Payment ID"
-            value={paymentId}
-            onChange={(e) => setPaymentId(e.target.value)}
-            className="px-3 w-full sm:w-auto border-2 placeholder:text-gray-400 text-gray-700 border-gray-300 focus:outline-none rounded-lg placeholder:text-[12px] h-9 text-[12px] font-[600]"
-          />
-        </div>
-
-        <div className="flex gap-2 justify-between w-full">
-
-
-          {/* Date Range Dropdown */}
-          <div className="relative w-full sm:w-auto" ref={dateDropdownRef}>
-            <button
-              onClick={() => setShowDateDropdown((prev) => !prev)}
-              className="w-full sm:w-[140px] h-9 px-3 border-2 border-gray-300 rounded-lg text-left text-gray-400 sm:text-[12px] text-[12px] bg-white flex items-center justify-between font-[600]"
-              type="button"
-            >
-              {customDateLabel || "Dates"}
-              <ChevronDown className={`w-4 h-4 transform transition-transform ${showDateDropdown ? "rotate-180" : ""}`} />
-            </button>
-
-            {showDateDropdown && (
-              <ul className="absolute z-30 w-full mt-1 bg-white border rounded-lg shadow-lg max-h-60 overflow-y-auto text-[12px]">
-                {[
-                  // { value: "", label: "Dates" },
-                  { value: "today", label: "Today" },
-                  { value: "yesterday", label: "Yesterday" },
-                  { value: "last5days", label: "Last 5 Days" },
-                  { value: "thisMonth", label: "This Month" },
-                  { value: "lastMonth", label: "Last Month" },
-                  { value: "custom", label: customDateLabel ? `Custom: ${customDateLabel}` : "Custom" }
-                ].map((item) => (
-                  <li
-                    key={item.value || "default"}
-                    className={`px-3 py-2 cursor-pointer text-gray-500 hover:bg-green-100 ${dateRange === item.value ? "bg-green-100 font-[600]" : ""}`}
-                    onClick={() => {
-                      setDateRange(item.value);
-                      setShowDateDropdown(false);
-                      if (item.value === "custom") {
-                        setShowCalendar(true);
-                      } else {
-                        setShowCalendar(false);
-                      }
-                    }}
-                  >
-                    {item.label}
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {/* Calendar Dropdown */}
-            {showCalendar && (
-              <div
-                ref={calendarRef}
-                className="absolute z-30 mt-2 bg-white shadow-lg rounded p-2 w-[350px]"
-              >
-                <DateRange
-                  editableDateInputs={true}
-                  onChange={(item) => setCustomRange([item.selection])}
-                  moveRangeOnFirstSelection={false}
-                  ranges={customRange}
-                  maxDate={new Date()}
-                  showDateDisplay={false}
+                    clearTrigger={clearTrigger}
+                    noInitialFilter={true}
                 />
+
                 <button
-                  onClick={handleApplyCustomDate}
-                  className="w-full mt-2 bg-[#0CBB7D] text-white text-sm py-1 px-3 rounded hover:bg-green-600"
+                    onClick={() => setIsFilterPanelOpen(true)}
+                    className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-9"
                 >
-                  Apply
+                    <Filter className="w-4 h-4 text-[#0CBB7D]" />
+                    More Filters
                 </button>
-              </div>
-            )}
-          </div>
 
-          <div className="flex gap-2">
-            <button
-              className="h-9 px-3 sm:w-none text-[10px] sm:text-[12px] border-2 border-gray-100 rounded-lg font-[600] text-white bg-[#0CBB7D] hover:bg-green-500 transition whitespace-nowrap"
-              onClick={handleClearFilters}
-              type="button"
-            >
-              Clear
-            </button>
-
-            <button className="rounded-lg sm:text-[12px] hover:bg-green-500 border-2 border-gray-100 text-[10px] px-3 h-9 bg-[#0CBB7D] text-white font-[600]" onClick={handleHistory}>
-              Wallet Updation
-            </button>
-          </div>
-
-        </div>
-      </div>
-
-      <div className="hidden md:block">
-        {loading ? (
-          <ThreeDotLoader />
-        ) : transactions.length === 0 ? (
-          <div className="text-center text-gray-500">No data found</div>
-        ) : (
-          <div className="overflow-auto">
-            <table className="min-w-full text-left text-[12px]">
-              <thead>
-                <tr className="bg-[#0CBB7D] border border-[#0CBB7D] text-white text-[12px] font-[600]">
-                  <th className="px-3 py-2">User Details</th>
-                  <th className="px-3 py-2">Date</th>
-                  <th className="px-3 py-2">Transaction ID</th>
-                  <th className="px-3 py-2">Amount</th>
-                  <th className="px-3 py-2">Status</th>
-                  <th className="px-3 py-2">Description</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-200 bg-white">
-                {transactions.map((row, index) => (
-                  <tr key={index} className="hover:bg-gray-50 border border-gray-300">
-                    <td className="px-3 py-2 text-gray-700" style={{ maxWidth: "350px", width: "300px" }}>
-                      <p className="text-[#0CBB7D] font-[600]">{row.user.userId}</p>
-                      <p>{row.user.name}</p>
-                      <p className="text-gray-500">{row.user.email}</p>
-                      <p className="text-gray-500">{row.user.phoneNumber}</p>
-                    </td>
-                    <td className="px-3 py-2 text-gray-700">
-                      <p>{new Date(row.date).toLocaleTimeString()}</p>
-                      <p>{new Date(row.date).toLocaleDateString()}</p>
-                    </td>
-                    <td className="px-3 py-2 text-[#0CBB7D]">{row.transactionId}</td>
-                    <td className="px-3 py-2 text-gray-700">₹{Number(row.amount).toFixed(2)}</td>
-                    <td className={`px-3 py-2 font-[600] ${row.status === "success" ? "text-[#0CBB7D]" : "text-red-500"}`}>
-                      {row.status}
-                    </td>
-                    <td className="px-3 py-2" style={{ maxWidth: "300px", width: "250px" }}>
-                      <p>
-                        <span className="font-[600]">paymentId:</span> {row.paymentId}
-                      </p>
-                      <p>
-                        <span className="font-[600]">OrderId:</span> {row.orderId}
-                      </p>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </div>
-
-
-      {/* Mobile Transaction Cards */}
-      <div className="md:hidden">
-        {loading ? (
-          <ThreeDotLoader />
-        ) : transactions.length > 0 ? (
-          <div className="space-y-2">
-            {transactions.map((row, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-lg shadow-md p-4 border border-gray-100 hover:shadow-lg transition-shadow duration-300 text-[12px]"
-              >
-                <div className="flex justify-between items-center w-full mb-2">
-                  <div>
-                    {/* Date Row */}
-                    <div className="flex items-center">
-                      <FaCalendarAlt className="mr-1 text-[#0CBB7D]" />
-                      <span>{new Date(row.date).toLocaleDateString()}</span>
-                    </div>
-
-
-                    {/* Payment ID Row */}
-                    <div className="flex items-center">
-                      {/* <FaRupeeSign className="mr-2 text-gray-400" /> */}
-                      <span className="truncate">Payment ID: {row.paymentId || "N/A"}</span>
-                    </div>
-
-                    {/* Transaction ID Row */}
-                    {row.transactionId && (
-
-                      <span className="truncate">
-                        <span className="font-medium">Txn ID:</span> {row.transactionId}
-                      </span>
+                <div className="flex items-center gap-2 ml-auto" ref={actionRef}>
+                    {isAnyFilterApplied && (
+                        <button
+                            onClick={handleClearFilters}
+                            className="text-[12px] text-red-500 hover:underline font-[600] px-2 whitespace-nowrap"
+                        >
+                            Clear All Filters
+                        </button>
                     )}
-                  </div>
-                  <div className="flex items-center justify-center w-[80px]">
-                    <span className="font-semibold text-gray-800">
-                      ₹{Number(row.amount).toFixed(2)}
-                    </span>
-                  </div>
+
+                    <div className="relative">
+                        <button
+                            disabled={selectedTransactions.length === 0}
+                            onClick={() => setActionOpen(!actionOpen)}
+                            className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedTransactions.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+                                }`}
+                        >
+                            Actions
+                            <ChevronDown className={`w-4 h-4 transition-transform ${actionOpen ? "rotate-180" : ""}`} />
+                        </button>
+
+                        {actionOpen && (
+                            <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-44 text-[12px] z-[100] animate-popup-in overflow-hidden">
+                                <div
+                                    className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600 border-b border-gray-50"
+                                    onClick={handleExport}
+                                >
+                                    Export to Excel
+                                </div>
+                                <div
+                                    className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                                    onClick={() => {
+                                        setShowForm(true);
+                                        setActionOpen(false);
+                                    }}
+                                >
+                                    Wallet Updation
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            {/* Mobile Filter Section */}
+            <div className="flex w-full flex-col md:hidden mb-2">
+                <div className="flex items-center gap-2">
+                    <div className="flex-1">
+                        <DateFilter
+                            onDateChange={(range) => {
+                                setDateRange(range);
+                                setPage(1);
+                            }}
+                            clearTrigger={clearTrigger}
+                            noInitialFilter={true}
+                        />
+                    </div>
+                    <button
+                        onClick={() => setIsFilterPanelOpen(true)}
+                        className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-[32px] min-w-[100px]"
+                    >
+                        <Filter className="w-3 h-3 text-[#0CBB7D]" />
+                        More Filters
+                    </button>
                 </div>
 
+                {isAnyFilterApplied && (
+                    <div className="flex justify-end pr-1 mt-1">
+                        <button
+                            onClick={handleClearFilters}
+                            className="text-[11px] font-[600] text-red-500 hover:text-red-600 transition-colors tracking-tight"
+                        >
+                            Clear All Filters
+                        </button>
+                    </div>
+                )}
+            </div>
 
-
-                {/* Divider - User Details & Status */}
-                <div className="p-2 mt-1 flex justify-between items-center bg-green-50 rounded-lg text-[10px]">
-                  {/* Left: User Info */}
-                  <div className="text-gray-700 space-y-1">
-                    <p className="font-semibold">{row.user.name}</p>
-                    <p>{row.user.phoneNumber}</p>
-                    <p className="text-[#0CBB7D] truncate">{row.user.email}</p>
-                  </div>
-
-                  {/* Right: Status */}
-                  <div
-                    className={`text-[10px] font-semibold px-2 py-1 rounded-lg whitespace-nowrap ${row.status === "success"
-                      ? "bg-green-100 text-green-600"
-                      : "bg-red-100 text-red-500"
-                      }`}
-                  >
-                    {row.status.toUpperCase()}
-                  </div>
+            {/* Desktop Table View */}
+            <div className="hidden md:block relative">
+                <div className="h-[calc(100vh-235px)] overflow-y-auto bg-white overflow-hidden">
+                    <table className="w-full text-[12px] text-left border-collapse relative">
+                        <thead className="sticky top-0 z-40 bg-[#0CBB7D] text-white font-[600]">
+                            <tr>
+                                <th className="py-2 px-3 w-10 shadow-[0_1px_0_0_#0CBB7D]">
+                                    <div className="flex items-center justify-center">
+                                        <input
+                                            type="checkbox"
+                                            checked={transactions.length > 0 && selectedTransactions.length === transactions.length}
+                                            onChange={handleSelectAll}
+                                            className="cursor-pointer accent-[#0CBB7D] w-4"
+                                        />
+                                    </div>
+                                </th>
+                                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">User Details</th>
+                                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">Date</th>
+                                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">Transaction ID</th>
+                                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">Amount</th>
+                                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">Status</th>
+                                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">Description</th>
+                            </tr>
+                        </thead>
+                        <tbody className="divide-y divide-gray-100">
+                            {loading ? (
+                                <tr>
+                                    <td colSpan="7" className="py-10 text-center">
+                                        <ThreeDotLoader />
+                                    </td>
+                                </tr>
+                            ) : transactions.length === 0 ? (
+                                <tr>
+                                    <td colSpan="7" className="py-10 text-center">
+                                        <div className="flex flex-col items-center justify-center">
+                                            <img src={NotFound} alt="No Data" className="w-60 h-60 mb-2" />
+                                            {/* <p className="text-gray-400 font-medium">No transactions found</p> */}
+                                        </div>
+                                    </td>
+                                </tr>
+                            ) : (
+                                transactions.map((row) => (
+                                    <tr key={row._id} className="hover:bg-gray-50 text-[12px] transition-colors border-b border-gray-200">
+                                        <td className="py-2 px-3 text-center">
+                                            <input
+                                                type="checkbox"
+                                                checked={selectedTransactions.includes(row._id)}
+                                                onChange={() => handleCheckboxChange(row._id)}
+                                                className="cursor-pointer accent-[#0CBB7D] w-4"
+                                            />
+                                        </td>
+                                        <td className="px-3 py-2">
+                                            <div className="flex flex-col text-gray-700">
+                                                <span className="text-[#0CBB7D] font-medium leading-tight">{row.user.userId}</span>
+                                                <span className="text-gray-700 text-[12px] leading-tight font-medium">{row.user.name}</span>
+                                                <span className="text-gray-700 truncate max-w-[150px]">{row.user.email}</span>
+                                                <span className="text-gray-700">{row.user.phoneNumber}</span>
+                                            </div>
+                                        </td>
+                                        <td className="px-3 py-2 text-gray-700">
+                                            <p className="whitespace-nowrap">{dayjs(row.date).format("DD MMM YYYY")}</p>
+                                            <p className="text-gray-500">{dayjs(row.date).format("hh:mm A")}</p>
+                                        </td>
+                                        <td className="px-3 py-2">
+                                            <div className="flex items-center gap-1 group">
+                                                <span className="text-[#0CBB7D] font-medium">{row.transactionId}</span>
+                                                <button onClick={() => handleCopy(row.transactionId, row._id + '_txn')}>
+                                                    {copiedId === row._id + '_txn' ? (
+                                                        <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                                                    ) : (
+                                                        <FiCopy className="w-3 h-3 text-gray-400 transition-opacity opacity-0 group-hover:opacity-100" />
+                                                    )}
+                                                </button>
+                                            </div>
+                                        </td>
+                                        <td className="px-3 py-2 text-gray-700">
+                                            ₹{Number(row.amount).toFixed(2)}
+                                        </td>
+                                        <td className="px-3 py-2">
+                                            <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "success" ? "bg-green-100 text-[#0CBB7D]" : "bg-red-100 text-red-600"}`}>
+                                                {row.status}
+                                            </span>
+                                        </td>
+                                        <td className="px-3 py-2 text-gray-700">
+                                            <div className="">
+                                                <div className="flex gap-2">
+                                                    <p className="text-[12px] text-gray-500 font-[600] tracking-tighter">Payment ID :</p>
+                                                    <div className="flex items-center gap-2 group">
+                                                        <span className="text-[12px]">{row.paymentId || "N/A"}</span>
+                                                        {row.paymentId && (
+                                                            <button onClick={() => handleCopy(row.paymentId, row._id + '_pay')}>
+                                                                {copiedId === row._id + '_pay' ? <FiCheck className="w-3 h-3 text-[#0CBB7D]" /> : <FiCopy className="w-3 h-3 text-gray-300 transition-opacity opacity-0 group-hover:opacity-100" />}
+                                                            </button>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                {row.orderId && (
+                                                    <div className="flex gap-2">
+                                                        <p className="text-[12px] text-gray-500 font-[600] tracking-tighter">Order ID :</p>
+                                                        <span className="text-[12px] text-gray-700">{row.orderId}</span>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </td>
+                                    </tr>
+                                ))
+                            )}
+                        </tbody>
+                    </table>
                 </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center text-gray-500 py-4">No data found</div>
-        )}
-      </div>
+            </div>
 
+            {/* Mobile Card View */}
+            <div className="md:hidden flex flex-col">
+                <div className="p-2 gap-2 bg-white rounded-lg flex justify-between items-center border border-gray-100 mb-2 shadow-sm">
+                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 bg-gray-100 flex-1">
+                        <input
+                            type="checkbox"
+                            checked={transactions.length > 0 && selectedTransactions.length === transactions.length}
+                            onChange={handleSelectAll}
+                            className="cursor-pointer accent-[#0CBB7D] w-4"
+                        />
+                        <span className="text-[10px] font-[600] text-gray-700 tracking-wider">Select All</span>
+                    </div>
 
+                    <div className="relative" ref={actionRef}>
+                        <button
+                            disabled={selectedTransactions.length === 0}
+                            onClick={() => setActionOpen(!actionOpen)}
+                            className={`h-[30px] px-3 rounded-lg flex items-center justify-center border transition-all ${selectedTransactions.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] bg-white shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+                                }`}
+                        >
+                            <FaBars className="w-3 h-3" />
+                        </button>
+                        {actionOpen && (
+                            <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[10px] z-[100] animate-popup-in overflow-hidden">
+                                <div
+                                    className="px-3 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600 border-b border-gray-50"
+                                    onClick={handleExport}
+                                >
+                                    Export Excel
+                                </div>
+                                <div
+                                    className="px-3 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                                    onClick={() => {
+                                        setShowForm(true);
+                                        setActionOpen(false);
+                                    }}
+                                >
+                                    Wallet Updation
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+                <div className="h-[calc(100vh-280px)] overflow-y-auto space-y-2">
+                    {loading ? (
+                        <div className="flex justify-center py-10">
+                            <ThreeDotLoader />
+                        </div>
+                    ) : transactions.length > 0 ? (
+                        transactions.map((row) => (
+                            <div key={row._id} className="bg-white rounded-lg shadow-sm p-3 border border-gray-200 text-[10px] animate-popup-in">
+                                <div className="flex justify-between mb-2 items-start relative">
+                                    <div className="absolute top-2.5">
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedTransactions.includes(row._id)}
+                                            onChange={() => handleCheckboxChange(row._id)}
+                                            className="cursor-pointer accent-[#0CBB7D] w-4"
+                                        />
+                                    </div>
+                                    <div className="pl-6 space-y-1">
+                                        <div className="flex items-center gap-1 font-[600] text-gray-700">
+                                            <span className="text-[#0CBB7D] truncate max-w-[120px] font-bold">{row.transactionId}</span>
+                                            <button onClick={() => handleCopy(row.transactionId, row._id + '_txn_mobile')}>
+                                                {copiedId === row._id + '_txn_mobile' ? <FiCheck className="w-3 h-3 text-[#0CBB7D]" /> : <FiCopy className="w-3 h-3 text-gray-400" />}
+                                            </button>
+                                        </div>
+                                        <p className="text-gray-500 text-[10px] leading-none uppercase tracking-tighter">
+                                            {dayjs(row.date).format("DD MMM YYYY, hh:mm A")}
+                                        </p>
+                                    </div>
+                                    <div className="text-right">
+                                        <p className="font-bold text-[#0CBB7D] text-[10px]">₹{Number(row.amount).toFixed(2)}</p>
+                                        <span className={`px-2 py-0.5 rounded text-[10px] inline-block ${row.status === "success" ? "bg-green-100 text-[#0CBB7D]" : "bg-red-100 text-red-600"}`}>
+                                            {row.status}
+                                        </span>
+                                    </div>
+                                </div>
 
+                                <div className="grid grid-cols-2 gap-2 mb-2 px-1">
+                                    <div className="space-y-0.5">
+                                        <p className="text-gray-500 text-[10px] tracking-tight">Payment ID</p>
+                                        <div className="flex items-center gap-1">
+                                            <p className="text-gray-700 font-bold truncate max-w-[100px] text-[10px]">{row.paymentId || "N/A"}</p>
+                                            {row.paymentId && (
+                                                <button onClick={() => handleCopy(row.paymentId, row._id + '_pay_mobile')}>
+                                                    {copiedId === row._id + '_pay_mobile' ? <FiCheck className="w-2.5 h-2.5 text-[#0CBB7D]" /> : <FiCopy className="w-2.5 h-2.5 text-gray-400" />}
+                                                </button>
+                                            )}
+                                        </div>
+                                    </div>
+                                    {row.orderId && (
+                                        <div className="text-right space-y-0.5">
+                                            <p className="text-gray-500 text-[10px] tracking-tight">Order ID</p>
+                                            <p className="text-gray-700 font-bold truncate text-[10px]">{row.orderId}</p>
+                                        </div>
+                                    )}
+                                </div>
 
+                                <div className="mt-2 pt-2 border-t border-gray-50 flex items-center justify-between px-1">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center font-bold text-[#0CBB7D] text-[10px] shrink-0 border border-gray-300">
+                                            {row.user.name?.charAt(0)}
+                                        </div>
+                                        <div className="min-w-0 leading-tight">
+                                            <p className="font-bold text-gray-700 text-[10px] truncate">{row.user.name}</p>
+                                            <p className="text-gray-500 text-[10px] truncate">{row.user.email}</p>
+                                            {/* <p className="text-gray-400 text-[9px] truncate">{row.user.userId}</p> */}
+                                        </div>
+                                    </div>
+                                    <p className="text-[#0CBB7D] font-medium text-[10px] tracking-widest shrink-0">
+                                        {row.user.userId}
+                                    </p>
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="text-center py-10">
+                            <img src={NotFound} alt="No Data" className="w-40 h-40 mx-auto opacity-50 mb-2" />
+                            <p className="text-gray-400 font-medium">No records found</p>
+                        </div>
+                    )}
+                </div>
+            </div>
 
-      {/* Limit Selector & Pagination */}
-      {/* Pagination Controls */}
-      <div className="flex justify-between items-center mt-4">
-        <div className="text-[12px] text-gray-600">
-          Showing {(page - 1) * limit + 1} to {Math.min(page * limit, total)} of {total} results
+            <PaginationFooter
+                page={page}
+                setPage={setPage}
+                totalPages={Math.ceil(total / limit)}
+                limit={limit}
+                setLimit={setLimit}
+            />
+
+            <WalletHistoryFilterPanel
+                isOpen={isFilterPanelOpen}
+                onClose={() => setIsFilterPanelOpen(false)}
+                selectedUserId={selectedUserId}
+                transactionId={transactionId}
+                paymentId={paymentId}
+                status={status}
+                onClearFilters={handleClearFilters}
+                onApplyFilters={(filters) => {
+                    setSelectedUserId(filters.selectedUserId);
+                    setTransactionId(filters.transactionId);
+                    setPaymentId(filters.paymentId);
+                    setStatus(filters.status);
+                    setPage(1);
+                    setIsFilterPanelOpen(false);
+                }}
+            />
+
+            <AnimatePresence>
+                {showForm && (
+                    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[100] flex justify-center items-center p-4">
+                        <motion.div
+                            className="bg-white rounded-2xl shadow-2xl w-full max-w-4xl p-0 relative overflow-hidden"
+                            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 20, scale: 0.95 }}
+                            transition={{ duration: 0.3, ease: "easeOut" }}
+                        >
+                            <div className="flex items-center justify-between p-4 border-b">
+                                <h2 className="text-[16px] font-bold text-gray-700 tracking-tight">Wallet Updation</h2>
+                                <button
+                                    onClick={() => setShowForm(false)}
+                                    className="p-2 hover:bg-gray-100 rounded-full transition-all text-gray-400 hover:text-red-500"
+                                >
+                                    <X className="w-5 h-5" />
+                                </button>
+                            </div>
+                            <div className="p-4 overflow-y-auto max-h-[80vh]">
+                                <WalletHistoryForm onClose={() => setShowForm(false)} />
+                            </div>
+                        </motion.div>
+                    </div>
+                )}
+            </AnimatePresence>
         </div>
-        <div className="flex space-x-2 items-center">
-          <button
-            onClick={() => setPage((prev) => Math.max(1, prev - 1))}
-            disabled={page === 1}
-            className="px-3 py-1 border text-[12px] rounded disabled:opacity-50"
-          >
-            Prev
-          </button>
-          <span className="text-[12px]">{page}</span>
-          <button
-            onClick={() => setPage((prev) => (prev * limit < total ? prev + 1 : prev))}
-            disabled={page * limit >= total}
-            className="px-3 py-1 border text-[12px] rounded disabled:opacity-50"
-          >
-            Next
-          </button>
-          <select
-            value={limit}
-            onChange={(e) => {
-              const val = e.target.value;
-              setLimit(val === "all" ? total : parseInt(val));
-              setPage(1);
-            }}
-            className="ml-2 p-1 border rounded text-[12px]"
-          >
-            {pageOptions.map((opt) => (
-              <option key={opt} value={opt}>
-                {opt}
-              </option>
-            ))}
-          </select>
-        </div>
-      </div>
-      <AnimatePresence>
-        {showForm && (
-          <div className="fixed inset-0 bg-black bg-opacity-30 z-50 flex justify-center items-center">
-            <motion.div
-              className="bg-white rounded-lg shadow-lg w-[90%] max-w-4xl p-4 relative"
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.25 }}
-            >
-              {/* Close button top-right */}
-              <button
-                onClick={() => setShowForm(false)}
-                className="absolute top-2 right-3 text-2xl font-bold text-gray-600 hover:text-red-500"
-              >
-                ×
-              </button>
-
-              <WalletHistoryForm onClose={() => setShowForm(false)} />
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
-
-    </div >
-  );
+    );
 };
 
 export default WalletHistorys;

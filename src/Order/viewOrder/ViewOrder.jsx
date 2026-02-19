@@ -222,10 +222,10 @@ const ViewOrder = ({ isSidebarAdmin }) => {
 
   if (error) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50 p-4">
-        <div className="text-red-500 text-center bg-white p-8 rounded-lg shadow-lg">
+      <div className="flex items-center justify-center p-4">
+        <div className="text-red-500 text-center p-8 rounded-lg">
           <p className="text-lg font-semibold mb-2">Error</p>
-          <p className="text-sm">{error}</p>
+          <p className="text-sm">No Order Found</p>
           <button
             onClick={() => window.history.back()}
             className="mt-4 px-4 py-2 bg-[#0CBB7D] text-white rounded-lg hover:opacity-90"
@@ -239,10 +239,10 @@ const ViewOrder = ({ isSidebarAdmin }) => {
 
   if (!order) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex items-center justify-center">
         <div className="text-center">
           <Loader />
-          <p className="mt-4 text-gray-600 text-sm">Loading order details...</p>
+          {/* <p className="mt-4 text-gray-600 text-sm">Loading order details...</p> */}
         </div>
       </div>
     );

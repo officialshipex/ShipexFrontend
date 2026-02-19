@@ -100,11 +100,11 @@ const UserFilter = ({ onUserSelect, clearTrigger }) => {
 
     return (
         <div className="z-50">
-            <div className="w-full md:w-[250px] relative ml-auto">
+            <div className="w-full relative ml-auto">
                 <input
                     type="text"
                     placeholder="Search by Name, Email, or Contact"
-                    className="w-full h-9 py-2 px-3 text-[12px] font-[600] border rounded-lg placeholder:text-gray-400 placeholder:font-[600] focus:outline-none focus:border-[#0CBB7D] transition-colors"
+                    className="w-full h-9 py-2 px-3 text-[12px] font-[600] border border-gray-300 rounded-lg placeholder:text-gray-400 placeholder:font-[600] focus:outline-none focus:border-[#0CBB7D] transition-colors"
                     onChange={(e) => {
                         const value = e.target.value;
                         setSearchUser(value);

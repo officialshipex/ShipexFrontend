@@ -1,36 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from "axios";
-import { useEffect } from "react";
 import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import Modal from "react-modal";
-// const Razorpay = require("razorpay");
-// import { toast } from "react-toastify";
 import { deleteSession } from '../utils/session';
-import {Notification} from "../Notification"
-
-
+import { Notification } from "../Notification";
+import { FiCreditCard, FiArrowLeft, FiActivity } from "react-icons/fi";
 
 const RechargeWallet = () => {
   const [amount, setAmount] = useState(1000);
-  const [coupon, setCoupon] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState(0);
-  const [showCoupons, setShowCoupons] = useState(false);
   const [user, setUser] = useState(null);
-  const [cashfree, setCashfree] = useState(null);
   const [balance, setBalance] = useState(null);
   const [walletId, setWalletId] = useState(null);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const navigate = useNavigate();
 
+  // Function to load Razorpay script dynamically
+  const loadRazorpayScript = () => {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.async = true;
+      script.onload = () => resolve(true);
+      script.onerror = () => reject(new Error("Failed to load Razorpay SDK"));
+      document.body.appendChild(script);
+    });
+  };
+
   const handlePayment = async () => {
     if (amount < 500) {
-      Notification("Minimum amount should be 500","warning");
+      Notification("Minimum amount should be 500", "warning");
       return;
     }
-
-
 
     try {
       if (!window.Razorpay) {
@@ -40,7 +41,7 @@ const RechargeWallet = () => {
       const token = Cookies.get("session");
       const { data } = await axios.post(
         `${REACT_APP_BACKEND_URL}/razorpay/create-order`,
-        { amount, walletId }, // ✅ Correct placement of body
+        { amount, walletId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -61,49 +62,29 @@ const RechargeWallet = () => {
         name: "Shipex India",
         description: "Live Transaction",
         order_id: order_id,
-        theme: { color: "#3399cc" },
+        theme: { color: "#0CBB7D" },
       };
 
       const razorpay = new window.Razorpay(options);
       razorpay.open();
     } catch (error) {
-      deleteSession()
+      deleteSession();
       console.error("Payment process failed:", error);
-      Notification("Something went wrong. Please try again.","error");
+      Notification("Something went wrong. Please try again.", "error");
     }
   };
-
-
-
-  // ✅ Function to load Razorpay script dynamically
-  const loadRazorpayScript = () => {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.async = true;
-      script.onload = () => resolve(true);
-      script.onerror = () => reject(new Error("Failed to load Razorpay SDK"));
-      document.body.appendChild(script);
-    });
-  };
-
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
         const token = Cookies.get("session");
-        // console.log(token)
-        if (!token) {
-          // navigate("/login");
-          return;
-        }
+        if (!token) return;
 
         const response = await axios.get(`${REACT_APP_BACKEND_URL}/user/getUserDetails`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(response.data)
 
         if (!response.data.user) {
           navigate('/login');
@@ -111,172 +92,125 @@ const RechargeWallet = () => {
           setUser(response.data.user);
           setBalance(response.data.user.Wallet.balance);
           setWalletId(response.data.user.Wallet._id);
-          // console.log(user)
-          // console.log(balance)
-          // console.log(walletId)
         }
 
       } catch (err) {
         console.error("Error fetching user:", err);
-        // navigate('/login');
       }
     };
 
     fetchUser();
-
-
-  }, [navigate, balance]);
+  }, [navigate, REACT_APP_BACKEND_URL]);
 
   const codRemittance = () => {
-    navigate("/dashboard/CodRemittanceRecharge")
+    navigate("/dashboard/CodRemittanceRecharge");
   }
+
   const handleAmountChange = (value) => {
     setAmount(value);
-  };
-
-  const handleCouponApply = () => {
-    setAppliedCoupon(0);
   };
 
   return (
     <Modal
       isOpen={true}
       onRequestClose={() => navigate(-1)}
-      className="modal-content bg-white p-6 md:p-6 rounded-lg shadow-2xl w-[90%] sm:w-[80%] md:w-[50%] lg:w-[40%] xl:w-[30%] max-h-[85vh] overflow-hidden relative mt-14"
-      overlayClassName="fixed inset-0 bg-transparent backdrop-blur-lg flex items-center justify-center"
-      style={{ fontFamily: "__Archivo_8dfe08, __Archivo_Fallback_8dfe08, Helvetica, Arial, sans-serif" }}
+      className="modal-content bg-white rounded-2xl shadow-2xl w-[95%] sm:w-[90%] md:w-[60%] lg:w-[45%] xl:w-[35%] max-h-[90vh] overflow-hidden relative outline-none page-slide-in pb-6"
+      overlayClassName="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999]"
     >
+      {/* Header */}
+      <div className="bg-[#0CBB7D] p-6 text-center relative">
+        <button
+          onClick={() => navigate(-1)}
+          className="absolute left-6 top-6 text-white hover:text-green-100 transition-colors"
+        >
+          <FiArrowLeft size={18} />
+        </button>
+        <h2 className="sm:text-[14px] text-[12px] font-bold text-white mb-2">Add Money to Wallet</h2>
+        {/* <p className="text-green-100 text-[12px]">Secure & Instant Recharge</p> */}
 
-
-      {/* Close Button (Always Visible) */}
-      <button
-        onClick={() => navigate(-1)}
-        className="absolute top-3 right-3 text-[#2d054b] hover:text-gray-900 text-2xl focus:outline-none block"
-      >
-        &times;
-      </button>
-
-      {/* Heading */}
-      <div className="sticky top-0 bg-white z-10 pb-2">
-        <h2 className="text-lg md:text-xl font-semibold text-[#2d054b] mb-3 text-center">
-          Recharge Your Wallet
-        </h2>
-        <p className="text-[#2d054b] mb-4 text-sm text-center">
-          Current wallet amount{" "}
-          <span className="text-green-500 font-semibold">
-            ₹{(balance || 0).toFixed(2)}
-          </span>
-        </p>
-
+        {/* Wallet Balance Card - Floating effect */}
+        <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-[90%] bg-white rounded-xl shadow-lg p-4 flex justify-between items-center z-10">
+          <div>
+            <p className="text-gray-500 text-[10px] font-semibold uppercase tracking-wide">Current Balance</p>
+            <h3 className="sm:text-[14px] text-[12px] font-bold text-gray-800">₹ {(balance || 0).toFixed(2)}</h3>
+          </div>
+          <div className="bg-green-50 p-3 rounded-full">
+            <FiCreditCard className="text-[#0CBB7D] sm:text-[14px] text-[12px]" />
+          </div>
+        </div>
       </div>
 
-      {/* Scrollable Content */}
-      <div className="max-h-[70vh] overflow-y-auto px-2 pb-[4rem] md:pb-0">
-        {/* Amount Input */}
-        <div className="bg-green-50 p-2 rounded-lg mb-4">
-          <label className="block text-[#2d054b] font-medium mb-1 text-sm text-center">
-            Enter Amount (Multiples of 500)
-          </label>
-          <input
-            type="text"
-            className="w-full p-1.5 border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#2d054b]"
-            min={500}
-            max={5000000}
-            step={100}
-            value={amount}
-            onChange={(e) => handleAmountChange(Number(e.target.value))}
-          />
-          <p className="text-[#0CBB7D] text-xs mt-1 text-center">Min: ₹ 500 | Max: ₹ 5000000</p>
+      {/* Main Content */}
+      <div className="pt-12 px-6 pb-2 h-full overflow-y-auto custom-scrollbar">
+        <div className="space-y-4">
 
-          {/* Predefined Amount Buttons */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
+          {/* Amount Input Section */}
+          <div className="space-y-2">
+            <label className="text-gray-700 font-semibold sm:text-[12px] text-[10px] block">
+              Enter Amount
+            </label>
+            <div className="relative">
+              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold sm:text-[14px] text-[12px]">₹</span>
+              <input
+                type="number"
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg sm:text-[14px] text-[12px] font-bold text-gray-700 focus:outline-none focus:border-[#0CBB7D] focus:ring-1 focus:ring-green-50 transition-all placeholder-gray-300"
+                min={500}
+                value={amount}
+                onChange={(e) => handleAmountChange(Number(e.target.value))}
+                placeholder="0"
+              />
+            </div>
+            <p className={`text-[10px] flex items-center gap-1 ${amount < 500 ? "text-red-500" : "text-gray-400"}`}>
+              {amount < 500 && <FiActivity />} Minimum amount required is ₹ 500
+            </p>
+          </div>
+
+          {/* Quick Amount Chips */}
+          <div className="grid grid-cols-4 gap-2">
             {[500, 1000, 2500, 5000].map((val) => (
               <button
                 key={val}
-                className={`px-3 py-2 rounded-lg border text-sm ${amount === val ? 'bg-[#0CBB7D] text-white' : 'bg-white text-[#2d054b]'
-                  } focus:outline-none`}
                 onClick={() => handleAmountChange(val)}
+                className={`py-2 px-1 rounded-lg sm:text-[12px] text-[10px] font-semibold transition-all duration-200 border ${amount === val
+                    ? "bg-[#0CBB7D] text-white border-[#0CBB7D] shadow-md transform scale-105"
+                    : "bg-white text-gray-600 border-gray-200 hover:border-[#0CBB7D] hover:bg-green-50"
+                  }`}
               >
                 ₹ {val}
               </button>
             ))}
           </div>
-        </div>
 
-        {/* Coupon Section */}
-        {/* <div className="mb-4">
-          <label className="block text-[#2d054b] font-medium mb-1 text-sm text-center">
-            Have a coupon?
-          </label>
-          <div className="flex flex-col md:flex-row gap-2">
-            <input
-              type="text"
-              placeholder="Enter coupon"
-              value={coupon}
-              onChange={(e) => setCoupon(e.target.value)}
-              className="flex-1 p-2 border rounded-lg text-sm focus:outline-none focus:ring-1 focus:ring-[#2d054b]"
-            />
+          {/* Action Buttons */}
+          <div className="pt-4 space-y-2">
             <button
-              onClick={handleCouponApply}
-              className="bg-[#0CBB7D] text-white px-6 py-2 w-full md:w-auto rounded-lg focus:outline-none text-sm text-center"
+              onClick={handlePayment}
+              disabled={amount < 500}
+              className={`w-full py-2 rounded-lg font-bold sm:text-[12px] text-[10px] text-white shadow-sm transition-all duration-300 transform active:scale-95 ${amount < 500
+                  ? "bg-gray-300 cursor-not-allowed shadow-none"
+                  : "bg-[#0CBB7D] hover:bg-[#0aa66d] hover:shadow-xl shadow-green-200"
+                }`}
             >
-              Apply
+              Proceed to Pay ₹ {amount || 0}
+            </button>
+
+            <div className="relative flex items-center py-2">
+              <div className="flex-grow border-t border-gray-100"></div>
+              <span className="flex-shrink-0 mx-4 text-gray-400 text-[10px] font-medium uppercase">Or</span>
+              <div className="flex-grow border-t border-gray-100"></div>
+            </div>
+
+            <button
+              onClick={codRemittance}
+              className="w-full py-2 rounded-lg font-bold sm:text-[12px] text-[10px] text-[#F59E0B] bg-yellow-50 border border-yellow-100 hover:bg-yellow-100 transition-colors duration-300 flex items-center justify-center gap-2"
+            >
+              <span>Recharge via COD Remittance</span>
             </button>
           </div>
-          <button
-            className="text-[#0CBB7D] mt-2 text-sm focus:outline-none"
-            onClick={() => setShowCoupons(!showCoupons)}
-          >
-            View Available coupons {showCoupons ? '▲' : '▼'}
-          </button>
-          {showCoupons && (
-            <div className="mt-2 p-2 bg-gray-100 text-[#0CBB7D] rounded-lg text-sm">
-              <p>No coupons available</p>
-            </div>
-          )}
-        </div> */}
 
-
-        {/* Summary Section */}
-        {/* <div className="bg-purple-50 p-6 rounded-lg mb-4 text-[13px]">
-          <div className="flex justify-between text-[#2d054b] mb-2">
-            <span>Recharge Amount</span>
-            <span>₹ {amount}</span>
-          </div>
-          <div className="flex justify-between text-[#2d054b] mb-2">
-            <span>Coupon Discount</span>
-            <span>₹ {appliedCoupon}</span>
-          </div>
-          <div className="flex justify-between font-medium text-[#2d054b]">
-            <span>Total to be credited</span>
-            <span>₹ {amount - appliedCoupon}</span>
-          </div>
-        </div> */}
-
-        {/* Buttons (Not Fixed, Slightly Cut in Mobile) */}
-        <button
-          onClick={handlePayment}
-          // disabled={amount <= 1}
-          className={`w-full p-2 rounded-lg font-medium text-sm focus:outline-none focus:ring-2 ${amount < 500
-            ? 'bg-gray-400 text-white cursor-not-allowed'
-            : 'bg-[#0CBB7D] text-white hover:bg-[#0aa66d]'
-            }`}
-        >
-          Continue to Payment
-        </button>
-        <button
-          onClick={codRemittance}
-          className="w-full mt-2 p-2 bg-yellow-200 rounded-lg font-[600] text-[12px] focus:outline-none focus:ring-2 text-gray-700 hover:bg-yellow-300"
-        >
-          Recharge from COD Remittance
-        </button>
-
-
+        </div>
       </div>
     </Modal>
-
-
-
   );
 };
 

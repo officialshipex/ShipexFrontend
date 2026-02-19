@@ -1,433 +1,372 @@
 import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
-import { FaCalendarAlt, FaWallet, FaRupeeSign, FaFilter } from "react-icons/fa";
+import { FaCalendarAlt, FaRupeeSign, FaFilter, FaBars } from "react-icons/fa";
+import dayjs from "dayjs";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
-import { FiMoreHorizontal, FiArrowLeft, FiArrowRight } from "react-icons/fi";
+import { ChevronDown, Filter } from "lucide-react";
 import ThreeDotLoader from "../../Loader";
 import Cookies from "js-cookie";
-import { Notification } from "../../Notification"
+import { Notification } from "../../Notification";
 import PaginationFooter from "../../Common/PaginationFooter";
 import DateFilter from "../../filter/DateFilter";
-import OrderAwbFilter from "../../filter/OrderAwbFilter";
 import { getCarrierLogo } from "../../Common/getCarrierLogo";
 import NotFound from "../../assets/nodatafound.png";
+import { FiCopy, FiCheck } from "react-icons/fi";
+import PassbookFilterPanel from "../../Common/PassbookFilterPanel";
+import * as XLSX from "xlsx";
+import { saveAs } from "file-saver";
 
-const Passbooks = () => {
+const Passbooks = ({
+  setFiltersApplied,
+  clearFiltersTrigger,
+  setClearFiltersTrigger,
+}) => {
   const [transactions, setTransactions] = useState([]);
-  const [userQuery, setUserQuery] = useState("");
-  const [userSuggestions, setUserSuggestions] = useState([]);
-  const [selectedUserId, setSelectedUserId] = useState(null);
   const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(20);
-  const [totalPages, setTotalPages] = useState(1);
-  const [showCategoryDropdown, setShowCategoryDropdown] = useState(false)
+  const [totalPages, setTotalPages] = useState(0);
   const [loading, setLoading] = useState(true);
   const [dateRange, setDateRange] = useState(null);
-  const categoryRef = useRef()
-  const navigate = useNavigate()
-  const searchTypeRef = useRef(null);
-  const descriptionRef = useRef();
-  const [showDescriptionDropdown, setShowDescriptionDropdown] = useState(false)
-  const [description, setDescription] = useState("")
-  const { id } = useParams()
-  const [searchBy, setSearchBy] = useState("awbNumber");
-  const [inputValue, setInputValue] = useState("");
-  const [showAwbDropdown, setShowAwbDropdown] = useState(false);
-  const awbFilterRef = useRef(null);
-  const awbFilterButtonRef = useRef(null);
-  const [showMobileFilters, setShowMobileFilters] = useState(false);
+  const [awbNumber, setAwbNumber] = useState("");
+  const [orderId, setOrderId] = useState("");
+  const [copiedId, setCopiedId] = useState(null);
+  const [clearTrigger, setClearTrigger] = useState(false);
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
+  const [selectedTransactions, setSelectedTransactions] = useState([]);
+
+  const desktopActionRef = useRef();
+  const mobileActionRef = useRef();
+  const navigate = useNavigate();
+  const { id } = useParams();
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (categoryRef.current && !categoryRef.current.contains(event.target) && searchTypeRef.current && !searchTypeRef.current.contains(event.target) && descriptionRef.current && !descriptionRef.current.contains(event.target)) {
-        setShowCategoryDropdown(false);
-        setShowDescriptionDropdown(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
+    if (clearFiltersTrigger) {
+      handleClearFilters();
+      if (setFiltersApplied) setFiltersApplied(false);
+      if (setClearFiltersTrigger) setClearFiltersTrigger(false);
+    }
+  }, [clearFiltersTrigger]);
 
   const fetchTransactions = async () => {
     try {
       const token = Cookies.get("session");
-      setLoading(true)
+      if (!token) return;
+
+      setLoading(true);
       const params = {
         id,
         category,
         description,
         page,
         limit,
+        awbNumber,
+        orderId,
       };
 
       if (dateRange?.[0]) {
-        params.fromDate = dateRange[0].startDate.toISOString();
-        params.toDate = dateRange[0].endDate.toISOString();
-      }
-
-      if (inputValue?.trim()) {
-        params[searchBy] = inputValue.trim();
+        params.fromDate = dayjs(dateRange[0].startDate).toISOString();
+        params.toDate = dayjs(dateRange[0].endDate).toISOString();
       }
 
       const response = await axios.get(
         `${REACT_APP_BACKEND_URL}/order/passbook`,
         {
           headers: { Authorization: `Bearer ${token}` },
-          params: params
+          params: params,
         }
       );
-      // console.log("trans", response.data)
       setTransactions(response.data.results || []);
-      setTotalPages(response.data.page || 0);
-      setLoading(false)
+      // The seller API returns `page` as total pages in some components, 
+      // but let's check what it actually returns for passbook.
+      // Original code: setTotalPages(response.data.page || 0);
+      // Wait, if it returns `page` as total pages, I'll use it.
+      // Actually, admin uses response.data.total.
+      // Seller original: response.data.page
+      setTotalPages(response.data.page || 0); // In seller code, 'page' seems to be totalPages
+      setLoading(false);
     } catch (error) {
       Notification("Error fetching transactions", "error");
+      setLoading(false);
     }
   };
 
+  useEffect(() => {
+    fetchTransactions();
+  }, [dateRange, page, limit, category, description, awbNumber, orderId]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (desktopActionRef.current && !desktopActionRef.current.contains(event.target)) setDesktopDropdownOpen(false);
+      if (mobileActionRef.current && !mobileActionRef.current.contains(event.target)) setMobileDropdownOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleClearFilters = () => {
+    setDateRange(null);
+    setCategory("");
+    setDescription("");
+    setAwbNumber("");
+    setOrderId("");
+    setClearTrigger((prev) => !prev);
+    setPage(1);
+  };
 
   const handleTrackingByAwb = (awb) => {
     navigate(`/dashboard/order/tracking/${awb}`);
   };
 
-  useEffect(() => {
-    fetchTransactions();
-  }, [dateRange, inputValue, searchBy, page, limit, category, description]);
+  const handleCopy = (text, id) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
 
+  const handleSelectAll = () => {
+    if (selectedTransactions.length === transactions.length && transactions.length > 0) {
+      setSelectedTransactions([]);
+    } else {
+      setSelectedTransactions(transactions.map((t) => t.id || t._id));
+    }
+  };
 
+  const handleCheckboxChange = (id) => {
+    setSelectedTransactions((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
 
+  const handleExport = async () => {
+    if (selectedTransactions.length === 0) {
+      Notification("Please select transactions to export.", "info");
+      return;
+    }
+
+    const dataToExport = transactions
+      .filter((t) => selectedTransactions.includes(t.id || t._id))
+      .map((t) => ({
+        Date: dayjs(t.date).format("DD MMM YYYY hh:mm A"),
+        "Order ID": t.orderId,
+        "AWB Number": t.awb_number,
+        Category: t.category,
+        Amount: t.amount,
+        "Available Balance": t.balanceAfterTransaction,
+        Description: t.description,
+      }));
+
+    const worksheet = XLSX.utils.json_to_sheet(dataToExport);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Passbook");
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: "application/octet-stream" });
+    saveAs(data, `Passbook_${dayjs().format("YYYY-MM-DD")}.xlsx`);
+
+    Notification("Export successful!", "success");
+    setDesktopDropdownOpen(false);
+    setMobileDropdownOpen(false);
+  };
+
+  const isAnyFilterApplied = dateRange || category || description || awbNumber || orderId;
 
   return (
     <div className="space-y-2 w-full">
       {/* Desktop Filter Section */}
-      <div className="hidden sm:flex gap-2 w-full relative justify-between">
-        <div className="flex sm:flex-row w-full flex-col gap-2">
-          <OrderAwbFilter
-            searchBy={searchBy}
-            setSearchBy={setSearchBy}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            showDropdown={showAwbDropdown}
-            setShowDropdown={setShowAwbDropdown}
-            dropdownRef={awbFilterRef}
-            buttonRef={awbFilterButtonRef}
-            options={[
-              { label: "AWB", value: "awbNumber" },
-              { label: "Order ID", value: "orderId" },
-            ]}
-            getPlaceholder={() =>
-              searchBy === "orderId"
-                ? "Search by Order ID"
-                : "Search by AWB Number"
-            }
-            width="w-full md:w-[350px]"
+      <div className="hidden md:flex gap-2 relative items-center mb-2">
+        <div className="w-[200px]">
+          <DateFilter
+            onDateChange={(range) => {
+              setDateRange(range);
+              setPage(1);
+            }}
+            clearTrigger={clearTrigger}
           />
-          <div className="flex w-full flex-col sm:flex-row sm:justify-between gap-2">
-            <div className="flex gap-2 w-full sm:w-auto">
-              {/* Date Range Dropdown */}
-              <DateFilter
-                onDateChange={(range) => {
-                  setDateRange(range);
-                  setPage(1);
-                }}
-              />
-              {/* Category Filter */}
-              <div className="relative" ref={categoryRef}>
-                <button
-                  onClick={() => setShowCategoryDropdown((prev) => !prev)}
-                  className={`sm:w-[100px] w-full py-2 px-3 border text-gray-400 rounded-lg text-left text-[12px] bg-white font-[600] flex justify-between items-center ${showCategoryDropdown ? "border-[#0CBB7D]" : ""}`}
-                  type="button"
-                >
-                  <span>{category || "Category"}</span>
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${showCategoryDropdown ? "rotate-180" : ""}`}
-                  />
-                </button>
+        </div>
 
-                {showCategoryDropdown && (
-                  <ul className="absolute sm:w-[100px] z-30 w-full mt-1 bg-white border rounded-lg text-gray-500 font-[600] overflow-y-auto text-[12px]">
-                    {[
-                      "credit", "debit"
-                    ].map((s) => (
-                      <li
-                        key={s || "empty"}
-                        className={`px-3 py-2 cursor-pointer hover:bg-green-100 ${category === s ? "bg-gray-100 font-medium" : ""}`}
-                        onClick={() => {
-                          setCategory(s);
-                          setShowCategoryDropdown(false);
-                        }}
-                      >
-                        {s || "Category"}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
-            </div>
+        <button
+          onClick={() => setIsFilterPanelOpen(true)}
+          className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap min-w-[120px] h-9"
+        >
+          <Filter className="w-4 h-4 text-[#0CBB7D]" />
+          More Filters
+        </button>
 
-            <div className="flex w-full gap-2 justify-between">
-              {/* Description Filter */}
-              <div className="relative w-full" ref={descriptionRef}>
-                <button
-                  onClick={() => setShowDescriptionDropdown((prev) => !prev)}
-                  className={`sm:w-[200px] w-full py-2 px-3 border text-gray-400 rounded-lg text-left text-[12px] bg-white font-[600] flex justify-between items-center ${showDescriptionDropdown ? "border-[#0CBB7D]" : ""}`}
-                  type="button"
-                >
-                  <span>{description || "Description"}</span>
-                  <ChevronDown
-                    className={`w-4 h-4 transition-transform duration-200 ${showDescriptionDropdown ? "rotate-180" : ""}`}
-                  />
-                </button>
+        <div className="flex items-center gap-2 ml-auto" ref={desktopActionRef}>
+          {isAnyFilterApplied && (
+            <button
+              onClick={handleClearFilters}
+              className="text-[12px] text-red-500 hover:underline font-[600] px-2 whitespace-nowrap"
+            >
+              Clear All Filters
+            </button>
+          )}
 
-                {showDescriptionDropdown && (
-                  <ul className="absolute sm:w-[200px] z-30 w-full mt-1 bg-white border rounded-lg text-gray-500 font-[600] overflow-y-auto text-[12px]">
-                    {[
-                      "Freight Charges Applied", "Freight Charges Received", "Auto-accepted Weight Dispute charge", "Weight Dispute Charges Applied", "COD Charges Received", "RTO Freight Charges Applied"
-                    ].map((s) => (
-                      <li
-                        key={s || "empty"}
-                        className={`px-3 py-2 cursor-pointer hover:bg-green-100 ${description === s ? "bg-gray-100 font-medium" : ""}`}
-                        onClick={() => {
-                          setDescription(s);
-                          setShowDescriptionDropdown(false);
-                        }}
-                      >
-                        {s || "Description"}
-                      </li>
-                    ))}
-                  </ul>
-                )}
+          <div className="relative">
+            <button
+              onClick={() => setDesktopDropdownOpen(!desktopDropdownOpen)}
+              disabled={selectedTransactions.length === 0}
+              className={`py-2 px-3 h-9 text-[12px] border rounded-lg font-[600] flex items-center gap-1 transition ${selectedTransactions.length === 0
+                ? "border-gray-300 text-gray-400 cursor-not-allowed"
+                : "text-[#0CBB7D] border-[#0CBB7D] bg-white hover:bg-green-50 shadow-sm"
+                }`}
+            >
+              <span>Actions</span>
+              <ChevronDown className={`w-4 h-4 transition-transform ${desktopDropdownOpen ? "rotate-180" : ""}`} />
+            </button>
+            {desktopDropdownOpen && (
+              <div className="absolute right-0 mt-1 w-40 bg-white border-2 border-gray-200 rounded-lg shadow-xl z-[100] animate-popup-in overflow-hidden">
+                <ul className="font-[600] text-[12px]">
+                  <li
+                    className="px-4 py-2 text-gray-700 hover:bg-green-50 cursor-pointer transition"
+                    onClick={() => {
+                      handleExport();
+                      setDesktopDropdownOpen(false);
+                    }}
+                  >
+                    Export Excel
+                  </li>
+                </ul>
               </div>
-              {/* Clear Button */}
-              <div>
-                <button
-                  onClick={() => {
-                    setSearchBy("awbNumber");
-                    setInputValue("");
-                    setDateRange(null);
-                    setCategory("");
-                    setDescription("");
-                    setPage(1);
-                  }}
-                  className="py-2 px-3 border rounded-lg bg-[#0CBB7D] text-[12px] font-[600] text-white hover:opacity-90 transition"
-                >
-                  Clear
-                </button>
-              </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
 
       {/* Mobile Filter Section */}
-      <div className="flex w-full flex-col sm:hidden">
-        {/* Top Row: Search + Filter Button */}
-        <div className="flex items-center justify-between gap-2 relative">
-          <OrderAwbFilter
-            searchBy={searchBy}
-            setSearchBy={setSearchBy}
-            inputValue={inputValue}
-            setInputValue={setInputValue}
-            showDropdown={showAwbDropdown}
-            setShowDropdown={setShowAwbDropdown}
-            dropdownRef={awbFilterRef}
-            buttonRef={awbFilterButtonRef}
-            options={[
-              { label: "AWB", value: "awbNumber" },
-              { label: "Order ID", value: "orderId" },
-            ]}
-            getPlaceholder={() =>
-              searchBy === "orderId"
-                ? "Search by Order ID"
-                : "Search by AWB Number"
-            }
-            heightClass="h-9"
-          />
-
-          {/* Filter Button */}
-          <button
-            className="px-3 flex items-center justify-center text-white bg-[#0CBB7D] h-[34px] rounded-lg transition text-[12px] font-[600]"
-            onClick={() => setShowMobileFilters((prev) => !prev)}
-          >
-            <FaFilter className="text-white" size={14} />
-          </button>
-        </div>
-
-        {/* Expandable Filters */}
-        <div
-          className={`transition-all duration-300 ease-in-out ${showMobileFilters ? "max-h-[1000px] overflow-visible" : "max-h-0 overflow-hidden"}`}
-        >
-          <div className="flex flex-col gap-2 mt-2 overflow-visible">
-            {/* Date Filter */}
+      <div className="flex w-full flex-col md:hidden mb-2">
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
             <DateFilter
               onDateChange={(range) => {
                 setDateRange(range);
                 setPage(1);
               }}
+              clearTrigger={clearTrigger}
             />
+          </div>
+          <button
+            onClick={() => setIsFilterPanelOpen(true)}
+            className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-[32px] min-w-[100px]"
+          >
+            <Filter className="w-3 h-3 text-[#0CBB7D]" />
+            More Filters
+          </button>
+        </div>
 
-            {/* Category Filter */}
-            <div className="relative" ref={categoryRef}>
-              <button
-                onClick={() => setShowCategoryDropdown((prev) => !prev)}
-                className={`w-full py-2 px-3 border text-gray-400 rounded-lg text-left text-[12px] bg-white font-[600] flex justify-between items-center ${showCategoryDropdown ? "border-[#0CBB7D]" : ""}`}
-                type="button"
-              >
-                <span>{category || "Category"}</span>
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform ${showCategoryDropdown ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              {showCategoryDropdown && (
-                <ul className="absolute z-40 w-full mt-1 bg-white border rounded-lg text-gray-500 font-[600] overflow-y-auto text-[12px] max-h-60">
-                  {[
-                    "credit", "debit"
-                  ].map((s) => (
-                    <li
-                      key={s || "empty"}
-                      className={`px-3 py-2 cursor-pointer hover:bg-green-100 ${category === s ? "bg-gray-100 font-medium" : ""}`}
-                      onClick={() => {
-                        setCategory(s);
-                        setShowCategoryDropdown(false);
-                      }}
-                    >
-                      {s || "Category"}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            {/* Description Filter */}
-            <div className="relative" ref={descriptionRef}>
-              <button
-                onClick={() => setShowDescriptionDropdown((prev) => !prev)}
-                className={`w-full py-2 px-3 border text-gray-400 rounded-lg text-left text-[12px] bg-white font-[600] flex justify-between items-center ${showDescriptionDropdown ? "border-[#0CBB7D]" : ""}`}
-                type="button"
-              >
-                <span>{description || "Description"}</span>
-                <ChevronDown
-                  className={`w-4 h-4 transition-transform ${showDescriptionDropdown ? "rotate-180" : ""}`}
-                />
-              </button>
-
-              {showDescriptionDropdown && (
-                <ul className="absolute z-40 w-full mt-1 bg-white border rounded-lg text-gray-500 font-[600] overflow-y-auto text-[12px] max-h-60">
-                  {[
-                    "Freight Charges Applied", "Freight Charges Received", "Auto-accepted Weight Dispute charge", "Weight Dispute Charges Applied", "COD Charges Received", "RTO Freight Charges Applied"
-                  ].map((s) => (
-                    <li
-                      key={s || "empty"}
-                      className={`px-3 py-2 cursor-pointer hover:bg-green-100 ${description === s ? "bg-gray-100 font-medium" : ""}`}
-                      onClick={() => {
-                        setDescription(s);
-                        setShowDescriptionDropdown(false);
-                      }}
-                    >
-                      {s || "Description"}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-
-            {/* Clear Button */}
+        {isAnyFilterApplied && (
+          <div className="flex justify-end pr-1 mt-1">
             <button
-              className="px-3 bg-[#0CBB7D] py-2 text-[12px] font-[600] rounded-lg text-white border hover:opacity-90 transition"
-              onClick={() => {
-                setSearchBy("awbNumber");
-                setInputValue("");
-                setDateRange(null);
-                setCategory("");
-                setDescription("");
-                setPage(1);
-                setShowMobileFilters(false);
-              }}
-              type="button"
+              onClick={handleClearFilters}
+              className="text-[11px] font-[600] text-red-500 hover:text-red-600 transition-colors tracking-tight"
             >
-              Clear
+              Clear All Filters
             </button>
           </div>
-        </div>
+        )}
       </div>
 
-      <div className="hidden md:block">
-        <div className="relative overflow-x-auto bg-white overflow-y-auto h-[calc(100vh-320px)]">
-          <table className="min-w-full text-[12px] text-left border-collapse">
-            <thead className="sticky top-0 z-20 bg-[#0CBB7D]">
-              <tr className="text-white font-[600]">
-                <th className="px-3 py-2">Date</th>
-                <th className="px-3 py-2">Order ID</th>
-                <th className="px-3 py-2">AWB</th>
-                <th className="px-3 py-2">Category</th>
-                <th className="px-3 py-2">Amount</th>
-                <th className="px-3 py-2 text-center">Available Balance</th>
-                <th className="px-3 py-2">Description</th>
+      {/* Desktop Table View */}
+      <div className="hidden md:block relative">
+        <div className="h-[calc(100vh-285px)] overflow-y-auto bg-white shadow-sm border rounded-lg">
+          <table className="min-w-full border-collapse text-[12px] text-left relative">
+            <thead className="sticky top-0 z-40 bg-[#0CBB7D] text-white font-[600]">
+              <tr>
+                <th className="py-2 px-3 text-left">
+                  <div className="flex justify-center items-center">
+                    <input
+                      type="checkbox"
+                      checked={selectedTransactions.length === transactions.length && transactions.length > 0}
+                      onChange={handleSelectAll}
+                      className="cursor-pointer accent-[#0CBB7D] w-4 h-4"
+                    />
+                  </div>
+                </th>
+                <th className="py-2 px-3">Date</th>
+                <th className="py-2 px-3">Order ID</th>
+                <th className="py-2 px-3">AWB Number</th>
+                <th className="py-2 px-3">Category</th>
+                <th className="py-2 px-3">Amount</th>
+                <th className="py-2 px-3">Available Balance</th>
+                <th className="py-2 px-3 w-[25%]">Description</th>
               </tr>
             </thead>
-
-            <tbody className="divide-y divide-gray-200">
+            <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan={7} className="py-6 text-center">
+                  <td colSpan="8" className="text-center py-10">
                     <ThreeDotLoader />
                   </td>
                 </tr>
               ) : transactions.length === 0 ? (
                 <tr>
-                  <td colSpan={7} className="py-6 text-center text-gray-500">
-                    <div className="flex flex-col items-center justify-center">
-                      <img
-                        src={NotFound}
-                        alt="No Data Found"
-                        className="w-60 h-60 object-contain mb-2"
-                      />
-                    </div>
+                  <td colSpan="8" className="text-center py-10">
+                    <img src={NotFound} alt="No Data Found" className="mx-auto w-[250px]" />
                   </td>
                 </tr>
               ) : (
                 transactions.map((row, index) => (
-                  <tr key={index} className="bg-white border-b">
-                    <td className="px-3 py-2 allign-middle" style={{ width: "220px", maxWidth: "250px" }}>
-                      <p>{new Date(row.date).toLocaleTimeString()}</p>
-                      <p>{new Date(row.date).toLocaleDateString()}</p>
+                  <tr key={index} className="border-b border-gray-200 hover:bg-gray-50 text-gray-600 transition-colors">
+                    <td className="py-2 px-3">
+                      <div className="flex justify-center items-center">
+                        <input
+                          type="checkbox"
+                          checked={selectedTransactions.includes(row.id || row._id)}
+                          onChange={() => handleCheckboxChange(row.id || row._id)}
+                          className="cursor-pointer accent-[#0CBB7D] w-4 h-4"
+                        />
+                      </div>
                     </td>
-                    <td className="px-3 py-2" style={{ width: "220px", maxWidth: "250px" }}>
-                      <Link
-                        to={`/dashboard/order/neworder/updateOrder/${Number(row.orderId)}`}
-                        className="text-[#0CBB7D]"
-                      >
-                        {row.orderId}
-                      </Link>
+                    <td className="py-2 px-3">
+                      <p className="text-gray-700 font-[600]">{dayjs(row.date).format("DD MMM YYYY")}</p>
+                      <p className="text-gray-400 text-[10px]">{dayjs(row.date).format("hh:mm A")}</p>
                     </td>
-                    <td className="px-3 py-2" style={{ width: "270px", maxWidth: "250px" }}>
-                      <p
-                        className="text-[#0CBB7D] cursor-pointer"
-                        onClick={() => handleTrackingByAwb(row.awb_number)}
-                      >
-                        {row.awb_number}
-                      </p>
+                    <td className="py-2 px-3">
+                      <div className="flex items-center gap-1 group">
+                        <Link to={`/dashboard/order/neworder/updateOrder/${row.orderId}`} className="text-[#0CBB7D] hover:underline block font-[600]">
+                          #{row.orderId}
+                        </Link>
+                        <button onClick={() => handleCopy(row.orderId, row.id || row._id + '_orderId')}>
+                          {copiedId === (row.id || row._id + '_orderId') ? (
+                            <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                          ) : (
+                            <FiCopy className="w-3 h-3 text-gray-300 transition-opacity opacity-0 group-hover:opacity-100" />
+                          )}
+                        </button>
+                      </div>
                     </td>
-                    <td className="px-3 py-2 capitalize" style={{ width: "220px", maxWidth: "250px" }}>{row.category}</td>
-                    <td
-                      className={`px-3 py-2 ${row.category === "debit" ? "text-red-600" : "text-green-600"
-                        }`}
-                    >
-                      ₹{Number(row.amount).toFixed(2)}
+                    <td className="py-2 px-3">
+                      <div className="flex items-center gap-1 group">
+                        <p className="text-[#0CBB7D] cursor-pointer hover:underline font-[600]" onClick={() => handleTrackingByAwb(row.awb_number)}>
+                          {row.awb_number}
+                        </p>
+                        <button onClick={() => handleCopy(row.awb_number, row.id || row._id + '_awb')}>
+                          {copiedId === (row.id || row._id + '_awb') ? (
+                            <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                          ) : (
+                            <FiCopy className="w-3 h-3 text-gray-300 transition-opacity opacity-0 group-hover:opacity-100" />
+                          )}
+                        </button>
+                      </div>
                     </td>
-                    <td className="px-3 py-2 text-center" style={{ width: "220px", maxWidth: "250px" }}>
-                      ₹{Number(row.balanceAfterTransaction).toFixed(2)}
+                    <td className="py-2 px-3">
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-[600] uppercase ${row.category === "debit" ? "bg-red-50 text-red-500" : "bg-green-50 text-[#0CBB7D]"}`}>
+                        {row.category}
+                      </span>
                     </td>
-                    <td className="px-3 py-2">
-                      <p className="">Description:</p>
-                      <p>{row?.description}</p>
+                    <td className="py-2 px-3">
+                      <span className={`font-[700] ${row.category === "debit" ? "text-red-500" : "text-[#0CBB7D]"}`}>
+                        {row.category === "debit" ? "-" : "+"} ₹{Number(row.amount).toFixed(2)}
+                      </span>
+                    </td>
+                    <td className="py-2 px-3 text-gray-700 font-[600]">₹{Number(row.balanceAfterTransaction).toFixed(2)}</td>
+                    <td className="py-2 px-3">
+                      <p className="line-clamp-2 text-[11px] leading-relaxed text-gray-500" title={row.description}>{row.description}</p>
                     </td>
                   </tr>
                 ))
@@ -437,110 +376,185 @@ const Passbooks = () => {
         </div>
       </div>
 
-      {/* Mobile View */}
-      <div className="md:hidden w-full">
-        {/* Data List */}
-        <div className="space-y-2 h-[calc(100vh-290px)] overflow-y-auto">
+      {/* Mobile Card View */}
+      <div className="md:hidden flex flex-col">
+        <div className="flex items-center justify-between gap-2 mb-2 bg-white p-2 rounded-lg shadow-sm border border-gray-100">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 bg-gray-50 flex-1">
+            <input
+              type="checkbox"
+              checked={selectedTransactions.length === transactions.length && transactions.length > 0}
+              onChange={handleSelectAll}
+              className="cursor-pointer accent-[#0CBB7D] w-4 h-4"
+            />
+            <span className="text-[11px] font-[600] text-gray-600">Select All</span>
+          </div>
+
+          <div ref={mobileActionRef} className="relative">
+            <button
+              className={`h-[32px] px-3 rounded-lg font-[600] flex items-center gap-2 transition bg-white border ${selectedTransactions.length === 0
+                ? "border-gray-200 text-gray-400 cursor-not-allowed"
+                : "text-[#0CBB7D] border-[#0CBB7D]"
+                }`}
+              onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
+              disabled={selectedTransactions.length === 0}
+            >
+              <FaBars className="w-3 h-3" />
+            </button>
+            {mobileDropdownOpen && (
+              <div className="absolute right-0 mt-1 w-40 bg-white border-2 border-gray-200 rounded-lg shadow-xl z-[100] animate-popup-in overflow-hidden">
+                <ul className="font-[600] text-[12px]">
+                  <li
+                    className="px-4 py-2 text-gray-700 hover:bg-green-50 cursor-pointer"
+                    onClick={() => {
+                      handleExport();
+                      setMobileDropdownOpen(false);
+                    }}
+                  >
+                    Export Excel
+                  </li>
+                </ul>
+              </div>
+            )}
+          </div>
+        </div>
+
+        <div className="h-[calc(100vh-260px)] overflow-y-auto space-y-2">
           {loading ? (
-            <ThreeDotLoader />
+            <div className="flex justify-center py-10"><ThreeDotLoader /></div>
           ) : transactions.length > 0 ? (
             transactions.map((row, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-lg shadow border border-gray-200"
-              >
-                {/* Top content */}
-                <div className="p-3 text-[12px] space-y-1">
-                  {/* Date */}
-                  <div className="grid grid-cols-[150px_10px_1fr] items-start text-gray-500">
-                    <span className="font-[400]">Date</span>
-                    <span className="text-center">:</span>
-                    <span className="font-[400]">{new Date(row.date).toLocaleDateString('en-GB', {
-                      day: '2-digit',
-                      month: 'short',
-                      year: 'numeric',
-                    })}</span>
-                  </div>
-
-                  {/* Category */}
-                  <div className="grid grid-cols-[150px_10px_1fr] items-start text-gray-500">
-                    <span className="">Amount</span>
-                    <span className="text-center">:</span>
-                    <div className="flex flex-col sm:flex-row justify-between sm:items-center">
-                      <span className="break-words">{row.type}</span>
-                      <span
-                        className={`${row.category === "debit" ? "text-red-500" : "text-green-600"
-                          }`}
-                      >
-                        {row.category === "debit" ? "-" : "+"} ₹{Number(row.amount).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-
-
-                  {/* Available Balance */}
-                  <div className="grid grid-cols-[150px_10px_1fr] items-start text-gray-500">
-                    <span className="">Available Balance</span>
-                    <span className="text-center">:</span>
-                    <div className="flex flex-col sm:flex-row justify-between sm:items-center">
-                      {/* <span className="break-words">{row.type}</span> */}
-                      <span className="">
-                        ₹{Number(row.balanceAfterTransaction).toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-
-
-                  {/* Description */}
-                  {row.description && (
-                    <div className="grid grid-cols-[150px_10px_1fr] items-start text-gray-500">
-                      <span className="">Description</span>
-                      <span className="text-center">:</span>
-                      <span>{row.description}</span>
-                    </div>
-                  )}
-                </div>
-
-                {/* Footer */}
-                <div className="flex items-center justify-between bg-green-100 text-[10px] text-gray-500 px-3 py-2 rounded-b-md">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={getCarrierLogo(row.courierServiceName || "")}
-                      alt={row.courierServiceName}
-                      className="w-5 h-5 rounded-full object-contain"
+              <div key={index} className="bg-white border border-gray-100 rounded-xl shadow-sm p-3 text-[11px] animate-popup-in">
+                {/* Header Bar */}
+                <div className="flex gap-2 justify-between rounded-lg bg-green-50/50 py-2 px-3 items-center mb-3">
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={selectedTransactions.includes(row.id || row._id)}
+                      onChange={() => handleCheckboxChange(row.id || row._id)}
+                      className="cursor-pointer accent-[#0CBB7D] w-4 h-4"
                     />
+                    <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center p-1.5 border border-green-100 shadow-sm overflow-hidden shrink-0">
+                      <img
+                        src={getCarrierLogo(row?.courierServiceName || "")}
+                        alt=""
+                        onError={(e) => { e.target.src = '/default-courier-logo.png' }}
+                        className="max-w-full max-h-full object-contain"
+                      />
+                    </div>
+                  </div>
 
-                    <span className="">
-                      {row.courierServiceName || ""}
+                  <div className="flex flex-col flex-1 min-w-0 ml-1">
+                    <span className="text-gray-700 font-[700] truncate text-[12px]">
+                      {row?.courierServiceName || "Transaction"}
+                    </span>
+                    <span className="text-gray-400 font-[600] text-[10px]">
+                      {dayjs(row.date).format("DD MMM YYYY, hh:mm A")}
                     </span>
                   </div>
-                  <div>
-                    AWB: <span className="text-[#0CBB7D]" onClick={() => { handleTrackingByAwb(row.awb_number) }}>{row.awb_number || "N/A"}</span>
+
+                  <div className="text-right">
+                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-[700] uppercase ${row.category === "debit" ? "bg-red-50 text-red-500" : "bg-green-50 text-[#0CBB7D]"}`}>
+                      {row.category}
+                    </span>
                   </div>
                 </div>
+
+                {/* Details Grid */}
+                <div className="grid grid-cols-2 gap-y-3 mb-3">
+                  <div>
+                    <p className="text-gray-400 font-[600] text-[10px] mb-0.5">Order ID</p>
+                    <div className="flex items-center gap-1">
+                      <Link to={`/dashboard/order/neworder/updateOrder/${row.orderId}`} className="text-[#0CBB7D] font-[700] hover:text-[#0CBB7D] text-[12px]">
+                        #{row.orderId}
+                      </Link>
+                      <button onClick={() => handleCopy(row.orderId, (row.id || row._id) + '_orderId_mobile')}>
+                        {copiedId === (row.id || row._id) + '_orderId_mobile' ? (
+                          <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                        ) : (
+                          <FiCopy className="w-3 h-3 text-gray-300" />
+                        )}
+                      </button>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-gray-400 font-[600] text-[10px] mb-0.5">AWB Number</p>
+                    <div className="flex items-center justify-end gap-1">
+                      <p className="text-[#0CBB7D] font-[700] truncate hover:underline text-[12px]" onClick={() => handleTrackingByAwb(row.awb_number)}>
+                        {row.awb_number || "N/A"}
+                      </p>
+                      {row.awb_number && (
+                        <button onClick={() => handleCopy(row.awb_number, (row.id || row._id) + '_awb_mobile')}>
+                          {copiedId === (row.id || row._id) + '_awb_mobile' ? (
+                            <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                          ) : (
+                            <FiCopy className="w-3 h-3 text-gray-300" />
+                          )}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div className="border-t border-gray-50 pt-3 col-span-2 flex justify-between items-center">
+                    <div>
+                      <p className="text-gray-400 font-[600] text-[10px] mb-0.5">Transaction Amount</p>
+                      <p className={`font-[700] text-[13px] ${row.category === "debit" ? "text-red-500" : "text-[#0CBB7D]"}`}>
+                        {row.category === "debit" ? "-" : "+"} ₹{Number(row.amount).toFixed(2)}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-gray-400 font-[600] text-[10px] mb-0.5">Closing Balance</p>
+                      <p className="text-gray-700 font-[700] text-[13px]">₹{Number(row.balanceAfterTransaction).toFixed(2)}</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Description Bar */}
+                {row.description && (
+                  <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-100">
+                    <p className="text-gray-400 font-[700] text-[9px] uppercase tracking-wider mb-1">Description</p>
+                    <p className="text-gray-600 leading-relaxed text-[11px]">
+                      {row.description}
+                    </p>
+                  </div>
+                )}
               </div>
             ))
           ) : (
-            <div className="flex flex-col items-center justify-center py-6">
-              <img
-                src={NotFound}
-                alt="No Data Found"
-                className="w-60 h-60 object-contain mb-2"
-              />
+            <div className="flex flex-col items-center justify-center py-10 bg-white rounded-xl border border-dashed border-gray-200">
+              <img src={NotFound} alt="No Data Found" className="w-[180px] opacity-60" />
+              <p className="text-gray-400 font-[600] mt-2">No transactions found</p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Pagination Controls */}
+      <PassbookFilterPanel
+        isOpen={isFilterPanelOpen}
+        onClose={() => setIsFilterPanelOpen(false)}
+        selectedUserId={null} // Not used for sellers
+        awbNumber={awbNumber}
+        orderId={orderId}
+        category={category}
+        description={description}
+        onClearFilters={handleClearFilters}
+        showUserFilter={false}
+        onApplyFilters={(filters) => {
+          setAwbNumber(filters.awbNumber);
+          setOrderId(filters.orderId);
+          setCategory(filters.category);
+          setDescription(filters.description);
+          setPage(1);
+          setIsFilterPanelOpen(false);
+        }}
+      />
+
       <PaginationFooter
         page={page}
         setPage={setPage}
-        totalPages={totalPages}
+        totalPages={totalPages} // For seller API, response.data.page is totalPages
         limit={limit}
         setLimit={setLimit}
       />
-    </div >
+    </div>
   );
 };
 

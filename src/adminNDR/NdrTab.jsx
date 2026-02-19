@@ -86,7 +86,7 @@ const NdrTab = ({ isSidebarAdmin }) => {
   };
 
   return (
-    <div className="md:px-2 px-1">
+    <div className="md:px-2">
       <div className="mb-2">
         <h1 className="text-[12px] md:text-[14px] font-[600] text-gray-700">NDR</h1>
       </div>
@@ -111,7 +111,7 @@ const NdrTab = ({ isSidebarAdmin }) => {
         {/* Dropdown for mobile */}
         <div className="relative md:hidden">
           <button
-            className="w-full px-4 py-2 bg-white border border-gray-200 shadow-sm rounded-lg text-[12px] font-[600] text-gray-700 flex justify-between items-center"
+            className="w-full px-3 py-2 bg-white border border-gray-200 shadow-sm rounded-lg text-[12px] font-[600] text-gray-700 flex justify-between items-center"
             onClick={() => setShowDropdown(!showDropdown)}
           >
             {activeTab} <ChevronDown className={`w-4 h-4 transition-transform ${showDropdown ? "rotate-180" : ""}`} />

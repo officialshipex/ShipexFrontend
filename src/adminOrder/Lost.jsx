@@ -67,7 +67,7 @@ const LostList = (filterOrder) => {
     const updateHeight = () => {
       if (tableRef.current) {
         const top = tableRef.current.getBoundingClientRect().top;
-        const remainingHeight = window.innerHeight - top - 60;
+        const remainingHeight = window.innerHeight - top - 50;
         setTableHeight(`${remainingHeight}px`);
       }
     };

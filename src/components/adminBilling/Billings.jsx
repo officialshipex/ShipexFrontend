@@ -41,8 +41,8 @@ const Billings = () => {
     }, [])
 
     return (
-        <div className="sm:p-2 p-1 max-w-full mx-auto">
-            <h1 className="text-[12px] sm:text-[18px] mb-1 text-gray-700 font-[600]">Billings</h1>
+        <div className="sm:px-2 max-w-full mx-auto">
+            <h1 className="text-[12px] sm:text-[14px] mb-1 text-gray-700 font-[600]">Billings</h1>
 
             {/* Desktop Tabs as Buttons */}
             <div className="hidden sm:flex gap-2">
@@ -50,7 +50,7 @@ const Billings = () => {
                     <Link
                         key={tab.path}
                         to={tab.path}
-                        className={`px-3 py-2 rounded-lg text-[12px] font-[600] transition-all duration-200 ${location.pathname === tab.path
+                        className={`px-3 py-2 rounded-lg border text-[12px] font-[600] transition-all duration-200 ${location.pathname === tab.path
                             ? 'bg-[#0CBB7D] text-white'
                             : 'text-gray-700 hover:bg-green-200 bg-white'
                             }`}
@@ -64,11 +64,11 @@ const Billings = () => {
             <div className="sm:hidden mb-2 relative" ref={dropdownRef}>
                 <button
                     onClick={toggleDropdown}
-                    className="w-full text-left text-[12px] border bg-[#0CBB7D] rounded-lg px-3 py-2 font-[600] text-white focus:outline-none flex items-center justify-between"
+                    className="w-full text-left text-[12px] border border-gray-200 shadow-sm bg-white rounded-lg px-3 py-2 font-[600] text-gray-700 focus:outline-none flex items-center justify-between"
                 >
                     <span>{selectedTab?.label || "Select Option"}</span>
                     <FiChevronDown
-                        className={`w-4 h-4 text-white transition-transform duration-200 ${isOpen ? "rotate-180" : ""
+                        className={`w-4 h-4 text-gray-700 transition-transform duration-200 ${isOpen ? "rotate-180" : ""
                             }`}
                     />
                 </button>

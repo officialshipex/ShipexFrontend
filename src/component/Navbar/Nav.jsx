@@ -502,7 +502,7 @@ const Navbar = () => {
                 </div>
 
                 <FaSyncAlt
-                  className={`text-[11px] cursor-pointer hover:text-gray-500 transition-transform duration-500 ${balance < 0 ? "text-red-500" : "text-[#0CBB7D]"
+                  className={`text-[10px] cursor-pointer hover:text-gray-500 transition-transform duration-500 ${balance < 0 ? "text-red-500" : "text-[#0CBB7D]"
                     }`}
                   title="Refresh balance"
                   onClick={(e) => {
@@ -543,7 +543,7 @@ const Navbar = () => {
                 setIsDropdownOpen(false);    // CLOSE Profile Dropdown
               }}
             >
-              <FaEllipsisV className="text-[18px] text-[#0CBB7D]" />
+              <FaEllipsisV className="text-[14px] text-[#0CBB7D]" />
             </button>
 
           </div>
@@ -730,7 +730,7 @@ const Navbar = () => {
       </div>
 
       {isMobileMenuOpen && (
-        <div ref={mobileMenuRef} className="fixed top-[60px] right-2 z-50 bg-white shadow-lg rounded-lg p-4 w-44">
+        <div ref={mobileMenuRef} className="fixed top-[50px] animate-popup-in right-2 z-50 bg-white shadow-lg rounded p-4 w-44">
           <ul className="space-y-4 text-[12px] font-[600]">
 
             {/* Profile */}
@@ -803,7 +803,7 @@ const Navbar = () => {
       {isDropdownOpen && (
         <div
           ref={dropdownRef}
-          className="fixed top-[62px] text-[12px] font-[600] right-2 z-50 bg-white shadow-sm rounded-lg p-2 w-40"
+          className="fixed top-[60px] text-[12px] font-[600] right-2 z-50 bg-white shadow-sm animate-popup-in rounded p-2 w-40"
         >
           <ul>
 

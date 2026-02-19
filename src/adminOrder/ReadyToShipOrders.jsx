@@ -71,7 +71,7 @@ const ReadyToShipOrders = ({ userId: initialUserId }) => {
     const updateHeight = () => {
       if (tableRef.current) {
         const top = tableRef.current.getBoundingClientRect().top;
-        const remainingHeight = window.innerHeight - top - 60;
+        const remainingHeight = window.innerHeight - top - 50;
         setTableHeight(`${remainingHeight}px`);
       }
     };
@@ -164,6 +164,7 @@ const ReadyToShipOrders = ({ userId: initialUserId }) => {
     setPaymentType("");
     setSelectedPickupAddress("");
     setSelectedCourier("");
+    setSelectedUserId(null);
     setDateRange([{ startDate: null, endDate: null, key: "selection" }]);
     setPage(1);
     setRefresh(prev => !prev);
@@ -359,6 +360,7 @@ const ReadyToShipOrders = ({ userId: initialUserId }) => {
           setPaymentType(filters.paymentType);
           setSelectedPickupAddress(filters.selectedPickupAddress);
           setSelectedCourier(filters.selectedCourier);
+          setSelectedUserId(filters.selectedUserId);
           setPage(1);
           setRefresh(prev => !prev);
           setIsFilterPanelOpen(false);

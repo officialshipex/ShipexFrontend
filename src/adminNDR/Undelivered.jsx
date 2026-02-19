@@ -72,7 +72,7 @@ const Undelivered = ({ userId: initialUserId }) => {
     const updateHeight = () => {
       if (tableRef.current) {
         const top = tableRef.current.getBoundingClientRect().top;
-        const remainingHeight = window.innerHeight - top - 60;
+        const remainingHeight = window.innerHeight - top - 50;
         setTableHeight(`${remainingHeight}px`);
       }
     };
@@ -199,6 +199,21 @@ const Undelivered = ({ userId: initialUserId }) => {
             <Filter className="w-4 h-4 text-[#0CBB7D]" />
             More Filters
           </button>
+          <div className="hidden md:block">
+            {(searchQuery || orderId || awbNumber || paymentType || selectedPickupAddress || selectedCourier || selectedUserId) && (
+              <button onClick={handleClearFilters} className="text-[12px] text-red-500 hover:underline font-[600] whitespace-nowrap">
+                Clear All Filters
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="md:hidden flex justify-end w-full px-1">
+          {(searchQuery || orderId || awbNumber || paymentType || selectedPickupAddress || selectedCourier || selectedUserId) && (
+            <button onClick={handleClearFilters} className="text-[10px] text-red-500 font-[600]">
+              Clear All Filters
+            </button>
+          )}
         </div>
 
         <div className="flex items-center gap-2 w-auto justify-end">

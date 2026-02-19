@@ -72,7 +72,7 @@ const InTransitOrders = (filterOrder) => {
     const updateHeight = () => {
       if (tableRef.current) {
         const top = tableRef.current.getBoundingClientRect().top;
-        const remainingHeight = window.innerHeight - top - 60;
+        const remainingHeight = window.innerHeight - top - 50;
         setTableHeight(`${remainingHeight}px`);
       }
     };
@@ -186,7 +186,7 @@ const InTransitOrders = (filterOrder) => {
           </div>
           <button
             onClick={() => setIsFilterPanelOpen(true)}
-            className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap min-w-[120px]"
+            className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border rounded-lg sm:text-[12px] text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap min-w-[120px]"
           >
             <Filter className="w-4 h-4 text-[#0CBB7D]" />
             More Filters

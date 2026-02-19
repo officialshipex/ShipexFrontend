@@ -144,7 +144,7 @@ const Dashboard = () => {
     };
 
     return (
-        <div className="sm:px-2 p-2">
+        <div className="sm:px-2">
             {!kycCompleted && (
                 <div className="flex flex-col sm:flex-row items-center justify-between border-2 border-yellow-400 bg-yellow-50 rounded-lg px-3 py-2 mb-2 shadow-sm w-full max-w-full gap-3">
                     <div className="flex items-center gap-3">

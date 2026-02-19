@@ -71,7 +71,7 @@ const Delivered = (filterOrder) => {
     const updateHeight = () => {
       if (tableRef.current) {
         const top = tableRef.current.getBoundingClientRect().top;
-        const remainingHeight = window.innerHeight - top - 60;
+        const remainingHeight = window.innerHeight - top - 50;
         setTableHeight(`${remainingHeight}px`);
       }
     };
@@ -197,6 +197,21 @@ const Delivered = (filterOrder) => {
               </button>
             )}
           </div>
+          <div className="hidden md:block">
+            {(searchQuery || orderId || awbNumber || paymentType || selectedPickupAddress || selectedCourier) && (
+              <button onClick={handleClearFilters} className="text-[12px] text-red-500 hover:underline font-[600] whitespace-nowrap">
+                Clear All Filters
+              </button>
+            )}
+          </div>
+        </div>
+
+        <div className="md:hidden flex justify-end w-full px-1">
+          {(searchQuery || orderId || awbNumber || paymentType || selectedPickupAddress || selectedCourier) && (
+            <button onClick={handleClearFilters} className="text-[10px] text-red-500 font-[600]">
+              Clear All Filters
+            </button>
+          )}
         </div>
 
         <div className="md:hidden flex justify-end w-full px-1">

@@ -13,7 +13,8 @@
 
 /* Additional optional styling for thumb radius */
 ::-webkit-scrollbar-thumb {
-  border-radius: 0.5rem; /* Equivalent to rounded-lg */
+  border-radius: 0.5rem;
+  /* Equivalent to rounded-lg */
 }
 
 /* Set Global Font */
@@ -82,5 +83,22 @@ p,td,a{
   .custom-scrollbar {
     scrollbar-width: thin;
     scrollbar-color: rgba(160, 174, 192, 0.1) transparent;
+  }
+
+  /* Page Transition Animations */
+  @keyframes pageSlideIn {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .page-slide-in {
+    animation: pageSlideIn 0.4s ease-out forwards;
   }
 }

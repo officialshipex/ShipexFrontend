@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import dayjs from "dayjs";
 import axios from "axios";
 import { useNavigate, Link, useParams } from "react-router-dom";
 // import { toast } from "react-toastify";
@@ -8,15 +9,15 @@ import { saveAs } from "file-saver";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { FaFilter, FaBars } from "react-icons/fa";
 import { FaTruck, FaPlane } from "react-icons/fa";
-import { FiMoreHorizontal, FiArrowLeft, FiArrowRight } from "react-icons/fi";
-import { ChevronDown } from "lucide-react";
+import { FiCopy, FiCheck } from "react-icons/fi";
+import { Filter, X, ChevronDown } from "lucide-react";
+import ShippingFilterPanel from "../../Common/ShippingFilterPanel";
+import DateFilter from "../../filter/DateFilter";
+import { motion, AnimatePresence } from "framer-motion";
 import ThreeDotLoader from "../../Loader";
 import Cookies from "js-cookie";
-import { Notification } from "../../Notification"
 import PaginationFooter from "../../Common/PaginationFooter";
-import OrderAwbFilter from "../../filter/OrderAwbFilter";
 import { ExportExcel } from "../../Common/orderActions";
-import CourierFilter from "../../filter/CourierFilter";
 import NotFound from "../../assets/nodatafound.png";
 
 const Shippings = (filterOrder) => {
@@ -48,7 +49,7 @@ const Shippings = (filterOrder) => {
   const mobileActionRef = useRef(null);
 
   const [courierOptions, setCourierOptions] = useState([]); // All unique couriers
-  const [selectedCourier, setSelectedCourier] = useState(""); // Selected courier
+  const [selectedCourier, setSelectedCourier] = useState([]); // Selected courier (array for multi-select)
   const [paymentType, setPaymentType] = useState("");
   const [dateRange, setDateRange] = useState([
     { startDate: null, endDate: null, key: "selection" },
@@ -60,6 +61,9 @@ const Shippings = (filterOrder) => {
   const [showPickupDropdown, setShowPickupDropdown] = useState(false); // Toggle dropdown visibility
   const [showPaymentTypeDropdown, setShowPaymentTypeDropdown] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const [clearTrigger, setClearTrigger] = useState(0);
+  const [weightPopupId, setWeightPopupId] = useState(null);
   const paymentRef = useRef(null);
   const dateRef = useRef(null);
   const pickupRef = useRef(null);
@@ -84,6 +88,8 @@ const Shippings = (filterOrder) => {
   const awbFilterButtonRef = useRef(null);
 
 
+  const [copiedOrderId, setCopiedOrderId] = useState(null);
+
   const statusOptions = [
     "new",
     "Ready To Ship",
@@ -99,6 +105,25 @@ const Shippings = (filterOrder) => {
     "RTO Lost",
     "RTO Damaged",
   ];
+
+  const isAnyFilterApplied =
+    inputValue ||
+    selectedCourier.length > 0 ||
+    selectedStatus ||
+    (dateRange[0].startDate !== null || dateRange[0].endDate !== null);
+
+  const handleCopy = (text, id) => {
+    navigator.clipboard.writeText(text);
+    setCopiedOrderId(id);
+    setTimeout(() => setCopiedOrderId(null), 1500);
+  };
+
+  // Auto-close mobile filters panel on selection (except for multi-select courier)
+  useEffect(() => {
+    if (showFilters && (selectedStatus || dateRange[0].startDate)) {
+      setShowFilters(false);
+    }
+  }, [selectedStatus, dateRange]);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -236,19 +261,19 @@ const Shippings = (filterOrder) => {
         id,
         page,
         limit,
-        status: selectedStatus !== "All" ? selectedStatus : undefined,
+        status: selectedStatus || undefined,
         searchQuery,
-        paymentType,
-        startDate: dateRange[0].startDate?.toISOString(),
-        endDate: dateRange[0].endDate?.toISOString(),
+        paymentType: paymentType && paymentType !== "All" ? paymentType : undefined,
+        fromDate: dateRange && dateRange[0]?.startDate ? dayjs(dateRange[0].startDate).startOf("day").toISOString() : undefined,
+        toDate: dateRange && dateRange[0]?.endDate ? dayjs(dateRange[0].endDate).endOf("day").toISOString() : undefined,
         pickupContactName: selectedPickupAddress || undefined,
       };
       if (inputValue?.trim()) {
         params[searchBy] = inputValue.trim();
       }
 
-      if (selectedCourier) {
-        params.courierServiceName = selectedCourier;
+      if (selectedCourier && selectedCourier.length > 0) {
+        params.courierServiceName = selectedCourier.join(",");
       }
 
       const response = await axios.get(
@@ -337,274 +362,113 @@ const Shippings = (filterOrder) => {
     setInputValue("");
     setSearchBy("awbNumber");
     setShowAwbDropdown(false);
-    setSelectedCourier("");
+    setSelectedCourier([]);
     setShowCourierDropdown(false);
     setSelectedStatus("");
-    setShowStatusDropdown(false);
-    setShowStatusDropdownMobile(false);
+    setPaymentType("");
+    setSelectedPickupAddress("");
     setDateRange([{ startDate: null, endDate: null, key: "selection" }]);
+    setClearTrigger(prev => prev + 1);
+    setIsFilterPanelOpen(false);
+    setPage(1);
   };
 
+  const handleFiltersToggle = () => {
+    setShowFilters(!showFilters);
+  };
 
   return (
     <div>
-      {/* Desktop Table */}
-      <div>
-        <div className="flex flex-row justify-between items-center gap-3 rounded-lg overflow-visible">
-          <div className="hidden md:flex items-center gap-2 w-full sm:mb-2">
-            {/* OrderID/AWB filter */}
-            <OrderAwbFilter
-              searchBy={searchBy}
-              setSearchBy={setSearchBy}
-              inputValue={inputValue}
-              setInputValue={setInputValue}
-              showDropdown={showAwbDropdown}
-              setShowDropdown={setShowAwbDropdown}
-              dropdownRef={awbFilterRef}
-              buttonRef={awbFilterButtonRef}
-              options={[
-                { label: "AWB", value: "awbNumber" },
-                { label: "Order ID", value: "orderId" },
-              ]}
-              getPlaceholder={() =>
-                searchBy === "orderId"
-                  ? "Search by Order ID"
-                  : "Search by AWB Number"
-              }
-              width="w-full md:w-[300px]"
-            />
+      {/* Desktop Filter Section */}
+      <div className="hidden md:flex gap-2 relative sm:items-center">
+        <DateFilter
+          onDateChange={(range) => {
+            setDateRange(range);
+            setPage(1);
+          }}
+          clearTrigger={clearTrigger}
+          noInitialFilter={true}
+        />
 
+        <button
+          onClick={() => setIsFilterPanelOpen(true)}
+          className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-9"
+        >
+          <Filter className="w-4 h-4 text-[#0CBB7D]" />
+          More Filters
+        </button>
 
-            {/* CourierDropdown */}
-            <CourierFilter
-              selectedCourier={selectedCourier}
-              setSelectedCourier={setSelectedCourier}
-              courierOptions={courierOptions}
-              showDropdown={showCourierDropdown}
-              setShowDropdown={setShowCourierDropdown}
-              dropdownRef={courierFilterRef}
-              buttonRef={courierFilterButtonRef}
-              width="w-full md:w-[250px]"
-            />
-
-
-            {/* Status filter */}
-            <div
-              className="relative w-full md:w-[200px]"
-              ref={statusDropdownRef}
+        <div className="flex items-center gap-2 ml-auto" ref={desktopActionRef}>
+          {isAnyFilterApplied && (
+            <button
+              onClick={handleClearFilters}
+              className="text-[12px] text-red-500 hover:underline font-[600] px-2 whitespace-nowrap"
             >
-              <button
-                className={`w-full bg-white py-2 px-3 text-[12px] font-[600] border rounded-lg focus:outline-none text-left flex items-center justify-between text-gray-400 ${showStatusDropdown || selectedStatus ? "border-[#0CBB7D]" : ""}`}
-                onClick={() => setShowStatusDropdown((prev) => !prev)}
-                ref={statusDropdownButtonRef}
-              >
-                {selectedStatus || "Status"}
-                <ChevronDown
-                  className={`w-4 h-4 ml-2 transform transition-transform ${showStatusDropdown ? "rotate-180" : ""
-                    }`}
-                />
-              </button>
-              {showStatusDropdown && (
-                <div className="absolute w-full mt-1 z-40 bg-white border rounded-lg shadow p-1 max-h-60 overflow-y-auto transition-all duration-300 ease-in-out">
-                  {statusOptions.map((status) => (
-                    <div
-                      key={status}
-                      className="cursor-pointer hover:bg-green-100 px-3 py-2 text-[12px] font-[600] text-gray-500"
-                      onClick={() => {
-                        setSelectedStatus(status);
-                        setShowStatusDropdown(false);
-                        setPage(1);
-                      }}
-                    >
-                      {status}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
+              Clear All Filters
+            </button>
+          )}
 
-            {/* --- Actions at the end of the row --- */}
-            <div className="flex items-center gap-2 ml-auto" ref={desktopActionRef}>
-              <button
-                className="py-2 px-3 text-[12px] border rounded-lg font-[600] text-white bg-[#0CBB7D] hover:bg-green-500 transition whitespace-nowrap"
-                onClick={handleClearFilters}
-                type="button"
-              >
-                Clear
-              </button>
-              <div className="relative">
-                <button
-                  className={`py-2 px-3 text-[12px] border rounded-lg font-[600] flex items-center gap-1 justify-center whitespace-nowrap ${selectedOrders.length === 0
-                    ? "border-gray-200 text-gray-400 cursor-not-allowed"
-                    : "text-[#0CBB7D] border-[#0CBB7D]"
-                    }`}
-                  onClick={() =>
-                    selectedOrders.length > 0 &&
-                    setDesktopDropdownOpen(!desktopDropdownOpen)
-                  }
-                  disabled={selectedOrders.length === 0}
-                >
-                  <span>Actions</span> <span><ChevronDown
-                    className={`w-4 h-4 transition-transform ${desktopDropdownOpen ? "rotate-180" : ""
-                      }`}
-                  /></span>
-                </button>
-                <div
-                  className={`absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-[100] overflow-hidden transition-all duration-300 ease-in-out ${desktopDropdownOpen
-                    ? "max-h-96 opacity-100 scale-100"
-                    : "max-h-0 opacity-0 scale-95 pointer-events-none"
-                    }`}
-                >
-                  <ul className="py-2 font-[600]">
-                    <li
-                      className="px-3 py-2 text-gray-700 hover:bg-green-100 cursor-pointer text-[10px]"
-                      onClick={handleExportExcel}
-                    >
-                      Export
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/* New Dropdown */}
-          <div className="flex gap-2 w-full flex-col md:hidden">
-            {/* 1. Top input: Order ID search */}
-            <div className="flex items-center justify-between gap-2 relative">
-              {/* Combined AWB / Order ID filter (Mobile) */}
-              <OrderAwbFilter
-                searchBy={searchBy}
-                setSearchBy={setSearchBy}
-                inputValue={inputValue}
-                setInputValue={setInputValue}
-                showDropdown={showAwbDropdown}
-                setShowDropdown={setShowAwbDropdown}
-                dropdownRef={awbFilterRef}
-                buttonRef={awbFilterButtonRef}
-                options={[
-                  { label: "AWB", value: "awbNumber" },
-                  { label: "Order ID", value: "orderId" },
-                ]}
-                getPlaceholder={() =>
-                  searchBy === "orderId"
-                    ? "Search by Order ID"
-                    : "Search by AWB Number"
-                }
-                heightClass="h-9"
-              />
-
-              {/* FaFilter Button */}
-              <button
-                className="px-3 flex-1 flex items-center justify-center text-white bg-[#0CBB7D] h-[34px] rounded-lg transition text-[12px] font-[600]"
-                onClick={() => setShowFilters((prev) => !prev)}
-              >
-                <FaFilter className="text-white size={14}" />
-              </button>
-              <div ref={actionDropdownRef}>
-                <button
-                  className={`px-3 h-[34px] border rounded-lg font-[600] flex items-center gap-1 ${selectedOrders.length === 0
-                    ? "border-gray-300 text-[12px] cursor-not-allowed text-gray-400"
-                    : "text-[#0CBB7D] border-[#0CBB7D] text-[12px]"
-                    }`}
-                  onClick={() =>
-                    selectedOrders.length > 0 &&
-                    setActionDropdownOpen(!actionDropdownOpen)
-                  }
-                  disabled={selectedOrders.length === 0}
-                >
-                  <FaBars
-                    className={`sm:hidden 
-                    ${selectedOrders.length === 0
-                        ? "text-gray-400"
-                        : "text-[#0CBB7D]"
-                      }`}
-                  />
-                  <span className="hidden sm:inline">Actions▼</span>
-                </button>
-                {actionDropdownOpen && (
-                  <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-[60]">
-                    <ul className="py-2 font-[600]">
-                      <li
-                        className="px-3 py-2 text-gray-700 hover:bg-green-100 cursor-pointer text-[10px]"
-                        onClick={handleExportExcel}
-                      >
-                        Export
-                      </li>
-                    </ul>
-                  </div>
-                )}
-              </div>
-            </div>
-            {/* 2. Expandable filters */}
-            <div
-              className={`transition-all duration-300 ease-in-out ${showFilters
-                ? "max-h-[1000px] overflow-visible"
-                : "max-h-0 overflow-hidden"
+          <div className="relative">
+            <button
+              disabled={selectedOrders.length === 0}
+              onClick={() => setDesktopDropdownOpen(!desktopDropdownOpen)}
+              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedOrders.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
-              <div className="flex flex-col gap-2 overflow-visible">
-                {/* Courier Dropdown */}
-                <CourierFilter
-                  selectedCourier={selectedCourier}
-                  setSelectedCourier={setSelectedCourier}
-                  courierOptions={courierOptions}
-                  showDropdown={showCourierDropdown}
-                  setShowDropdown={setShowCourierDropdown}
-                  dropdownRef={courierFilterRef}
-                  buttonRef={courierFilterButtonRef}
-                  heightClass="h-9"
-                />
+              Actions
+              <ChevronDown className={`w-4 h-4 transition-transform ${desktopDropdownOpen ? "rotate-180" : ""}`} />
+            </button>
 
-
-                {/* Status Dropdown */}
+            {desktopDropdownOpen && (
+              <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[12px] z-[100] animate-popup-in overflow-hidden">
                 <div
-                  className="relative w-full z-[10]"
-                  ref={statusDropdownRefMobile}
+                  className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                  onClick={handleExportExcel}
                 >
-                  <button
-                    className={`w-full bg-white py-2 px-3 text-[12px] font-[600] border rounded-lg focus:outline-none text-left flex items-center justify-between text-gray-400 ${showStatusDropdown || selectedStatus ? "border-[#0CBB7D]" : ""}`}
-                    onClick={() => setShowStatusDropdownMobile((prev) => !prev)}
-                    ref={statusDropdownButtonRefMobile}
-                  >
-                    {selectedStatus || "Status"}
-                    <ChevronDown
-                      className={`w-4 h-4 ml-2 transform transition-transform ${showStatusDropdownMobile ? "rotate-180" : ""
-                        }`}
-                    />
-                  </button>
-                  {showStatusDropdownMobile && (
-                    <div className="absolute w-full bg-white border rounded shadow p-1 z-10 max-h-60 overflow-y-auto transition-all duration-300 ease-in-out">
-                      {statusOptions.map((status) => (
-                        <div
-                          key={status}
-                          className="cursor-pointer hover:bg-green-50 px-3 py-2 text-[12px] font-[600] text-gray-500"
-                          onClick={() => {
-                            setSelectedStatus(status);
-                            setShowStatusDropdownMobile(false);
-                            setPage(1);
-                          }}
-                        >
-                          {status}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                  Export
                 </div>
-                <button
-                  className="px-3 mb-2 bg-[#0CBB7D] py-2 text-[12px] font-[600] rounded-lg text-white border hover:opacity-90 transition"
-                  onClick={handleClearFilters}
-                  type="button"
-                >
-                  Clear
-                </button>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
+
+      {/* Mobile Filter Section */}
+      <div className="flex w-full flex-col md:hidden mb-2">
+        <div className="flex items-center gap-2">
+          <div className="flex-1">
+            <DateFilter
+              onDateChange={(range) => {
+                setDateRange(range);
+                setPage(1);
+              }}
+              clearTrigger={clearTrigger}
+              noInitialFilter={true}
+            />
+          </div>
+          <button
+            onClick={() => setIsFilterPanelOpen(true)}
+            className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-[32px] min-w-[100px]"
+          >
+            <Filter className="w-3 h-3 text-[#0CBB7D]" />
+            More Filters
+          </button>
+        </div>
+
+        {isAnyFilterApplied && (
+          <div className="flex justify-end mt-1 px-1">
+            <button
+              onClick={handleClearFilters}
+              className="text-[11px] font-[600] text-red-500 hover:text-red-600 px-1"
+            >
+              Clear All Filters
+            </button>
+          </div>
+        )}
+      </div>
       <div className="hidden md:block relative">
         <div className="
-      h-[calc(100vh-320px)]
+      h-[calc(100vh-305px)]
       overflow-y-auto
       bg-white
     ">
@@ -619,12 +483,12 @@ const Shippings = (filterOrder) => {
                       selectedOrders.length === orders.length && orders.length > 0
                     }
                     onChange={handleSelectAll}
-                    className="cursor-pointer accent-[#0CBB7D] w-4"
+                    className="cursor-pointer mt-1 accent-[#0CBB7D] w-4"
                   />
                 </th>
-                <th className="py-2 px-3 text-left">Order</th>
-                <th className="py-2 px-3 text-left">AWB</th>
-                <th className="py-2 px-3 text-left">Courier</th>
+                <th className="py-2 px-3 text-left">Order ID</th>
+                <th className="py-2 px-3 text-left">AWB Number</th>
+                <th className="py-2 px-3 text-left">Courier Service Name</th>
                 <th className="py-2 px-3 text-left">Status</th>
                 <th className="py-2 px-3 text-left">Assigned Weight</th>
                 <th className="py-2 px-3 text-left">Applied Charges</th>
@@ -658,26 +522,50 @@ const Shippings = (filterOrder) => {
                         type="checkbox"
                         checked={selectedOrders.includes(order._id)}
                         onChange={() => handleCheckboxChange(order._id)}
-                        className="cursor-pointer accent-[#0CBB7D] w-4"
+                        className="cursor-pointer mt-1 accent-[#0CBB7D] w-4"
                       />
                     </td>
                     <td className="py-2 px-3 whitespace-nowrap">
-                      <Link
-                        to={`/dashboard/order/neworder/updateOrder/${order._id}`}
-                        className="text-[#0CBB7D] font-medium block"
-                      >
-                        {order.orderId}
-                      </Link>
+                      <div className="relative flex items-center gap-1 group">
+                        <Link
+                          to={`/dashboard/order/neworder/updateOrder/${order._id}`}
+                          className="text-[#0CBB7D] font-medium block hover:underline"
+                        >
+                          {order.orderId}
+                        </Link>
+                        <button
+                          onClick={() => handleCopy(order.orderId, order._id + '_id')}
+                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-green-50 rounded"
+                        >
+                          {copiedOrderId === order._id + '_id' ? (
+                            <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                          ) : (
+                            <FiCopy className="w-3 h-3 text-gray-400" />
+                          )}
+                        </button>
+                      </div>
                     </td>
                     <td className="py-2 px-3 whitespace-nowrap">
-                      <p>
+                      <div className="relative flex items-center gap-1 group max-w-fit">
                         <span
-                          className="text-[#0CBB7D] cursor-pointer"
+                          className="text-[#0CBB7D] cursor-pointer font-medium hover:underline"
                           onClick={() => handleTrackingByAwb(order.awb_number)}
                         >
-                          {order.awb_number ? `${order.awb_number}` : "_ _"}
+                          {order.awb_number || "_ _"}
                         </span>
-                      </p>
+                        {order.awb_number && (
+                          <button
+                            onClick={() => handleCopy(order.awb_number, order._id + '_awb')}
+                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-green-50 rounded"
+                          >
+                            {copiedOrderId === order._id + '_awb' ? (
+                              <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                            ) : (
+                              <FiCopy className="w-3 h-3 text-gray-400" />
+                            )}
+                          </button>
+                        )}
+                      </div>
                     </td>
                     <td>
                       <p className="py-2 px-3 whitespace-nowrap">
@@ -687,7 +575,7 @@ const Shippings = (filterOrder) => {
                       </p>
                     </td>
                     <td className="py-2 px-3 whitespace-nowrap">
-                      <span className="px-2 py-1 rounded-lg text-[10px] bg-green-100 text-green-700">
+                      <span className="px-2 rounded py-0.5 text-[10px] bg-green-100 text-[#0CBB7D]">
                         {order.status}
                       </span>
                     </td>
@@ -760,120 +648,145 @@ const Shippings = (filterOrder) => {
         </div>
       </div>
 
-      {/* Mobile View: Display Orders as Cards */}
-      <div className="md:hidden w-full">
-        {/* Select All */}
-        <div className="px-2 py-1 bg-green-200 rounded-lg flex items-center gap-2 mb-2">
-          <input
-            type="checkbox"
-            checked={selectedOrders.length === orders.length && orders.length > 0}
-            onChange={handleSelectAll}
-            className="accent-[#0CBB7D] w-3 h-3"
-          />
-          <span className="text-[10px] font-[600] text-gray-500">Select All</span>
-        </div>
+      {/* Mobile View */}
+      <div className="md:hidden flex flex-col">
+        <div className="p-2 justify-between bg-white rounded-lg flex gap-2 items-center border border-gray-100 mb-2 shadow-sm">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 bg-gray-100 flex-1">
+            <input
+              type="checkbox"
+              checked={orders.length > 0 && selectedOrders.length === orders.length}
+              onChange={handleSelectAll}
+              className="cursor-pointer accent-[#0CBB7D] w-4"
+            />
+            <span className="text-[10px] font-[600] text-gray-700 tracking-wider">Select All</span>
+          </div>
 
-        {/* Orders List */}
-        <div className="space-y-2 h-[calc(100vh-240px)] overflow-y-auto">
-          {loading ? (
-            <ThreeDotLoader />
-          ) : orders.length > 0 ? (
-            orders.map((order, index) => (
-
-
-              <div
-                key={index}
-                className="bg-white shadow rounded-lg border border-gray-200 text-[10px] text-gray-500 overflow-hidden"
-              >
-                {/* Top: Order ID and Status */}
-                <div className="flex justify-between items-center px-4 pt-3">
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="checkbox"
-                      checked={selectedOrders.includes(order._id)}
-                      onChange={() => handleCheckboxChange(order._id)}
-                      className="accent-[#0CBB7D] w-3 h-3"
-                    />
-                    <Link
-                      to={`/dashboard/order/neworder/updateOrder/${order._id}`}
-                      className="text-[#0CBB7D]"
-                    >
-                      {order.orderId}
-                    </Link>
-                  </div>
-                  <span className="bg-green-100 text-green-700 text-[10px] px-2 py-[2px] rounded-lg">
-                    {order.status}
-                  </span>
-                </div>
-
-                {/* Body: Details */}
-                <div className="px-4 py-3 space-y-1">
-                  {[
-                    { label: "AWB", value: order.awb_number || "_ _", isLink: true },
-                    { label: "Courier", value: order.courierServiceName || "_ _" },
-                    {
-                      label: "Assigned Weight",
-                      value: order.orderType === "B2B"
-                        ? `${Number(order.B2BPackageDetails?.applicableWeight)?.toFixed(3) || "_ _"} Kg`
-                        : `${Number(order.packageDetails?.applicableWeight)?.toFixed(3) || "_ _"} Kg`,
-                    },
-                    ...(order.orderType === "B2C"
-                      ? [
-                        {
-                          label: "Entered W&D",
-                          value: `${Number(order.packageDetails?.deadWeight)?.toFixed(3) || "_ _"} Kg, ${order.packageDetails?.volumetricWeight?.length || "_ _"
-                            } x ${order.packageDetails?.volumetricWeight?.width || "_ _"} x ${order.packageDetails?.volumetricWeight?.height || "_ _"
-                            } cm`,
-                        },
-                      ]
-                      : []),
-                    {
-                      label: "Applied Charges",
-                      value: order.totalFreightCharges
-                        ? `₹ ${order.totalFreightCharges}`
-                        : "_ _",
-                    },
-                    { label: "Excess Charges", value: "_ _" },
-                    {
-                      label: "Total Freight",
-                      value: order.totalFreightCharges
-                        ? `₹ ${order.totalFreightCharges}`
-                        : "_ _",
-                    },
-                    { label: "Charged W&D", value: "_ _" },
-                  ].map((item, i) => (
-                    <div
-                      key={i}
-                      className="grid grid-cols-[130px_10px_1fr] gap-1 text-gray-500"
-                    >
-                      <span className="font-medium">{item.label}</span>
-                      <span className="text-center">:</span>
-                      {item.isLink ? (
-                        <span
-                          className="text-[#0CBB7D] cursor-pointer text-right"
-                          onClick={() => handleTrackingByAwb(order.awb_number)}
-                        >
-                          {item.value}
-                        </span>
-                      ) : (
-                        <span className="text-right text-gray-700 break-words">
-                          {item.value}
-                        </span>
-                      )}
-                    </div>
-                  ))}
+          <div className="relative" ref={mobileActionRef}>
+            <button
+              disabled={selectedOrders.length === 0}
+              onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
+              className={`h-[30px] px-3 rounded-lg flex items-center justify-center border transition-all ${selectedOrders.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] bg-white shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+                }`}
+            >
+              <FaBars className="w-3 h-3" />
+            </button>
+            {mobileDropdownOpen && (
+              <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[11px] z-[100] animate-popup-in overflow-hidden">
+                <div
+                  className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                  onClick={handleExportExcel}
+                >
+                  Export
                 </div>
               </div>
-            ))
-          ) : (
-            <div className="flex flex-col items-center justify-center py-6">
-              <img
-                src={NotFound}
-                alt="No Data Found"
-                className="w-60 h-60 object-contain mb-2"
-              />
+            )}
+          </div>
+        </div>
+        <div className="h-[calc(100vh-275px)] overflow-y-auto space-y-2">
 
+          {loading ? (
+            <div className="flex justify-center py-10">
+              <ThreeDotLoader />
             </div>
+          ) : orders.length === 0 ? (
+            <div className="text-center py-10 flex flex-col items-center">
+              <img src={NotFound} alt="No Data Found" className="w-60 h-60" />
+            </div>
+          ) : (
+            orders.map((row) => (
+              <div key={row._id} className="bg-white rounded-lg shadow-sm px-3 py-2 border border-gray-200 animate-popup-in relative">
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="checkbox"
+                      checked={selectedOrders.includes(row._id)}
+                      onChange={() => handleCheckboxChange(row._id)}
+                      className="cursor-pointer accent-[#0CBB7D]"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-[#0CBB7D] font-[600] text-[10px]">#{row.orderId}</span>
+                      <span className="text-gray-500 text-[10px]">{dayjs(row.shipmentCreatedAt || row.createdAt).format("DD MMM YYYY, hh:mm A")}</span>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <span className="px-2 py-0.5 rounded text-[10px] bg-green-100 text-[#0CBB7D]">
+                      {row.status}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-[10px] mb-2">
+                  <div>
+                    <p className="text-gray-400 mb-0.5">AWB Number</p>
+                    <div className="flex items-center gap-1 group">
+                      <p className="text-[#0CBB7D] font-bold active:underline" onClick={() => handleTrackingByAwb(row.awb_number)}>
+                        {row.awb_number || "N/A"}
+                      </p>
+                      {row.awb_number && (
+                        <button onClick={() => handleCopy(row.awb_number, row._id + '_awb_mob')}>
+                          {copiedOrderId === row._id + '_awb_mob' ? <FiCheck className="text-green-500" /> : <FiCopy className="text-gray-300" />}
+                        </button>
+                      )}
+                    </div>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 mb-0.5 text-right">Freight Charges</p>
+                    <p className="text-[#0CBB7D] font-bold text-right">₹{row.totalFreightCharges || 0}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 mb-0.5">Courier Service Name</p>
+                    <p className="text-gray-700 font-bold">{row.courierServiceName || "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-right">Weight</p>
+                    <p
+                      className="text-gray-700 font-bold text-right border-b border-dashed border-gray-400 inline-block float-right cursor-pointer"
+                      onClick={() => setWeightPopupId(weightPopupId === row._id ? null : row._id)}
+                    >
+                      {row.orderType === "B2C" ? row.packageDetails?.applicableWeight : row.B2BPackageDetails?.applicableWeight} Kg
+                    </p>
+                  </div>
+                </div>
+
+                {/* Weight Popup for Mobile */}
+                <AnimatePresence>
+                  {weightPopupId === row._id && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                      <div className="absolute inset-0 bg-black/40" onClick={() => setWeightPopupId(null)}></div>
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        className="bg-white rounded-lg shadow-xl p-4 w-full max-w-xs relative z-10"
+                      >
+                        <div className="flex justify-between items-center mb-3">
+                          <h3 className="font-bold text-gray-700 uppercase text-[12px]">Weight Details</h3>
+                          <X className="w-4 h-4 text-gray-400 cursor-pointer" onClick={() => setWeightPopupId(null)} />
+                        </div>
+                        <div className="space-y-2 text-[12px]">
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Dead Weight</span>
+                            <span className="font-bold">{row.orderType === "B2C" ? row.packageDetails?.deadWeight : row.B2BPackageDetails?.deadWeight || row.B2BPackageDetails?.applicableWeight} Kg</span>
+                          </div>
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Applicable Weight</span>
+                            <span className="font-bold text-[#0CBB7D]">{row.orderType === "B2C" ? row.packageDetails?.applicableWeight : row.B2BPackageDetails?.applicableWeight} Kg</span>
+                          </div>
+                          {row.orderType === "B2C" && (
+                            <>
+                              <div className="border-t pt-2 mt-2">
+                                <span className="text-gray-500 block mb-1">Dimensions (L x W x H)</span>
+                                <span className="font-bold">{row.packageDetails?.volumetricWeight?.length}x{row.packageDetails?.volumetricWeight?.width}x{row.packageDetails?.volumetricWeight?.height} cm</span>
+                              </div>
+                            </>
+                          )}
+                        </div>
+                      </motion.div>
+                    </div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))
           )}
         </div>
       </div>
@@ -886,7 +799,34 @@ const Shippings = (filterOrder) => {
         setLimit={setLimit}
       />
 
-    </div>
+      <ShippingFilterPanel
+        isOpen={isFilterPanelOpen}
+        onClose={() => setIsFilterPanelOpen(false)}
+        searchInput={inputValue}
+        searchType={searchBy}
+        selectedCourier={selectedCourier}
+        status={selectedStatus}
+        paymentType={paymentType}
+        pickupAddress={selectedPickupAddress}
+        courierOptions={courierOptions}
+        pickupAddresses={pickupAddresses}
+        onClearFilters={handleClearFilters}
+        showUserFilter={false}
+        showPaymentType={true}
+        showPickupAddress={true}
+        onApplyFilters={(filters) => {
+          setInputValue(filters.searchInput);
+          setSearchBy(filters.searchType);
+          setSelectedCourier(filters.selectedCourier);
+          setSelectedStatus(filters.status);
+          setPaymentType(filters.paymentType);
+          setSelectedPickupAddress(filters.pickupAddress);
+          setPage(1);
+          setIsFilterPanelOpen(false);
+        }}
+      />
+
+    </div >
   );
 };
 
