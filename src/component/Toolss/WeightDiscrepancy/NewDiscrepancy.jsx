@@ -4,7 +4,8 @@ import { useNavigate, Link, useParams } from "react-router-dom";
 // import { toast } from "react-toastify";
 import AcceptAllModal from "./AcceptAllModal";
 import UploadImageModal from "./UploadImageModal";
-import DeclinedReasonPopup from "./DeclinedReasonPopup";
+import SharedWeightDiscrepancyTable from "./SharedWeightDiscrepancyTable";
+import SharedWeightDiscrepancyCard from "./SharedWeightDiscrepancyCard";
 import dayjs from "dayjs";
 import { ChevronDown, Filter } from "lucide-react";
 import { FiMoreHorizontal, FiArrowRight, FiArrowLeft, FiCopy, FiCheck } from "react-icons/fi";
@@ -394,277 +395,56 @@ const NewDiscrepancy = ({ refresh, setRefresh }) => {
                     )}
                 </div>
 
-                <div className="hidden md:block relative">
-                    <div className="relative overflow-x-auto bg-white overflow-y-auto h-[calc(100vh-295px)]">
-                        <table className="w-full text-left border-collapse">
-                            {/* Table Head */}
-                            <thead className="sticky top-0 z-20 bg-[#0CBB7D]">
-                                <tr className="text-white text-[12px] font-[600]">
-                                    <th className="py-2 px-3">
-                                        <div className="flex justify-center items-center">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedOrders.length === orders.length && orders.length > 0}
-                                                onChange={handleSelectAll}
-                                                className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
-                                            />
-                                        </div>
-                                    </th>
-                                    <th className="py-2 px-3">Product Details</th>
-                                    <th className="py-2 px-3">Upload On</th>
-                                    <th className="py-2 px-3">Shipping Details</th>
-                                    <th className="py-2 px-3">Applied Weight</th>
-                                    <th className="py-2 px-3">Charged Weight</th>
-                                    <th className="py-2 px-3">Excess Weight & Charges</th>
-                                    <th className="py-2 px-3">Status</th>
-                                    <th className="py-2 px-3">Actions</th>
-                                </tr>
-                            </thead>
+                <SharedWeightDiscrepancyTable
+                    orders={orders}
+                    loading={loading}
+                    isAdmin={false}
+                    selectedOrders={selectedOrders}
+                    handleSelectAll={handleSelectAll}
+                    handleCheckboxChange={handleCheckboxChange}
+                    handleTrackingByAwb={handleTrackingByAwb}
+                    handleCopyAwb={handleCopyAwb}
+                    copiedAwb={copiedAwb}
+                    actionsColumnTitle="Actions"
+                    renderActions={(order, index) => (
+                        <>
+                            <div className="relative" ref={(el) => { if (el) dropdownRefs.current[index] = el }}></div>
+                            <button
+                                ref={(el) => {
+                                    if (el) toggleButtonRefs.current[index] = el;
+                                }}
+                                className={`text-gray-700 rounded-lg text-[10px] p-2 bg-gray-100 transition-colors ${dropdownOpen === index ? 'bg-green-100' : ''}`}
+                                onClick={() => toggleDropdown(index)}
+                            >
+                                <FiMoreHorizontal size={16} className={dropdownOpen === index ? "text-[#0CBB7D]" : "text-gray-700"} />
+                            </button>
 
-                            {/* Table Body */}
-                            <tbody>
-                                {loading ? (
-                                    <tr>
-                                        <td colSpan="9" className="text-center py-4">
-                                            <ThreeDotLoader />
-                                        </td>
-                                    </tr>
-                                ) : orders.length === 0 ? (
-                                    <tr>
-                                        <td colSpan="9" className="text-center py-4">
-                                            <div className="flex flex-col items-center justify-center">
-                                                <img
-                                                    src={NotFound}
-                                                    alt="No Data Found"
-                                                    className="w-60 h-60 object-contain mb-2"
-                                                />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ) : (
-
-                                    orders.map((order, index) => {
-                                        const discrepancyDate = new Date(order.createdAt);
-                                        const today = new Date();
-                                        const daysPassed = Math.floor((today - discrepancyDate) / (1000 * 60 * 60 * 24));
-                                        const remainingDays = Math.max(7 - daysPassed, 0);
-
-                                        return (
-                                            <tr key={index} className="text-[12px] border-b text-gray-500">
-                                                {/* Box for Remaining Days */}
-                                                <td className="py-2 px-3 relative align-middle">
-                                                    <div className="absolute -top-2 left-2 bg-red-500 z-[40] text-white text-[10px] px-2 py-1 w-auto rounded-lg whitespace-nowrap">
-                                                        {remainingDays > 0 ? `${remainingDays} days left` : "Auto Accepting Soon"}
-                                                    </div>
-
-                                                    <div className="flex justify-center items-center">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={selectedOrders.includes(order._id)}
-                                                            onChange={() => handleCheckboxChange(order._id)}
-                                                            className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
-                                                        />
-                                                    </div>
-                                                </td>
-                                                <td className="py-2 px-3 whitespace-nowrap" style={{ maxWidth: "200px", width: "180px" }}>
-                                                    {(() => {
-                                                        const products = order.productDetails || [];
-                                                        const names = products.map(p => p.name).join(", ") || "-";
-                                                        const skus = products.map(p => p.sku).join(", ") || "-";
-                                                        const totalQty = products.reduce((sum, p) => sum + (p.quantity || 0), 0);
-
-                                                        const truncateText = (text, limit = 18) =>
-                                                            text.length > limit ? text.slice(0, limit) + "..." : text;
-
-                                                        return (
-                                                            <div className="relative space-y-1">
-                                                                {/* NAME — hover source */}
-                                                                <div className="relative group inline-block max-w-full">
-                                                                    <p className="inline-block max-w-full cursor-pointer border-b border-dashed border-gray-400 group-hover:border-gray-600">
-                                                                        {truncateText(names)}
-                                                                    </p>
-
-                                                                    {/* TOOLTIP */}
-                                                                    <div className="absolute z-[200] hidden group-hover:block
-                                                                        bg-white text-gray-700 text-[10px]
-                                                                        p-2 rounded shadow-2xl w-[280px] border
-                                                                        top-1/2 left-full ml-2
-                                                                        transform -translate-y-1/2
-                                                                        whitespace-normal select-text pointer-events-auto">
-                                                                        <table className="w-full border-collapse">
-                                                                            <thead>
-                                                                                <tr className="text-left border-b">
-                                                                                    <th className="pb-1 pr-2 font-semibold">Name</th>
-                                                                                    <th className="pb-1 pr-2 font-semibold">SKU</th>
-                                                                                    <th className="pb-1 font-semibold">Qty</th>
-                                                                                </tr>
-                                                                            </thead>
-                                                                            <tbody>
-                                                                                {products.map((p, idx) => (
-                                                                                    <tr key={idx} className="border-b last:border-0">
-                                                                                        <td className="py-1 pr-2 break-words">{p.name}</td>
-                                                                                        <td className="py-1 pr-2 break-words">{p.sku}</td>
-                                                                                        <td className="py-1">{p.quantity}</td>
-                                                                                    </tr>
-                                                                                ))}
-                                                                                <tr className="font-semibold border-t">
-                                                                                    <td colSpan={2} className="pt-1">Total</td>
-                                                                                    <td className="pt-1">{totalQty}</td>
-                                                                                </tr>
-                                                                            </tbody>
-                                                                        </table>
-                                                                    </div>
-
-                                                                    {/* INVISIBLE HOVER BRIDGE */}
-                                                                    <div className="absolute left-full top-0 w-3 h-full"></div>
-                                                                </div>
-
-                                                                <p>SKU: {truncateText(skus, 14)}</p>
-                                                                <p>QTY: {totalQty}</p>
-                                                            </div>
-                                                        );
-                                                    })()}
-                                                </td>
-                                                <td className="py-2 px-3 whitespace-nowrap">
-                                                    <p>{dayjs(order.createdAt).format("hh:mm A")}</p>
-                                                    <p>{dayjs(order.createdAt).format("DD MMM YYYY")}</p>
-                                                </td>
-                                                <td className="py-2 px-3 whitespace-nowrap">
-
-                                                    <p className="text-gray-700">{order.courierServiceName}</p>
-                                                    <div className="flex items-center gap-1 group">
-
-                                                        <span
-                                                            onClick={() => handleTrackingByAwb(order.awbNumber)}
-                                                            className="text-[#0CBB7D] font-[600] cursor-pointer hover:underline"
-                                                        >
-                                                            {order.awbNumber}
-                                                        </span>
-                                                        <button
-                                                            onClick={() => handleCopyAwb(order.awbNumber, `desk-${index}`)}
-                                                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-green-50 rounded"
-                                                        >
-                                                            {copiedAwb === `desk-${index}` ? (
-                                                                <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
-                                                            ) : (
-                                                                <FiCopy className="w-3 h-3 text-gray-400" />
-                                                            )}
-                                                        </button>
-                                                    </div>
-                                                </td>
-                                                <td className="py-2 px-3 whitespace-nowrap">
-                                                    <p className="font-[600]">Applied weight: {order.enteredWeight
-                                                        .applicableWeight} Kg</p>
-                                                    <p>
-                                                        Dead Weight: {order.enteredWeight.deadWeight} Kg
-                                                    </p>
-                                                    <div className="text-gray-500">
-                                                        <p>Volumetric weight:</p>
-                                                        <p>
-                                                            {(
-                                                                ((order.enteredWeight?.volumetricWeight?.length || 0) *
-                                                                    (order.enteredWeight?.volumetricWeight?.breadth || 0) *
-                                                                    (order.enteredWeight?.volumetricWeight?.height || 0)) /
-                                                                5000
-                                                            ).toFixed(2)}{" "}
-                                                            Kg (
-                                                            {order.enteredWeight?.volumetricWeight?.length || 0}cm x{" "}
-                                                            {order.enteredWeight?.volumetricWeight?.breadth || 0}cm x{" "}
-                                                            {order.enteredWeight?.volumetricWeight?.height || 0}cm)
-                                                        </p>
-                                                    </div>
-
-                                                </td>
-                                                <td className="py-2 px-3 whitespace-nowrap">
-                                                    <p className="font-[600]">
-                                                        Charged weight: {order.chargedWeight.applicableWeight} Kg
-                                                    </p>
-                                                    <p>
-                                                        Dead Weight: {order.chargedWeight.deadWeight} Kg
-                                                    </p>
-                                                    {order.chargedDimension?.length && order.chargedDimension?.breadth && order.chargedDimension?.height && (
-                                                        <p className="text-gray-500">
-                                                            Volumetric weight:{" "}
-                                                            {(
-                                                                (order.chargedDimension?.length *
-                                                                    order.chargedDimension?.breadth *
-                                                                    order.chargedDimension?.height) /
-                                                                5000
-                                                            ).toFixed(2)}{" "}
-                                                            Kg (
-                                                            {order.chargedDimension?.length}cm x{" "}
-                                                            {order.chargedDimension?.breadth}cm x{" "}
-                                                            {order.chargedDimension?.height}cm)
-                                                        </p>
-                                                    )}
-
-                                                </td>
-
-                                                <td className="py-2 px-3 whitespace-nowrap">
-                                                    <p className="font-[600]"><span>Excess Weight:</span>
-                                                        {order.excessWeightCharges.excessWeight} Kg
-                                                    </p>
-                                                    <p>
-                                                        <span>Excess Charges:</span>{" "}
-                                                        ₹{Number(order.excessWeightCharges.excessCharges || 0).toFixed(2)}
-                                                    </p>
-
-                                                    <p>
-                                                        <span>Pending Amount:</span>
-                                                        ₹{Number(order.excessWeightCharges.pendingAmount || 0).toFixed(2)}
-                                                    </p>
-                                                </td>
-                                                <td className="py-2 px-3 whitespace-nowrap">
-                                                    <span className="px-2 py-1 rounded text-[10px] bg-green-100 text-green-700">
-                                                        {order?.status}
-                                                    </span>
-                                                </td>
-
-                                                <td className="py-2 px-3 whitespace-nowrap">
-                                                    <div className="relative" ref={(el) => { if (el) dropdownRefs.current[index] = el }}></div>
-                                                    <button
-                                                        ref={(el) => {
-                                                            if (el) toggleButtonRefs.current[index] = el;
-                                                        }}
-                                                        // ✅ Imp
-                                                        className={`text-gray-700 rounded-lg text-[10px] p-2 bg-gray-100 transition-colors ${dropdownOpen ? 'bg-green-100' : ''}`}
-                                                        onClick={() => toggleDropdown(index)}
-                                                    >
-                                                        <FiMoreHorizontal size={16} className={dropdownOpen ? "text-[#0CBB7D]" : "text-gray-700"} />
-                                                    </button>
-
-                                                    {dropdownOpen === index && (
-                                                        <div className="absolute right-6 animate-popup-in mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
-                                                            <ul className="text-[10px] font-[600]">
-                                                                <li className={`px-3 py-2 text-gray-500 hover:bg-green-100 cursor-pointer ${loading ? "cursor-not-allowed" : ""}`}>
-                                                                    <button onClick={(e) => { handleDiscrepancy(order.awbNumber); e.stopPropagation(); setDropdownOpen(null) }} disabled={loading}>
-                                                                        {loading ? "Processing..." : "Accept Discrepancy"}
-                                                                    </button>
-                                                                </li>
-                                                                <li className="px-3 py-2 text-gray-500 hover:bg-green-100 cursor-pointer">
-                                                                    <button onClick={(e) => { handleOpenPopup(order.awbNumber); e.stopPropagation(); setDropdownOpen(null) }}>
-                                                                        Raise Discrepancy
-                                                                    </button>
-                                                                </li>
-                                                                {order.adminStatus === "Discrepancy Declined" && (
-                                                                    <li className="px-3 py-2 text-gray-500 hover:bg-green-100 cursor-pointer">
-                                                                        <button onClick={(e) => { handleDeclinedPopup(order.awbNumber, order.discrepancyDeclinedReason); e.stopPropagation(); setDropdownOpen(null) }}>
-                                                                            Declined Reason
-                                                                        </button>
-                                                                    </li>
-                                                                )}
-                                                            </ul>
-                                                        </div>
-                                                    )}
-                                                </td>
-                                            </tr>
-                                        );
-                                    })
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                            {dropdownOpen === index && (
+                                <div className="absolute right-6 animate-popup-in mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
+                                    <ul className="text-[10px] font-[600]">
+                                        <li className={`px-3 py-2 text-gray-500 hover:bg-green-100 cursor-pointer ${loading ? "cursor-not-allowed" : ""}`}>
+                                            <button onClick={(e) => { handleDiscrepancy(order.awbNumber); e.stopPropagation(); setDropdownOpen(null) }} disabled={loading}>
+                                                {loading ? "Processing..." : "Accept Discrepancy"}
+                                            </button>
+                                        </li>
+                                        <li className="px-3 py-2 text-gray-500 hover:bg-green-100 cursor-pointer">
+                                            <button onClick={(e) => { handleOpenPopup(order.awbNumber); e.stopPropagation(); setDropdownOpen(null) }}>
+                                                Raise Discrepancy
+                                            </button>
+                                        </li>
+                                        {order.adminStatus === "Discrepancy Declined" && (
+                                            <li className="px-3 py-2 text-gray-500 hover:bg-green-100 cursor-pointer">
+                                                <button onClick={(e) => { handleDeclinedPopup(order.awbNumber, order.discrepancyDeclinedReason); e.stopPropagation(); setDropdownOpen(null) }}>
+                                                    Declined Reason
+                                                </button>
+                                            </li>
+                                        )}
+                                    </ul>
+                                </div>
+                            )}
+                        </>
+                    )}
+                />
 
 
                 <div className="block md:hidden">
@@ -709,169 +489,48 @@ const NewDiscrepancy = ({ refresh, setRefresh }) => {
                         </div>
                     </div>
                     <div className="space-y-2 h-[calc(100vh-250px)] overflow-y-auto">
+                        <SharedWeightDiscrepancyCard
+                            orders={orders}
+                            loading={loading}
+                            isAdmin={false}
+                            selectedOrders={selectedOrders}
+                            handleCheckboxChange={handleCheckboxChange}
+                            handleTrackingByAwb={handleTrackingByAwb}
+                            handleCopyAwb={handleCopyAwb}
+                            copiedAwb={copiedAwb}
+                            renderActions={(order, index) => (
+                                <>
+                                    <button onClick={() => toggleDropdown(index)}>
+                                        <FiMoreHorizontal size={18} className="text-gray-600" />
+                                    </button>
 
-                        {loading ? (
-                            <div className="flex justify-center py-10">
-                                <ThreeDotLoader />
-                            </div>
-                        ) : orders.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-10 text-gray-400">
-                                <img src={NotFound} alt="Not Found" className="w-60 h-60" />
-                                {/* <p className="text-[14px]">No weight discrepancies found.</p> */}
-                            </div>
-                        ) : (
-                            orders.map((order, index) => {
-                                const discrepancyDate = new Date(order.createdAt);
-                                const today = new Date();
-                                const daysPassed = Math.floor((today - discrepancyDate) / (1000 * 60 * 60 * 24));
-                                const remainingDays = Math.max(7 - daysPassed, 0);
-
-                                return (
-                                    <div key={index} className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden text-[10px]">
-
-                                        {/* 1️⃣ HEADER ROW */}
-                                        <div className="flex justify-between items-center px-3 py-1">
-
-                                            {/* Left: Checkbox + Order ID + Status */}
-                                            <div className="flex items-center gap-2 flex-wrap">
-
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedOrders.includes(order._id)}
-                                                    onChange={() => handleCheckboxChange(order._id)}
-                                                    className="accent-[#0CBB7D] w-3 h-3"
-                                                />
-
-                                                <div className="flex items-center gap-1">
-                                                    <span className="font-[600] text-gray-700 text-[10px]">
-                                                        Order Id : <span className="font-[600] text-[#0CBB7D]">{order.orderId || order._id?.slice(-6)}</span>
-                                                    </span>
-
-                                                    <button
-                                                        onClick={() => handleCopyAwb(order.orderId || order._id?.slice(-6), `order-${index}`)}
-                                                    >
-                                                        {copiedAwb === `order-${index}` ? (
-                                                            <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
-                                                        ) : (
-                                                            <FiCopy className="w-3 h-3 text-gray-400" />
-                                                        )}
-                                                    </button>
-                                                </div>
-
-                                                <span className="px-2 py-0.5 rounded text-[10px] bg-green-100 text-green-700">
-                                                    {order?.status}
-                                                </span>
-                                            </div>
-
-                                            {/* Right: Action Icon */}
-                                            <div className="relative">
-                                                <button onClick={() => toggleDropdown(index)}>
-                                                    <FiMoreHorizontal size={18} className="text-gray-600" />
-                                                </button>
-
-                                                {dropdownOpen === index && (
-                                                    <div className="absolute animate-popup-in right-0 top-6 w-[130px] bg-white border rounded-lg shadow-lg z-50">
-                                                        <ul className="text-[10px] font-[600] text-gray-600">
-                                                            <li
-                                                                className="px-3 py-2 hover:bg-green-50 cursor-pointer"
-                                                                onClick={() => {
-                                                                    handleDiscrepancy(order.awbNumber);
-                                                                    setDropdownOpen(null);
-                                                                }}
-                                                            >
-                                                                Accept Discrepancy
-                                                            </li>
-                                                            <li
-                                                                className="px-3 py-2 hover:bg-green-50 cursor-pointer border-t"
-                                                                onClick={() => {
-                                                                    handleOpenPopup(order.awbNumber);
-                                                                    setDropdownOpen(null);
-                                                                }}
-                                                            >
-                                                                Raise Discrepancy
-                                                            </li>
-                                                        </ul>
-                                                    </div>
-                                                )}
-                                            </div>
+                                    {dropdownOpen === index && (
+                                        <div className="absolute animate-popup-in right-0 top-6 w-[130px] bg-white border rounded-lg shadow-lg z-50">
+                                            <ul className="text-[10px] font-[600] text-gray-600">
+                                                <li
+                                                    className="px-3 py-2 hover:bg-green-50 cursor-pointer"
+                                                    onClick={() => {
+                                                        handleDiscrepancy(order.awbNumber);
+                                                        setDropdownOpen(null);
+                                                    }}
+                                                >
+                                                    Accept Discrepancy
+                                                </li>
+                                                <li
+                                                    className="px-3 py-2 hover:bg-green-50 cursor-pointer border-t"
+                                                    onClick={() => {
+                                                        handleOpenPopup(order.awbNumber);
+                                                        setDropdownOpen(null);
+                                                    }}
+                                                >
+                                                    Raise Discrepancy
+                                                </li>
+                                            </ul>
                                         </div>
-
-
-
-                                        {/* 3️⃣ WEIGHT DETAILS */}
-                                        <div className="px-3 py-1 text-[10px] flex justify-between items-center text-gray-700">
-                                            <div>
-                                                <span className="font-[600] text-red-600">
-                                                    Charged Weight: {order.chargedWeight?.applicableWeight} Kg
-                                                </span>
-                                            </div>
-                                            <div className="font-[600]">
-                                                Applied Weight: {order.enteredWeight?.applicableWeight} Kg
-                                            </div>
-
-                                        </div>
-
-                                        {/* 4️⃣ DATE + WARNING BADGE */}
-                                        <div className="px-3 py-1 flex justify-between items-center border-b text-[10px]">
-                                            <span className="text-gray-700">
-                                                Upload On : {new Date(order.createdAt).toLocaleDateString("en-GB")}
-                                            </span>
-
-                                            <span
-                                                className={`px-2 py-0.5 rounded-full text-white text-[10px] ${remainingDays > 0 ? "bg-red-500" : "bg-orange-500"
-                                                    }`}
-                                            >
-                                                {remainingDays > 0 ? `${remainingDays} Days Left` : "Auto Accept Soon"}
-                                            </span>
-                                        </div>
-
-                                        {/* 5️⃣ SHIPMENT DETAILS */}
-                                        <div className="px-3 py-1 flex justify-between items-center bg-green-50">
-
-                                            {/* Left Side */}
-                                            <div className="flex items-center gap-2">
-
-                                                <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center p-1 shadow-sm border">
-                                                    <img
-                                                        src={getCarrierLogo(order.courierServiceName || "")}
-                                                        alt="carrier"
-                                                        className="w-full h-full object-contain"
-                                                    />
-                                                </div>
-
-                                                <div className="flex flex-col text-[10px]">
-                                                    <span className="font-[600] text-gray-700">
-                                                        {order.courierServiceName}
-                                                    </span>
-
-                                                    <div className="flex items-center gap-1">
-                                                        <span
-                                                            onClick={() => handleTrackingByAwb(order.awbNumber)}
-                                                            className="text-[#0CBB7D] font-[600] cursor-pointer"
-                                                        >
-                                                            {order.awbNumber}
-                                                        </span>
-
-                                                        <button onClick={() => handleCopyAwb(order.awbNumber, `awb-${index}`)}>
-                                                            {copiedAwb === `awb-${index}` ? (
-                                                                <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
-                                                            ) : (
-                                                                <FiCopy className="w-3 h-3 text-gray-400" />
-                                                            )}
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* Right Side Amount */}
-                                            <div className="text-[#0CBB7D] font-[600] text-[10px]">
-                                                ₹{Number(order?.excessWeightCharges?.pendingAmount || 0).toFixed(2)}
-                                            </div>
-                                        </div>
-                                    </div>
-                                );
-                            })
-                        )}
+                                    )}
+                                </>
+                            )}
+                        />
                     </div>
                 </div>
 

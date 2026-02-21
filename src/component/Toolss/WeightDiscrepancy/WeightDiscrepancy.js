@@ -222,7 +222,7 @@ const WeightDiscrepancy = () => {
       {/* Dropdown for mobile screens */}
       <div className="relative w-full md:hidden mb-2 mt-2">
         <button
-          className="w-full font-[600] px-3 py-2 border border-gray-200 shadow-sm text-gray-700 rounded-lg text-[12px] flex justify-between items-center"
+          className="w-full bg-white font-[600] px-3 py-2 border border-gray-200 shadow-sm text-gray-700 rounded-lg text-[12px] flex justify-between items-center"
           onClick={() => setShowDropdown(!showDropdown)}
         >
           {activeTab} <ChevronDown className="w-4 h-4 ml-2" />

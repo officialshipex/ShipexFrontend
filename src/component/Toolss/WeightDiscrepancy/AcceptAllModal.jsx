@@ -45,7 +45,7 @@ const AcceptAllModal = ({ isOpen, onClose, onConfirm, price, selectedOrders,setR
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+        <div className="fixed animate-popup-in inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-[600px]">
                 <h2 className="text-[12px] sm:text-[14px] text-gray-700 font-[600]">Confirm All Weight Discrepancies</h2>
                 <p className="mt-2 text-gray-500 text-[10px] sm:text-[12px]">

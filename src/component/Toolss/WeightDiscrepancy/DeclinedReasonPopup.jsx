@@ -4,7 +4,7 @@ const DeclinedReasonPopup = ({ isOpen, onClose, awbNumber, declinedReason }) => 
     if (!isOpen) return null; // Prevents rendering when modal is closed
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 animate-popup-in z-20">
             <div className="bg-white p-6 rounded-lg shadow-lg w-[600px] text-center relative">
                 {/* Close Button */}
                 <button

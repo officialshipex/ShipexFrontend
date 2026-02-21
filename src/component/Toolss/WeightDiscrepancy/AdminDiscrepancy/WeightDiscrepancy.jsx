@@ -162,7 +162,7 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
     };
 
     return (
-        <div className="p-1 md:p-2 flex flex-col">
+        <div className="sm:px-2 flex flex-col">
             {!isSidebarAdmin && showEmployeeAuthModal && (
                 <EmployeeAuthModal
                     employeeModalShow={showEmployeeAuthModal}
@@ -175,7 +175,7 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
             {(isSidebarAdmin || employeeAccess.canView || employeeAccess.isAdmin) && (
                 <>
                     {/* Title */}
-                    <h1 className="text-[14px] font-[600] text-gray-700 mb-1">
+                    <h1 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 mb-1">
                         Weight Discrepancy
                     </h1>
 
@@ -183,7 +183,7 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
                     <div className="w-full">
 
                         {/* Mobile View: One Combined Card */}
-                        <div className="md:hidden bg-white border border-[#0CBB7D] rounded-lg p-4 text-[12px] text-gray-700 space-y-2">
+                        <div className="md:hidden bg-white border border-[#0CBB7D] rounded-lg px-3 py-2 text-[10px] text-gray-700 space-y-1">
                             {[
                                 { label: "New Discrepancies", count: counts.pending },
                                 { label: "Accepted", count: counts.accepted },
@@ -289,13 +289,13 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
                     {/* Dropdown for mobile screens */}
                     <div className="relative w-full md:hidden mb-2 mt-2 flex gap-2">
                         <button
-                            className="w-full px-3 font-[600] py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] flex justify-between items-center"
+                            className="w-full px-3 font-[600] py-2 text-gray-700 bg-white border border-gray-200 rounded-lg text-[12px] flex justify-between items-center"
                             onClick={() => setShowDropdown(!showDropdown)}
                         >
                             {activeTab} <ChevronDown className="w-4 h-4 ml-2" />
                         </button>
                         {showDropdown && (
-                            <div className="absolute top-full w-full left-0 mt-1 text-gray-700 bg-white border rounded-lg font-[600] shadow-lg z-10">
+                            <div className="absolute top-full w-full left-0 mt-1 animate-popup-in text-gray-700 bg-white border rounded-lg font-[600] shadow-lg z-10">
                                 {tabs.map((tab) => (
                                     <button
                                         key={tab}
@@ -310,8 +310,8 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
                                 ))}
                             </div>
                         )}
-                        <div className="py-2 px-3 bg-[#0CBB7D] rounded-lg flex items-center justify-center cursor-pointer">
-                            <FaUpload className="text-white" />
+                        <div className="h-[34px] px-3 bg-[#0CBB7D] rounded-lg flex items-center justify-center cursor-pointer">
+                            <FaUpload className="text-white" size={12} />
                         </div>
                     </div>
 

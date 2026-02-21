@@ -11,10 +11,12 @@ import ThreeDotLoader from "../../../Loader";
 import Cookies from "js-cookie";
 import { Notification } from "../../../Notification";
 import PaginationFooter from "../../../Common/PaginationFooter";
-import DateFilter from "../../../filter/DateFilter";
+import SharedWeightDiscrepancyTable from "./SharedWeightDiscrepancyTable";
+import SharedWeightDiscrepancyCard from "./SharedWeightDiscrepancyCard";
 import DiscrepancyFilterPanel from "../../../Common/DiscrepancyFilterPanel";
 import { getCarrierLogo } from "../../../Common/getCarrierLogo";
 import NotFound from "../../../assets/nodatafound.png";
+import DateFilter from "../../../filter/DateFilter";
 
 const OrderEscalatedDiscrepancy = () => {
     const [orders, setOrders] = useState([]);
@@ -263,227 +265,19 @@ const OrderEscalatedDiscrepancy = () => {
                     )}
                 </div>
 
-                {/* ── Desktop Table ── */}
-                <div className="hidden md:block relative">
-                    <div className="relative overflow-x-auto bg-white overflow-y-auto h-[calc(100vh-295px)]">
-                        <table className="w-full text-left border-collapse">
-                            {/* Table Head */}
-                            <thead className="sticky top-0 z-20 bg-[#0CBB7D]">
-                                <tr className="text-white text-[12px] font-[600]">
-                                    <th className="py-2 px-3">
-                                        <div className="flex justify-center items-center">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedOrders.length === orders.length && orders.length > 0}
-                                                onChange={handleSelectAll}
-                                                className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
-                                            />
-                                        </div>
-                                    </th>
-                                    <th className="py-2 px-3">Product Details</th>
-                                    <th className="py-2 px-3">Upload On</th>
-                                    <th className="py-2 px-3">Shipping Details</th>
-                                    <th className="py-2 px-3">Applied Weight</th>
-                                    <th className="py-2 px-3">Charged Weight</th>
-                                    <th className="py-2 px-3">Excess Weight & Charges</th>
-                                    <th className="py-2 px-3">Status</th>
-                                </tr>
-                            </thead>
-
-                            {/* Table Body */}
-                            <tbody>
-                                {loading ? (
-                                    <tr>
-                                        <td colSpan="8" className="text-center py-4">
-                                            <ThreeDotLoader />
-                                        </td>
-                                    </tr>
-                                ) : orders.length === 0 ? (
-                                    <tr>
-                                        <td colSpan="8" className="text-center py-4">
-                                            <div className="flex flex-col items-center justify-center">
-                                                <img
-                                                    src={NotFound}
-                                                    alt="No Data Found"
-                                                    className="w-60 h-60 object-contain mb-2"
-                                                />
-                                            </div>
-                                        </td>
-                                    </tr>
-                                ) : (
-                                    orders.map((order, index) => (
-                                        <tr key={index} className="text-[12px] border-b text-gray-500">
-                                            <td className="py-2 px-3 relative align-middle">
-                                                <div className="flex justify-center items-center">
-                                                    <input
-                                                        type="checkbox"
-                                                        checked={selectedOrders.includes(order._id)}
-                                                        onChange={() => handleCheckboxChange(order._id)}
-                                                        className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
-                                                    />
-                                                </div>
-                                            </td>
-
-                                            {/* Product Details with hover tooltip */}
-                                            <td className="py-2 px-3 whitespace-nowrap" style={{ maxWidth: "200px", width: "180px" }}>
-                                                {(() => {
-                                                    const products = order.productDetails || [];
-                                                    const names = products.map(p => p.name).join(", ") || "-";
-                                                    const skus = products.map(p => p.sku).join(", ") || "-";
-                                                    const totalQty = products.reduce((sum, p) => sum + (p.quantity || 0), 0);
-
-                                                    const truncateText = (text, limit = 18) =>
-                                                        text.length > limit ? text.slice(0, limit) + "..." : text;
-
-                                                    return (
-                                                        <div className="relative space-y-1">
-                                                            {/* NAME — hover source */}
-                                                            <div className="relative group inline-block max-w-full">
-                                                                <p className="inline-block max-w-full cursor-pointer border-b border-dashed border-gray-400 group-hover:border-gray-600">
-                                                                    {truncateText(names)}
-                                                                </p>
-
-                                                                {/* TOOLTIP */}
-                                                                <div className="absolute z-[200] hidden group-hover:block
-                                                                    bg-white text-gray-700 text-[10px]
-                                                                    p-2 rounded shadow-2xl w-[280px] border
-                                                                    top-1/2 left-full ml-2
-                                                                    transform -translate-y-1/2
-                                                                    whitespace-normal select-text pointer-events-auto">
-                                                                    <table className="w-full border-collapse">
-                                                                        <thead>
-                                                                            <tr className="text-left border-b">
-                                                                                <th className="pb-1 pr-2 font-semibold">Name</th>
-                                                                                <th className="pb-1 pr-2 font-semibold">SKU</th>
-                                                                                <th className="pb-1 font-semibold">Qty</th>
-                                                                            </tr>
-                                                                        </thead>
-                                                                        <tbody>
-                                                                            {products.map((p, idx) => (
-                                                                                <tr key={idx} className="border-b last:border-0">
-                                                                                    <td className="py-1 pr-2 break-words">{p.name}</td>
-                                                                                    <td className="py-1 pr-2 break-words">{p.sku}</td>
-                                                                                    <td className="py-1">{p.quantity}</td>
-                                                                                </tr>
-                                                                            ))}
-                                                                            <tr className="font-semibold border-t">
-                                                                                <td colSpan={2} className="pt-1">Total</td>
-                                                                                <td className="pt-1">{totalQty}</td>
-                                                                            </tr>
-                                                                        </tbody>
-                                                                    </table>
-                                                                </div>
-
-                                                                {/* INVISIBLE HOVER BRIDGE */}
-                                                                <div className="absolute left-full top-0 w-3 h-full"></div>
-                                                            </div>
-
-                                                            <p>SKU: {truncateText(skus, 14)}</p>
-                                                            <p>QTY: {totalQty}</p>
-                                                        </div>
-                                                    );
-                                                })()}
-                                            </td>
-
-                                            {/* Upload On */}
-                                            <td className="py-2 px-3 whitespace-nowrap">
-                                                <p>{dayjs(order.createdAt).format("hh:mm A")}</p>
-                                                <p>{dayjs(order.createdAt).format("DD MMM YYYY")}</p>
-                                            </td>
-
-                                            {/* Shipping Details */}
-                                            <td className="py-2 px-3 whitespace-nowrap">
-                                                <p className="text-gray-700">{order.courierServiceName}</p>
-                                                <div className="flex items-center gap-1 group">
-                                                    <span
-                                                        onClick={() => handleTrackingByAwb(order.awbNumber)}
-                                                        className="text-[#0CBB7D] font-[600] cursor-pointer hover:underline"
-                                                    >
-                                                        {order.awbNumber}
-                                                    </span>
-                                                    <button
-                                                        onClick={() => handleCopyAwb(order.awbNumber, `desk-${index}`)}
-                                                        className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-green-50 rounded"
-                                                    >
-                                                        {copiedAwb === `desk-${index}` ? (
-                                                            <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
-                                                        ) : (
-                                                            <FiCopy className="w-3 h-3 text-gray-400" />
-                                                        )}
-                                                    </button>
-                                                </div>
-                                            </td>
-
-                                            {/* Applied Weight */}
-                                            <td className="py-2 px-3 whitespace-nowrap">
-                                                <p className="font-[600]">Applied weight: {order.enteredWeight?.applicableWeight} Kg</p>
-                                                <p>Dead Weight: {order.enteredWeight?.deadWeight} Kg</p>
-                                                <div className="text-gray-500">
-                                                    <p>Volumetric weight:</p>
-                                                    <p>
-                                                        {(
-                                                            ((order.enteredWeight?.volumetricWeight?.length || 0) *
-                                                                (order.enteredWeight?.volumetricWeight?.breadth || 0) *
-                                                                (order.enteredWeight?.volumetricWeight?.height || 0)) /
-                                                            5000
-                                                        ).toFixed(2)}{" "}
-                                                        Kg (
-                                                        {order.enteredWeight?.volumetricWeight?.length || 0}cm x{" "}
-                                                        {order.enteredWeight?.volumetricWeight?.breadth || 0}cm x{" "}
-                                                        {order.enteredWeight?.volumetricWeight?.height || 0}cm)
-                                                    </p>
-                                                </div>
-                                            </td>
-
-                                            {/* Charged Weight */}
-                                            <td className="py-2 px-3 whitespace-nowrap">
-                                                <p className="font-[600]">
-                                                    Charged weight: {order.chargedWeight?.applicableWeight} Kg
-                                                </p>
-                                                <p>Dead Weight: {order.chargedWeight?.deadWeight} Kg</p>
-                                                {order.chargedDimension?.length && order.chargedDimension?.breadth && order.chargedDimension?.height && (
-                                                    <p className="text-gray-500">
-                                                        Volumetric weight:{" "}
-                                                        {(
-                                                            (order.chargedDimension?.length *
-                                                                order.chargedDimension?.breadth *
-                                                                order.chargedDimension?.height) /
-                                                            5000
-                                                        ).toFixed(2)}{" "}
-                                                        Kg (
-                                                        {order.chargedDimension?.length}cm x{" "}
-                                                        {order.chargedDimension?.breadth}cm x{" "}
-                                                        {order.chargedDimension?.height}cm)
-                                                    </p>
-                                                )}
-                                            </td>
-
-                                            {/* Excess Weight & Charges */}
-                                            <td className="py-2 px-3 whitespace-nowrap">
-                                                <p className="font-[600]"><span>Excess Weight:</span> {order.excessWeightCharges?.excessWeight} Kg</p>
-                                                <p>
-                                                    <span>Excess Charges:</span>{" "}
-                                                    ₹{Number(order.excessWeightCharges?.excessCharges || 0).toFixed(2)}
-                                                </p>
-                                                <p>
-                                                    <span>Pending Amount:</span>
-                                                    ₹{Number(order.excessWeightCharges?.pendingAmount || 0).toFixed(2)}
-                                                </p>
-                                            </td>
-
-                                            {/* Status */}
-                                            <td className="py-2 px-3 whitespace-nowrap">
-                                                <span className="px-2 py-1 rounded text-[10px] bg-green-100 text-green-700">
-                                                    {order?.clientStatus || order?.status}
-                                                </span>
-                                            </td>
-                                        </tr>
-                                    ))
-                                )}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                <SharedWeightDiscrepancyTable
+                    orders={orders}
+                    loading={loading}
+                    isAdmin={false}
+                    selectedOrders={selectedOrders}
+                    handleSelectAll={handleSelectAll}
+                    handleCheckboxChange={handleCheckboxChange}
+                    handleTrackingByAwb={handleTrackingByAwb}
+                    handleCopyAwb={handleCopyAwb}
+                    copiedAwb={copiedAwb}
+                    actionsColumnTitle={null}
+                    renderActions={null}
+                />
 
                 {/* ── Mobile View ── */}
                 <div className="block md:hidden">
@@ -523,114 +317,17 @@ const OrderEscalatedDiscrepancy = () => {
                     </div>
 
                     <div className="space-y-2 h-[calc(100vh-250px)] overflow-y-auto">
-                        {loading ? (
-                            <div className="flex justify-center py-10">
-                                <ThreeDotLoader />
-                            </div>
-                        ) : orders.length === 0 ? (
-                            <div className="flex flex-col items-center justify-center py-10 text-gray-400">
-                                <img src={NotFound} alt="Not Found" className="w-60 h-60" />
-                            </div>
-                        ) : (
-                            orders.map((order, index) => (
-                                <div key={index} className="bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden text-[10px]">
-
-                                    {/* 1️⃣ HEADER ROW */}
-                                    <div className="flex justify-between items-center px-3 py-1">
-                                        {/* Left: Checkbox + Order ID + Status */}
-                                        <div className="flex items-center gap-2 flex-wrap">
-                                            <input
-                                                type="checkbox"
-                                                checked={selectedOrders.includes(order._id)}
-                                                onChange={() => handleCheckboxChange(order._id)}
-                                                className="accent-[#0CBB7D] w-3 h-3"
-                                            />
-
-                                            <div className="flex items-center gap-1">
-                                                <span className="font-[600] text-gray-700 text-[10px]">
-                                                    Order Id : <span className="font-[600] text-[#0CBB7D]">{order.orderId || order._id?.slice(-6)}</span>
-                                                </span>
-
-                                                <button
-                                                    onClick={() => handleCopyAwb(order.orderId || order._id?.slice(-6), `order-${index}`)}
-                                                >
-                                                    {copiedAwb === `order-${index}` ? (
-                                                        <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
-                                                    ) : (
-                                                        <FiCopy className="w-3 h-3 text-gray-400" />
-                                                    )}
-                                                </button>
-                                            </div>
-
-                                            <span className="px-2 py-0.5 rounded text-[10px] bg-green-100 text-green-700">
-                                                {order?.clientStatus || order?.status}
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    {/* 3️⃣ WEIGHT DETAILS */}
-                                    <div className="px-3 py-1 text-[10px] flex justify-between items-center text-gray-700">
-                                        <div>
-                                            <span className="font-[600] text-red-600">
-                                                Charged Weight: {order.chargedWeight?.applicableWeight} Kg
-                                            </span>
-                                        </div>
-                                        <div className="font-[600]">
-                                            Applied Weight: {order.enteredWeight?.applicableWeight} Kg
-                                        </div>
-                                    </div>
-
-                                    {/* 4️⃣ DATE */}
-                                    <div className="px-3 py-1 flex justify-between items-center border-b text-[10px]">
-                                        <span className="text-gray-700">
-                                            Upload On : {new Date(order.createdAt).toLocaleDateString("en-GB")}
-                                        </span>
-                                    </div>
-
-                                    {/* 5️⃣ SHIPMENT DETAILS */}
-                                    <div className="px-3 py-1 flex justify-between items-center bg-green-50">
-                                        {/* Left Side */}
-                                        <div className="flex items-center gap-2">
-                                            <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center p-1 shadow-sm border">
-                                                <img
-                                                    src={getCarrierLogo(order.courierServiceName || "")}
-                                                    alt="carrier"
-                                                    className="w-full h-full object-contain"
-                                                />
-                                            </div>
-
-                                            <div className="flex flex-col text-[10px]">
-                                                <span className="font-[600] text-gray-700">
-                                                    {order.courierServiceName}
-                                                </span>
-
-                                                <div className="flex items-center gap-1">
-                                                    <span
-                                                        onClick={() => handleTrackingByAwb(order.awbNumber)}
-                                                        className="text-[#0CBB7D] font-[600] cursor-pointer"
-                                                    >
-                                                        {order.awbNumber}
-                                                    </span>
-
-                                                    <button onClick={() => handleCopyAwb(order.awbNumber, `awb-${index}`)}>
-                                                        {copiedAwb === `awb-${index}` ? (
-                                                            <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
-                                                        ) : (
-                                                            <FiCopy className="w-3 h-3 text-gray-400" />
-                                                        )}
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        {/* Right Side Amount */}
-                                        <div className="text-[#0CBB7D] font-[600] text-[10px]">
-                                            ₹{Number(order?.excessWeightCharges?.pendingAmount || 0).toFixed(2)}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))
-                        )}
+                        <SharedWeightDiscrepancyCard
+                            orders={orders}
+                            loading={loading}
+                            isAdmin={false}
+                            selectedOrders={selectedOrders}
+                            handleCheckboxChange={handleCheckboxChange}
+                            handleTrackingByAwb={handleTrackingByAwb}
+                            handleCopyAwb={handleCopyAwb}
+                            copiedAwb={copiedAwb}
+                            renderActions={null}
+                        />
                     </div>
                 </div>
 

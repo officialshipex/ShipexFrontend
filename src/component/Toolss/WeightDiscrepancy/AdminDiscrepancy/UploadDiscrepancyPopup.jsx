@@ -91,7 +91,7 @@ const UploadDiscrepancyPopup = ({ onClose, setRefresh }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[1000]">
+    <div className="fixed inset-0 flex animate-popup-in items-center justify-center bg-black bg-opacity-50 z-[1000]">
       <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] relative">
         <h2 className="text-lg font-bold mb-2">Upload Weight Discrepancy</h2>
 

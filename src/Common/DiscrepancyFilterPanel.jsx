@@ -8,19 +8,25 @@ const DiscrepancyFilterPanel = ({
     searchType: initialSearchType,
     selectedCourier: initialSelectedCourier,
     courierOptions = [],
+    status: initialStatus,
+    showStatus = false,
     onClearFilters,
     onApplyFilters,
+    children,
 }) => {
     const [localFilters, setLocalFilters] = useState({
         searchInput: "",
         searchType: "awbNumber",
         selectedCourier: [],
+        status: "",
     });
 
     const [showSearchTypeDropdown, setShowSearchTypeDropdown] = useState(false);
     const [showCourierDropdown, setShowCourierDropdown] = useState(false);
+    const [showStatusDropdown, setShowStatusDropdown] = useState(false);
     const searchTypeRef = useRef(null);
     const courierRef = useRef(null);
+    const statusRef = useRef(null);
 
     useEffect(() => {
         if (isOpen) {
@@ -32,12 +38,13 @@ const DiscrepancyFilterPanel = ({
                     : initialSelectedCourier
                         ? [initialSelectedCourier]
                         : [],
+                status: initialStatus || "",
             });
             document.body.style.overflow = "hidden";
         } else {
             document.body.style.overflow = "auto";
         }
-    }, [isOpen, initialSearchInput, initialSearchType, initialSelectedCourier]);
+    }, [isOpen, initialSearchInput, initialSearchType, initialSelectedCourier, initialStatus]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -45,6 +52,8 @@ const DiscrepancyFilterPanel = ({
                 setShowSearchTypeDropdown(false);
             if (courierRef.current && !courierRef.current.contains(event.target))
                 setShowCourierDropdown(false);
+            if (statusRef.current && !statusRef.current.contains(event.target))
+                setShowStatusDropdown(false);
         };
         document.addEventListener("mousedown", handleClickOutside);
         return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -57,7 +66,7 @@ const DiscrepancyFilterPanel = ({
     };
 
     const handleClear = () => {
-        const cleared = { searchInput: "", searchType: "awbNumber", selectedCourier: [] };
+        const cleared = { searchInput: "", searchType: "awbNumber", selectedCourier: [], status: "" };
         setLocalFilters(cleared);
         onClearFilters();
     };
@@ -85,7 +94,7 @@ const DiscrepancyFilterPanel = ({
                 {/* Header */}
                 <div className="flex items-center justify-between p-4 border-b">
                     <h2 className="text-[14px] font-bold text-gray-700 tracking-tight">
-                        More Filters
+                        Filters
                     </h2>
                     <button
                         onClick={onClose}
@@ -97,6 +106,12 @@ const DiscrepancyFilterPanel = ({
 
                 {/* Content */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
+                    {/* Children Filter (e.g., UserFilter) */}
+                    {children && (
+                        <div className="space-y-1">
+                            {children}
+                        </div>
+                    )}
                     {/* Search Type */}
                     <div className="space-y-1" ref={searchTypeRef}>
                         <label className="text-[12px] font-[600] text-gray-400">
@@ -146,6 +161,8 @@ const DiscrepancyFilterPanel = ({
                             )}
                         </div>
                     </div>
+
+
 
                     {/* Search Input */}
                     <div className="space-y-1">
@@ -231,6 +248,57 @@ const DiscrepancyFilterPanel = ({
                             )}
                         </div>
                     </div>
+
+                    {/* Status Filter */}
+                    {showStatus && (
+                        <div className="space-y-1" ref={statusRef}>
+                            <label className="text-[12px] font-[600] text-gray-400">
+                                Status
+                            </label>
+                            <div className="relative">
+                                <button
+                                    onClick={() => setShowStatusDropdown(!showStatusDropdown)}
+                                    className={`${fieldStyle} border ${showStatusDropdown
+                                        ? "border-[#0CBB7D]"
+                                        : "border-gray-300"
+                                        } bg-white`}
+                                >
+                                    <span className={localFilters.status ? "text-gray-700 font-[600]" : "text-gray-400"}>
+                                        {localFilters.status || "All Status"}
+                                    </span>
+                                    <ChevronDown
+                                        className={`w-4 h-4 transition-transform ${showStatusDropdown ? "rotate-180" : ""
+                                            }`}
+                                    />
+                                </button>
+                                {showStatusDropdown && (
+                                    <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-20 py-1 animate-popup-in">
+                                        {[
+                                            { label: "All Status", value: "" },
+                                            { label: "New", value: "new" },
+                                            { label: "Accepted", value: "Accepted" },
+                                            { label: "Discrepancy Raised", value: "Discrepancy Raised" },
+                                            { label: "Discrepancy Declined", value: "Discrepancy Declined" },
+                                        ].map((opt) => (
+                                            <div
+                                                key={opt.value}
+                                                onClick={() => {
+                                                    setLocalFilters({
+                                                        ...localFilters,
+                                                        status: opt.value,
+                                                    });
+                                                    setShowStatusDropdown(false);
+                                                }}
+                                                className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                            >
+                                                {opt.label}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Footer Buttons */}

@@ -56,7 +56,7 @@ const UploadImageModal = ({ onClose, awbNumber,setRefresh1,setRefresh }) => {
     };
 
     return (
-        <div className="fixed inset-0 flex items-center animate-popup-in justify-center bg-black bg-opacity-50 z-[100]">
+        <div className="fixed animate-popup-in inset-0 flex items-center animate-popup-in justify-center bg-black bg-opacity-50 z-[100]">
             <div className="bg-white p-5 rounded-lg shadow-lg w-[600px]">
                 <h2 className="text-[12px] sm:text-[14px] text-gray-500 font-[600] mb-3">Raise Discrepancy</h2>
 

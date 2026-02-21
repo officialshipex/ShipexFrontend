@@ -40,7 +40,7 @@ const AcceptDiscrepancy = ({ isOpen, onClose, awbNumber, setRefresh }) => {
   };
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed animate-popup-in inset-0 flex items-center justify-center bg-black bg-opacity-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-80 text-center">
         <h2 className="text-lg font-semibold mb-4">
           Are you sure to accept Dispute?
