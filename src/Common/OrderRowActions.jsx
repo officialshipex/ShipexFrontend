@@ -123,7 +123,7 @@ const OrderRowActions = ({
                             toggleDropdown(index);
                         }}
                     >
-                        <FiMoreHorizontal size={16} className={isOpen ? "text-[#0CBB7D]" : "text-gray-700"} />
+                        <FiMoreHorizontal size={16} className={isOpen ? "text-[#0CBB7D]" : "text-gray-700"}/>
                     </button>
 
                     {isOpen && position && createPortal(

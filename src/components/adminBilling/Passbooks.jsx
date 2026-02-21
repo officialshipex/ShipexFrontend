@@ -114,7 +114,7 @@ const Passbooks = () => {
     if (selectedTransactions.length === transactions.length && transactions.length > 0) {
       setSelectedTransactions([]);
     } else {
-      setSelectedTransactions(transactions.map((t) => t.id));
+      setSelectedTransactions(transactions.map((t) => t.id || t._id));
     }
   };
 
@@ -200,7 +200,7 @@ const Passbooks = () => {
     }
   };
 
-  const isAnyFilterApplied = selectedUserId || dateRange || category || description || awbNumber || orderId;
+  const isAnyFilterApplied = selectedUserId || (dateRange && dateRange[0]?.endDate) || category || description || awbNumber || orderId;
 
   return (
     <div className="space-y-2">
@@ -353,8 +353,8 @@ const Passbooks = () => {
                       <div className="flex justify-center items-center">
                         <input
                           type="checkbox"
-                          checked={selectedTransactions.includes(row.id)}
-                          onChange={() => handleCheckboxChange(row.id)}
+                          checked={selectedTransactions.includes(row.id || row._id)}
+                          onChange={() => handleCheckboxChange(row.id || row._id)}
                           className="cursor-pointer accent-[#0CBB7D] w-4"
                         />
                       </div>
@@ -477,8 +477,8 @@ const Passbooks = () => {
                   <div className="flex items-center gap-2">
                     <input
                       type="checkbox"
-                      checked={selectedTransactions.includes(row.id)}
-                      onChange={() => handleCheckboxChange(row.id)}
+                      checked={selectedTransactions.includes(row.id || row._id)}
+                      onChange={() => handleCheckboxChange(row.id || row._id)}
                       className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
                     />
                     <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center p-0.5 border shadow-xs overflow-hidden shrink-0">

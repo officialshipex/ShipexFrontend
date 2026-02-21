@@ -17,7 +17,6 @@ const InvoicesFilterPanel = ({
 }) => {
     const [localFilters, setLocalFilters] = useState({
         selectedUserId: null,
-        invoiceNumber: "",
         month: "",
         year: ""
     });
@@ -32,7 +31,6 @@ const InvoicesFilterPanel = ({
         if (isOpen) {
             setLocalFilters({
                 selectedUserId: initialSelectedUserId || null,
-                invoiceNumber: initialInvoiceNumber || "",
                 month: initialMonth || "",
                 year: initialYear || ""
             });
@@ -60,7 +58,6 @@ const InvoicesFilterPanel = ({
     const handleClear = () => {
         const cleared = {
             selectedUserId: null,
-            invoiceNumber: "",
             month: "",
             year: ""
         };
@@ -96,17 +93,6 @@ const InvoicesFilterPanel = ({
                             />
                         </div>
                     )}
-                    {/* Invoice Number */}
-                    <div className="space-y-1">
-                        <label className="text-[12px] font-[600] text-gray-400">Invoice Number</label>
-                        <input
-                            type="text"
-                            placeholder="Enter Invoice Number"
-                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D]`}
-                            value={localFilters.invoiceNumber}
-                            onChange={(e) => setLocalFilters({ ...localFilters, invoiceNumber: e.target.value })}
-                        />
-                    </div>
 
                     {/* Month Dropdown */}
                     <div className="space-y-1" ref={monthRef}>

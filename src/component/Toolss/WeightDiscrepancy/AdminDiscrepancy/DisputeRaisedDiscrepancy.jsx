@@ -367,7 +367,7 @@ const DisputeRaisedDiscrepancy = ({ refresh, setRefresh, canAction }) => {
                         <button
                           onClick={() => handleOpenPopup(order.awbNumber)}
                           className="w-16 bg-[#0CBB7D] text-white px-2 py-1 rounded-lg text-[10px] hover:bg-opacity-90 transition disabled:opacity-50"
-                          disabled={!canAction} 
+                          disabled={!canAction}
                         >
                           Accept
                         </button>

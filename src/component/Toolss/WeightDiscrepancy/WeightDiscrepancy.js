@@ -27,7 +27,7 @@ const WeightDiscrepancy = () => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const params={id}
+        const params = { id }
         const token = Cookies.get("session");
         const response = await axios.get(
           `${REACT_APP_BACKEND_URL}/dispreancy/allDispreancyCountById`,
@@ -71,14 +71,14 @@ const WeightDiscrepancy = () => {
   const tabStorageKey = isNdrRoute
     ? "activeNdrTab"
     : isDiscrepancyRoute
-    ? "activeUserDiscrepancyTab"
-    : "activeOrderTab";
+      ? "activeUserDiscrepancyTab"
+      : "activeOrderTab";
 
   const defaultTab = isNdrRoute
     ? "Action Required"
     : isDiscrepancyRoute
-    ? "New"
-    : "New";
+      ? "New"
+      : "New";
 
   const [activeTab, setActiveTab] = useState(() => {
     return localStorage.getItem(tabStorageKey) || defaultTab;
@@ -122,11 +122,11 @@ const WeightDiscrepancy = () => {
   };
 
   return (
-    <div className="sm:px-2 px-1 md:px-2 flex flex-col">
+    <div className="sm:px-2 flex flex-col">
       {/* Title */}
       {!id && (
-        <div className="mb-1">
-          <h1 className="text-[14px] font-[600] text-gray-700">
+        <div>
+          <h1 className="text-[12px] mb-2 sm:text-[14px] font-[600] text-gray-700">
             Weight Discrepancy
           </h1>
         </div>
@@ -135,7 +135,7 @@ const WeightDiscrepancy = () => {
       {/* Cards Section */}
       <div className="w-full">
         {/* Mobile View: One Combined Card */}
-        <div className="md:hidden bg-white border border-[#0CBB7D] rounded-lg p-4 text-[12px] text-gray-700 space-y-2">
+        <div className="md:hidden bg-white border border-[#0CBB7D] rounded-lg px-3 py-2 text-[10px] text-gray-700 space-y-2">
           {[
             { label: "New Discrepancies", count: counts.new },
             { label: "Accepted", count: counts.accepted },
@@ -147,8 +147,8 @@ const WeightDiscrepancy = () => {
               className="grid"
               style={{ gridTemplateColumns: "180px 10px 1fr" }}
             >
-              <span className="text-gray-500 font-[600]">{item.label}</span>
-              <span className="text-center text-gray-500">:</span>
+              <span className="text-gray-700 font-[600]">{item.label}</span>
+              <span className="text-center text-gray-700">:</span>
               <span className="font-[600] text-gray-700 text-right">
                 {item.count}
               </span>
@@ -187,7 +187,7 @@ const WeightDiscrepancy = () => {
             <div
               key={index}
               className="flex items-center space-x-2 bg-white border border-[#0CBB7D] p-2 rounded-lg"
-              // onClick={() => setActiveTab(item.status)}
+            // onClick={() => setActiveTab(item.status)}
             >
               <div className="p-2 bg-[#0CBB7D] rounded-full font-[600] flex items-center justify-center">
                 {item.icon}
@@ -208,11 +208,10 @@ const WeightDiscrepancy = () => {
         {tabs.map((tab) => (
           <button
             key={tab}
-            className={`px-3 py-2 rounded-lg border text-[12px] font-[600] transition-all ${
-              activeTab === tab
+            className={`px-3 py-2 rounded-lg border text-[12px] font-[600] transition-all ${activeTab === tab
                 ? "bg-[#0CBB7D] text-white"
                 : "bg-white text-gray-700 hover:bg-green-200"
-            }`}
+              }`}
             onClick={() => setActiveTab(tab)}
           >
             {tab}
@@ -223,19 +222,18 @@ const WeightDiscrepancy = () => {
       {/* Dropdown for mobile screens */}
       <div className="relative w-full md:hidden mb-2 mt-2">
         <button
-          className="w-full font-[600] px-3 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] flex justify-between items-center"
+          className="w-full font-[600] px-3 py-2 border border-gray-200 shadow-sm text-gray-700 rounded-lg text-[12px] flex justify-between items-center"
           onClick={() => setShowDropdown(!showDropdown)}
         >
           {activeTab} <ChevronDown className="w-4 h-4 ml-2" />
         </button>
         {showDropdown && (
-          <div className="absolute top-full left-0 w-full mt-1 bg-white border rounded-lg z-10">
+          <div className="absolute top-full animate-popup-in left-0 w-full mt-1 bg-white border rounded-lg z-10">
             {tabs.map((tab) => (
               <button
                 key={tab}
-                className={`w-full text-left px-3 py-2 text-[12px] font-[600] ${
-                  activeTab === tab ? "bg-green-100" : "hover:bg-green-50"
-                }`}
+                className={`w-full text-left px-3 py-2 text-[12px] font-[600] ${activeTab === tab ? "bg-green-100" : "hover:bg-green-50"
+                  }`}
                 onClick={() => {
                   setActiveTab(tab);
                   setShowDropdown(false);

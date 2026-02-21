@@ -357,7 +357,7 @@ const Navbar = () => {
           <div className="sm:hidden">
             <button
               onClick={() => setShowQuickPopup(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-full border border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50 transition"
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-[#0CBB7D] text-white hover:bg-green-50 transition"
             >
               <FiZap className="text-[14px]" />
             </button>
@@ -455,7 +455,7 @@ const Navbar = () => {
             {/* Toggle Button - Icon with Border */}
             <button
               onClick={() => setIsMobileSearchOpen((p) => !p)}
-              className="flex items-center justify-center w-8 h-8 rounded-full border border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50 transition"
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-[#0CBB7D] text-white hover:bg-green-50 transition"
               aria-label="Open Master Search"
             >
               <FiSearch className="text-[14px]" />

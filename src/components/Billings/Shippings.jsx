@@ -380,7 +380,7 @@ const Shippings = (filterOrder) => {
   return (
     <div>
       {/* Desktop Filter Section */}
-      <div className="hidden md:flex gap-2 relative sm:items-center">
+      <div className="hidden md:flex gap-2 mb-2 relative sm:items-center">
         <DateFilter
           onDateChange={(range) => {
             setDateRange(range);
@@ -468,7 +468,7 @@ const Shippings = (filterOrder) => {
       </div>
       <div className="hidden md:block relative">
         <div className="
-      h-[calc(100vh-305px)]
+      h-[calc(100vh-300px)]
       overflow-y-auto
       bg-white
     ">
@@ -477,14 +477,16 @@ const Shippings = (filterOrder) => {
             <thead className="sticky top-0 z-20 bg-[#0CBB7D]">
               <tr className="text-white bg-[#0CBB7D] text-[12px] font-[600]">
                 <th className="py-2 px-3 text-left bg-[#0CBB7D] shadow-[0_1px_0_0_#0CBB7D]">
-                  <input
+                  <div className="flex justify-center items-center">
+                    <input
                     type="checkbox"
                     checked={
                       selectedOrders.length === orders.length && orders.length > 0
                     }
                     onChange={handleSelectAll}
-                    className="cursor-pointer mt-1 accent-[#0CBB7D] w-4"
+                    className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
                   />
+                  </div>
                 </th>
                 <th className="py-2 px-3 text-left">Order ID</th>
                 <th className="py-2 px-3 text-left">AWB Number</th>
@@ -518,12 +520,14 @@ const Shippings = (filterOrder) => {
                     className="hover:bg-gray-50 border-gray-300 border-b text-gray-500 transition-all text-[12px] font-[400] relative"
                   >
                     <td className="py-2 px-3 whitespace-nowrap align-middle">
-                      <input
+                      <div className="flex justify-center items-center">
+                        <input
                         type="checkbox"
                         checked={selectedOrders.includes(order._id)}
                         onChange={() => handleCheckboxChange(order._id)}
-                        className="cursor-pointer mt-1 accent-[#0CBB7D] w-4"
+                        className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
                       />
+                      </div>
                     </td>
                     <td className="py-2 px-3 whitespace-nowrap">
                       <div className="relative flex items-center gap-1 group">
@@ -682,7 +686,7 @@ const Shippings = (filterOrder) => {
             )}
           </div>
         </div>
-        <div className="h-[calc(100vh-275px)] overflow-y-auto space-y-2">
+        <div className="h-[calc(100vh-250px)] overflow-y-auto space-y-2">
 
           {loading ? (
             <div className="flex justify-center py-10">
@@ -704,7 +708,7 @@ const Shippings = (filterOrder) => {
                       className="cursor-pointer accent-[#0CBB7D]"
                     />
                     <div className="flex flex-col">
-                      <span className="text-[#0CBB7D] font-[600] text-[10px]">#{row.orderId}</span>
+                      <span className="font-[600] text-[10px]">Order Id :<span className="text-[#0CBB7D]">{row.orderId}</span></span>
                       <span className="text-gray-500 text-[10px]">{dayjs(row.shipmentCreatedAt || row.createdAt).format("DD MMM YYYY, hh:mm A")}</span>
                     </div>
                   </div>

@@ -34,7 +34,7 @@ const CourierFilter = ({
         type="button"
         onClick={() => setShowDropdown((prev) => !prev)}
         className={`w-full bg-white py-2 px-3 text-[12px] font-[600]
-          border border-gray-300 rounded-lg flex items-center justify-between text-gray-400 ${showDropdown || selectedCourier.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D]" : "border-gray-200"}`}
+          border rounded-lg flex items-center justify-between text-gray-400 ${showDropdown || selectedCourier.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D]" : "border-gray-300"}`}
       >
         <span className="truncate mr-2">{displayText()}</span>
         <ChevronDown

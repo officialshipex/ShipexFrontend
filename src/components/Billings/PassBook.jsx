@@ -81,6 +81,7 @@ const Passbooks = ({
           params: params,
         }
       );
+      console.log("trans", response.data.results)
       setTransactions(response.data.results || []);
       // The seller API returns `page` as total pages in some components, 
       // but let's check what it actually returns for passbook.
@@ -173,7 +174,7 @@ const Passbooks = ({
     setMobileDropdownOpen(false);
   };
 
-  const isAnyFilterApplied = dateRange || category || description || awbNumber || orderId;
+  const isAnyFilterApplied = (dateRange && dateRange[0]?.endDate) || category || description || awbNumber || orderId;
 
   return (
     <div className="space-y-2 w-full">
@@ -186,6 +187,7 @@ const Passbooks = ({
               setPage(1);
             }}
             clearTrigger={clearTrigger}
+            noInitialFilter={true}
           />
         </div>
 
@@ -248,6 +250,7 @@ const Passbooks = ({
                 setPage(1);
               }}
               clearTrigger={clearTrigger}
+              noInitialFilter={true}
             />
           </div>
           <button
@@ -273,7 +276,7 @@ const Passbooks = ({
 
       {/* Desktop Table View */}
       <div className="hidden md:block relative">
-        <div className="h-[calc(100vh-285px)] overflow-y-auto bg-white shadow-sm border rounded-lg">
+        <div className="h-[calc(100vh-300px)] overflow-y-auto bg-white shadow-sm">
           <table className="min-w-full border-collapse text-[12px] text-left relative">
             <thead className="sticky top-0 z-40 bg-[#0CBB7D] text-white font-[600]">
               <tr>
@@ -283,7 +286,7 @@ const Passbooks = ({
                       type="checkbox"
                       checked={selectedTransactions.length === transactions.length && transactions.length > 0}
                       onChange={handleSelectAll}
-                      className="cursor-pointer accent-[#0CBB7D] w-4 h-4"
+                      className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
                     />
                   </div>
                 </th>
@@ -311,62 +314,62 @@ const Passbooks = ({
                 </tr>
               ) : (
                 transactions.map((row, index) => (
-                  <tr key={index} className="border-b border-gray-200 hover:bg-gray-50 text-gray-600 transition-colors">
+                  <tr key={index} className="border-b border-gray-200 hover:bg-gray-50 text-gray-700 transition-colors">
                     <td className="py-2 px-3">
                       <div className="flex justify-center items-center">
                         <input
                           type="checkbox"
                           checked={selectedTransactions.includes(row.id || row._id)}
                           onChange={() => handleCheckboxChange(row.id || row._id)}
-                          className="cursor-pointer accent-[#0CBB7D] w-4 h-4"
+                          className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
                         />
                       </div>
                     </td>
                     <td className="py-2 px-3">
-                      <p className="text-gray-700 font-[600]">{dayjs(row.date).format("DD MMM YYYY")}</p>
-                      <p className="text-gray-400 text-[10px]">{dayjs(row.date).format("hh:mm A")}</p>
+                      <p className="text-gray-700">{dayjs(row.date).format("DD MMM YYYY")}</p>
+                      <p className="text-gray-500">{dayjs(row.date).format("hh:mm A")}</p>
                     </td>
                     <td className="py-2 px-3">
                       <div className="flex items-center gap-1 group">
-                        <Link to={`/dashboard/order/neworder/updateOrder/${row.orderId}`} className="text-[#0CBB7D] hover:underline block font-[600]">
-                          #{row.orderId}
+                        <Link to={`/dashboard/order/neworder/updateOrder/${row.orderId}`} className="text-[#0CBB7D] hover:underline block font-medium">
+                          {row.orderId}
                         </Link>
                         <button onClick={() => handleCopy(row.orderId, row.id || row._id + '_orderId')}>
                           {copiedId === (row.id || row._id + '_orderId') ? (
                             <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
                           ) : (
-                            <FiCopy className="w-3 h-3 text-gray-300 transition-opacity opacity-0 group-hover:opacity-100" />
+                            <FiCopy className="w-3 h-3 text-gray-400 transition-opacity opacity-0 group-hover:opacity-100" />
                           )}
                         </button>
                       </div>
                     </td>
                     <td className="py-2 px-3">
                       <div className="flex items-center gap-1 group">
-                        <p className="text-[#0CBB7D] cursor-pointer hover:underline font-[600]" onClick={() => handleTrackingByAwb(row.awb_number)}>
+                        <p className="text-[#0CBB7D] cursor-pointer hover:underline font-medium" onClick={() => handleTrackingByAwb(row.awb_number)}>
                           {row.awb_number}
                         </p>
                         <button onClick={() => handleCopy(row.awb_number, row.id || row._id + '_awb')}>
                           {copiedId === (row.id || row._id + '_awb') ? (
                             <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
                           ) : (
-                            <FiCopy className="w-3 h-3 text-gray-300 transition-opacity opacity-0 group-hover:opacity-100" />
+                            <FiCopy className="w-3 h-3 text-gray-400 transition-opacity opacity-0 group-hover:opacity-100" />
                           )}
                         </button>
                       </div>
                     </td>
                     <td className="py-2 px-3">
-                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-[600] uppercase ${row.category === "debit" ? "bg-red-50 text-red-500" : "bg-green-50 text-[#0CBB7D]"}`}>
+                      <span className={`px-2 py-0.5 rounded text-[10px] ${row.category === "debit" ? "bg-red-50 text-red-500" : "bg-green-50 text-[#0CBB7D]"}`}>
                         {row.category}
                       </span>
                     </td>
                     <td className="py-2 px-3">
-                      <span className={`font-[700] ${row.category === "debit" ? "text-red-500" : "text-[#0CBB7D]"}`}>
+                      <span className={`${row.category === "debit" ? "text-red-500" : "text-[#0CBB7D]"}`}>
                         {row.category === "debit" ? "-" : "+"} ₹{Number(row.amount).toFixed(2)}
                       </span>
                     </td>
-                    <td className="py-2 px-3 text-gray-700 font-[600]">₹{Number(row.balanceAfterTransaction).toFixed(2)}</td>
+                    <td className="py-2 px-3 text-gray-700">₹{Number(row.balanceAfterTransaction).toFixed(2)}</td>
                     <td className="py-2 px-3">
-                      <p className="line-clamp-2 text-[11px] leading-relaxed text-gray-500" title={row.description}>{row.description}</p>
+                      <p className="line-clamp-2 text-[12px] leading-relaxed text-gray-700" title={row.description}>{row.description}</p>
                     </td>
                   </tr>
                 ))
@@ -384,14 +387,14 @@ const Passbooks = ({
               type="checkbox"
               checked={selectedTransactions.length === transactions.length && transactions.length > 0}
               onChange={handleSelectAll}
-              className="cursor-pointer accent-[#0CBB7D] w-4 h-4"
+              className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
             />
-            <span className="text-[11px] font-[600] text-gray-600">Select All</span>
+            <span className="text-[10px] font-[600] text-gray-700">Select All</span>
           </div>
 
           <div ref={mobileActionRef} className="relative">
             <button
-              className={`h-[32px] px-3 rounded-lg font-[600] flex items-center gap-2 transition bg-white border ${selectedTransactions.length === 0
+              className={`h-[30px] px-3 rounded-lg font-[600] flex items-center gap-2 transition bg-white border ${selectedTransactions.length === 0
                 ? "border-gray-200 text-gray-400 cursor-not-allowed"
                 : "text-[#0CBB7D] border-[#0CBB7D]"
                 }`}
@@ -404,7 +407,7 @@ const Passbooks = ({
               <div className="absolute right-0 mt-1 w-40 bg-white border-2 border-gray-200 rounded-lg shadow-xl z-[100] animate-popup-in overflow-hidden">
                 <ul className="font-[600] text-[12px]">
                   <li
-                    className="px-4 py-2 text-gray-700 hover:bg-green-50 cursor-pointer"
+                    className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer"
                     onClick={() => {
                       handleExport();
                       setMobileDropdownOpen(false);
@@ -418,22 +421,22 @@ const Passbooks = ({
           </div>
         </div>
 
-        <div className="h-[calc(100vh-260px)] overflow-y-auto space-y-2">
+        <div className="h-[calc(100vh-250px)] overflow-y-auto space-y-2">
           {loading ? (
             <div className="flex justify-center py-10"><ThreeDotLoader /></div>
           ) : transactions.length > 0 ? (
             transactions.map((row, index) => (
               <div key={index} className="bg-white border border-gray-100 rounded-xl shadow-sm p-3 text-[11px] animate-popup-in">
                 {/* Header Bar */}
-                <div className="flex gap-2 justify-between rounded-lg bg-green-50/50 py-2 px-3 items-center mb-3">
-                  <div className="flex items-center gap-3">
+                <div className="flex gap-2 justify-between items-center mb-2">
+                  <div className="flex items-center gap-2">
                     <input
                       type="checkbox"
                       checked={selectedTransactions.includes(row.id || row._id)}
                       onChange={() => handleCheckboxChange(row.id || row._id)}
-                      className="cursor-pointer accent-[#0CBB7D] w-4 h-4"
+                      className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
                     />
-                    <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center p-1.5 border border-green-100 shadow-sm overflow-hidden shrink-0">
+                    <div className="w-7 h-7 rounded-full bg-white flex items-center justify-center p-1.5 border border-gray-100 shadow-sm overflow-hidden shrink-0">
                       <img
                         src={getCarrierLogo(row?.courierServiceName || "")}
                         alt=""
@@ -444,28 +447,28 @@ const Passbooks = ({
                   </div>
 
                   <div className="flex flex-col flex-1 min-w-0 ml-1">
-                    <span className="text-gray-700 font-[700] truncate text-[12px]">
+                    <span className="text-gray-700 font-[600] truncate text-[10px]">
                       {row?.courierServiceName || "Transaction"}
                     </span>
-                    <span className="text-gray-400 font-[600] text-[10px]">
+                    <span className="text-gray-500 text-[10px]">
                       {dayjs(row.date).format("DD MMM YYYY, hh:mm A")}
                     </span>
                   </div>
 
                   <div className="text-right">
-                    <span className={`px-2 py-0.5 rounded-full text-[10px] font-[700] uppercase ${row.category === "debit" ? "bg-red-50 text-red-500" : "bg-green-50 text-[#0CBB7D]"}`}>
+                    <span className={`px-2 py-0.5 rounded text-[10px] ${row.category === "debit" ? "bg-red-100 text-red-600" : "bg-green-50 text-[#0CBB7D]"}`}>
                       {row.category}
                     </span>
                   </div>
                 </div>
 
                 {/* Details Grid */}
-                <div className="grid grid-cols-2 gap-y-3 mb-3">
+                <div className="grid grid-cols-2 gap-y-2">
                   <div>
-                    <p className="text-gray-400 font-[600] text-[10px] mb-0.5">Order ID</p>
+                    <p className="text-gray-700 text-[10px] mb-0.5">Order ID</p>
                     <div className="flex items-center gap-1">
-                      <Link to={`/dashboard/order/neworder/updateOrder/${row.orderId}`} className="text-[#0CBB7D] font-[700] hover:text-[#0CBB7D] text-[12px]">
-                        #{row.orderId}
+                      <Link to={`/dashboard/order/neworder/updateOrder/${row.orderId}`} className="text-[#0CBB7D] font-[600] hover:text-[#0CBB7D] text-[10px]">
+                        {row.orderId}
                       </Link>
                       <button onClick={() => handleCopy(row.orderId, (row.id || row._id) + '_orderId_mobile')}>
                         {copiedId === (row.id || row._id) + '_orderId_mobile' ? (
@@ -476,10 +479,10 @@ const Passbooks = ({
                       </button>
                     </div>
                   </div>
-                  <div className="text-right">
-                    <p className="text-gray-400 font-[600] text-[10px] mb-0.5">AWB Number</p>
+                  <div className="text-right text-[10px]">
+                    <p className="text-gray-700 text-[10px] mb-0.5">AWB Number</p>
                     <div className="flex items-center justify-end gap-1">
-                      <p className="text-[#0CBB7D] font-[700] truncate hover:underline text-[12px]" onClick={() => handleTrackingByAwb(row.awb_number)}>
+                      <p className="text-[#0CBB7D] font-[600] truncate hover:underline" onClick={() => handleTrackingByAwb(row.awb_number)}>
                         {row.awb_number || "N/A"}
                       </p>
                       {row.awb_number && (
@@ -493,25 +496,25 @@ const Passbooks = ({
                       )}
                     </div>
                   </div>
-                  <div className="border-t border-gray-50 pt-3 col-span-2 flex justify-between items-center">
+                  <div className="border-t my-1 border-gray-50 col-span-2 flex justify-between items-center">
                     <div>
-                      <p className="text-gray-400 font-[600] text-[10px] mb-0.5">Transaction Amount</p>
-                      <p className={`font-[700] text-[13px] ${row.category === "debit" ? "text-red-500" : "text-[#0CBB7D]"}`}>
+                      <p className="text-gray-700 text-[10px] mb-0.5">Transaction Amount</p>
+                      <p className={`text-[10px] ${row.category === "debit" ? "text-red-500" : "text-[#0CBB7D]"}`}>
                         {row.category === "debit" ? "-" : "+"} ₹{Number(row.amount).toFixed(2)}
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-gray-400 font-[600] text-[10px] mb-0.5">Closing Balance</p>
-                      <p className="text-gray-700 font-[700] text-[13px]">₹{Number(row.balanceAfterTransaction).toFixed(2)}</p>
+                      <p className="text-gray-700 text-[10px] mb-0.5">Closing Balance</p>
+                      <p className="text-gray-700 text-[10px]">₹{Number(row.balanceAfterTransaction).toFixed(2)}</p>
                     </div>
                   </div>
                 </div>
 
                 {/* Description Bar */}
                 {row.description && (
-                  <div className="p-2.5 bg-gray-50 rounded-xl border border-gray-100">
-                    <p className="text-gray-400 font-[700] text-[9px] uppercase tracking-wider mb-1">Description</p>
-                    <p className="text-gray-600 leading-relaxed text-[11px]">
+                  <div className="p-2 bg-green-50 rounded-lg border border-green-100">
+                    <p className="text-gray-700 font-[600] text-[10px] tracking-wider">Description</p>
+                    <p className="text-gray-500 leading-relaxed text-[10px]">
                       {row.description}
                     </p>
                   </div>

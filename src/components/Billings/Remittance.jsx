@@ -306,7 +306,7 @@ const Remittance = ({
 
       {/* Desktop Table */}
       <div className="hidden md:block">
-        <div className="h-[calc(100vh-320px)] overflow-y-auto bg-white border rounded-lg">
+        <div className="h-[calc(100vh-365px)] overflow-y-auto bg-white">
           <table className="w-full text-[12px] border-collapse sticky-header">
             <thead className="bg-[#0CBB7D] text-white font-[600] sticky top-0 z-10">
               <tr>
@@ -343,8 +343,8 @@ const Remittance = ({
                 <tr>
                   <td colSpan={11} className="py-10 text-center">
                     <div className="flex flex-col items-center justify-center">
-                      <img src={NoDataFound} alt="No Data Found" className="w-48 h-48 mb-2" />
-                      <p className="text-gray-400 font-medium">No remittances found</p>
+                      <img src={NoDataFound} alt="No Data Found" className="w-60 h-60 mb-2" />
+                      
                     </div>
                   </td>
                 </tr>
@@ -363,7 +363,7 @@ const Remittance = ({
                     </td>
                     <td className="py-2 px-3 text-gray-600">
                       <p className="font-medium">{dayjs(row.date).format("DD MMM YYYY")}</p>
-                      <p className="text-[10px] text-gray-400">{dayjs(row.date).format("hh:mm A")}</p>
+                      <p className="text-[12px] text-gray-500">{dayjs(row.date).format("hh:mm A")}</p>
                     </td>
                     <td className="py-2 px-3">
                       <div className="flex items-center gap-1 group">
@@ -371,26 +371,26 @@ const Remittance = ({
                           className="text-[#0CBB7D] font-medium cursor-pointer hover:underline"
                           onClick={() => openRemittanceDetails(row.remittanceId)}
                         >
-                          #{row.remittanceId}
+                          {row.remittanceId}
                         </span>
                         <button onClick={() => handleCopy(row.remittanceId, row.remittanceId + '_remId')}>
                           {copiedId === row.remittanceId + '_remId' ? (
                             <FiCheck className="text-green-500 w-3 h-3" />
                           ) : (
-                            <FiCopy className="text-gray-300 opacity-0 group-hover:opacity-100 w-3 h-3 transition-opacity" />
+                            <FiCopy className="text-gray-400 opacity-0 group-hover:opacity-100 w-3 h-3 transition-opacity" />
                           )}
                         </button>
                       </div>
                     </td>
-                    <td className="py-2 px-3 text-gray-600 font-medium">
+                    <td className="py-2 px-3 text-[#0CBB7D] font-medium">
                       <div className="flex items-center gap-1 group">
                         <span>{row.utr || "N/N"}</span>
                         {row.utr && (
                           <button onClick={() => handleCopy(row.utr, row.remittanceId + '_utr')}>
                             {copiedId === row.remittanceId + '_utr' ? (
-                              <FiCheck className="text-green-500 w-3 h-3" />
+                              <FiCheck className="text-[#0CBB7D] w-3 h-3" />
                             ) : (
-                              <FiCopy className="text-gray-300 opacity-0 group-hover:opacity-100 w-3 h-3 transition-opacity" />
+                              <FiCopy className="text-gray-400 opacity-0 group-hover:opacity-100 w-3 h-3 transition-opacity" />
                             )}
                           </button>
                         )}
@@ -400,10 +400,10 @@ const Remittance = ({
                     <td className="py-2 px-3 text-gray-600">₹{(Number(row?.amountCreditedToWallet) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3 text-gray-600">₹{(Number(row.adjustedAmount) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3 text-red-500">₹{(Number(row.earlyCodCharges) || 0).toFixed(2)}</td>
-                    <td className="py-2 px-3 text-[#0CBB7D] font-bold">₹{(Number(row.codAvailable) || 0).toFixed(2)}</td>
+                    <td className="py-2 px-3 text-[#0CBB7D]">₹{(Number(row.codAvailable) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3 text-gray-500">{row.remittanceMethod}</td>
                     <td className="py-2 px-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${row.status === "Paid" ? "bg-green-100 text-[#0CBB7D]" : "bg-orange-100 text-orange-600"}`}>
+                      <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "Paid" ? "bg-green-100 text-[#0CBB7D]" : "bg-red-100 text-red-600"}`}>
                         {row.status}
                       </span>
                     </td>
@@ -469,10 +469,11 @@ const Remittance = ({
                     <div className="flex flex-col">
                       <div className="flex items-center gap-2">
                         <div className="flex flex-col">
-                          <span className="text-gray-400 text-[8px] font-bold uppercase leading-none">Remittance ID</span>
+                          
                           <div className="flex items-center gap-1 group">
+                            <span className="text-gray-400 text-[10px] leading-none">Remittance ID :</span>
                             <span className="font-[600] text-[#0CBB7D] text-[10px] hover:underline cursor-pointer" onClick={() => openRemittanceDetails(row.remittanceId)}>
-                              #{row.remittanceId}
+                              {row.remittanceId}
                             </span>
                             <button onClick={() => handleCopy(row.remittanceId, row.remittanceId + '_mob')}>
                               {copiedId === row.remittanceId + '_mob' ? (
@@ -483,7 +484,7 @@ const Remittance = ({
                             </button>
                           </div>
                         </div>
-                        <span className={`px-2 py-0.5 rounded text-[10px] whitespace-nowrap ${row.status === "Paid" ? "bg-green-100 text-[#0CBB7D]" : "bg-orange-100 text-orange-600"}`}>
+                        <span className={`px-2 py-0.5 rounded text-[10px] whitespace-nowrap ${row.status === "Paid" ? "bg-green-100 text-[#0CBB7D]" : "bg-red-100 text-red-600"}`}>
                           {row.status}
                         </span>
                       </div>
@@ -492,7 +493,7 @@ const Remittance = ({
                   </div>
                   <div className="text-right flex flex-col items-end">
                     <div className="flex flex-col items-end">
-                      <span className="text-gray-400 text-[8px] font-bold uppercase leading-none">Amount</span>
+                      {/* <span className="text-gray-400 text-[8px] font-bold uppercase leading-none">Amount</span> */}
                       <p className="font-bold text-[#0CBB7D] text-[10px] tracking-tight">₹{(Number(row.codAvailable) || 0).toFixed(2)}</p>
                       <p
                         className="text-[9px] text-[#0CBB7D] font-bold border-b border-dashed border-[#0CBB7D] cursor-pointer hover:opacity-80 mt-0.5"
@@ -504,11 +505,11 @@ const Remittance = ({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 text-[10px] mb-2 p-1.5 bg-gray-50 rounded-lg">
+                <div className="grid grid-cols-2 gap-2 text-[10px] mb-2 p-1.5 bg-green-50 rounded-lg">
                   <div>
                     <p className="text-gray-400">UTR Number</p>
                     <div className="flex items-center gap-1 group">
-                      <p className="font-bold text-gray-700">{row.utr || "N/N"}</p>
+                      <p className="font-bold text-[#0CBB7D]">{row.utr || "N/N"}</p>
                       {row.utr && (
                         <button onClick={() => handleCopy(row.utr, row.remittanceId + '_utr_mob')}>
                           {copiedId === row.remittanceId + '_utr_mob' ? (

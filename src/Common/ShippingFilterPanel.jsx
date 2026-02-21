@@ -88,7 +88,7 @@ const ShippingFilterPanel = ({
     };
 
     const statusOptions = [
-        "new", "Ready To Ship", "In-transit", "Out for Delivery", "Delivered",
+        "Ready To Ship", "In-transit", "Out for Delivery", "Delivered",
         "Cancelled", "Lost", "Damaged", "RTO", "RTO In-transit", "RTO Delivered",
         "RTO Lost", "RTO Damaged", "Undelivered"
     ];
@@ -128,7 +128,7 @@ const ShippingFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowSearchTypeDropdown(!showSearchTypeDropdown)}
-                                className={`${fieldStyle} border-gray-300 bg-white`}
+                                className={`${fieldStyle} border bg-white ${showSearchTypeDropdown ? "border-[#0CBB7D]" : "border-gray-300"}`}
                             >
                                 <span className="text-gray-400">{localFilters.searchType === "awbNumber" ? "AWB Number" : "Order ID"}</span>
                                 <ChevronDown className={`w-4 h-4 transition-transform ${showSearchTypeDropdown ? "rotate-180" : ""}`} />
@@ -185,7 +185,7 @@ const ShippingFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowStatusDropdown(!showStatusDropdown)}
-                                className={`${fieldStyle} ${showStatusDropdown ? "border-[#0CBB7D]" : "border-gray-300"} bg-white`}
+                                className={`border ${fieldStyle} ${showStatusDropdown ? "border-[#0CBB7D]" : "border-gray-300"} bg-white`}
                             >
                                 <span className={localFilters.status ? "text-gray-700 font-[600]" : "text-gray-400"}>
                                     {localFilters.status || "Select Status"}
@@ -209,7 +209,7 @@ const ShippingFilterPanel = ({
                     </div>
 
                     {/* Payment Type */}
-                    {showPaymentType && (
+                    {/* {showPaymentType && (
                         <div className="space-y-1" ref={paymentRef}>
                             <label className="text-[12px] font-[600] text-gray-400">Payment Type</label>
                             <div className="relative">
@@ -237,7 +237,7 @@ const ShippingFilterPanel = ({
                                 )}
                             </div>
                         </div>
-                    )}
+                    )} */}
 
                     
                 </div>
