@@ -356,7 +356,7 @@ const AllWeightDiscrepancy = () => {
         }}
       >
         <div className="space-y-1">
-          <label className="text-[12px] font-[600] text-gray-400">User Filter</label>
+          <label className="text-[12px] font-[600] text-gray-700">Search User</label>
           <UserFilter
             onUserSelect={setLocalSelectedUserId}
             clearTrigger={clearTrigger}

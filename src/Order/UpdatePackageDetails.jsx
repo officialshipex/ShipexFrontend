@@ -34,7 +34,7 @@ const UpdatePackageDetails = ({ isOpen, onClose, onSave, packageDetails, setPack
     const applicableWeight = Math.max(parseFloat(packageDetails.weight) || 0, parseFloat(volumetricWeight) || 0).toFixed(2);
 
     return (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50 animate-popup-in">
+        <div className="fixed inset-0 bg-gray-500 bg-opacity-50 shadow-lg flex items-center justify-center z-[1000] animate-popup-in">
             <div className="bg-white p-4 rounded-lg w-[500px] shadow-lg relative">
                 <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 mb-4">Update Package Details</h2>
 

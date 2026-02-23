@@ -424,6 +424,7 @@ const NewOrders = (filterOrder) => {
           title={title}
           setRefresh={setRefresh}
           refresh={refresh}
+          userId={id}
           onPickupSelected={async (formData) => {
             // Bulk ship logic...
           }}

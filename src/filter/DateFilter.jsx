@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ChevronDown } from "lucide-react";
+import { Calendar } from "lucide-react";
 import dayjs from "dayjs";
 import { DateRange } from "react-date-range";
 
@@ -67,17 +67,10 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter }) => {
             }),
         },
         {
-            label: "Last 30 Days",
+            label: "This Month",
             range: () => ({
-                startDate: dayjs().subtract(29, "day").startOf("day").toDate(),
+                startDate: dayjs().startOf("month").toDate(),
                 endDate: dayjs().endOf("day").toDate(),
-            }),
-        },
-        {
-            label: "Last Week",
-            range: () => ({
-                startDate: dayjs().subtract(1, "week").startOf("week").toDate(),
-                endDate: dayjs().subtract(1, "week").endOf("week").toDate(),
             }),
         },
         {
@@ -164,9 +157,8 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter }) => {
                             : "Select Date"}
 
                     </span>
-                    <ChevronDown
-                        className={`w-4 h-4 ml-2 transform transition-transform ${showDropdown ? "rotate-180" : ""
-                            }`}
+                    <Calendar
+                        className={`w-4 h-4 ml-2 transition-colors ${showDropdown || showCustom ? "text-[#0CBB7D]" : "text-gray-400"}`}
                     />
                 </button>
 

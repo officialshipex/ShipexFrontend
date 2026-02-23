@@ -163,7 +163,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                 <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-50 z-[1000] transition-opacity duration-300">
                     <div className="bg-white rounded-lg shadow-lg w-full max-w-5xl max-h-[90vh] overflow-y-auto m-4 animate-popup-in">
                         <div className="sticky top-0 bg-white border-b py-2 px-3 flex justify-between items-center z-10">
-                            <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">Edit Product Details</h2>
+                            <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">Update Product Details</h2>
                             <div className="flex gap-2">
                                 <button
                                     onClick={() => {
@@ -175,13 +175,13 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                                         );
                                         setIsEditPopupOpen(false);
                                     }}
-                                    className="px-3 py-2 bg-gray-200 text-gray-700 rounded-lg text-[10px] font-[600] hover:opacity-90"
+                                    className="bg-gray-200 text-[10px] sm:text-[12px] font-[600] text-gray-500 px-5 py-2 rounded-lg hover:bg-gray-300 transition-all"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleSave}
-                                    className="px-3 py-2 bg-[#0CBB7D] text-white rounded-lg text-[10px] font-[600] hover:opacity-90"
+                                    className="px-3 py-2 bg-[#0CBB7D] text-white rounded-lg text-[10px] sm:text-[12px] font-[600] hover:opacity-90"
                                 >
                                     Save Changes
                                 </button>

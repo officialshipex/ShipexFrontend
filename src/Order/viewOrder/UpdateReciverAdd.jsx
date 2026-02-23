@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import { toast } from "react-toastify";
 import Modal from "../Modal";
-import {Notification} from "../../Notification"
+import { Notification } from "../../Notification"
 import Cookies from "js-cookie";
 
 const { REACT_APP_BACKEND_URL } = process.env;
@@ -62,12 +62,12 @@ const UpdateReceiverAdd = ({ isOpen, onClose, onSave, ReceiverAddress }) => {
           }));
         } else {
           setFormData((prev) => ({ ...prev, city: "", state: "" }));
-          Notification("Pincode not found!","error");
+          Notification("Pincode not found!", "error");
         }
       } catch (error) {
         console.error("Error fetching city and state:", error);
         setFormData((prev) => ({ ...prev, city: "", state: "" }));
-        Notification("Pincode not found!","error");
+        Notification("Pincode not found!", "error");
       }
     } else {
       setFormData((prev) => ({ ...prev, city: "", state: "" }));
@@ -95,7 +95,7 @@ const UpdateReceiverAdd = ({ isOpen, onClose, onSave, ReceiverAddress }) => {
             placeholder="Enter Contact Name"
             value={formData.contactName}
             onChange={handleChange}
-            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
           />
         </div>
         <div>
@@ -108,7 +108,7 @@ const UpdateReceiverAdd = ({ isOpen, onClose, onSave, ReceiverAddress }) => {
             placeholder="buyer.contact@shipex.in"
             value={formData.email}
             onChange={handleChange}
-            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
           />
         </div>
         <div>
@@ -121,7 +121,7 @@ const UpdateReceiverAdd = ({ isOpen, onClose, onSave, ReceiverAddress }) => {
             placeholder="Enter Phone Number"
             value={formData.phoneNumber}
             onChange={handleChange}
-            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
           />
         </div>
         <div>
@@ -134,7 +134,7 @@ const UpdateReceiverAdd = ({ isOpen, onClose, onSave, ReceiverAddress }) => {
             placeholder="Enter Address"
             value={formData.address}
             onChange={handleChange}
-            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
           />
         </div>
         <div>
@@ -147,7 +147,7 @@ const UpdateReceiverAdd = ({ isOpen, onClose, onSave, ReceiverAddress }) => {
             placeholder="Enter Pincode"
             value={formData.pinCode}
             onChange={handlePincodeChange}
-            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
           />
         </div>
         <div>
@@ -161,7 +161,7 @@ const UpdateReceiverAdd = ({ isOpen, onClose, onSave, ReceiverAddress }) => {
             value={formData.city}
             onChange={handleChange}
             readOnly
-            className="w-full m-1 px-3 py-2 bg-gray-50 text-[12px] font-[600] border rounded-lg focus:outline-none"
+            className="w-full px-3 py-2 bg-gray-50 text-[12px] font-[600] border rounded-lg focus:outline-none"
           />
         </div>
         <div>
@@ -175,13 +175,20 @@ const UpdateReceiverAdd = ({ isOpen, onClose, onSave, ReceiverAddress }) => {
             value={formData.state}
             onChange={handleChange}
             readOnly
-            className="w-full m-1 px-3 py-2 text-[12px] bg-gray-50 font-[600] border rounded-lg focus:outline-none"
+            className="w-full px-3 py-2 text-[12px] bg-gray-50 font-[600] border rounded-lg focus:outline-none"
           />
         </div>
-        <div className="col-span-2 text-right">
+        <div className="col-span-2 flex justify-end gap-2">
+          <button
+            type="button"
+            className="bg-gray-200 text-[10px] sm:text-[12px] font-[600] text-gray-500 px-5 py-2 rounded-lg hover:bg-gray-300 transition-all"
+            onClick={onClose}
+          >
+            Cancel
+          </button>
           <button
             type="submit"
-            className="bg-[#0CBB7D] text-white px-3 py-2 hover:opacity-90 transition rounded-lg text-[12px] font-[600]"
+            className="bg-[#0CBB7D] text-white px-5 py-2 hover:opacity-90 transition rounded-lg text-[12px] font-[600]"
           >
             Save
           </button>

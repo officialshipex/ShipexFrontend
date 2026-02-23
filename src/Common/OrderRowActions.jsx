@@ -100,7 +100,7 @@ const OrderRowActions = ({
         <div className="flex justify-center items-center gap-2">
             {(renderOnly === "both" || renderOnly === "action") && action && (
                 <button
-                    className={`p-2 rounded-lg text-[10px] font-[600]
+                    className={`h-[30px] px-2 py-1 sm:px-2 sm:py-2 rounded-lg text-[10px] font-[600]
       hover:opacity-90 transition-all duration-200
       ${renderOnly === 'action' ? 'w-full mt-2' : ''}
       ${action.className}`}

@@ -18,7 +18,7 @@ const SharedWeightDiscrepancyCard = ({
     renderBottomActions,
 }) => {
     return (
-        <div className="space-y-4 h-[calc(100vh-255px)] overflow-y-auto">
+        <div className="space-y-2 h-[calc(100vh-255px)] overflow-y-auto">
             {loading ? (
                 <div className="flex justify-center py-10">
                     <ThreeDotLoader />

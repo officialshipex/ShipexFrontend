@@ -265,13 +265,13 @@ const ViewOrder = ({ isSidebarAdmin }) => {
             <PickupDetailsSection
               order={order}
               onUpdate={handleUpdatePickupDetails}
-              userId={userId}
+              userId={order?.userId || userId}
             />
           ) : (
             <PickupDetailsSection
               order={order}
               onUpdate={() => setShowEmployeeAuthModal(true)}
-              userId={userId}
+              userId={order?.userId || userId}
             />
           )}
 

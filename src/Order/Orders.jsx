@@ -462,6 +462,7 @@ const Orders = (filterOrder) => {
           title={title}
           setRefresh={setRefresh}
           refresh={refresh}
+          userId={id}
           onPickupSelected={async (formData) => {
             try {
               setShowBulkShipModal(false);

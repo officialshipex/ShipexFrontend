@@ -250,7 +250,7 @@ const PickupManifestDetails = () => {
     };
 
     return (
-        <div className="w-full p-2">
+        <div className="w-full sm:px-2">
             {/* Header */}
             <div className="bg-white p-2 rounded-lg shadow-sm mb-2 sticky top-16 z-40">
                 <div className="flex items-center justify-between gap-2">

@@ -92,20 +92,20 @@ const UploadDiscrepancyPopup = ({ onClose, setRefresh }) => {
 
   return (
     <div className="fixed inset-0 flex animate-popup-in items-center justify-center bg-black bg-opacity-50 z-[1000]">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] relative">
-        <h2 className="text-lg font-bold mb-2">Upload Weight Discrepancy</h2>
+      <div className="bg-white p-4 rounded-lg shadow-lg w-[400px] relative">
+        <h2 className="text-[12px] sm:text-[14px] font-bold mb-2">Upload Weight Discrepancy</h2>
 
-        <p className="text-xs text-gray-600">
+        <p className="text-[10px] sm:text-[12px] text-gray-600">
           Download Sample File{" "}
           <span
-            className={`text-[#0CBB7D] cursor-pointer ${isDownloading ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`text-[#0CBB7D] hover:underline cursor-pointer ${isDownloading ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={!isDownloading ? handleDownload : null}
           >
             {isDownloading ? "Downloading..." : "click here"}
           </span>
         </p>
 
-        <label className="cursor-pointer flex text-sm items-center gap-2 text-[#0CBB7D] bg-white px-4 py-2 mt-5 rounded-lg border-2 border-[#0CBB7D] transition">
+        <label className="cursor-pointer flex text-[12px] sm:text-[14px] items-center gap-2 text-[#0CBB7D] bg-white px-4 py-2 mt-4 rounded-lg border border-[#0CBB7D] transition">
           <div className="flex justify-between items-center w-full">
             <span>Upload File</span>
             <FaUpload className="text-[#0CBB7D]" />
@@ -114,14 +114,14 @@ const UploadDiscrepancyPopup = ({ onClose, setRefresh }) => {
         </label>
 
         {selectedFile && (
-          <p className="text-sm text-gray-600">Selected: {selectedFile.name}</p>
+          <p className="text-[10px] sm:text-[12px] text-gray-500">Selected: {selectedFile.name}</p>
         )}
 
         {/* Submit Button - Disabled when uploading */}
         <button
           onClick={handleSubmit}
           disabled={isUploading}
-          className={`px-4 py-2 mt-3 rounded-lg text-sm transition-all ${isUploading
+          className={`px-4 py-2 mt-2 rounded-lg text-[10px] sm:text-[12px] font-[600] transition-all ${isUploading
               ? "bg-gray-400 cursor-not-allowed"
               : "bg-[#0CBB7D] text-white hover:bg-green-500"
             }`}

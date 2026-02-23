@@ -143,7 +143,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
             <div className="bg-white p-4 rounded-lg shadow-lg w-[700px] relative">
                 <h2 className="sm:text-[14px] text-[12px] font-[600] text-gray-700">Add PickUp Address</h2>
                 <form className="grid grid-cols-2 mt-2 gap-2 text-[12px] font-[600] text-gray-700">
-                    <div className="">
+                    <div className="flex flex-col gap-1">
                         <label className="block">
                             Contact Name <span className="text-red-500">*</span>
                         </label>
@@ -156,7 +156,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                             className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
                         />
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-1">
                         <label className="block">
                             Email <span className="text-red-500">*</span>
                         </label>
@@ -169,7 +169,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                             className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
                         />
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-1">
                         <label className="block">
                             Phone Number <span className="text-red-500">*</span>
                         </label>
@@ -182,7 +182,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                             className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
                         />
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-1">
                         <label className="block">
                             Address <span className="text-red-500">*</span>
                         </label>
@@ -195,7 +195,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                             className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
                         />
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-1">
                         <label className="block">
                             Pincode <span className="text-red-500">*</span>
                         </label>
@@ -208,7 +208,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                             className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
                         />
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-1">
                         <label className="block">
                             City <span className="text-red-500">*</span>
                         </label>
@@ -220,7 +220,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                             className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
                         />
                     </div>
-                    <div>
+                    <div className="flex flex-col gap-1">
                         <label className="block">
                             State <span className="text-red-500">*</span>
                         </label>

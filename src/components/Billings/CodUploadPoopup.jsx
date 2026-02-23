@@ -79,22 +79,22 @@ const CodUploadPoopup = ({ onClose, setRefresh }) => {
     }
   };
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] relative">
-        <h2 className="text-lg font-bold mb-2">Upload Cod Remittance</h2>
+    <div className="fixed inset-0 w-full h-full z-[1000] flex items-center justify-center bg-gray-500 animate-popup-in bg-opacity-50">
+      <div className="bg-white p-4 rounded-lg shadow-lg w-[400px] relative">
+        <h2 className="text-[12px] sm:text-[14px] font-bold mb-2">Upload Cod Remittance</h2>
 
-        <p className="text-xs font-semibold">
+        <p className="text-[10px] sm:text-[12px]">
           Download Sample file{" "}
           <button
             onClick={handleDownload}
-            className="text-purple-500 cursor-pointer"
+            className="text-[#0CBB7D] hover:underline cursor-pointer"
           >
             click here{" "}
           </button>
           {/* <span className="text-purple-500 cursor-pointer">click here</span> */}
         </p>
 
-        <label className="cursor-pointer flex text-sm items-center gap-2 text-[#0CBB7D] bg-white px-4 py-2 mt-5 rounded-lg border-2 border-[#0CBB7D] transition">
+        <label className="cursor-pointer flex text-[10px] sm:text-[12px] items-center gap-2 text-[#0CBB7D] bg-white px-3 py-2 mt-4 rounded-lg border border-[#0CBB7D] transition">
           <div className="flex justify-between items-center w-full">
             <span>Upload File</span>
             <FaUpload className="text-[#0CBB7D]" />
@@ -103,9 +103,9 @@ const CodUploadPoopup = ({ onClose, setRefresh }) => {
         </label>
 
         {selectedFile && (
-          <p className="text-sm text-gray-600">Selected: {selectedFile.name}</p>
+          <p className="text-[10px] sm:text-[12px] text-gray-700">Selected: {selectedFile.name}</p>
         )}
-        <button onClick={handleSubmit} className="px-4 py-2 me-3 mt-3 bg-[#0CBB7D] text-white rounded-lg text-sm">
+        <button onClick={handleSubmit} className="px-3 py-2 me-2 font-[600] hover:opacity-90 mt-2 bg-[#0CBB7D] text-white rounded-lg text-[10px] sm:text-[12px]">
           Submit
         </button>
 

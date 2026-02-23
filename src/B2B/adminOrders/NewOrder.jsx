@@ -471,13 +471,12 @@ const NewOrder = ({ userId: initialUserId }) => {
 
       {showBulkShipModal && (
         <SelectPickupPopup
-          show={showBulkShipModal}
           onClose={() => setShowBulkShipModal(false)}
-          data={selectedData}
-          selectedOrders={selectedOrders}
+          setSelectedData={selectedOrders}
           userId={bulkUserId}
           setRefresh={setRefresh}
           refresh={refresh}
+          title="Update Pickup Address"
         />
       )}
     </div>

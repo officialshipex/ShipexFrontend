@@ -1,1082 +1,604 @@
 import axios from "axios";
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { FaUpload } from "react-icons/fa";
-import CodUploadPoopup from "./CodUploadPoopup";
-import EmployeeAuthModal from "../../employeeAuth/EmployeeAuthModal";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { DateRange } from "react-date-range";
-import { ChevronDown } from "lucide-react";
+import { ChevronDown, Wallet, Banknote, Minus, Send, Filter, X, Download, Search, Upload, Clock, CheckCircle } from "lucide-react";
 import dayjs from "dayjs";
-// import toast from "react-hot-toast";
-import TranseferCODModal from "./TransferCODModal";
+import ThreeDotLoader from "../../Loader";
 import Cookies from "js-cookie";
-import { Notification } from "../../Notification"
+import PaginationFooter from "../../Common/PaginationFooter";
+import { FiCopy, FiCheck, FiUpload, FiTrash2 } from "react-icons/fi";
+import { FaBars } from "react-icons/fa";
+import NoDataFound from "../../assets/nodatafound.png";
+import DateFilter from "../../filter/DateFilter";
+import UserFilter from "../../filter/UserFilter";
+import { motion, AnimatePresence } from "framer-motion";
 import RemittanceDetails from "./SellerRemittanceDatas";
+import { Notification } from "../../Notification";
+import TranseferCODModal from "./TransferCODModal";
+import CodUploadPoopup from "./CodUploadPoopup";
 
-import {
-  FiCheckCircle,
-  FiCreditCard,
-  FiClock,
-  FiArrowRight,
-  FiArrowLeft,
-  FiArrowRightCircle,
-  FiTrendingUp,
-  FiDollarSign,
-  FiMinusCircle,
-} from "react-icons/fi";
-import ThreeDotLoader from "../../Loader"
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const CODRemittanceOrder = ({ isSidebarAdmin }) => {
-  const [page, setPage] = useState(1); // Track current page
-  const [limit, setLimit] = useState(20); // You can make this dynamic if needed
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState(20);
   const [totalPages, setTotalPages] = useState(1);
   const [loading, setLoading] = useState(true);
-  const [totalremitted, setTotalRemitted] = useState(0);
-  const [remited, setRemited] = useState(0);
-  const [paidremitted, setPaidRemitted] = useState(0);
-  const [upload, setUpload] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
-  const [refresh, setRefresh] = useState(false);
-  const rowsPerPage = 10;
-  // const [remited, setremited] = useState({});
+  const [remitedSummary, setRemitedSummary] = useState({});
   const [remitedData, setremitedData] = useState([]);
-  const navigate = useNavigate();
-  const [statusFilter, setStatusFilter] = useState("");
-  const [userNameFilter, setUserNameFilter] = useState("");
-  const [remittanceIdFilter, setRemittanceIdFilter] = useState("");
-  const [filteredData, setFilteredData] = useState([]);
+  const [refresh, setRefresh] = useState(false);
   const [selectedRemittanceIds, setSelectedRemittanceIds] = useState([]);
-  const [userSuggestions, setUserSuggestions] = useState([]);
-  const [selectedUserId, setSelectedUserId] = useState(null);
-  const [userQuery, setUserQuery] = useState("");
+
+  // Applied Filters
+  const [appliedFilters, setAppliedFilters] = useState({
+    selectedUserId: null,
+    remittanceId: "",
+    status: "",
+  });
+
+  // Local Filters
+  const [localFilters, setLocalFilters] = useState({
+    selectedUserId: null,
+    remittanceId: "",
+    status: "",
+  });
+
+  const [dateRange, setDateRange] = useState(null);
+  const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const [bulkActionOpen, setBulkActionOpen] = useState(false);
+  const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
+
+  const bulkActionRef = useRef(null);
+  const statusRef = useRef(null);
+
+  const [openRemittancePopup, setOpenRemittancePopup] = useState(false);
+  const [selectedRemittanceId, setSelectedRemittanceId] = useState(null);
+  const [copiedId, setCopiedId] = useState(null);
+  const [detailsPopupId, setDetailsPopupId] = useState(null);
+  const [clearTrigger, setClearTrigger] = useState(0);
+  const [clearUserTrigger, setClearUserTrigger] = useState(0);
+
   const [employeeAccess, setEmployeeAccess] = useState({
     isAdmin: false,
     canView: false,
     canAction: false,
   });
-  const [showEmployeeAuthModal, setShowEmployeeAuthModal] = useState(false);
-  const dateRef = useRef(null);
-  const calendarRef = useRef(null);
-  const statusRef = useRef(null);
-  const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [showCustom, setShowCustom] = useState(false);
-  const [dateRange, setDateRange] = useState([
-    { startDate: null, endDate: null, key: "selection" },
-  ]);
-  const [showTransferCODModal, setShowTransferCODModal] = useState(false);  // modal visibility
-  const [transferCODUserId, setTransferCODUserId] = useState(null);                 // remittanceId to pass
-  const [openRemittancePopup, setOpenRemittancePopup] = useState(false);
-  const [selectedRemittanceId, setSelectedRemittanceId] = useState(null);
+  const [showUpload, setShowUpload] = useState(false);
+  const [showTransferCODModal, setShowTransferCODModal] = useState(false);
+  const [transferCODUserId, setTransferCODUserId] = useState(null);
 
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (bulkActionRef.current && !bulkActionRef.current.contains(event.target)) setBulkActionOpen(false);
+      if (statusRef.current && !statusRef.current.contains(event.target)) setStatusDropdownOpen(false);
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleClearFilters = () => {
+    const cleared = {
+      selectedUserId: null,
+      remittanceId: "",
+      status: "",
+    };
+    setAppliedFilters(cleared);
+    setLocalFilters(cleared);
+    setDateRange(null);
+    setClearTrigger(prev => prev + 1);
+    setClearUserTrigger(prev => prev + 1);
+    setPage(1);
+    setIsFilterPanelOpen(false);
+    setStatusDropdownOpen(false);
+  };
+
+  const handleCopy = (text, id) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  useEffect(() => {
+    const fetchAccessAndData = async () => {
+      setLoading(true);
+      try {
+        const token = Cookies.get("session");
+        if (!token) return;
+
+        if (isSidebarAdmin) {
+          setEmployeeAccess({ isAdmin: true, canView: true, canAction: true });
+        } else {
+          const empRes = await axios.get(`${REACT_APP_BACKEND_URL}/staffRole/verify`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          const employee = empRes.data.employee;
+          const canView = !!employee?.accessRights?.finance?.["Seller COD Remittance"]?.view;
+          const canAction = !!employee?.accessRights?.finance?.["Seller COD Remittance"]?.action;
+          setEmployeeAccess({ canView, canAction });
+          if (!canView) return;
+        }
+
+        let url = `${REACT_APP_BACKEND_URL}/cod/getAdminCodRemitanceData?page=${page}&limit=${limit}`;
+        if (appliedFilters.selectedUserId) url += `&selectedUserId=${appliedFilters.selectedUserId}`;
+        if (appliedFilters.remittanceId) url += `&remittanceIdFilter=${encodeURIComponent(appliedFilters.remittanceId)}`;
+        if (appliedFilters.status) url += `&statusFilter=${appliedFilters.status}`;
+        if (dateRange && dateRange[0]?.startDate && dateRange[0]?.endDate) {
+          url += `&startDate=${encodeURIComponent(dateRange[0].startDate.toISOString())}`;
+          url += `&endDate=${encodeURIComponent(dateRange[0].endDate.toISOString())}`;
+        }
+
+        const response = await axios.get(url, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.status === 200) {
+          setRemitedSummary(response.data.summary);
+          setremitedData(response.data.results || []);
+          setTotalPages(response.data.totalPages || 1);
+        }
+      } catch (error) {
+        console.error("Error fetching remittance data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchAccessAndData();
+  }, [page, limit, refresh, appliedFilters, dateRange, isSidebarAdmin]);
+
+  const handleSelectAll = (e) => {
+    if (e.target.checked) {
+      setSelectedRemittanceIds(remitedData.map((r) => r.remittanceId));
+    } else {
+      setSelectedRemittanceIds([]);
+    }
+  };
+
+  const handleCheckboxChange = (id) => {
+    setSelectedRemittanceIds(prev => prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]);
+  };
+
+  const handleExport = () => {
+    if (selectedRemittanceIds.length === 0) return;
+    const exportData = remitedData.filter(item => selectedRemittanceIds.includes(item.remittanceId));
+    const formattedData = exportData.map((row) => ({
+      Date: dayjs(row.date).format("DD MMM YYYY"),
+      "User Name": row.user?.fullname || "N/A",
+      "Remittance ID": row.remittanceId,
+      "UTR": row.utr || "N/A",
+      "COD Available": row.codAvailable || 0,
+      "Amount Credited to Wallet": row.amountCreditedToWallet || 0,
+      "Early COD Charges": row.earlyCodCharges || 0,
+      "Adjusted Amount": row.adjustedAmount || 0,
+      "Remittance Amount": row.remittanceInitiated || 0,
+      Status: row.status,
+    }));
+    const worksheet = XLSX.utils.json_to_sheet(formattedData);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, "Remittances");
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    saveAs(new Blob([excelBuffer], { type: "application/octet-stream" }), `remittances_${new Date().toISOString().slice(0, 10)}.xlsx`);
+  };
+
+  const handleTransferCOD = async () => {
+    if (selectedRemittanceIds.length === 0) return;
+    try {
+      const token = Cookies.get("session");
+      const response = await axios.post(
+        `${REACT_APP_BACKEND_URL}/cod/validateCODTransfer`,
+        { remittanceIds: selectedRemittanceIds },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setTransferCODUserId(response.data.userId);
+      setShowTransferCODModal(true);
+    } catch (error) {
+      Notification(error?.response?.data?.message || "Error transferring COD", "error");
+    }
+  };
 
   const openRemittanceDetails = (id) => {
     setSelectedRemittanceId(id);
     setOpenRemittancePopup(true);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      const clickedOutsideDate =
-        dateRef.current && !dateRef.current.contains(event.target);
-      const clickedOutsideCalendar =
-        !calendarRef.current || !calendarRef.current.contains(event.target);
-
-      if (clickedOutsideDate && clickedOutsideCalendar) {
-        setShowDropdown(false);
-        setShowCustom(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  const handleDateOptionClick = (option) => {
-    if (option.custom) {
-      setTempDateRange([...dateRange]);
-      setShowDropdown(false);
-
-      requestAnimationFrame(() => {
-        setShowCustom(true);
-      });
-    } else {
-      const range = option.range();
-      setDateRange([
-        {
-          startDate: new Date(range.startDate),
-          endDate: new Date(range.endDate),
-          key: "selection",
-        },
-      ]);
-      setShowDropdown(false);
-      setShowCustom(false);
-    }
-  };
-
-  const dateOptions = [
-    {
-      label: "Today",
-      range: () => ({
-        startDate: dayjs().startOf("day").toDate(),
-        endDate: dayjs().endOf("day").toDate(),
-      }),
-    },
-    {
-      label: "Yesterday",
-      range: () => ({
-        startDate: dayjs().subtract(1, "day").startOf("day").toDate(),
-        endDate: dayjs().subtract(1, "day").endOf("day").toDate(),
-      }),
-    },
-    {
-      label: "Last 7 Days",
-      range: () => ({
-        startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
-        endDate: dayjs().endOf("day").toDate(),
-      }),
-    },
-    {
-      label: "Last 30 Days",
-      range: () => ({
-        startDate: dayjs().subtract(29, "day").startOf("day").toDate(),
-        endDate: dayjs().endOf("day").toDate(),
-      }),
-    },
-    {
-      label: "Last Week",
-      range: () => ({
-        startDate: dayjs().subtract(1, "week").startOf("week").toDate(),
-        endDate: dayjs().subtract(1, "week").endOf("week").toDate(),
-      }),
-    },
-    {
-      label: "Last Month",
-      range: () => ({
-        startDate: dayjs().subtract(1, "month").startOf("month").toDate(),
-        endDate: dayjs().subtract(1, "month").endOf("month").toDate(),
-      }),
-    },
-    {
-      label: "This Year",
-      range: () => ({
-        startDate: dayjs().startOf("year").toDate(),
-        endDate: dayjs().endOf("day").toDate(),
-      }),
-    },
-    {
-      label: "Custom",
-      custom: true,
-    },
+  const summaryItems = [
+    { title: "COD To Be Remitted", value: remitedSummary?.CODToBeRemitted, icon: <Wallet size={18} /> },
+    { title: "Last COD Remitted", value: remitedSummary?.LastCODRemitted, icon: <Send size={18} /> },
+    { title: "Total COD Remitted", value: remitedSummary?.TotalCODRemitted, icon: <Banknote size={18} /> },
+    { title: "Total Deduction", value: remitedSummary?.TotalDeductionfromCOD, icon: <Minus size={18} /> },
+    { title: "Remittance Initiated", value: remitedSummary?.RemittanceInitiated, icon: <Clock size={18} /> },
   ];
 
-
-  // const handleDateApply = () => {
-  //   // const selected = tempDateRange[0];
-  //   // setDateRange(tempDateRange);
-  //   setFilters((prev) => ({
-  //     ...prev,
-  //     dateRange: {
-  //       startDate: format(selected.startDate, "yyyy-MM-dd"),
-  //       endDate: format(selected.endDate, "yyyy-MM-dd"),
-  //     },
-  //   }));
-  //   setShowCustom(false);
-  //   setShowDropdown(false);
-  // };
-  const [tempDateRange, setTempDateRange] = useState([
-    { startDate: null, endDate: null, key: "selection" },
-  ]);
-  useEffect(() => {
-    const fetchAccessAndData = async () => {
-      setLoading(true);
-      try {
-        if (isSidebarAdmin) {
-          setEmployeeAccess({ isAdmin: true, canView: true, canAction: true });
-          setShowEmployeeAuthModal(false);
-        } else {
-          const token = Cookies.get("session");
-          if (!token) {
-            setShowEmployeeAuthModal(true);
-            return;
-          }
-          const empRes = await axios.get(
-            `${REACT_APP_BACKEND_URL}/staffRole/verify`,
-            { headers: { Authorization: `Bearer ${token}` } }
-          );
-          const employee = empRes.data.employee;
-          // const isAdmin = !!employee?.isAdmin;
-          const canView =
-            !!employee?.accessRights?.finance?.["Seller COD Remittance"]?.view;
-          const canAction =
-            !!employee?.accessRights?.finance?.["Seller COD Remittance"]
-              ?.action;
-          setEmployeeAccess({ canView, canAction });
-          if (!canView) {
-            setShowEmployeeAuthModal(true);
-            return;
-          }
-          setShowEmployeeAuthModal(false);
-        }
-
-        // Fetch remittance data only if access is allowed
-        const token = Cookies.get("session");
-        if (!token) {
-          setShowEmployeeAuthModal(true);
-          return;
-        }
-        let url = `${REACT_APP_BACKEND_URL}/cod/getAdminCodRemitanceData?page=${page}`;
-        if (limit) url += `&limit=${limit}`;
-        if (selectedUserId) url += `&selectedUserId=${selectedUserId}`;
-        if (remittanceIdFilter)
-          url += `&remittanceIdFilter=${remittanceIdFilter}`;
-        if (statusFilter) url += `&statusFilter=${statusFilter}`;
-        // ✅ Append startDate and endDate if available
-        const startDate = dateRange[0]?.startDate;
-        const endDate = dateRange[0]?.endDate;
-        if (startDate && endDate) {
-          url += `&startDate=${encodeURIComponent(startDate.toISOString())}`;
-          url += `&endDate=${encodeURIComponent(endDate.toISOString())}`;
-        }
-        const response = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        // console.log("Remittance Data:", response.data);
-        if (response.status === 200) {
-          // setTotalRemitted(response.data.data.totalCODAmount);
-          // setPendingRemitted(response.data.data.pendingCODAmount);
-          setRemited(response.data.summary);
-          setremitedData(response.data.results);
-          setTotalPages(response.data.totalPages);
-        }
-      } catch (error) {
-        setShowEmployeeAuthModal(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchAccessAndData();
-  }, [
-    isSidebarAdmin,
-    page,
-    limit,
-    refresh,
-    selectedUserId,
-    remittanceIdFilter,
-    statusFilter,
-    dateRange
-  ]);
-
-  const handleCodRemittanceUpload = () => {
-    setUpload(true);
-  };
-
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (statusRef.current && !statusRef.current.contains(e.target)) {
-        setStatusDropdownOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  // Function to format date with day name
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-  };
-
-  // Pagination logic
-
-  // const lastCODRemitted =
-  //   currentRows.length > 0 ? currentRows[0].codAvailable : 0;
-  const handleCheckboxChange = (id) => {
-    setSelectedRemittanceIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
-    );
-  };
-
-  const handleUserSearch = async (query) => {
-    setUserQuery(query);
-    if (query.length < 2) {
-      setUserSuggestions([]);
-      setSelectedUserId(null);
-      return;
-    }
-    try {
-      const res = await axios.get(`${REACT_APP_BACKEND_URL}/admin/searchUser`, {
-        params: { query },
-      });
-      setUserSuggestions(res.data.users || []);
-    } catch {
-      setUserSuggestions([]);
-    }
-  };
-
-  // The main function to export selected remittances to Excel
-  const handleExport = () => {
-    if (selectedRemittanceIds.length === 0) {
-      alert("Please select at least one row to export.");
-      return;
-    }
-
-    const exportData = remitedData.filter(
-      (item) => selectedRemittanceIds.includes(item.remittanceId) // <-- Match this key with your data
-    );
-
-    const formattedData = exportData.map((row) => ({
-      Date: formatDate(row.date),
-      "User name": row.user.name,
-      "Remittance ID": row.remittanceId,
-      "UTR": row.utr || "N/A",
-      "COD Available": row?.codAvailable || 0,
-      "Amount Credited to Wallet": row.amountCreditedToWallet,
-      "Early COD Charges": row.earlyCodCharges,
-      "Adjusted Amount": row.adjustedAmount,
-      "Remittance Amount": row.remittanceInitiated,
-      Status: row.status,
-    }));
-
-    const worksheet = XLSX.utils.json_to_sheet(formattedData);
-    worksheet["!cols"] = [
-      { wch: 25 }, // Date
-      { wch: 20 }, // Remittance ID
-      { wch: 20 }, // COD Available
-      { wch: 15 }, // Amount Credited to Wallet
-      { wch: 18 }, // Early COD Charges
-      { wch: 25 }, // Adjusted Amount
-      { wch: 20 }, //Remittance Amount
-      { wch: 15 }, // Status
-    ];
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Remittance");
-
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
-    });
-
-    const fileData = new Blob([excelBuffer], {
-      type: "application/octet-stream",
-    });
-
-    saveAs(fileData, "RemittanceExport.xlsx");
-
-    // Optionally reset selection after download
-    setSelectedRemittanceIds([]);
-  };
-
-  const handleTransferCOD = async () => {
-    if (selectedRemittanceIds.length === 0) {
-      alert("Please select at least one row to transfer COD.");
-      return;
-    }
-    // console.log("Selected IDs for COD transfer:", selectedRemittanceIds);
-    try {
-      const token = Cookies.get("session");
-      const response = await axios.post(
-        `${REACT_APP_BACKEND_URL}/cod/validateCODTransfer`,
-        { remittanceIds: selectedRemittanceIds },
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-      // console.log("res", response.data)
-      setTransferCODUserId(response.data.userId); // use backend-provided or first ID
-      setShowTransferCODModal(true); // open modal
-    } catch (error) {
-      console.error("Error transferring COD:", error.response.data.message);
-      Notification(error?.response?.data?.message || "An error occurred while transferring COD.", "error")
-      // alert("An error occurred while transferring COD.");
-    }
-  };
-
-
-
+  const isAnyFilterApplied = appliedFilters.selectedUserId || appliedFilters.remittanceId || appliedFilters.status || dateRange;
 
   return (
-    <div className="min-h-screen">
-      {/* {!isSidebarAdmin && showEmployeeAuthModal && (
-        <EmployeeAuthModal
-          employeeModalShow={showEmployeeAuthModal}
-          employeeModalClose={() => {
-            setShowEmployeeAuthModal(false);
-            window.history.back();
-          }}
+    <div className="space-y-2">
+      {/* Summary Grid */}
+      <div className="text-[12px] font-bold">
+        <div className="md:hidden border text-[10px] border-[#0CBB7D] bg-white rounded-lg px-3 py-2 space-y-2">
+          {summaryItems.map((item, idx) => (
+            <div key={idx} className="flex justify-between items-center">
+              <span className="text-gray-500 w-1/2">{item.title}</span>
+              <span className="mx-1 text-gray-500">:</span>
+              <span className="text-gray-700 w-1/2 text-right">₹{(Number(item.value) || 0).toFixed(2)}</span>
+            </div>
+          ))}
+        </div>
+        <div className="hidden md:grid md:grid-cols-5 gap-2 my-2">
+          {summaryItems.map((item, idx) => (
+            <div key={idx} className="flex items-center gap-3 p-2 bg-white rounded-lg border border-[#0CBB7D] hover:shadow-sm transition-shadow h-14">
+              <div className="bg-[#0CBB7D] text-white p-1.5 rounded-full shrink-0">{item.icon}</div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-[11px] font-bold text-gray-700 truncate">₹{(Number(item.value) || 0).toFixed(2)}</span>
+                <span className="text-[10px] text-gray-500 truncate">{item.title}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Desktop Filter Bar */}
+      <div className="hidden md:flex flex-row gap-2 items-center z-20">
+        <DateFilter
+          onDateChange={(range) => { setDateRange(range); setPage(1); }}
+          clearTrigger={clearTrigger}
+          noInitialFilter={true}
         />
-      )} */}
-      {(isSidebarAdmin || employeeAccess.isAdmin || employeeAccess.canView) && (
-        <>
-          {/* Header Cards */}
-          {/* Header */}
 
-          {/* Desktop View: grid */}
-          <div className="hidden lg:grid grid-cols-5 gap-4 mb-2">
-            {[
-              {
-                label: "COD To Be Remitted",
-                value: `₹${(Number(remited?.CODToBeRemitted) || 0).toFixed(2)}`,
-                icon: <FiCreditCard className="text-white" size={18} />,
-              },
-              {
-                label: "Last COD Remitted",
-                value: `₹${(Number(remited?.LastCODRemitted) || 0).toFixed(2)}`,
-                icon: <FiArrowRightCircle className="text-white" size={18} />,
-              },
-              {
-                label: "Total COD Remitted",
-                value: `₹${(Number(remited?.TotalCODRemitted) || 0).toFixed(2)}`,
-                icon: <FiTrendingUp className="text-white" size={18} />,
-              },
-              {
-                label: "Total Deduction from COD",
-                value: `₹${(Number(remited?.TotalDeductionfromCOD) || 0).toFixed(2)}`,
-                icon: <FiMinusCircle className="text-white" size={18} />,
-              },
-              {
-                label: "Remittance Initiated",
-                value: `₹${(Number(remited?.RemittanceInitiated) || 0).toFixed(2)}`,
-                icon: <FiDollarSign className="text-white" size={18} />,
-              },
-            ].map((card, index) => (
-              <div
-                key={index}
-                className="border-2 border-[#0CBB7D] rounded-lg px-3 py-2 bg-white flex items-center gap-3"
-              >
-                <div className="flex-shrink-0 bg-[#0CBB7D] p-2 rounded-full">{card.icon}</div>
-                <div className="flex flex-col">
-                  <div className="font-[600] text-[10px] text-gray-700">
-                    {card.value}
-                  </div>
-                  <div className="text-[10px] text-gray-500">{card.label}</div>
-                </div>
-              </div>
-            ))}
-          </div>
+        <button
+          onClick={() => setIsFilterPanelOpen(true)}
+          className="flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-bold text-gray-600 hover:bg-gray-50 transition-all shadow-sm h-9"
+        >
+          <Filter className="w-4 h-4 text-[#0CBB7D]" />
+          More Filters
+        </button>
 
-          {/* Mobile View: single box */}
-          <div className="block lg:hidden border-2 border-[#0CBB7D] rounded-lg px-4 py-2 bg-white text-[12px] font-[600] text-gray-500 mb-2 space-y-1">
-            {[
-              { label: "COD To Be Remitted", value: remited?.CODToBeRemitted },
-              { label: "Last COD Remitted", value: remited?.LastCODRemitted },
-              { label: "Total COD Remitted", value: remited?.TotalCODRemitted },
-              { label: "Total Deduction from COD", value: remited?.TotalDeductionfromCOD },
-              { label: "Remittance Initiated", value: remited?.RemittanceInitiated },
-            ].map((item, idx) => (
-              <div
-                key={idx}
-                className="grid"
-                style={{ gridTemplateColumns: "180px 10px 1fr" }}
-              >
-                <span className="truncate">{item.label}</span>
-                <span className="text-center">:</span>
-                <span className="text-right">₹{(Number(item.value) || 0).toFixed(2)}</span>
-              </div>
-            ))}
-          </div>
-
-          <div className="flex justify-between">
-            {/* desktop */}
-
-            <div className="flex justify-between sm:flex-row flex-col w-full">
-              <div className="flex gap-2 w-full sm:flex-row flex-col">
-                {/* User Search */}
-                <div className="relative">
-                  <input
-                    type="text"
-                    value={userQuery}
-                    onChange={(e) => handleUserSearch(e.target.value)}
-                    placeholder="Search user by ID, name, or email"
-                    className="w-full sm:w-auto px-3 placeholder:text-gray-400 text-gray-700 focus:outline-none rounded-lg border-2 border-gray-300 placeholder:text-[12px] h-9 font-[600] text-[12px]" // Uniform height
-                  />
-                  {userSuggestions.length > 0 && (
-                    <div className="absolute left-0 right-0 top-full bg-white shadow-lg rounded-md mt-1 z-20 max-h-60 overflow-y-auto">
-                      {userSuggestions.map((user, index) => (
-                        <div
-                          key={user._id}
-                          className={`flex cursor-pointer group transition-colors duration-200 ${index !== userSuggestions.length
-                            ? "border-b border-gray-200  hover:bg-gray-100"
-                            : ""
-                            }`}
-                          onClick={() => {
-                            setSelectedUserId(user._id);
-                            setUserQuery(`${user.fullname} (${user.email})`);
-                            setUserSuggestions([]);
-                            setPage(1);
-                          }}
-                        >
-                          {/* Left column: User ID */}
-                          <div className="w-1/4 flex items-center justify-center p-2 transition-colors duration-300">
-                            <p className="text-[12px] text-gray-400 group-hover:text-[#0CBB7D] font-medium truncate text-center transition-colors duration-200">
-                              {user.userId}
-                            </p>
-                          </div>
-
-                          {/* Right column: Name, Email, Phone */}
-                          <div className="w-3/4 flex flex-col justify-center py-[7px] pr-2 leading-tight">
-                            <p className="text-[13px] text-gray-500 group-hover:text-[#0CBB7D] font-medium truncate transition-colors duration-200">
-                              {user.fullname}
-                            </p>
-                            <p className="text-[11px] text-gray-400 truncate">
-                              {user.email}
-                            </p>
-                            <p className="text-[11px] text-gray-400 truncate">
-                              {user.phoneNumber}
-                            </p>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-
-                <div className="flex gap-2">
-                  {/* Search by Remittance ID */}
-                  <input
-                    type="text"
-                    placeholder="Search by Remittance ID"
-                    className="w-full md:w-[250px] h-9 px-3 text-[12px] font-[600] border-2 border-gray-300 placeholder:text-gray-400 text-gray-700 rounded-lg focus:outline-none placeholder:text-[12px]"
-                    value={remittanceIdFilter}
-                    onChange={(e) => setRemittanceIdFilter(e.target.value)}
-                  />
-                  {/* Date Filter */}
-                  <div className="relative sm:w-[200px] w-full z-[20]" ref={dateRef}>
-                    <button
-                      className="w-full bg-white h-9 px-3 text-[12px] font-[600] border-gray-300 border-2 rounded-lg focus:outline-none text-left flex items-center justify-between text-gray-400"
-                      onClick={() => {
-                        setShowDropdown((prev) => !prev);
-                        // setShowPickupDropdown(false);
-                        // setShowPaymentTypeDropdown(false);
-                        setShowCustom(false);
-                      }}
-                    >
-                      <span>
-                        {dateRange[0].startDate && dateRange[0].endDate
-                          ? `${dayjs(dateRange[0].startDate).format(
-                            "DD/MM/YYYY"
-                          )} - ${dayjs(dateRange[0].endDate).format(
-                            "DD/MM/YYYY"
-                          )}`
-                          : "Select Date"}
-                      </span>
-                      <ChevronDown
-                        className={`w-4 h-4 ml-2 transform transition-transform ${showDropdown ? "rotate-180" : ""
-                          }`}
-                      />
-                    </button>
-
-                    {showDropdown && (
-                      <div className="absolute w-full bg-white border rounded shadow p-2 z-[50] transition-all duration-300 ease-in-out">
-                        <ul>
-                          {dateOptions.map((option, idx) => (
-                            <li
-                              key={idx}
-                              className="cursor-pointer hover:bg-green-50 px-3 py-2 text-[12px] font-[600] text-gray-500"
-                              onClick={(e) => {
-                                e.preventDefault();
-                                handleDateOptionClick(option);
-                              }}
-                            >
-                              {option.label}
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    )}
-
-                    {/* Custom Calendar */}
-                    {showCustom && (
-                      <div
-                        className="absolute -ml-28 w-full bg-white border rounded shadow p-2 z-[60] transition-all duration-600 ease-in-out"
-                        ref={calendarRef}
-                        onClick={(e) => e.stopPropagation()} // prevent calendar clicks from closing
-                      >
-                        <DateRange
-                          editableDateInputs={true}
-                          onChange={(item) => setTempDateRange([item.selection])}
-                          ranges={tempDateRange}
-                          moveRangeOnFirstSelection={false}
-                          showMonthAndYearPickers={false}
-                          rangeColors={["#0CBB7D"]}
-                          months={1}
-                          direction="horizontal"
-                          showDateDisplay={false}
-                          className="custom-date-range w-[290px] h-[290px] text-xs"
-                        />
-                        <div className="flex justify-end gap-2 mt-2">
-                          <button
-                            className="bg-[#0CBB7D] text-white px-3 py-1 text-xs rounded"
-                            onClick={(e) => {
-                              e.stopPropagation(); // prevent button clicks from closing unexpectedly
-                              setDateRange(tempDateRange);
-                              setShowCustom(false);
-                              setShowDropdown(false);
-                            }}
-                          >
-                            Apply
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="flex gap-2 justify-between w-full">
-                  {/* Status Dropdown */}
-                  <div className="relative w-full sm:w-[150px]" ref={statusRef}>
-                    <button
-                      onClick={() => setStatusDropdownOpen((prev) => !prev)}
-                      className="w-full text-gray-400 outline-none h-9 px-3 py-2 border-2 border-gray-300 rounded-lg text-left text-[12px] bg-white flex justify-between items-center font-[600]"
-                    >
-                      {statusFilter || "Status"}
-                      <ChevronDown className={`w-4 h-4 transform transition ${statusDropdownOpen ? "rotate-180" : ""}`} />
-                    </button>
-                    {statusDropdownOpen && (
-                      <ul className="absolute mt-1 w-full bg-white shadow-lg border border-gray-200 rounded-lg z-50 text-[12px] font-[600] text-gray-600">
-                        <li
-                          className="px-3 py-2 hover:bg-green-50 cursor-pointer"
-                          onClick={() => {
-                            setStatusFilter("Paid");
-                            setStatusDropdownOpen(false);
-                          }}
-                        >
-                          Paid
-                        </li>
-                        <li
-                          className="px-3 py-2 hover:bg-green-50 cursor-pointer"
-                          onClick={() => {
-                            setStatusFilter("Pending");
-                            setStatusDropdownOpen(false);
-                          }}
-                        >
-                          Pending
-                        </li>
-                      </ul>
-                    )}
-                  </div>
-                  <div className="w-full gap-2 sm:w-auto mb-2 sm:mb-0 flex flex-row items-center sm:items-start justify-end">
-                    <button
-                      className="h-9 px-3 sm:text-[12px] text-[10px] border-2 border-gray-100 rounded-lg font-[600] text-white bg-[#0CBB7D] hover:bg-green-500 transition whitespace-nowrap"
-                      onClick={() => {
-                        setRemittanceIdFilter("");
-                        setUserQuery("");
-                        setStatusFilter("");
-                        setSelectedUserId("");
-                        setDateRange([{ startDate: null, endDate: null, key: "selection" }]);
-                      }}
-                    >
-                      Clear
-                    </button>
-                    <button
-                      disabled={selectedRemittanceIds.length === 0}
-                      className={`flex items-center justify-center ${selectedRemittanceIds.length === 0
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-[#0CBB7D]"
-                        } text-white px-3 h-9 border-2 border-gray-100 rounded-lg text-[10px] sm:text-[12px] font-[600] transition-all duration-200 w-full md:w-auto`}
-                      onClick={handleExport}
-                    >
-                      Export
-                    </button>
-                    <button
-                      disabled={selectedRemittanceIds.length === 0}
-                      className={`flex items-center justify-center ${selectedRemittanceIds.length === 0
-                        ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-[#0CBB7D]"
-                        } text-white px-3 h-9 border-2 border-gray-100 rounded-lg text-[10px] sm:text-[12px] font-[600] transition-all duration-200 w-full md:w-auto`}
-                      onClick={handleTransferCOD}
-                    >
-                      Transfer COD
-                    </button>
-
-                    <div
-                      onClick={() => {
-                        if (
-                          isSidebarAdmin ||
-                          employeeAccess.isAdmin ||
-                          employeeAccess.canAction
-                        ) {
-                          handleCodRemittanceUpload();
-                        } else {
-                          setShowEmployeeAuthModal(true);
-                        }
-                      }}
-                      className="flex flex-col items-center sm:items-start"
-                    >
-                      {/* <label
-                        className={`cursor-pointer flex h-9 items-center gap-2 text-[10px] sm:text-[12px] font-[600] px-3 py-2 rounded-lg border-2 border-gray-100 transition
-      ${isSidebarAdmin || employeeAccess.isAdmin || employeeAccess.canAction
-                            ? "text-white bg-[#0CBB7D] border-[#0CBB7D] hover:bg-green-500"
-                            : "text-gray-400 bg-gray-100 border-gray-300 cursor-not-allowed"
-                          }`}
-                      >
-                        <FaUpload className="text-white text-[10px] sm:text-[12px] font-[600]" />
-                        <span>Upload</span>
-                      </label> */}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="hidden md:block relative mt-2">
-            <table
-              className="min-w-full 
-         bg-white rounded-lg shadow-md table-auto"
-            >
-              {/* Table Head */}
-              <thead>
-                <tr className="text-white border border-[#0CBB7D] bg-[#0CBB7D] text-[12px] font-[600]">
-                  <th className="py-2 px-3 text-left">
-                    <div className="flex">
-                      <input
-                        type="checkbox"
-                        checked={
-                          selectedRemittanceIds.length === remitedData.length &&
-                          remitedData.length > 0
-                        }
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedRemittanceIds(
-                              remitedData.map((row) => row.remittanceId)
-                            );
-                          } else {
-                            setSelectedRemittanceIds([]);
-                          }
-                        }}
-                        className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
-                      />
-                      <div className="ml-4">Date</div>
-                    </div>
-                  </th>
-                  <th className="py-2 px-3 text-left">User</th>
-                  <th className="py-2 px-3 text-center">Remittance ID</th>
-                  <th className="py-2 px-3 text-center">UTR</th>
-                  <th className="py-2 px-3 text-center">Total COD Amount</th>
-                  <th className="py-2 px-3 text-center">
-                    Amount Credited to Wallet
-                  </th>
-                  <th className="py-2 px-3 text-center">Adjusted Amount</th>
-                  <th className="py-2 px-3 text-center">Early COD Charges</th>
-                  <th className="py-2 px-3 text-center">Remittance Amount</th>
-                  <th className="py-2 px-3 text-center">COD Status</th>
-                </tr>
-              </thead>
-              {/* Table Body */}
-              <tbody>
-                {loading ? (
-                  <tr>
-                    <td colSpan="10" className="text-center py-6">
-                      <ThreeDotLoader />
-                    </td>
-                  </tr>
-                ) : remitedData.length > 0 ? (
-                  remitedData.map((row, index) => (
-                    <tr
-                      key={index}
-                      className="border-t hover:bg-gray-50 border-gray-300 text-gray-500 transition-all text-[12px] font-[400] relative text-center"
-                    >
-                      <td className="py-2 px-3 whitespace-nowrap">
-                        <div className="flex">
-                          <input
-                            type="checkbox"
-                            checked={selectedRemittanceIds.includes(
-                              row.remittanceId
-                            )}
-                            onChange={() =>
-                              handleCheckboxChange(row.remittanceId)
-                            }
-                            className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
-                          />
-                          <div className="ml-4">{formatDate(row.date)}</div>
-                        </div>
-                      </td>
-                      <td className="py-2 px-3 font-semibold whitespace-nowrap text-left">
-                        {row.user.name}
-                      </td>
-                      <td className="py-2 px-3 whitespace-normal">
-                        <div
-                          onClick={() => openRemittanceDetails(row.remittanceId)}
-                          className="text-[#0CBB7D] font-semibold hover:underline cursor-pointer"
-                        >
-                          {row.remittanceId}
-                        </div>
-                      </td>
-                      <td className="py-2 px-3 text-[#0CBB7D] font-semibold whitespace-nowrap">
-                        {row.utr}
-                      </td>
-                      <td className="py-2 px-3 whitespace-nowrap">
-                        {`₹${(Number(row?.codAvailable) || 0).toFixed(
-                          2
-                        )}`}
-                      </td>
-                      <td className="py-2 px-3 whitespace-nowrap">
-                        {`₹${(Number(row?.amountCreditedToWallet) || 0).toFixed(
-                          2
-                        )}`}
-                      </td>
-                      {/* <td className="py-2 px-3 whitespace-nowrap">
-                    {`₹${(Number(row?.earlyCodCharges) || 0).toFixed(2)}`}
-                  </td> */}
-                      <td className="py-2 px-3 whitespace-nowrap">
-                        {`₹${(Number(row.adjustedAmount) || 0).toFixed(2)}`}
-                      </td>
-                      <td className="py-2 px-3 whitespace-nowrap">
-                        {`₹${(Number(row.earlyCodCharges) || 0).toFixed(2)}`}
-                      </td>
-                      <td className="py-2 px-3 whitespace-nowrap">
-                        {`₹${(Number(row.remittanceInitiated) || 0).toFixed(2)}`}
-                      </td>
-                      <td
-                        className={`py-2 px-3 whitespace-nowrap ${row.status === "Paid"
-                          ? "text-green-600"
-                          : row.status === "Pending"
-                            ? "text-orange-500"
-                            : ""
-                          }`}
-                      >
-                        {row.status}
-                      </td>
-                    </tr>
-                  ))
-                ) : (
-                  <tr>
-                    <td colSpan="9" className="text-center py-4 text-gray-500">
-                      No orders found.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-          {/* Mobile View */}
-          <div className="md:hidden space-y-2">
-            <div className="block w-full sm:hidden">
-              <div className="px-2 w-full py-1 bg-green-200 rounded-lg flex items-center gap-2">
-                <input
-                  type="checkbox"
-                  checked={
-                    selectedRemittanceIds.length === remitedData.length &&
-                    remitedData.length > 0
-                  }
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setSelectedRemittanceIds(
-                        remitedData.map((row) => String(row.remittanceId))
-                      );
-                    } else {
-                      setSelectedRemittanceIds([]);
-                    }
-                  }}
-                  className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
-                />
-                <span className="text-[10px] font-[600] text-gray-500">Select All</span>
-              </div>
-            </div>
-            {remitedData.map((row, index) => (
-              <div
-                key={index}
-                className="bg-green-100 shadow-md text-gray-500 rounded-lg p-3 mt-2"
-              >
-                <div className="mt-2">
-                  <div className="flex justify-between items-start">
-                    <div className="flex text-[10px] font-[400]">
-                      <input
-                        type="checkbox"
-                        checked={selectedRemittanceIds.includes(
-                          String(row.remittanceId)
-                        )}
-                        onChange={() => handleCheckboxChange(row.remittanceId)}
-                        className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
-                      />
-                      <p className="ml-2">Date:</p>
-                      <p className="text-gray-500 ml-2">
-                        {formatDate(row.date)}
-                      </p>
-                    </div>
-                    <div className="flex">
-                      <span
-                        className={`text-[10px] font-[400] px-2 py-1 rounded-lg ${row.status === "Paid"
-                          ? "bg-green-100 text-green-600"
-                          : "bg-orange-100 text-orange-500"
-                          }`}
-                      >
-                        {row.status}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex">
-                    <p className="text-[10px] font-[400] ml-5">Remittance ID:</p>
-                    <p
-                      className="ml-2 text-[10px] font-[400] text-[#0CBB7D] hover:underline"
-                      onClick={() => openRemittanceDetails(row.remittanceId)}
-                    >
-                      {row.remittanceId}
-                    </p>
-                  </div>
-
-                  <div className="flex items-center mt-1 text-[10px] font-[400]">
-                    <p className="font-semibold ml-5">User Name:</p>
-                    <p className="ml-2 text-gray-700 font-[600] hover:underline truncate">
-                      {row.user.name}
-                    </p>
-                  </div>
-
-                  <div className="mt-2 bg-white rounded-lg p-3 text-[10px] font-[400]">
-                    {/* Amount Details */}
-                    <div className="flex justify-between items-center">
-                      <p className="text-gray-700 text-[10px] font-[400] text-left">Total COD:</p>
-                      <p className="text-right text-[#0CBB7D]">{`₹${(
-                        row.codAvailable
-                      ).toFixed(2)}`}</p>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-500">-</span>
-                      <p className="text-[10px] font-[400] text-gray-500 text-left flex-1 pl-2">
-                        Amount Credited to Wallet:
-                      </p>
-                      <p className="text-right text-red-600">{`₹${(
-                        row.amountCreditedToWallet || 0
-                      ).toFixed(2)}`}</p>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-500">-</span>
-                      <p className="text-[10px] font-[400] text-gray-500 text-left flex-1 pl-2">
-                        Early COD Charges:
-                      </p>
-                      <p className="text-right text-red-600">{`₹${(
-                        row.earlyCodCharges || 0
-                      ).toFixed(2)}`}</p>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                      <span className="text-gray-500 ">-</span>
-                      <p className="text-[10px] font-[400] text-gray-500 text-left flex-1 pl-2">
-                        Adjusted Amount:
-                      </p>
-                      <p className="text-red-600 text-right">{`₹${(
-                        row.adjustedAmount || 0
-                      ).toFixed(2)}`}</p>
-                    </div>
-
-                    {/* Divider */}
-                    <div className="border-t my-1"></div>
-
-                    {/* Final COD Available */}
-                    <div className="flex justify-between items-center">
-                      <p className="text-left text-[12px] font-[400]">Remittance Amount:</p>
-                      <p className="text-right text-[#0CBB7D]">{`₹${(
-                        row.remittanceInitiated || 0
-                      ).toFixed(2)}`}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Pagination */}
-          <div className="flex justify-between items-center mt-6 gap-4 flex-wrap text-[10px] font-[600]">
-            <div className="flex items-center gap-2">
-              <label
-                htmlFor="limit"
-                className="text-gray-700 text-[10px] font-[600]"
-              >
-                Show:
-              </label>
-              <select
-                id="limit"
-                value={limit}
-                onChange={(e) => {
-                  const selected = e.target.value;
-                  if (selected === "All") {
-                    setLimit("all"); // null means no limit
-                    setPage(1);
-                  } else {
-                    setLimit(parseInt(selected));
-                    setPage(1); // reset to first page when changing limit
-                  }
-                }}
-                className="px-3 py-2 border rounded-md text-[10px] font-[600]"
-              >
-                <option value={20}>20</option>
-                <option value={50}>50</option>
-                <option value={75}>75</option>
-                <option value={100}>100</option>
-                <option value="All">All</option>
-              </select>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <button
-                onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                disabled={page === 1}
-                className="py-2 px-3 bg-gray-300 rounded disabled:opacity-50"
-              >
-                <FiArrowLeft />
-              </button>
-              <span className="text-gray-700">
-                Page {page} of {totalPages}
-              </span>
-              <button
-                onClick={() =>
-                  setPage((prev) => Math.min(prev + 1, totalPages))
-                }
-                disabled={page === totalPages}
-                className="py-2 px-3 bg-gray-300 rounded disabled:opacity-50"
-              >
-                <FiArrowRight />
-              </button>
-            </div>
-          </div>
-          {upload && (
-            <CodUploadPoopup
-              onClose={() => setUpload(false)}
-              setRefresh={setRefresh}
-            />
+        <div className="flex items-center gap-2 ml-auto">
+          {isAnyFilterApplied && (
+            <button onClick={handleClearFilters} className="text-[12px] text-red-500 hover:underline font-bold px-2 whitespace-nowrap">
+              Clear All Filters
+            </button>
           )}
+          <button onClick={() => setShowUpload(true)} disabled={!employeeAccess.canAction && !employeeAccess.isAdmin} className={`h-[36px] px-3 rounded-lg text-[12px] font-bold transition-all focus:scale-95 flex items-center justify-center gap-1 ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-[#0CBB7D] text-white hover:bg-opacity-90 shadow-sm" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}>
+            <Upload className="w-4 h-4" />
+            Upload
+          </button>
 
-
-        </>
-      )}
-
-      {showTransferCODModal &&
-        <TranseferCODModal id={transferCODUserId} selectedRemittanceIds={selectedRemittanceIds} onClose={() => setShowTransferCODModal(false)} />
-      }
-
-      {openRemittancePopup && (
-        <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center z-50">
-          <div className="bg-white w-[90%] max-w-3xl rounded-lg shadow-xl p-2 relative">
-
-            {/* Close Button */}
+          <div className="relative" ref={bulkActionRef}>
             <button
-              onClick={() => setOpenRemittancePopup(false)}
-              className="absolute right-2 top-2 text-gray-500 hover:text-black text-[12px] sm:text-[14px]"
+              disabled={selectedRemittanceIds.length === 0}
+              onClick={() => setBulkActionOpen(!bulkActionOpen)}
+              className={`h-9 px-4 rounded-lg text-[12px] font-bold flex items-center gap-1 border transition-all ${selectedRemittanceIds.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50 shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"}`}
             >
-              ✕
+              Actions
+              <ChevronDown className={`w-4 h-4 transition-transform ${bulkActionOpen ? "rotate-180" : ""}`} />
+            </button>
+            {bulkActionOpen && (
+              <div className="absolute right-0 top-full mt-1 bg-white border border-gray-100 rounded-lg shadow-xl w-44 text-[12px] z-[100] animate-popup-in overflow-hidden border">
+                <div className="px-4 py-2 hover:bg-green-50 cursor-pointer font-bold text-gray-700 flex items-center gap-2 border-b border-gray-50 transition-colors" onClick={() => { handleExport(); setBulkActionOpen(false); }}>
+                  <Download className="w-4 h-4 text-[#0CBB7D]" /> Export
+                </div>
+                <div className="px-4 py-2 hover:bg-green-50 cursor-pointer font-bold text-gray-700 flex items-center gap-2 transition-colors" onClick={() => { handleTransferCOD(); setBulkActionOpen(false); }}>
+                  <Send className="w-4 h-4 text-[#0CBB7D]" /> Transfer COD
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile Filter Bar */}
+      <div className="md:hidden flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <div className="flex-1 min-w-0">
+            <DateFilter
+              onDateChange={(range) => { setDateRange(range); setPage(1); }}
+              clearTrigger={clearTrigger}
+              noInitialFilter={true}
+            />
+          </div>
+
+          <button
+            onClick={() => setIsFilterPanelOpen(true)}
+            className="flex items-center justify-center gap-1.5 px-3 h-[34px] bg-white border border-gray-300 rounded-lg text-[10px] font-bold text-gray-700 whitespace-nowrap"
+          >
+            <Filter className="w-3 h-3 text-[#0CBB7D]" />
+            More Filters
+          </button>
+
+          <button
+            onClick={() => setShowUpload(true)}
+            disabled={!employeeAccess.canAction && !employeeAccess.isAdmin}
+            className={`p-2.5 rounded-lg active:scale-95 transition-transform ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-[#0CBB7D] text-white" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}
+          >
+            <FiUpload className="w-3 h-3" />
+          </button>
+
+          {isAnyFilterApplied && (
+            <button onClick={handleClearFilters} className="p-2.5 bg-red-50 text-red-500 rounded-lg border border-red-100">
+              <FiTrash2 className="w-4 h-4" />
+            </button>
+          )}
+        </div>
+
+        <div className="flex items-center justify-between bg-white p-2 gap-2 rounded-lg border border-gray-100 shadow-sm">
+          <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 border border-gray-200 rounded-lg w-full">
+            <input
+              type="checkbox"
+              checked={remitedData.length > 0 && selectedRemittanceIds.length === remitedData.length}
+              onChange={handleSelectAll}
+              className="w-3 h-3 accent-[#0CBB7D] cursor-pointer shadow-sm"
+            />
+            <span className="text-[10px] font-bold text-gray-700 tracking-tight">Select All</span>
+          </div>
+
+          <div className="relative" ref={bulkActionRef}>
+            <button
+              onClick={() => setBulkActionOpen(!bulkActionOpen)}
+              className={`py-[8px] px-3 rounded-lg border transition-all ${selectedRemittanceIds.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] shadow-sm" : "border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed"}`}
+              disabled={selectedRemittanceIds.length === 0}
+            >
+              <FaBars className="w-3 h-3" />
             </button>
 
-            {/* Load Remittance Component */}
-            <RemittanceDetails remittanceId={selectedRemittanceId} />
+            {bulkActionOpen && (
+              <div className="absolute right-0 top-full mt-2 w-44 bg-white rounded-xl shadow-2xl border border-gray-100 z-[100] overflow-hidden animate-popup-in">
+                <button
+                  onClick={() => { handleExport(); setBulkActionOpen(false); }}
+                  className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-green-50 hover:text-[#0CBB7D] flex items-center gap-2.5 transition-colors border-b border-gray-50"
+                >
+                  <Download className="w-3 h-3 text-[#0CBB7D]" /> Export
+                </button>
+                <button
+                  onClick={() => { handleTransferCOD(); setBulkActionOpen(false); }}
+                  className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-green-50 hover:text-[#0CBB7D] flex items-center gap-2.5 transition-colors"
+                >
+                  <Send className="w-3 h-3 text-[#0CBB7D]" /> Transfer COD
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
 
+      {/* Desktop Table View */}
+      <div className="hidden md:block">
+        <div className="h-[calc(100vh-300px)] overflow-y-auto bg-white overflow-hidden shadow-sm shadow-green-50/50">
+          <table className="w-full text-[12px] border-collapse sticky-header">
+            <thead className="bg-[#0CBB7D] text-white font-bold sticky top-0 z-10 text-center uppercase tracking-wider">
+              <tr>
+                <th className="py-2.5 px-3 w-10">
+                  <input type="checkbox" checked={remitedData.length > 0 && selectedRemittanceIds.length === remitedData.length} onChange={handleSelectAll} className="accent-[#0CBB7D] cursor-pointer" />
+                </th>
+                <th className="py-2.5 px-3 text-left">Date</th>
+                <th className="py-2.5 px-3 text-left">User</th>
+                <th className="py-2.5 px-3">Remittance ID</th>
+                <th className="py-2.5 px-3">UTR</th>
+                <th className="py-2.5 px-3">COD Available</th>
+                <th className="py-2.5 px-3">Wallet Transfer</th>
+                <th className="py-2.5 px-3">Adjusted</th>
+                <th className="py-2.5 px-3">Early COD</th>
+                <th className="py-2.5 px-3">Remit Amount</th>
+                <th className="py-2.5 px-3">Status</th>
+              </tr>
+            </thead>
+            <tbody className="text-center">
+              {loading ? (
+                <tr><td colSpan={11} className="py-10"><ThreeDotLoader /></td></tr>
+              ) : remitedData.length === 0 ? (
+                <tr><td colSpan={11} className="py-10 text-center"><img src={NoDataFound} alt="No Data" className="w-60 h-60 mx-auto" /></td></tr>
+              ) : (
+                remitedData.map((row, index) => (
+                  <tr key={index} className="border-t border-gray-100 hover:bg-green-50/20 transition-colors">
+                    <td className="py-2 px-3">
+                      <input type="checkbox" checked={selectedRemittanceIds.includes(row.remittanceId)} onChange={() => handleCheckboxChange(row.remittanceId)} className="accent-[#0CBB7D] cursor-pointer" />
+                    </td>
+                    <td className="py-2 px-3 text-left font-medium text-gray-500">{dayjs(row.date).format("DD MMM YYYY")}</td>
+                    <td className="py-2 px-3 text-left min-w-[150px]">
+                      <p className="font-bold text-gray-700 truncate max-w-[180px]">{row.user?.fullname}</p>
+                      <p className="text-[10px] text-gray-400 truncate max-w-[180px]">{row.user?.email}</p>
+                    </td>
+                    <td className="py-2 px-3">
+                      <div className="flex items-center justify-center gap-2 group">
+                        <button onClick={() => openRemittanceDetails(row.remittanceId)} className="text-[#0CBB7D] font-bold hover:underline transition-all">
+                          {row.remittanceId}
+                        </button>
+                        <button onClick={() => handleCopy(row.remittanceId, row.remittanceId)} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-[#0CBB7D] transition-all opacity-0 group-hover:opacity-100">
+                          {copiedId === row.remittanceId ? <FiCheck className="text-green-500 w-3 h-3" /> : <FiCopy className="w-3 h-3" />}
+                        </button>
+                      </div>
+                    </td>
+                    <td className="py-2 px-3 text-gray-600 font-medium">
+                      <div className="flex items-center justify-center gap-1 group">
+                        <span>{row.utr || "N/A"}</span>
+                        {row.utr && (
+                          <button onClick={() => handleCopy(row.utr, row.remittanceId + '_utr')} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-[#0CBB7D] transition-all opacity-0 group-hover:opacity-100">
+                            {copiedId === row.remittanceId + '_utr' ? <FiCheck className="text-green-500 w-3 h-3" /> : <FiCopy className="w-3 h-3" />}
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                    <td className="py-2 px-3 font-bold text-gray-700">₹{(Number(row.codAvailable) || 0).toFixed(2)}</td>
+                    <td className="py-2 px-3 text-red-500 font-bold">₹{(Number(row.amountCreditedToWallet) || 0).toFixed(2)}</td>
+                    <td className="py-2 px-3 text-gray-600 font-bold">₹{(Number(row.adjustedAmount) || 0).toFixed(2)}</td>
+                    <td className="py-2 px-3 text-red-500 font-bold">₹{(Number(row.earlyCodCharges) || 0).toFixed(2)}</td>
+                    <td className="py-2 px-3 font-bold text-[#0CBB7D]">₹{(Number(row.remittanceInitiated) || 0).toFixed(2)}</td>
+                    <td className="py-2 px-3">
+                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold shadow-sm ${row.status === "Paid" ? "bg-green-100 text-[#0CBB7D]" : "bg-orange-100 text-orange-600"}`}>{row.status}</span>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden flex flex-col space-y-2 h-[calc(100vh-320px)] overflow-y-auto">
+        {loading ? <div className="flex justify-center py-20"><ThreeDotLoader /></div> : remitedData.length === 0 ? <img src={NoDataFound} className="w-40 mx-auto mt-20 opacity-50" /> : remitedData.map((row, index) => (
+          <div key={index} className="bg-white border border-gray-200 rounded-lg shadow-sm p-2 text-[10px] animate-popup-in">
+            {/* Header Bar */}
+            <div className="flex gap-2 justify-between rounded-lg bg-green-50 py-1.5 px-2 items-center mb-1.5">
+              <div className="flex items-center gap-2">
+                <input type="checkbox" checked={selectedRemittanceIds.includes(row.remittanceId)} onChange={() => handleCheckboxChange(row.remittanceId)} className="w-3.5 h-3.5 accent-[#0CBB7D]" />
+                <div className="flex items-center gap-1.5">
+                  <span className="text-[#0CBB7D] font-bold text-[10px] underline cursor-pointer" onClick={() => openRemittanceDetails(row.remittanceId)}>{row.remittanceId}</span>
+                  <button onClick={() => handleCopy(row.remittanceId, row.remittanceId + '_m')} className="text-gray-400 p-0.5 transition-colors hover:text-[#0CBB7D]">
+                    {copiedId === row.remittanceId + '_m' ? <FiCheck className="text-green-500 w-2.5 h-2.5" /> : <FiCopy className="w-2.5 h-2.5" />}
+                  </button>
+                  <span className="text-gray-500 text-[9px] font-medium">{dayjs(row.date).format("DD MMM YYYY")}</span>
+                </div>
+              </div>
+              <div className="text-right flex flex-col items-end">
+                <span className={`px-2 py-0.5 rounded text-[10px] font-bold shadow-xs ${row.status === "Paid" ? "bg-green-100 text-[#0CBB7D]" : "bg-orange-100 text-orange-600"}`}>{row.status}</span>
+              </div>
+            </div>
+
+            {/* Details Grid */}
+            <div className="grid grid-cols-2 gap-4 mb-1 px-1 py-1 items-center border-b border-gray-50 pb-2">
+              <div>
+                <p className="text-gray-400 font-bold tracking-tight uppercase text-[8px] mb-0.5">UTR Number</p>
+                <div className="flex items-center gap-1.5">
+                  <p className="font-bold text-gray-700 text-[10px] truncate">{row.utr || "N/A"}</p>
+                  {row.utr && (
+                    <button onClick={() => handleCopy(row.utr, row.remittanceId + '_m_utr')} className="p-1 hover:bg-green-50 rounded-full transition-colors text-gray-400 hover:text-[#0CBB7D]">
+                      {copiedId === row.remittanceId + '_m_utr' ? <FiCheck className="text-green-500 w-2.5 h-2.5" /> : <FiCopy className="w-2.5 h-2.5" />}
+                    </button>
+                  )}
+                </div>
+              </div>
+              <div className="text-right">
+                <p className="text-gray-400 font-bold tracking-tight uppercase text-[8px] mb-0.5">Remit Amount</p>
+                <p className="font-bold text-[#0CBB7D] text-[12px]">₹{(Number(row.remittanceInitiated) || 0).toFixed(2)}</p>
+              </div>
+            </div>
+
+            {/* User Info Section */}
+            <div className="mt-2 flex items-center justify-between px-1 pt-1 pb-1">
+              <div className="flex items-center gap-2 min-w-0 max-w-[65%]">
+                <div className="w-7 h-7 rounded-full bg-gray-100 flex items-center justify-center font-bold text-[#0CBB7D] text-[10px] shrink-0 uppercase border border-gray-200">
+                  {row.user?.fullname?.charAt(0) || "U"}
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-gray-700 font-bold text-[10px] truncate leading-tight">{row.user?.fullname}</p>
+                  <p className="text-gray-500 text-[9px] truncate leading-tight">{row.user?.email}</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setDetailsPopupId(detailsPopupId === row.remittanceId ? null : row.remittanceId)}
+                className="bg-[#0CBB7D] text-white px-3 py-1 rounded-md font-bold text-[9px] shadow-sm hover:opacity-90 active:scale-95 transition-all"
+              >
+                View Details
+              </button>
+            </div>
+
+            {/* Expandable Breakdown */}
+            <AnimatePresence>
+              {detailsPopupId === row.remittanceId && (
+                <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} className="overflow-hidden">
+                  <div className="mt-2 p-2.5 bg-gray-50 rounded-lg space-y-1.5 border border-green-100/50 shadow-inner mx-1">
+                    <div className="flex justify-between items-center"><span className="text-gray-500">COD Available</span><span className="font-bold text-gray-700">₹{(Number(row.codAvailable) || 0).toFixed(2)}</span></div>
+                    <div className="flex justify-between items-center"><span className="text-gray-500">Wallet Transfer</span><span className="font-bold text-red-500">-₹{(Number(row.amountCreditedToWallet) || 0).toFixed(2)}</span></div>
+                    <div className="flex justify-between items-center"><span className="text-gray-500">Early COD Fee</span><span className="font-bold text-red-500">-₹{(Number(row.earlyCodCharges) || 0).toFixed(2)}</span></div>
+                    <div className="flex justify-between items-center pt-1.5 border-t border-gray-200 mt-1"><span className="text-gray-600 font-bold">Adjusted Amount</span><span className="font-bold text-gray-800">₹{(Number(row.adjustedAmount) || 0).toFixed(2)}</span></div>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ))}
+      </div>
+
+      <PaginationFooter page={page} setPage={setPage} totalPages={totalPages} limit={limit} setLimit={setLimit} />
+
+      {openRemittancePopup && (
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[120] backdrop-blur-sm p-4">
+          <div className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden relative animate-popup-in">
+            <button onClick={() => setOpenRemittancePopup(false)} className="absolute right-5 top-5 text-gray-400 hover:text-red-500 transition-all z-[130] p-1.5 hover:bg-gray-100 rounded-full"><X className="w-6 h-6" /></button>
+            <div className="p-1 min-h-[400px]"><RemittanceDetails remittanceId={selectedRemittanceId} /></div>
           </div>
         </div>
       )}
 
+      {showTransferCODModal && (
+        <TranseferCODModal
+          id={transferCODUserId}
+          onClose={() => setShowTransferCODModal(false)}
+          selectedRemittanceIds={selectedRemittanceIds}
+        />
+      )}
+
+      {showUpload && <CodUploadPoopup onClose={() => setShowUpload(false)} setRefresh={setRefresh} />}
+
+      {/* Side Filter Panel */}
+      <AnimatePresence>
+        {isFilterPanelOpen && (
+          <div className="fixed inset-0 z-[110] flex justify-end">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-[4px] transition-all" onClick={() => setIsFilterPanelOpen(false)}></div>
+            <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "100%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="relative w-full max-w-[340px] bg-white h-full shadow-2xl flex flex-col border-l border-gray-200">
+              <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-white">
+                <h2 className="text-[16px] font-bold text-gray-700 tracking-tight">Remittance Filters</h2>
+                <button onClick={() => setIsFilterPanelOpen(false)} className="p-1.5 hover:bg-gray-100 rounded-full transition-all group">
+                  <X className="w-5 h-5 text-gray-400 group-hover:text-red-500" />
+                </button>
+              </div>
+
+              <div className="flex-1 overflow-y-auto p-4 space-y-5 custom-scrollbar">
+                {/* User Filter */}
+                <div className="space-y-1.5">
+                  <label className="text-[12px] font-[600] text-gray-700 tracking-wide">Search User</label>
+                  <UserFilter onUserSelect={(id) => setLocalFilters(prev => ({ ...prev, selectedUserId: id }))} clearTrigger={clearUserTrigger} />
+                </div>
+
+                {/* Remittance ID */}
+                <div className="space-y-1.5">
+                  <label className="text-[12px] font-[600] text-gray-700 tracking-wide">Remittance ID</label>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      placeholder="RE123456"
+                      className="w-full h-9 pl-9 pr-3 text-[12px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-all text-gray-700 placeholder:text-gray-400"
+                      value={localFilters.remittanceId}
+                      onChange={e => setLocalFilters(prev => ({ ...prev, remittanceId: e.target.value }))}
+                    />
+                    <Search className="absolute left-3 top-2.5 w-4 h-4 text-gray-400" />
+                  </div>
+                </div>
+
+                {/* Status Dropdown */}
+                <div className="space-y-1.5" ref={statusRef}>
+                  <label className="text-[12px] font-[600] text-gray-700 tracking-wide">Status</label>
+                  <div className="relative">
+                    <button
+                      onClick={() => setStatusDropdownOpen(!statusDropdownOpen)}
+                      className={`w-full h-9 px-3 text-[12px] font-[600] border rounded-lg focus:outline-none flex items-center justify-between transition-all bg-white text-left ${statusDropdownOpen ? "border-[#0CBB7D]" : "border-gray-200"}`}
+                    >
+                      <span className={localFilters.status ? "text-gray-700" : "text-gray-400"}>{localFilters.status || "Select Status"}</span>
+                      <ChevronDown className={`w-4 h-4 ml-2 text-gray-400 transition-transform ${statusDropdownOpen ? "rotate-180" : ""}`} />
+                    </button>
+                    {statusDropdownOpen && (
+                      <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-[120] py-1 border border-gray-200 animate-popup-in">
+                        {["Paid", "Transfer To Wallet", "Transfer To Bank"].map(s => (
+                          <div key={s} onClick={() => { setLocalFilters(prev => ({ ...prev, status: s })); setStatusDropdownOpen(false); }} className={`px-4 py-2 text-[12px] font-[600] cursor-pointer transition-colors ${localFilters.status === s ? "bg-green-50 text-[#0CBB7D]" : "text-gray-500 hover:bg-gray-50"}`}>{s}</div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 border-t bg-gray-50 flex gap-3 mt-auto">
+                <button onClick={handleClearFilters} className="flex-1 py-2 text-gray-500 rounded-xl text-[12px] font-bold hover:bg-white hover:text-red-500 transition-all border border-gray-200">Reset</button>
+                <button onClick={() => { setAppliedFilters(localFilters); setIsFilterPanelOpen(false); setPage(1); }} className="flex-1 py-2 bg-[#0CBB7D] text-white rounded-xl text-[12px] font-bold hover:opacity-90 transition-all shadow-md">Apply</button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };

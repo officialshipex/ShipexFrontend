@@ -92,7 +92,7 @@ const DiscrepancyFilterPanel = ({
 
             <div className="relative w-full max-w-[340px] bg-white h-full shadow-2xl flex flex-col animate-slide-in-right">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b">
+                <div className="flex items-center justify-between px-4 py-2 border-b">
                     <h2 className="text-[14px] font-bold text-gray-700 tracking-tight">
                         Filters
                     </h2>
@@ -114,7 +114,7 @@ const DiscrepancyFilterPanel = ({
                     )}
                     {/* Search Type */}
                     <div className="space-y-1" ref={searchTypeRef}>
-                        <label className="text-[12px] font-[600] text-gray-400">
+                        <label className="text-[12px] font-[600] text-gray-700">
                             Search Type
                         </label>
                         <div className="relative">
@@ -166,7 +166,7 @@ const DiscrepancyFilterPanel = ({
 
                     {/* Search Input */}
                     <div className="space-y-1">
-                        <label className="text-[12px] font-[600] text-gray-400">
+                        <label className="text-[12px] font-[600] text-gray-700">
                             Search{" "}
                             {localFilters.searchType === "awbNumber"
                                 ? "AWB Number"
@@ -191,7 +191,7 @@ const DiscrepancyFilterPanel = ({
 
                     {/* Courier Service Name Filter */}
                     <div className="space-y-1" ref={courierRef}>
-                        <label className="text-[12px] font-[600] text-gray-400">
+                        <label className="text-[12px] font-[600] text-gray-700">
                             Courier Service
                         </label>
                         <div className="relative">
@@ -252,7 +252,7 @@ const DiscrepancyFilterPanel = ({
                     {/* Status Filter */}
                     {showStatus && (
                         <div className="space-y-1" ref={statusRef}>
-                            <label className="text-[12px] font-[600] text-gray-400">
+                            <label className="text-[12px] font-[600] text-gray-700">
                                 Status
                             </label>
                             <div className="relative">

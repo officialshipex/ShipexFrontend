@@ -56,16 +56,12 @@ const PackageDetailsSection = ({ order, onUpdate }) => {
                         <span className="font-[600] text-gray-700">Order Type:</span>
                         <p className="text-gray-500">{order.orderType || "B2C"}</p>
                     </div>
-
                     <div>
-                        <span className="font-[600] text-gray-700">Applicable Weight:</span>
-                        <p className="text-gray-500">
-                            {isB2B
-                                ? (order.B2BPackageDetails?.applicableWeight || 0)
-                                : (order.packageDetails?.applicableWeight || 0)
-                            } KG
-                        </p>
+                        <span className="font-[600] text-gray-700">Dead Weight:</span>
+                        <p className="text-gray-500">{order.packageDetails?.deadWeight || "B2C"}</p>
                     </div>
+
+
 
                     {!isB2B && (
                         <>
@@ -84,6 +80,16 @@ const PackageDetailsSection = ({ order, onUpdate }) => {
                             </div>
                         </>
                     )}
+
+                    <div>
+                        <span className="font-[600] text-gray-700">Applicable Weight:</span>
+                        <p className="text-gray-500">
+                            {isB2B
+                                ? (order.B2BPackageDetails?.applicableWeight || 0)
+                                : (order.packageDetails?.applicableWeight || 0)
+                            } KG
+                        </p>
+                    </div>
 
                     {isB2B && (
                         <>

@@ -80,7 +80,7 @@ const MobileOrderCard = ({
     }, []);
 
     return (
-        <div className="text-gray-700 border bg-green-50 p-2 rounded-lg shadow-md space-y-1">
+        <div className="text-gray-700 animate-popup-in border bg-white p-2 rounded-lg shadow-md space-y-1">
             {/* HEADER */}
             <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
@@ -147,16 +147,21 @@ const MobileOrderCard = ({
 
             {/* USER DETAILS (ADMIN ONLY) */}
             {showUserDetails && (
-                <div className="flex flex-col gap-0.5 border-b border-dashed border-green-200 pb-1.5 mb-1.5">
-                    <div className="flex justify-between items-center">
-                        <span className="text-[10px] text-[#0CBB7D]">{order.userId?.userId}</span>
-                        <span className="text-[10px] text-gray-700">{order.userId?.fullname}</span>
-                    </div>
-                    <div className="flex justify-between items-center text-[9px] text-gray-500">
-                        <span className="truncate max-w-[150px]">{order.userId?.email}</span>
-                        <span>{order.userId?.phoneNumber}</span>
-                    </div>
-                </div>
+                <div className="flex items-center justify-between">
+                                    <div className="flex items-center gap-2 min-w-0">
+                                        <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center font-bold text-[#0CBB7D] text-[10px] shrink-0 border border-gray-300">
+                                            {order.userId?.fullname?.charAt(0)}
+                                        </div>
+                                        <div className="min-w-0 leading-tight">
+                                            <p className="font-bold text-gray-700 text-[10px] truncate">{order.userId?.fullname}</p>
+                                            <p className="text-gray-500 text-[10px] truncate">{order.userId?.email}</p>
+                                            {/* <p className="text-gray-400 text-[9px] truncate">{row.user.userId}</p> */}
+                                        </div>
+                                    </div>
+                                    <p className="text-[#0CBB7D] font-medium text-[10px] tracking-widest shrink-0">
+                                        {order.userId.userId}
+                                    </p>
+                                </div>
             )}
 
             {/* DATE + CHANNEL */}
@@ -176,7 +181,7 @@ const MobileOrderCard = ({
 
 
             {showShippingDetails && (
-                <div className="flex items-center p-2 bg-green-200 rounded-lg justify-between gap-2">
+                <div className="flex items-center p-2 bg-green-100 rounded-lg justify-between gap-2">
                     {/* Courier Logo & Details */}
 
                     <div className="flex items-center gap-2">
@@ -323,7 +328,7 @@ const MobileOrderCard = ({
             </div >
 
             {/* FOOTER WITH SEPARATORS */}
-            <div className="flex items-center justify-between bg-green-200 px-2 py-1 rounded-lg text-[10px]" >
+            <div className="flex items-center justify-between bg-green-100 px-2 py-1 rounded-lg text-[10px]" >
                 {/* PRODUCTS */}
                 <div className="relative" ref={openPopup === "products" ? popupRef : null}>
                     <p

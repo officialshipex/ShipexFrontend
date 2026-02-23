@@ -101,7 +101,7 @@ const ShippingFilterPanel = ({
 
             <div className="relative w-full max-w-[340px] bg-white h-full shadow-2xl flex flex-col animate-slide-in-right">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b">
+                <div className="flex items-center justify-between px-4 py-2 border-b">
                     <h2 className="text-[14px] font-bold text-gray-700 tracking-tight">Filters</h2>
                     <button onClick={onClose} className="p-1.5 hover:bg-gray-100 rounded-full transition-all">
                         <X className="w-5 h-5 text-gray-500" />
@@ -113,7 +113,7 @@ const ShippingFilterPanel = ({
                     {/* User Search */}
                     {showUserFilter && (
                         <div className="space-y-1">
-                            <label className="text-[12px] font-[600] text-gray-400">Search User</label>
+                            <label className="text-[12px] font-[600] text-gray-700">Search User</label>
                             <UserFilter
                                 onUserSelect={(id) => setLocalFilters({ ...localFilters, selectedUserId: id })}
                                 clearTrigger={clearUserTrigger}
@@ -124,7 +124,7 @@ const ShippingFilterPanel = ({
 
                     {/* Search Type (AWB / Order ID) */}
                     <div className="space-y-1" ref={searchTypeRef}>
-                        <label className="text-[12px] font-[600] text-gray-400">Search Type</label>
+                        <label className="text-[12px] font-[600] text-gray-700">Search Type</label>
                         <div className="relative">
                             <button
                                 onClick={() => setShowSearchTypeDropdown(!showSearchTypeDropdown)}
@@ -154,7 +154,7 @@ const ShippingFilterPanel = ({
 
                     {/* Search Input */}
                     <div className="space-y-1">
-                        <label className="text-[12px] font-[600] text-gray-400">Search {localFilters.searchType === "awbNumber" ? "AWB" : "Order ID"}</label>
+                        <label className="text-[12px] font-[600] text-gray-700">Search {localFilters.searchType === "awbNumber" ? "AWB" : "Order ID"}</label>
                         <input
                             type="text"
                             placeholder={`Enter ${localFilters.searchType === "awbNumber" ? "AWB" : "Order ID"}`}
@@ -166,7 +166,7 @@ const ShippingFilterPanel = ({
 
                     {/* Courier Filter */}
                     <div className="space-y-1">
-                        <label className="text-[12px] font-[600] text-gray-400">Courier</label>
+                        <label className="text-[12px] font-[600] text-gray-700">Courier</label>
                         <CourierFilter
                             selectedCourier={localFilters.selectedCourier}
                             setSelectedCourier={(c) => setLocalFilters({ ...localFilters, selectedCourier: c })}
@@ -181,7 +181,7 @@ const ShippingFilterPanel = ({
 
                     {/* Status Dropdown */}
                     <div className="space-y-1" ref={statusRef}>
-                        <label className="text-[12px] font-[600] text-gray-400">Status</label>
+                        <label className="text-[12px] font-[600] text-gray-700">Status</label>
                         <div className="relative">
                             <button
                                 onClick={() => setShowStatusDropdown(!showStatusDropdown)}

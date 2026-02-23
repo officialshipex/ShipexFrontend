@@ -28,24 +28,28 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
     const navigate = useNavigate()
     // console.log(setSelectedData)
     const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+    const effectiveUserId = (userId && userId !== "null" && userId !== "undefined")
+        ? userId
+        : (setSelectedData?.[0]?.userId);
+
     useEffect(() => {
         const fetchPickupAddresses = async () => {
+            if (!effectiveUserId || effectiveUserId === "null" || effectiveUserId === "undefined") return;
             try {
-                const token = Cookies.get("session"); // Extract token
+                const token = Cookies.get("session");
                 const response = await axios.get(
-                    `${REACT_APP_BACKEND_URL}/order/pickupAddress?userId=${userId}`,
+                    `${REACT_APP_BACKEND_URL}/order/pickupAddress?userId=${effectiveUserId}`,
                     {
                         headers: { Authorization: `Bearer ${token}` },
                     }
                 );
-                // console.log("Fetched Pickup Addresses:", response.data.data);
                 setPickUpAddress(response.data.data || []);
             } catch (error) {
                 console.error("Error fetching pickup addresses:", error);
             }
         };
         fetchPickupAddresses();
-    }, [refresh1]);
+    }, [refresh1, effectiveUserId, REACT_APP_BACKEND_URL]);
 
     // Handle Pickup Address Selection
     const handlePickupChange = (selectedOption) => {
@@ -100,7 +104,7 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
             let success = true;
             if (setSelectedData && setSelectedData.length > 0) {
                 const response = await axios.post(
-                    `${REACT_APP_BACKEND_URL}/bulk/updatePickup?userId=${userId}`,
+                    `${REACT_APP_BACKEND_URL}/bulk/updatePickup?userId=${effectiveUserId}`,
                     { formData, setSelectedData },
                     { headers: { Authorization: `Bearer ${token}` } }
                 );
@@ -208,7 +212,7 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
                 <div className="col-span-2 text-right flex gap-2 mt-4 justify-end">
                     <button
                         type="button"
-                        className="bg-gray-200 text-[10px] sm:text-[12px] font-[600] text-gray-500 px-4 py-2 rounded-lg hover:bg-gray-300 transition-all"
+                        className="bg-gray-200 text-[10px] sm:text-[12px] font-[600] text-gray-500 px-5 py-2 rounded-lg hover:bg-gray-300 transition-all"
                         onClick={onClose}
                     >
                         Cancel
@@ -226,7 +230,7 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
                 <UpdatePickupAddress
                     onClose={() => setShowBulkShipModal(false)}
                     setRefresh={setRefresh}
-                    userId={userId}
+                    userId={effectiveUserId}
                     setPickupAddress={(newAddress) =>
                         setPickUpAddress((prev) => [...prev, newAddress])
                     }
