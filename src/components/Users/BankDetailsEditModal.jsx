@@ -104,7 +104,7 @@ export default function BankDetailsEditModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="fixed animate-popup-in inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white w-[90%] max-w-xl rounded-lg p-6 relative shadow-lg">
         {/* Close Button */}
         <button

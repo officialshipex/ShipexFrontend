@@ -708,7 +708,7 @@ export default function ProfileCard() {
   return (
     <div className="min-h-screen bg-gray-50">
       {loading ? (
-        <div className="flex items-center justify-center h-screen">
+        <div className="flex items-center justify-center">
           <ThreeDotLoader />
         </div>
       ) : (
@@ -781,7 +781,7 @@ export default function ProfileCard() {
             </div>
 
             {/* Tab Content */}
-            <div className="pb-6 sm:pb-8">{renderTabContent()}</div>
+            <div className="pb-6 sm:pb-6">{renderTabContent()}</div>
           </div>
         </>
       )}

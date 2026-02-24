@@ -6,6 +6,7 @@ import {
   useLocation,
   useNavigate,
 } from "react-router-dom";
+import { AnimatePresence, motion } from "framer-motion";
 import "./index.css"; // Tailwind CSS
 import { getUserInfoFromToken } from "./utils/session.js";
 // import { Toaster } from "react-hot-toast";
@@ -250,923 +251,931 @@ function App() {
             />
           )}{" "}
           {/* Pass isAdmin from user */}
-          <div className="flex-grow p-2">
-            <Routes>
-              {/* Public Routes */}
-              <Route
-                path="/login"
-                element={<Login setIsAuthenticated={setIsAuthenticated} />}
-              />
-              <Route
-                path="/e-login"
-                element={
-                  <Elogin setEmployeeAuthenticated={setEmployeeAuthenticated} />
-                }
-              />
+          <div className="flex-grow p-2 overflow-hidden">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
+              >
+                <Routes location={location}>
+                  {/* Public Routes */}
+                  <Route
+                    path="/login"
+                    element={<Login setIsAuthenticated={setIsAuthenticated} />}
+                  />
+                  <Route
+                    path="/e-login"
+                    element={
+                      <Elogin setEmployeeAuthenticated={setEmployeeAuthenticated} />
+                    }
+                  />
 
-              <Route
-                path="/register"
-                element={<Register setIsAuthenticated={setIsAuthenticated} />}
-              />
+                  <Route
+                    path="/register"
+                    element={<Register setIsAuthenticated={setIsAuthenticated} />}
+                  />
 
-              <Route
-                path="/reset-password"
-                element={
-                  <ResetPasswordPage setIsAuthenticated={setIsAuthenticated} />
-                }
-              />
+                  <Route
+                    path="/reset-password"
+                    element={
+                      <ResetPasswordPage setIsAuthenticated={setIsAuthenticated} />
+                    }
+                  />
 
-              {/* Private Routes */}
-              <Route
-                path="/dashboard"
-                element={
-                  isAuthenticated ? (
-                    <DashboardCards />
-                  ) : employeeAuthenticated ? (
-                    <Navigate to="/adminDashboard" />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
+                  {/* Private Routes */}
+                  <Route
+                    path="/dashboard"
+                    element={
+                      isAuthenticated ? (
+                        <DashboardCards />
+                      ) : employeeAuthenticated ? (
+                        <Navigate to="/adminDashboard" />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
 
-              <Route
-                path="/adminDashboard"
-                element={
-                  employeeAuthenticated ||
-                    (isAuthenticated && (user?.isAdmin || user?.adminTab)) ? (
-                    <AdminDashboard
-                      isSidebarAdmin={
-                        employeeAuthenticated ||
-                        (isAuthenticated && (user?.isAdmin || user?.adminTab))
+                  <Route
+                    path="/adminDashboard"
+                    element={
+                      employeeAuthenticated ||
+                        (isAuthenticated && (user?.isAdmin || user?.adminTab)) ? (
+                        <AdminDashboard
+                          isSidebarAdmin={
+                            employeeAuthenticated ||
+                            (isAuthenticated && (user?.isAdmin || user?.adminTab))
+                          }
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/employeeAuthentication"
+                    element={
+                      employeeAuthenticated ? (
+                        <EmployeeAuthModal />
+                      ) : (
+                        <Navigate to="/e-login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/rechargeWallet"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <RechargeWallet />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/CodRemittanceRecharge"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <CodRemittanceRecharge />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+
+                  <Route
+                    path="/user/profile"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <Profile />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  {!kyc && (
+                    <Route
+                      path="/kyc"
+                      element={
+                        isAuthenticated || employeeAuthenticated ? (
+                          <Kyc />
+                        ) : (
+                          <Navigate to="/login" />
+                        )
                       }
                     />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/employeeAuthentication"
-                element={
-                  employeeAuthenticated ? (
-                    <EmployeeAuthModal />
-                  ) : (
-                    <Navigate to="/e-login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/rechargeWallet"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <RechargeWallet />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/CodRemittanceRecharge"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <CodRemittanceRecharge />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
-              <Route
-                path="/user/profile"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <Profile />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              {!kyc && (
-                <Route
-                  path="/kyc"
-                  element={
-                    isAuthenticated || employeeAuthenticated ? (
-                      <Kyc />
-                    ) : (
-                      <Navigate to="/login" />
-                    )
-                  }
-                />
-              )}
-              <Route
-                path="/dashboard/b2c/order"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <OrdersPage />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/order/pickup-manifest/:pickupId"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <PickupManifestDetails />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/b2b/order"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <B2BOrdersPage />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/adminDashboard/b2c/order"
-                element={
-                  employeeAuthenticated ||
-                    (isAuthenticated && user?.adminTab) ? (
-                    <AdminOrder
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/adminDashboard/order/pickup-manifest/:pickupId"
-                element={
-                  employeeAuthenticated ||
-                    (isAuthenticated && user?.adminTab) ? (
-                    <AdminPickupManifestDetails />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/adminDashboard/b2b/order"
-                element={
-                  employeeAuthenticated ||
-                    (isAuthenticated && user?.adminTab) ? (
-                    <B2BAdminOrder
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
-              <Route
-                path="/dashboard/order/tracking/:awb"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <Tracking />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/order/neworder" // New route for NewOrder page
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <NewOrder />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/order/neworder/updateOrder/:id" // New route for NewOrder page
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <UpdateOrder
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/ndr" // New route for NewOrder page
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <NDRPage />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/adminDashboard/ndr" // New route for NewOrder page
-                element={
-                  employeeAuthenticated ||
-                    (isAuthenticated && user?.adminTab) ? (
-                    <NdrTab
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/order/courierSelection/:id" // New route for NewOrder page
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <CourrierSelection />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
-              <Route
-                path="/dashboard/order/b2b/courierSelection/:id" // New route for NewOrder page
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <B2BCourrierSelection />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/billing"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <Billing />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/billing/RemittanceDetails/:id"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <RemittanceDetails />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/billing/sellerRemittanceData/:id"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <SellerRemittanceData />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
-              <Route
-                path="/dashboard/AdminCodRemittances"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <AdminCodRemittances
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
-              <Route
-                path="/finance/COD"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <COD isSidebarAdmin={isAuthenticated && user?.adminTab} />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              >
-                {/* Redirect /finance/COD to default tab */}
-                <Route
-                  index
-                  element={<Navigate to="CODRemittance" replace />}
-                />
-
-                <Route
-                  path="sellerCodRemittance"
-                  element={
-                    <CODRemittanceOrder
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-                <Route
-                  path="CODRemittance"
-                  element={
-                    <AdminCodRemittances
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-                <Route
-                  path="courierCodRemittance"
-                  element={
-                    <CourierCODRemittance
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-              </Route>
-
-              <Route
-                path="/finance/billing"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <Billings
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              >
-                {/* Redirect /finance/COD to default tab */}
-                <Route index element={<Navigate to="shipping" replace />} />
-
-                <Route
-                  path="shipping"
-                  element={
-                    <Shippings
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-                <Route
-                  path="CODRemitance"
-                  element={
-                    <CodRemmitances
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-                <Route
-                  path="passbook"
-                  element={
-                    <Passbooks
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-                <Route
-                  path="walletHistory"
-                  element={
-                    <WalletHistorys
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-                <Route
-                  path="invoice"
-                  element={
-                    <Invoices
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-              </Route>
-
-              {/* Tools page */}
-              <Route
-                path="/dashboard/tools/Cost_Estimation/b2c"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <CostEstimation />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/tools/Cost_Estimation/b2b"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <CostEstimationB2B />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
-              <Route
-                path="/dashboard/tools/reports"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <ReportsPage />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/tools/Weight_Dependency"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <WeightDiscrepancy
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/adminDashboard/tools/Weight_Dependency"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <AdminWeightDiscrepancy
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
-              {/* Setup&Manage */}
-              <Route
-                path="/dashboard/Setup&Manage/Channel"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <Channel />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/channel/addchannel"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <AddChannel />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/channel/addchannel/Woocommerce"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <WooCommerceIntegration />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/channel/addchannel/Shopify"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <ShopifyIntegration />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/channel/addchannel/Shopify/:id"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <ShopifyIntegration />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/channel/addchannel/WooCommerce/:id"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <WooCommerceIntegration />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/Setup&Manage/Package_type"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <PackageType />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/Setup&Manage/Customer"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <Customer />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/Setup&Manage/Pickup_address"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <PickupAddress />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
-              <Route
-                path="/dashboard/Setup&Manage/Courier"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <CourierTab
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              >
-                {/* Redirect /finance/COD to default tab */}
-                <Route
-                  index
-                  element={<Navigate to="courier_selection" replace />}
-                />
-
-                <Route
-                  path="courier_selection"
-                  element={
-                    <CourierSelection
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-                <Route
-                  path="courier_priority"
-                  element={
-                    <CourierPriority
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-                <Route
-                  path="courier_rules"
-                  element={
-                    <CourierRules
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-              </Route>
-
-              <Route
-                path="/dashboard/Setup&Manage/User/Profile/:id/*"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <Profile />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
-              <Route
-                path="/dashboard/Setup&Manage/Role_List"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <RoleList
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/Setup&Manage/Role_List/AddRole"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <AddRole />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/Setup&Manage/allocateRoles"
-                element={
-                  isAuthenticated && user?.isAdmin && user?.adminTab ? (
-                    <AllocateRoles isSidebarAdmin={true} />
-                  ) : employeeAuthenticated ? (
-                    <YourSellers />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
-              <Route
-                path="/adminDashboard/Setup&Manage/statusMap"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <StatusMaping
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/adminDashboard/Setup&Manage/EDD-map"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <EDDMapping
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
-              <Route
-                path="/adminDashboard/Setup&Manage/pincode-information"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <PincodeInformation
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
-              <Route
-                path="/adminDashboard/operations/firstmile"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <FirstMile
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/adminDashboard/operations/midmile"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <MidMile
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/adminDashboard/operations/lastmile"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <LastMile
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/adminDashboard/operations/delayDelivered"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <DelayDelivered
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/adminDashboard/setup/courier/add"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <Couriers
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              >
-                {/* Redirect /finance/COD to default tab */}
-                <Route index element={<Navigate to="b2c" replace />} />
-
-                <Route
-                  path="b2c"
-                  element={
-                    <AddNewCourier
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-                <Route
-                  path="b2b"
-                  element={
-                    <AddNewCourierB2B
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-              </Route>
-
-              <Route
-                path="/adminDashboard/setup/courierservices/add"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <CourierServices
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              >
-                {/* Redirect /finance/COD to default tab */}
-                <Route index element={<Navigate to="b2c" replace />} />
-
-                <Route
-                  path="b2c"
-                  element={
-                    <CreateNewCourier
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-                <Route
-                  path="b2b"
-                  element={
-                    <CreateNewCourierB2B
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  }
-                />
-              </Route>
-
-              <Route
-                path="/dashboard/user"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <Users isSidebarAdmin={isAuthenticated && user?.adminTab} />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-
-              {/* Integration Routes for Couriers */}
-              <Route
-                path="/dashboard/setup/courier/add/nimbuspost"
-                element={<NimbusPostAdd />}
-              />
-              <Route
-                path="/dashboard/setup/courier/add/shiprocket"
-                element={<ShipRocketAdd />}
-              />
-              <Route
-                path="/dashboard/setup/courier/add/xpressbees"
-                element={<XpressbeesAdd />}
-              />
-              {/* <Route path="/dashboard/setup/courier/add/DelhiveryAdd" element={<DelhiveryAdd />} /> */}
-              {/* <Route path="/dashboard/setup/courier/add/DtdcAdd" element={<DtdcAdd />} /> */}
-
-              {/* Courier-services */}
-              <Route
-                path="/dashboard/setup/courier-services/create"
-                element={<CreateNewCourier />}
-              />
-
-              <Route
-                path="/adminDashboard/b2c/ratecard"
-                element={
-                  <AllRateCards
-                    isSidebarAdmin={isAuthenticated && user?.adminTab}
+                  )}
+                  <Route
+                    path="/dashboard/b2c/order"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <OrdersPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
                   />
-                }
-              />
-              <Route
-                path="/adminDashboard/b2b/ratecard"
-                element={
-                  <RateCard
-                    isSidebarAdmin={isAuthenticated && user?.adminTab}
+                  <Route
+                    path="/dashboard/order/pickup-manifest/:pickupId"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <PickupManifestDetails />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
                   />
-                }
-              />
-              <Route
-                path="/adminDashboard/b2b/zonematrix"
-                element={
-                  <ZoneMatrix
-                    isSidebarAdmin={isAuthenticated && user?.adminTab}
+                  <Route
+                    path="/dashboard/b2b/order"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <B2BOrdersPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
                   />
-                }
-              />
-              <Route
-                path="/adminDashboard/referral"
-                element={
-                  <AdminReferral
-                    isSidebarAdmin={isAuthenticated && user?.adminTab}
+                  <Route
+                    path="/adminDashboard/b2c/order"
+                    element={
+                      employeeAuthenticated ||
+                        (isAuthenticated && user?.adminTab) ? (
+                        <AdminOrder
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
                   />
-                }
-              />
-              <Route
-                path="/dashboard/ratecard/rateCardform"
-                element={
-                  <RateCardForm
-                    isSidebarAdmin={isAuthenticated && user?.adminTab}
+                  <Route
+                    path="/adminDashboard/order/pickup-manifest/:pickupId"
+                    element={
+                      employeeAuthenticated ||
+                        (isAuthenticated && user?.adminTab) ? (
+                        <AdminPickupManifestDetails />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
                   />
-                }
-              />
-              <Route path="/dashboard/settings" element={<Settings />} />
-              <Route
-                path="/dashboard/ratecard/update/:id"
-                element={
-                  <UpdateRateCardForm
-                    isSidebarAdmin={isAuthenticated && user?.adminTab}
+                  <Route
+                    path="/adminDashboard/b2b/order"
+                    element={
+                      employeeAuthenticated ||
+                        (isAuthenticated && user?.adminTab) ? (
+                        <B2BAdminOrder
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
                   />
-                }
-              />
-              <Route path="/dashboard/settings" element={<Settings />}>
-                <Route path="company-profile" element={<CompanyProfile />} />
-                <Route path="kyc-profile" element={<KYCDetails />} />
-                <Route path="label" element={<LabelCustomize />} />
-                <Route path="change_password" element={<ForgotPassword />} />
-                <Route path="referral" element={<Referral />} />
 
-                {/* ✅ Nested notification route */}
-                <Route path="notification" element={<Notification />}>
-                  {/* Redirect default path to whatsapp */}
-                  <Route index element={<Navigate to="whatsapp" replace />} />
+                  <Route
+                    path="/dashboard/order/tracking/:awb"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <Tracking />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/order/neworder" // New route for NewOrder page
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <NewOrder />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/order/neworder/updateOrder/:id" // New route for NewOrder page
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <UpdateOrder
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/ndr" // New route for NewOrder page
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <NDRPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/adminDashboard/ndr" // New route for NewOrder page
+                    element={
+                      employeeAuthenticated ||
+                        (isAuthenticated && user?.adminTab) ? (
+                        <NdrTab
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/order/courierSelection/:id" // New route for NewOrder page
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <CourrierSelection />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
 
-                  <Route path="whatsapp" element={<WhatsApp />} />
-                  <Route path="message" element={<Message />} />
-                  <Route path="email" element={<Email />} />
-                </Route>
-              </Route>
+                  <Route
+                    path="/dashboard/order/b2b/courierSelection/:id" // New route for NewOrder page
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <B2BCourrierSelection />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/billing"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <Billing />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/billing/RemittanceDetails/:id"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <RemittanceDetails />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/billing/sellerRemittanceData/:id"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <SellerRemittanceData />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
 
-              {/* Admin Route */}
-              {isAuthenticated && user?.isAdmin && (
-                <Route path="/admin" element={<AdminDashboard />} />
-              )}
+                  <Route
+                    path="/dashboard/AdminCodRemittances"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <AdminCodRemittances
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
 
-              {/* Catch-All Route */}
-              <Route
-                path="*"
-                element={
-                  employeeAuthenticated ||
-                    (isAuthenticated && (user?.isAdmin || user?.adminTab)) ? (
-                    <Navigate to="/adminDashboard" />
-                  ) : isAuthenticated ? (
-                    <Navigate to="/dashboard" />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/settings"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <Settings />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              {/* <Route
+                  <Route
+                    path="/finance/COD"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <COD isSidebarAdmin={isAuthenticated && user?.adminTab} />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  >
+                    {/* Redirect /finance/COD to default tab */}
+                    <Route
+                      index
+                      element={<Navigate to="CODRemittance" replace />}
+                    />
+
+                    <Route
+                      path="sellerCodRemittance"
+                      element={
+                        <CODRemittanceOrder
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                    <Route
+                      path="CODRemittance"
+                      element={
+                        <AdminCodRemittances
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                    <Route
+                      path="courierCodRemittance"
+                      element={
+                        <CourierCODRemittance
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                  </Route>
+
+                  <Route
+                    path="/finance/billing"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <Billings
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  >
+                    {/* Redirect /finance/COD to default tab */}
+                    <Route index element={<Navigate to="shipping" replace />} />
+
+                    <Route
+                      path="shipping"
+                      element={
+                        <Shippings
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                    <Route
+                      path="CODRemitance"
+                      element={
+                        <CodRemmitances
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                    <Route
+                      path="passbook"
+                      element={
+                        <Passbooks
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                    <Route
+                      path="walletHistory"
+                      element={
+                        <WalletHistorys
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                    <Route
+                      path="invoice"
+                      element={
+                        <Invoices
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                  </Route>
+
+                  {/* Tools page */}
+                  <Route
+                    path="/dashboard/tools/Cost_Estimation/b2c"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <CostEstimation />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/tools/Cost_Estimation/b2b"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <CostEstimationB2B />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+
+                  <Route
+                    path="/dashboard/tools/reports"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <ReportsPage />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/tools/Weight_Dependency"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <WeightDiscrepancy
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/adminDashboard/tools/Weight_Dependency"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <AdminWeightDiscrepancy
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+
+                  {/* Setup&Manage */}
+                  <Route
+                    path="/dashboard/Setup&Manage/Channel"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <Channel />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/channel/addchannel"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <AddChannel />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/channel/addchannel/Woocommerce"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <WooCommerceIntegration />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/channel/addchannel/Shopify"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <ShopifyIntegration />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/channel/addchannel/Shopify/:id"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <ShopifyIntegration />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/channel/addchannel/WooCommerce/:id"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <WooCommerceIntegration />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/Setup&Manage/Package_type"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <PackageType />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/Setup&Manage/Customer"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <Customer />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/Setup&Manage/Pickup_address"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <PickupAddress />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+
+                  <Route
+                    path="/dashboard/Setup&Manage/Courier"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <CourierTab
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  >
+                    {/* Redirect /finance/COD to default tab */}
+                    <Route
+                      index
+                      element={<Navigate to="courier_selection" replace />}
+                    />
+
+                    <Route
+                      path="courier_selection"
+                      element={
+                        <CourierSelection
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                    <Route
+                      path="courier_priority"
+                      element={
+                        <CourierPriority
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                    <Route
+                      path="courier_rules"
+                      element={
+                        <CourierRules
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                  </Route>
+
+                  <Route
+                    path="/dashboard/Setup&Manage/User/Profile/:id/*"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <Profile />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+
+                  <Route
+                    path="/dashboard/Setup&Manage/Role_List"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <RoleList
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/Setup&Manage/Role_List/AddRole"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <AddRole />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/Setup&Manage/allocateRoles"
+                    element={
+                      isAuthenticated && user?.isAdmin && user?.adminTab ? (
+                        <AllocateRoles isSidebarAdmin={true} />
+                      ) : employeeAuthenticated ? (
+                        <YourSellers />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+
+                  <Route
+                    path="/adminDashboard/Setup&Manage/statusMap"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <StatusMaping
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/adminDashboard/Setup&Manage/EDD-map"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <EDDMapping
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+
+                  <Route
+                    path="/adminDashboard/Setup&Manage/pincode-information"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <PincodeInformation
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+
+                  <Route
+                    path="/adminDashboard/operations/firstmile"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <FirstMile
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/adminDashboard/operations/midmile"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <MidMile
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/adminDashboard/operations/lastmile"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <LastMile
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/adminDashboard/operations/delayDelivered"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <DelayDelivered
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/adminDashboard/setup/courier/add"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <Couriers
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  >
+                    {/* Redirect /finance/COD to default tab */}
+                    <Route index element={<Navigate to="b2c" replace />} />
+
+                    <Route
+                      path="b2c"
+                      element={
+                        <AddNewCourier
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                    <Route
+                      path="b2b"
+                      element={
+                        <AddNewCourierB2B
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                  </Route>
+
+                  <Route
+                    path="/adminDashboard/setup/courierservices/add"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <CourierServices
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  >
+                    {/* Redirect /finance/COD to default tab */}
+                    <Route index element={<Navigate to="b2c" replace />} />
+
+                    <Route
+                      path="b2c"
+                      element={
+                        <CreateNewCourier
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                    <Route
+                      path="b2b"
+                      element={
+                        <CreateNewCourierB2B
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      }
+                    />
+                  </Route>
+
+                  <Route
+                    path="/dashboard/user"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <Users isSidebarAdmin={isAuthenticated && user?.adminTab} />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+
+                  {/* Integration Routes for Couriers */}
+                  <Route
+                    path="/dashboard/setup/courier/add/nimbuspost"
+                    element={<NimbusPostAdd />}
+                  />
+                  <Route
+                    path="/dashboard/setup/courier/add/shiprocket"
+                    element={<ShipRocketAdd />}
+                  />
+                  <Route
+                    path="/dashboard/setup/courier/add/xpressbees"
+                    element={<XpressbeesAdd />}
+                  />
+                  {/* <Route path="/dashboard/setup/courier/add/DelhiveryAdd" element={<DelhiveryAdd />} /> */}
+                  {/* <Route path="/dashboard/setup/courier/add/DtdcAdd" element={<DtdcAdd />} /> */}
+
+                  {/* Courier-services */}
+                  <Route
+                    path="/dashboard/setup/courier-services/create"
+                    element={<CreateNewCourier />}
+                  />
+
+                  <Route
+                    path="/adminDashboard/b2c/ratecard"
+                    element={
+                      <AllRateCards
+                        isSidebarAdmin={isAuthenticated && user?.adminTab}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/adminDashboard/b2b/ratecard"
+                    element={
+                      <RateCard
+                        isSidebarAdmin={isAuthenticated && user?.adminTab}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/adminDashboard/b2b/zonematrix"
+                    element={
+                      <ZoneMatrix
+                        isSidebarAdmin={isAuthenticated && user?.adminTab}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/adminDashboard/referral"
+                    element={
+                      <AdminReferral
+                        isSidebarAdmin={isAuthenticated && user?.adminTab}
+                      />
+                    }
+                  />
+                  <Route
+                    path="/dashboard/ratecard/rateCardform"
+                    element={
+                      <RateCardForm
+                        isSidebarAdmin={isAuthenticated && user?.adminTab}
+                      />
+                    }
+                  />
+                  <Route path="/dashboard/settings" element={<Settings />} />
+                  <Route
+                    path="/dashboard/ratecard/update/:id"
+                    element={
+                      <UpdateRateCardForm
+                        isSidebarAdmin={isAuthenticated && user?.adminTab}
+                      />
+                    }
+                  />
+                  <Route path="/dashboard/settings" element={<Settings />}>
+                    <Route path="company-profile" element={<CompanyProfile />} />
+                    <Route path="kyc-profile" element={<KYCDetails />} />
+                    <Route path="label" element={<LabelCustomize />} />
+                    <Route path="change_password" element={<ForgotPassword />} />
+                    <Route path="referral" element={<Referral />} />
+
+                    {/* ✅ Nested notification route */}
+                    <Route path="notification" element={<Notification />}>
+                      {/* Redirect default path to whatsapp */}
+                      <Route index element={<Navigate to="whatsapp" replace />} />
+
+                      <Route path="whatsapp" element={<WhatsApp />} />
+                      <Route path="message" element={<Message />} />
+                      <Route path="email" element={<Email />} />
+                    </Route>
+                  </Route>
+
+                  {/* Admin Route */}
+                  {isAuthenticated && user?.isAdmin && (
+                    <Route path="/admin" element={<AdminDashboard />} />
+                  )}
+
+                  {/* Catch-All Route */}
+                  <Route
+                    path="*"
+                    element={
+                      employeeAuthenticated ||
+                        (isAuthenticated && (user?.isAdmin || user?.adminTab)) ? (
+                        <Navigate to="/adminDashboard" />
+                      ) : isAuthenticated ? (
+                        <Navigate to="/dashboard" />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/settings"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <Settings />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  {/* <Route
               path="/dashboard/settings/change_password"
               element={
                 isAuthenticated || employeeAuthenticated ? (
@@ -1176,35 +1185,37 @@ function App() {
                 )
               }
             /> */}
-              <Route
-                path="/dashboard/support"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <SupportPage
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/adminDashboard/support/manageTickets"
-                element={
-                  isAuthenticated || employeeAuthenticated ? (
-                    <ManageTickets
-                      isSidebarAdmin={isAuthenticated && user?.adminTab}
-                    />
-                  ) : (
-                    <Navigate to="/login" />
-                  )
-                }
-              />
-              <Route
-                path="/dashboard/order/bulkSelection"
-                element={<BulkSelection />}
-              />
-            </Routes>
+                  <Route
+                    path="/dashboard/support"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <SupportPage
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/adminDashboard/support/manageTickets"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <ManageTickets
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/dashboard/order/bulkSelection"
+                    element={<BulkSelection />}
+                  />
+                </Routes>
+              </motion.div>
+            </AnimatePresence>
             {/* <AllCostingRateCards/> */}
             {/* <AllRateCards/> */}
             {/* <CostingRateCardForm/> */}

@@ -10,8 +10,8 @@ const Modal = ({ isOpen, onClose, children, title, ReciveAddress }) => {
       <div className="bg-white rounded-lg shadow-lg w-11/12 max-w-2xl relative">
         
         {/* Modal Header */}
-        <div className="flex justify-between items-center border-b px-4 py-3">
-          <h2 className="text-[14px] text-gray-700 font-[600]">
+        <div className="flex justify-between items-center border-b px-4 py-2">
+          <h2 className="text-[12px] sm:text-[14px] text-gray-700 font-[600]">
             {title || "Modal Title"}
           </h2>
 

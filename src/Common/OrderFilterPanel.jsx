@@ -22,7 +22,7 @@ const OrderFilterPanel = ({
     showCourier = true,
     showUserSearch = false,
     searchLabel = "Customer Search",
-    searchPlaceholder = "Name, Email or Phone",
+    searchPlaceholder = "Search by Name, Email or Contact",
     selectedUserId: initialSelectedUserId,
 }) => {
     // Local state for filters
@@ -236,7 +236,7 @@ const OrderFilterPanel = ({
                     {/* AWB Number - Conditional */}
                     {showAwb && (
                         <div className="space-y-1">
-                            <label className="text-[12px] font-[600] text-gray-400 tracking-wider">AWB Number</label>
+                            <label className="text-[12px] font-[600] text-gray-700 tracking-wider">AWB Number</label>
                             <input
                                 type="text"
                                 placeholder="Enter AWB Number"
@@ -316,7 +316,7 @@ const OrderFilterPanel = ({
                     {/* Courier - Conditional */}
                     {showCourier && (
                         <div className="space-y-1" ref={courierRef}>
-                            <label className="text-[12px] font-[600] text-gray-400 tracking-wider">Courier Partner</label>
+                            <label className="text-[12px] font-[600] text-gray-700 tracking-wider">Courier Service</label>
                             <div className="relative">
                                 <button
                                     onClick={() => setShowCourierDropdown(!showCourierDropdown)}
@@ -325,7 +325,7 @@ const OrderFilterPanel = ({
                                     <span className={localFilters.selectedCourier.length > 0 ? "text-gray-700 font-[600]" : "text-gray-400"}>
                                         {localFilters.selectedCourier.length > 0
                                             ? `${localFilters.selectedCourier.length} Selected`
-                                            : "Select Courier Partner"}
+                                            : "Select Courier Service"}
                                     </span>
                                     <ChevronDown className={`w-4 h-4 ml-2 text-gray-400 transition-transform ${showCourierDropdown ? "rotate-180" : ""} `} />
                                 </button>

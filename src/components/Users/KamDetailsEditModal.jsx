@@ -96,10 +96,10 @@ const KamDetailsEditModal = ({ isOpen, onClose, userId }) => {
     if (!isOpen) return null;
 
     return (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
+        <div className="fixedk animate-popup-in inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
             <div className="bg-white w-full max-w-sm rounded-lg shadow-lg p-4">
                 <h2 className="text-[14px] mb-4 font-[600] text-gray-700">
-                    Edit KAM Details
+                    Update KAM Details
                 </h2>
 
                 {loading ? (

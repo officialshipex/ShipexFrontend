@@ -131,7 +131,7 @@ const UpdateRateCardPopup = ({ id, userName, selectedRateCardValue, onClose, onS
     };
 
     return (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 animate-popup-in bg-black bg-opacity-50 z-50 flex items-center justify-center">
             <div className="bg-white rounded-lg p-6 w-[300px] shadow-lg">
                 <h3 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 mb-2">Update Rate Card</h3>
                 <p className="text-[10px] text-gray-500 font-[600] sm:text-[12px] mb-4">User Name : {userName}</p>

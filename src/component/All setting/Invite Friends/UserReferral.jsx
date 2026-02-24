@@ -67,7 +67,7 @@ const Referral = () => {
           params: { month, year },
         }
       );
-console.log("Referral data:", data);
+// console.log("Referral data:", data);
       setStats(data.stats);
       setMonthlyData(data.monthlyData);
       setCommissionPercentage(data.referralCommissionPercentage);
@@ -150,7 +150,7 @@ console.log("Referral data:", data);
         {statsArray.map((item, i) => (
           <div
             key={i}
-            className="hidden md:flex bg-white border-2 border-[#0CBB7D] rounded-lg p-3 flex-col items-center shadow-sm"
+            className="hidden md:flex bg-white border border-[#0CBB7D] rounded-lg p-3 flex-col items-center shadow-sm"
           >
             <span className="text-[12px] text-gray-500 font-[600]">
               {item.title}

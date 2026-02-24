@@ -25,7 +25,7 @@ const CustomDropdown = ({ label, options, value, onChange }) => {
         <ChevronDown size={16} />
       </button>
       {isOpen && (
-        <div className="absolute z-50 mt-1 w-full bg-white border rounded-lg shadow-md">
+        <div className="absolute animate-popup-in z-50 mt-1 w-full bg-white border rounded-lg shadow-md">
           {options.map((option) => (
             <div
               key={option}

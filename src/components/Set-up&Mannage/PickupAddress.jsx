@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import UpdateSenderAdd from "../../Order/viewOrder/UpdateSenderAdd";
 // import { toast } from "react-toastify";
-import { FiEdit, FiTrash2 } from "react-icons/fi"
+import { FiEdit, FiTrash2, FiSearch, FiCopy, FiCheck } from "react-icons/fi"
 import { Notification } from "../../Notification";
 import Cookies from "js-cookie";
 
@@ -12,6 +12,26 @@ const PickupAddress = () => {
   const [editData, setEditData] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [title, setTitle] = useState("Add New Address");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [copiedId, setCopiedId] = useState(null);
+
+  const handleCopy = (text, id) => {
+    navigator.clipboard.writeText(text);
+    setCopiedId(id);
+    Notification("Address copied to clipboard", "success");
+    setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const filteredPickupAddress = pickupAddress.filter((item) => {
+    const search = searchTerm.toLowerCase();
+    const address = item.pickupAddress;
+    return (
+      address.contactName.toLowerCase().includes(search) ||
+      address.email.toLowerCase().includes(search) ||
+      address.phoneNumber.toLowerCase().includes(search) ||
+      address.address.toLowerCase().includes(search)
+    );
+  });
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -104,23 +124,48 @@ const PickupAddress = () => {
   };
 
   return (
-    <div className="p-1 sm:p-2 space-y-2">
-      <div className="flex justify-between items-center">
-        <h1 className="text-[14px] font-[600] text-gray-700">Pickup Addresses</h1>
+    <div className="sm:px-2 space-y-2">
+      <div className="flex flex-wrap items-center justify-between gap-y-2 gap-x-4">
+        <h1 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 order-1">Pickup Addresses</h1>
+
+        {/* Add New Address Button */}
         <button
           onClick={() => {
             openModal();
             setTitle("Add New Address");
           }}
-          className="bg-[#0CBB7D] text-white text-[12px] hover:opacity-90 transition-all rounded-lg font-[600] px-3 py-2"
+          className="bg-[#0CBB7D] text-white text-[10px] sm:text-[12px] hover:opacity-90 transition-all rounded-lg font-[600] px-3 py-2 order-2 sm:order-3"
         >
           + Add New Address
         </button>
+
+        {/* Search Bar */}
+        <div className="relative w-full sm:w-64 order-3 sm:order-2 group sm:ml-auto">
+          <FiSearch
+            className="absolute left-3 top-1/2 -translate-y-1/2 
+             text-gray-400 
+             group-focus-within:text-[#0CBB7D] 
+             transition-colors duration-200"
+            size={14}
+          />
+          <input
+            type="text"
+            placeholder="Search by name, email, phone..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-9 pr-3 py-2 text-[10px] sm:text-[12px] 
+             border border-gray-300 
+             rounded-lg 
+             outline-none 
+             focus:border-[#0CBB7D] 
+             transition-all duration-200"
+          />
+        </div>
       </div>
 
       {/* Table for Desktop */}
       <div className="hidden sm:block">
-        <div className="relative overflow-x-auto bg-white overflow-y-auto h-[calc(100dvh-150px)] shadow-sm">
+        <div className="relative overflow-x-auto bg-white overflow-y-auto h-[calc(100dvh-120px)] shadow-sm">
           <table className="min-w-full text-left">
             <thead className="bg-[#0CBB7D] text-white sticky top-0 z-20">
               <tr className="text-[12px] font-[600]">
@@ -133,12 +178,22 @@ const PickupAddress = () => {
               </tr>
             </thead>
             <tbody>
-              {pickupAddress.map((address, index) => (
+              {filteredPickupAddress.map((address, index) => (
                 <tr key={index} className="border-b text-gray-700 text-[12px] border-gray-200 hover:bg-gray-50 transition-all">
                   <td className="px-3 py-2" style={{ maxWidth: "300px", width: "250px" }}>{address.pickupAddress.contactName}</td>
                   <td className="px-3 py-2" style={{ maxWidth: "300px", width: "200px" }}>{address.pickupAddress.phoneNumber}</td>
                   <td className="px-3 py-2" style={{ maxWidth: "300px", width: "250px" }}>{address.pickupAddress.email}</td>
-                  <td className="px-3 py-2" style={{ maxWidth: "600px", width: "550px" }}>{address.pickupAddress.address}</td>
+                  <td className="px-3 py-2" style={{ maxWidth: "600px", width: "550px" }}>
+                    <div className="flex items-center group relative">
+                      <span className="truncate">{address.pickupAddress.address}</span>
+                      <button
+                        onClick={() => handleCopy(address.pickupAddress.address, address._id)}
+                        className="ml-2 p-1 text-gray-400 hover:text-[#0CBB7D] transition-colors opacity-0 group-hover:opacity-100"
+                      >
+                        {copiedId === address._id ? <FiCheck size={12} className="text-green-500" /> : <FiCopy size={12} />}
+                      </button>
+                    </div>
+                  </td>
                   <td className="px-3 py-2" style={{ maxWidth: "300px", width: "100px" }}>
                     <label className="inline-flex items-center cursor-pointer relative">
                       <input
@@ -180,80 +235,83 @@ const PickupAddress = () => {
 
       {/* Mobile View (Card Format) */}
       <div className="sm:hidden">
-        <div className="flex flex-col gap-3 h-[calc(100dvh-160px)] overflow-y-auto pb-4">
-          {pickupAddress.map((address, index) => (
+        <div className="flex flex-col gap-2 h-[calc(100dvh-160px)] overflow-y-auto">
+          {filteredPickupAddress.map((address, index) => (
             <div
               key={index}
-              className="bg-white shadow-sm rounded-lg text-gray-500 p-4 text-[10px] font-[600] border border-gray-200"
+              className="bg-white shadow-sm rounded-lg text-gray-500 p-2 text-[10px] border border-gray-200 flex flex-col gap-1"
             >
-              {/* Name, Email, Phone */}
-              <div className="flex justify-between">
-                <span>Name:</span>
-                <span className="text-gray-700 underline">{address.pickupAddress.contactName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Email:</span>
-                <span className="text-gray-700 underline">{address.pickupAddress.email}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>Phone:</span>
-                <span className="text-gray-700 underline">{address.pickupAddress.phoneNumber}</span>
-              </div>
-
-              {/* Pin Code, City, State - Each with Label */}
-              <div className="flex justify-between">
-                <span>Pin Code:</span>
-                <span className="text-gray-700">{address.pickupAddress.pinCode}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>City:</span>
-                <span className="text-gray-700">{address.pickupAddress.city}</span>
-              </div>
-              <div className="flex justify-between">
-                <span>State:</span>
-                <span className="text-gray-700">{address.pickupAddress.state}</span>
-              </div>
-              {/* Address - One Line, No Title */}
-              <div className="font-[600] text-gray-700 bg-gray-50 p-2 rounded-md mt-1">
-                {address.pickupAddress.address}
-              </div>
-
-              {/* Action Buttons + Primary Toggle */}
-              <div className="flex items-center justify-between pt-2 border-t mt-2">
-                {/* Action Buttons */}
-                <div className="flex gap-4">
-                  <button
-                    className="p-2 rounded-full text-green-600 bg-green-100 hover:bg-green-200 transition"
-                    onClick={() => {
-                      openModal({ ...address.pickupAddress, _id: address._id });
-                      setTitle("Edit Address");
-                    }}
-                  >
-                    <FiEdit size={16} />
-                  </button>
-                  <button
-                    className="p-2 rounded-full text-red-600 bg-red-100 hover:bg-red-200 transition"
-                    onClick={() => handleDelete(address._id)}
-                  >
-                    <FiTrash2 size={16} />
-                  </button>
-                </div>
-
-                {/* Primary Toggle */}
+              {/* Top Row: Name and Actions */}
+              <div className="flex justify-between items-center border-b pb-1">
+                <span className="text-gray-700 font-[700] truncate max-w-[150px]">{address.pickupAddress.contactName}</span>
                 <div className="flex items-center gap-2">
-                  <label className="inline-flex items-center cursor-pointer relative">
-                    <input
-                      type="checkbox"
-                      className="sr-only peer"
-                      checked={primaryAddressId === address._id}
-                      onChange={() => handlePrimaryChange(address._id)}
-                    />
-                    <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-focus:outline-none peer-checked:bg-[#0CBB7D] transition-colors duration-300"></div>
-                    <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 transform peer-checked:translate-x-5"></div>
-                  </label>
-                  <span className="text-[10px] text-gray-500 font-[700]">Primary</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-[9px] text-gray-500">Primary</span>
+                    <label className="inline-flex items-center cursor-pointer relative">
+                      <input
+                        type="checkbox"
+                        className="sr-only peer"
+                        checked={primaryAddressId === address._id}
+                        onChange={() => handlePrimaryChange(address._id)}
+                      />
+                      <div className="w-7 h-3.5 bg-gray-200 rounded-full peer peer-focus:outline-none peer-checked:bg-[#0CBB7D] transition-colors duration-300"></div>
+                      <div className="absolute left-0.5 top-0.5 bg-white w-2.5 h-2.5 rounded-full transition-transform duration-300 transform peer-checked:translate-x-3.5"></div>
+                    </label>
+                  </div>
+                  <div className="flex gap-1.5">
+                    <button
+                      className="p-1.5 rounded-full text-green-600 bg-green-50 hover:bg-green-100 transition"
+                      onClick={() => {
+                        openModal({ ...address.pickupAddress, _id: address._id });
+                        setTitle("Edit Address");
+                      }}
+                    >
+                      <FiEdit size={12} />
+                    </button>
+                    <button
+                      className="p-1.5 rounded-full text-red-600 bg-red-50 hover:bg-red-100 transition"
+                      onClick={() => handleDelete(address._id)}
+                    >
+                      <FiTrash2 size={12} />
+                    </button>
+                  </div>
                 </div>
               </div>
+
+              {/* info layout */}
+              <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 mt-0.5">
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-gray-500">Phone</span>
+                  <span className="text-gray-700 font-[600] truncate">{address.pickupAddress.phoneNumber}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-gray-500">Email</span>
+                  <span className="text-gray-700 font-[600] truncate">{address.pickupAddress.email}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-gray-500">Location</span>
+                  <span className="text-gray-700 font-[600] truncate">{address.pickupAddress.city}, {address.pickupAddress.state}</span>
+                </div>
+                <div className="flex flex-col">
+                  <span className="text-[10px] text-gray-500">Pin Code</span>
+                  <span className="text-gray-700 font-[600]">{address.pickupAddress.pinCode}</span>
+                </div>
+              </div>
+
+              {/* Address with Copy */}
+              <div className="bg-green-50 p-1.5 rounded-md mt-1 flex justify-between items-start gap-2">
+                <span className="text-gray-700 font-[500] leading-tight text-[10px] line-clamp-2 flex-1">
+                  {address.pickupAddress.address}
+                </span>
+                <button
+                  onClick={() => handleCopy(address.pickupAddress.address, address._id)}
+                  className="p-1 text-gray-400 hover:text-[#0CBB7D] shrink-0"
+                >
+                  {copiedId === address._id ? <FiCheck size={12} className="text-green-500" /> : <FiCopy size={12} />}
+                </button>
+              </div>
+
+
             </div>
           ))}
         </div>

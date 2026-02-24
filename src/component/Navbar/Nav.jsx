@@ -376,7 +376,7 @@ const Navbar = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Action Grid */}
-                <div className="grid grid-cols-3 gap-3 text-center text-gray-700">
+                <div className="grid grid-cols-3 gap-3 text-center animate-popup-in text-gray-700">
 
                   {/* Add Order */}
                   <div
@@ -572,49 +572,50 @@ const Navbar = () => {
 
               {/* Dropdown Actions */}
               {showActions && (
-                <div className="absolute left-1/2 -translate-x-1/2 mt-3 z-50 bg-white border border-gray-200 rounded-lg shadow-sm px-3 py-2 w-[500px]">
-                  {/* Arrow */}
-                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white rotate-45 border-l border-t border-gray-200"></div>
+                <div className="absolute left-1/2 -translate-x-1/2 mt-3 z-50 w-[500px]">
+                  <div className="bg-white animate-popup-in border border-gray-200 rounded-lg shadow-sm px-3 py-2 w-full">
+                    {/* Arrow */}
+                    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white rotate-45 border-l border-t border-gray-200"></div>
 
-                  {/* Action Grid */}
-                  <div className="grid grid-cols-3 gap-2">
-                    <div
-                      onClick={() => {
-                        handleNewOrderClick();
-                        setShowActions(false);
-                      }}
-                      className="flex flex-col items-center justify-center bg-gray-50 rounded-lg py-4 cursor-pointer hover:bg-gray-100 transition"
-                    >
-                      <div className="bg-[#e1f7f2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
-                        <FiPlusSquare />
+                    {/* Action Grid */}
+                    <div className="grid grid-cols-3 gap-2">
+                      <div
+                        onClick={() => {
+                          handleNewOrderClick();
+                          setShowActions(false);
+                        }}
+                        className="flex flex-col items-center justify-center bg-gray-50 rounded-lg py-4 cursor-pointer hover:bg-gray-100 transition"
+                      >
+                        <div className="bg-[#e1f7f2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
+                          <FiPlusSquare />
+                        </div>
+                        <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">Add an Order</span>
                       </div>
-                      <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">Add an Order</span>
-                    </div>
 
-                    <div
-                      onClick={() => {
-                        handleBulkUpload();
-                        setShowActions(false);
-                      }}
-                      className="flex flex-col items-center justify-center bg-gray-50 rounded-lg py-4 cursor-pointer hover:bg-gray-100 transition"
-                    >
-                      <div className="bg-[#e1f7f2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
-                        <FiUploadCloud />
+                      <div
+                        onClick={() => {
+                          handleBulkUpload();
+                          setShowActions(false);
+                        }}
+                        className="flex flex-col items-center justify-center bg-gray-50 rounded-lg py-4 cursor-pointer hover:bg-gray-100 transition"
+                      >
+                        <div className="bg-[#e1f7f2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
+                          <FiUploadCloud />
+                        </div>
+                        <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">Bulk Import</span>
                       </div>
-                      <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">Bulk Import</span>
-                    </div>
 
-                    <div
-                      onClick={() => { setShowActions(false); handleCalculateRate(); }}
-                      className="flex flex-col items-center justify-center bg-gray-50 rounded-lg py-4 cursor-pointer hover:bg-gray-100 transition"
-                    >
-                      <div className="bg-[#e1f7f2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
-                        <MdOutlineCalculate />
+                      <div
+                        onClick={() => { setShowActions(false); handleCalculateRate(); }}
+                        className="flex flex-col items-center justify-center bg-gray-50 rounded-lg py-4 cursor-pointer hover:bg-gray-100 transition"
+                      >
+                        <div className="bg-[#e1f7f2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
+                          <MdOutlineCalculate />
+                        </div>
+                        <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">Calculate Rate</span>
                       </div>
-                      <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">Calculate Rate</span>
-                    </div>
 
-                    {/* <div
+                      {/* <div
                       onClick={() => { setShowActions(false); handleCreateTicket(); }}
                       className="flex flex-col items-center justify-center bg-gray-50 rounded-lg py-4 cursor-pointer hover:bg-gray-100 transition"
                     >
@@ -623,6 +624,7 @@ const Navbar = () => {
                       </div>
                       <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">Create a Ticket</span>
                     </div> */}
+                    </div>
                   </div>
                 </div>
               )}

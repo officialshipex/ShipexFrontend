@@ -44,7 +44,7 @@ const UpdateCreditLimitEditModal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed animate-popup-in inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white p-4 rounded-lg w-full max-w-md shadow-2xl">
         <h2 className="text-[12px] sm:text-[14px] font-[600] mb-4 text-gray-700">
           Update Credit Limit

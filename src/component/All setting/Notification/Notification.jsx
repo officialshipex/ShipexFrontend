@@ -68,11 +68,11 @@ const Notification = () => {
     }, []);
 
     return (
-        <div className="max-w-full mx-auto mt-1">
+        <div className="max-w-full mx-auto">
             {/* Header section */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                 <div>
-                    <h1 className="text-[14px] mb-1 text-gray-700 font-[600]">
+                    <h1 className="text-[12px] sm:text-[14px] mb-1 text-gray-700 font-[600]">
                         Manage Your Notification
                     </h1>
                 </div>
@@ -96,7 +96,7 @@ const Notification = () => {
 
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="bg-[#0CBB7D] text-white text-[10px] sm:text-[12px] font-[600] rounded-lg px-3 py-2 hover:bg-green-500 transition"
+                        className="bg-[#0CBB7D] text-white text-[10px] sm:text-[12px] font-[600] rounded-lg px-3 py-2 hover:bg-opacity-90 transition"
                     >
                         Buy Credit
                     </button>
@@ -104,7 +104,7 @@ const Notification = () => {
             </div>
 
             {/* Desktop Tabs */}
-            <div className="hidden sm:flex gap-2 mt-3">
+            <div className="hidden sm:flex gap-2 mt-2">
                 {tabs.map((tab) => (
                     <Link
                         key={tab.path}
@@ -123,11 +123,11 @@ const Notification = () => {
             <div className="sm:hidden mb-2 mt-3 relative" ref={dropdownRef}>
                 <button
                     onClick={toggleDropdown}
-                    className="w-full text-left text-[12px] border bg-[#0CBB7D] rounded-lg px-3 py-2 font-[600] text-white focus:outline-none flex items-center justify-between"
+                    className="w-full text-left text-[12px] border bg-white rounded-lg px-3 py-2 font-[600] text-gray-700 focus:outline-none flex items-center justify-between"
                 >
                     <span>{selectedTab?.label || "Select Option"}</span>
                     <FiChevronDown
-                        className={`w-4 h-4 text-white transition-transform duration-200 ${isOpen ? "rotate-180" : ""
+                        className={`w-4 h-4 text-gray-700 transition-transform duration-200 ${isOpen ? "rotate-180" : ""
                             }`}
                     />
                 </button>
@@ -143,7 +143,7 @@ const Notification = () => {
                             key={tab.path}
                             onClick={() => handleSelect(tab.path)}
                             className={`px-3 py-2 text-[12px] cursor-pointer font-[600] transition-all ${location.pathname === tab.path
-                                ? "bg-green-200 text-gray-700"
+                                ? "bg-green-100 text-[#0CBB7D]"
                                 : "text-gray-700 hover:bg-green-50"
                                 }`}
                         >

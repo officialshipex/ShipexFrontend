@@ -72,7 +72,7 @@ const KYCDetails = () => {
     <div className="">
       <div className="w-full mx-auto">
         {/* Page Header */}
-        <h1 className="text-[14px] font-[600] text-gray-700">
+        <h1 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
           KYC Details
         </h1>
 
@@ -82,48 +82,48 @@ const KYCDetails = () => {
           {/* Aadhar Details */}
           <div className={`px-3 py-2 border border-[#0CBB7D] bg-white rounded-lg shadow-sm`}>
             <div className="flex items-center justify-between">
-              <h2 className="text-[14px] font-[600] text-gray-700">
+              <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
                 Aadhaar Details
               </h2>
               {isVerified_A ? (
                 <div className="flex items-center text-[#0CBB7D]">
-                  <CheckCircleIcon className="w-5 h-5 mr-1" />
-                  <span className="text-[12px] font-[600]">Verified</span>
+                  <CheckCircleIcon className="sm:w-5 sm:h-5 w-4 h-4 mr-1" />
+                  <span className="text-[10px] sm:text-[12px] font-[600]">Verified</span>
                 </div>
               ) : (
                 <div className="flex items-center text-yellow-600">
-                  <ClockIcon className="w-5 h-5 mr-1" />
-                  <span className="text-[12px] font-[600]">Pending</span>
+                  <ClockIcon className="sm:w-5 sm:h-5 w-4 h-4 mr-1" />
+                  <span className="text-[10px] sm:text-[12px] font-[600]">Pending</span>
                 </div>
               )}
             </div>
 
             <div className="space-y-2 mt-2">
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Name -{" "}
                 <span className="text-gray-700 font-[600]">
                   {aadhaar?.name || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Aadhaar Number -{" "}
                 <span className="text-gray-700 font-[600]">
                   {aadhaar?.aadhaarNumber || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Guardian Name -{" "}
                 <span className="text-gray-700 font-[600]">
                   {aadhaar?.sonOf || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 State -{" "}
                 <span className="text-gray-700 font-[600]">
                   {aadhaar?.state || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Address -{" "}
                 <span className="text-gray-700 font-[600]">
                   {aadhaar?.address || "N/A"}
@@ -134,42 +134,42 @@ const KYCDetails = () => {
           {/* PAN Details */}
           <div className="px-3 py-2 border border-[#0CBB7D] bg-white rounded-lg shadow-sm">
             <div className="flex items-center justify-between">
-              <h2 className="text-[14px] font-[600] text-gray-700">
+              <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
                 PAN Details
               </h2>
               {isVerified_P ? (
                 <div className="flex items-center text-[#0CBB7D]">
-                  <CheckCircleIcon className="w-5 h-5 mr-1" />
-                  <span className="text-[12px] font-[600]">Verified</span>
+                  <CheckCircleIcon className="sm:w-5 sm:h-5 w-4 h-4 mr-1" />
+                  <span className="text-[10px] sm:text-[12px] font-[600]">Verified</span>
                 </div>
               ) : (
                 <div className="flex items-center text-yellow-600">
-                  <ClockIcon className="w-5 h-5 mr-1" />
-                  <span className="text-[12px] font-[600]">Pending</span>
+                  <ClockIcon className="sm:w-5 sm:h-5 w-4 h-4 mr-1" />
+                  <span className="text-[10px] sm:text-[12px] font-[600]">Pending</span>
                 </div>
               )}
             </div>
 
             <div className="space-y-2 mt-2">
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 PAN Number -{" "}
                 <span className="text-gray-700 font-[600]">
                   {pan?.pan || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Name on PAN -{" "}
                 <span className="text-gray-700 font-[600]">
                   {pan?.registeredName || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Type -{" "}
                 <span className="text-gray-700 font-[600]">
                   {pan?.panType || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 PAN Ref ID -{" "}
                 <span className="text-gray-700 font-[600]">
                   {pan?.panRefId || "N/A"}
@@ -181,48 +181,48 @@ const KYCDetails = () => {
           {/* Bank Details */}
           <div className="px-3 py-2 border border-[#0CBB7D] rounded-lg bg-white shadow-sm">
             <div className="flex items-center justify-between">
-              <h2 className="text-[14px] font-[600] text-gray-700">
+              <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
                 Bank Details
               </h2>
               {isVerified_b ? (
                 <div className="flex items-center text-[#0CBB7D]">
-                  <CheckCircleIcon className="w-5 h-5 mr-1" />
-                  <span className="text-[12px] font-[600]">Verified</span>
+                  <CheckCircleIcon className="sm:w-5 sm:h-5 w-4 h-4 mr-1" />
+                  <span className="text-[10px] sm:text-[12px] font-[600]">Verified</span>
                 </div>
               ) : (
                 <div className="flex items-center text-yellow-600">
-                  <ClockIcon className="w-5 h-5 mr-1" />
-                  <span className="text-[12px] font-[600]">Pending</span>
+                  <ClockIcon className="sm:w-5 sm:h-5 w-4 h-4 mr-1" />
+                  <span className="text-[10px] sm:text-[12px] font-[600]">Pending</span>
                 </div>
               )}
             </div>
 
             <div className="space-y-2 mt-2">
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Beneficiary Name -{" "}
                 <span className="text-gray-700 font-[600]">
                   {bank?.nameAtBank || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Bank Name -{" "}
                 <span className="text-gray-700 font-[600]">
                   {bank?.bank || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Account Number -{" "}
                 <span className="text-gray-700 font-[600]">
                   {bank?.accountNumber || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 IFSC Code -{" "}
                 <span className="text-gray-700 font-[600]">
                   {bank?.ifsc || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Branch -{" "}
                 <span className="text-gray-700 font-[600]">
                   {bank?.branch || "N/A"}
@@ -233,54 +233,54 @@ const KYCDetails = () => {
           {/* GST Details */}
           <div className="px-3 py-2 border border-[#0CBB7D] rounded-lg shadow-sm bg-white">
             <div className="flex items-center justify-between">
-              <h2 className="text-[14px] font-[600] text-gray-700">
+              <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
                 GST Details
               </h2>
               {isVerified_g ? (
                 <div className="flex items-center text-[#0CBB7D]">
-                  <CheckCircleIcon className="w-5 h-5 mr-1" />
-                  <span className="text-[12px] font-[600]">Verified</span>
+                  <CheckCircleIcon className="sm:w-5 sm:h-5 w-4 h-4 mr-1" />
+                  <span className="text-[10px] sm:text-[12px] font-[600]">Verified</span>
                 </div>
               ) : (
                 <div className="flex items-center text-yellow-600">
-                  <ClockIcon className="w-5 h-5 mr-1" />
-                  <span className="text-[12px] font-[600]">Pending</span>
+                  <ClockIcon className="sm:w-5 sm:h-5 w-4 h-4 mr-1" />
+                  <span className="text-[10px] sm:text-[12px] font-[600]">Pending</span>
                 </div>
               )}
             </div>
 
             <div className="space-y-2 mt-2">
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 GST Number -{" "}
                 <span className="text-gray-700 font-[600]">
                   {gst?.gstin || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Company Name -{" "}
                 <span className="text-gray-700 font-[600]">
                   {gst?.nameOfBusiness || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Company Address -{" "}
                 <span className="text-gray-700 font-[600]">
                   {gst?.address || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Pincode -{" "}
                 <span className="text-gray-700 font-[600]">
                   {gst?.pincode || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 City -{" "}
                 <span className="text-gray-700 font-[600]">
                   {gst?.city || "N/A"}
                 </span>
               </p>
-              <p className="text-[12px] font-[600] text-gray-500">
+              <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 State -{" "}
                 <span className="text-gray-700 font-[600]">
                   {gst?.state || "N/A"}

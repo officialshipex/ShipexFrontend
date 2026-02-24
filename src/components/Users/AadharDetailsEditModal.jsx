@@ -104,7 +104,7 @@ export default function AadharDetailsEditModal({ isOpen, onClose }) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+    <div className="fixed animate-popup-in inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
       <div className="bg-white w-[90%] max-w-md rounded-lg p-6 relative shadow-lg">
         {/* Close Button */}
         <button
@@ -115,7 +115,7 @@ export default function AadharDetailsEditModal({ isOpen, onClose }) {
         </button>
 
         <h2 className="text-[14px] font-[600] text-gray-700 mb-4">
-          Edit Aadhaar Details
+        Update Aadhaar Details
         </h2>
 
         {/* Form */}

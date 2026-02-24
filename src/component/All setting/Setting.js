@@ -60,7 +60,7 @@ const Settings = () => {
   const isMainSettingsPage = location.pathname === "/dashboard/settings";
 
   return (
-    <div className="md:px-2 px-1">
+    <div className="md:px-2">
       <div className="max-w-full mx-auto">
         {isMainSettingsPage ? (
           <div>

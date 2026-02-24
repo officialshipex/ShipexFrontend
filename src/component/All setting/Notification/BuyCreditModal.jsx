@@ -37,7 +37,7 @@ const BuyCreditModal = ({ onClose, onSuccess }) => {
     };
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-40 z-50">
+        <div className="fixed inset-0 flex items-center justify-center animate-popup-in bg-black bg-opacity-40 z-50">
             <div className="bg-white rounded-lg p-4 w-[90%] sm:w-[400px] shadow-sm relative">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-2">

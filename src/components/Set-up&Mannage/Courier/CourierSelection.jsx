@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useOutletContext } from "react-router-dom";
 import axios from "axios";
 import { FaTruck, FaPlane } from "react-icons/fa";
+import { FiSearch } from "react-icons/fi";
 import Cookies from "js-cookie";
 import { Notification } from "../../../Notification";
 import { getCarrierLogo } from "../../../Common/getCarrierLogo";
@@ -12,8 +13,13 @@ const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const CourierSelection = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { searchTerm = "" } = useOutletContext() || {};
   const [couriers, setCouriers] = useState([]);
   const [loading, setLoading] = useState(true); // loader state
+
+  const filteredCouriers = couriers.filter((courier) =>
+    courier.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   useEffect(() => {
     const fetchCouriers = async () => {
@@ -83,10 +89,10 @@ const CourierSelection = () => {
     }
   };
 
-  const toggleStatus = (index) => {
+  const toggleStatus = (id) => {
     setCouriers((prevCouriers) =>
-      prevCouriers.map((courier, i) => {
-        if (i === index) {
+      prevCouriers.map((courier) => {
+        if (courier.id === id) {
           const updatedCourier = {
             ...courier,
             status: courier.status === "Active" ? "Inactive" : "Active",
@@ -112,10 +118,10 @@ const CourierSelection = () => {
   }
 
   return (
-    <div className="mx-auto sm:mt-2 mt-0">
+    <div className="mx-auto sm:mt-1 mt-0">
       {/* Desktop View */}
       <div className="hidden md:block">
-        <div className="relative overflow-x-auto bg-white overflow-y-auto h-[calc(100dvh-160px)] shadow-sm">
+        <div className="relative overflow-x-auto bg-white overflow-y-auto h-[calc(100dvh-150px)] shadow-sm">
           <table className="min-w-full text-left">
             <thead className="sticky top-0 z-20">
               <tr className="text-white bg-[#0CBB7D] font-[600] text-[12px]">
@@ -126,7 +132,7 @@ const CourierSelection = () => {
               </tr>
             </thead>
             <tbody>
-              {couriers.map((courier, index) => (
+              {filteredCouriers.map((courier, index) => (
                 <tr
                   key={courier.id}
                   className="border-b border-gray-200 text-gray-700 hover:bg-gray-50 transition-all text-[12px]"
@@ -156,7 +162,7 @@ const CourierSelection = () => {
                           type="checkbox"
                           className="sr-only peer"
                           checked={courier.status === "Active"}
-                          onChange={() => toggleStatus(index)}
+                          onChange={() => toggleStatus(courier.id)}
                         />
                         <div className="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-[#0CBB7D] relative transition-all duration-300">
                           <div
@@ -176,8 +182,8 @@ const CourierSelection = () => {
 
       {/* Mobile View */}
       <div className="md:hidden">
-        <div className="flex flex-col gap-2 h-[calc(100dvh-160px)] overflow-y-auto pb-4">
-          {couriers.map((courier, index) => (
+        <div className="flex flex-col gap-2 h-[calc(100dvh-180px)] overflow-y-auto pb-2">
+          {filteredCouriers.map((courier) => (
             <div
               key={courier.id}
               className="bg-white p-3 rounded-lg shadow-sm border border-gray-200"
@@ -207,7 +213,7 @@ const CourierSelection = () => {
                     type="checkbox"
                     className="sr-only peer"
                     checked={courier.status === "Active"}
-                    onChange={() => toggleStatus(index)}
+                    onChange={() => toggleStatus(courier.id)}
                   />
                   <div className="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-[#0CBB7D] relative transition-all duration-300">
                     <div
