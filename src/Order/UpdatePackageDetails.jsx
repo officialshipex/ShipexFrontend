@@ -1,6 +1,6 @@
 import React from "react";
 import { Notification } from "../Notification";
-import { FiX } from "react-icons/fi";
+import { FiX, FiBox } from "react-icons/fi";
 
 const UpdatePackageDetails = ({ isOpen, onClose, onSave, packageDetails, setPackageDetails }) => {
     if (!isOpen) return null;
@@ -36,7 +36,10 @@ const UpdatePackageDetails = ({ isOpen, onClose, onSave, packageDetails, setPack
     return (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 shadow-lg flex items-center justify-center z-[1000] animate-popup-in">
             <div className="bg-white p-4 rounded-lg w-[500px] shadow-lg relative">
-                <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 mb-4">Update Package Details</h2>
+                <div className="flex items-center gap-2 mb-4">
+                    <FiBox className="w-4 h-4 text-[#0CBB7D]" />
+                    <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">Update Package Details</h2>
+                </div>
 
                 <button
                     className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-colors"

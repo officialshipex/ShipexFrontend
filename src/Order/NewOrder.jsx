@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from "react";
 import Select from "react-select";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import AddPickupAddress from "./PickupAddress";
 import axios from "axios";
 import { ArrowLeft } from "lucide-react";
@@ -25,8 +25,14 @@ const NewOrder = () => {
   const [isSelectOrderTypeOpen, setIsSelectOrderTypeOpen] = useState(false);
   const [isBulkUploadOpen, setIsBulkUploadOpen] = useState(false);
   const [selectedOrderType, setSelectedOrderType] = useState(null);
+  const [clonedOrderData, setClonedOrderData] = useState(null);
+  const [updateOrderData, setUpdateOrderData] = useState(null);
 
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const cloneId = searchParams.get("cloneId");
+  const updateId = searchParams.get("updateId");
+  const userId = searchParams.get("userId");
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   // Fetch Pickup Addresses
@@ -35,18 +41,115 @@ const NewOrder = () => {
       try {
         const token = Cookies.get("session");
         const response = await axios.get(
-          `${REACT_APP_BACKEND_URL}/order/pickupAddress`,
+          `${REACT_APP_BACKEND_URL}/order/pickupAddress${userId ? `?userId=${userId}` : ""}`,
           {
-            headers: { Authorization: `Bearer ${token}` },
+            headers: { authorization: `Bearer ${token}` },
           },
         );
-        setPickUpAddress(response.data.data || []);
+        const addresses = response.data?.data || response.data || [];
+        setPickUpAddress(addresses);
       } catch (error) {
         console.error("Error fetching pickup addresses:", error);
       }
     };
     fetchPickupAddresses();
-  }, [refresh]);
+  }, [refresh, userId, REACT_APP_BACKEND_URL]);
+
+  // Auto-select pickup address when cloning — runs whenever both addresses and cloned data are ready
+  useEffect(() => {
+    if (!cloneId || !clonedOrderData || pickupAddress.length === 0) return;
+    const clonedPickup = clonedOrderData.pickupAddress;
+    if (!clonedPickup) return;
+    const matchingPickup = pickupAddress.find((addr) => {
+      const a = addr.pickupAddress || addr;
+      return (
+        (a.contactName === clonedPickup.contactName && a.pinCode === clonedPickup.pinCode) ||
+        (a.email === clonedPickup.email && a.phoneNumber === clonedPickup.phoneNumber)
+      );
+    });
+    if (matchingPickup) {
+      setPickUp(matchingPickup);
+    }
+  }, [cloneId, clonedOrderData, pickupAddress]);
+
+  // Auto-select pickup address when updating — runs whenever both addresses and update data are ready
+  useEffect(() => {
+    if (!updateId || !updateOrderData || pickupAddress.length === 0) return;
+    const updatePickup = updateOrderData.pickupAddress;
+    if (!updatePickup) return;
+    const matchingPickup = pickupAddress.find((addr) => {
+      const a = addr.pickupAddress || addr;
+      // Normalize pinCode to string for comparison (handles number vs string mismatch)
+      const aPinCode = String(a.pinCode || "").trim();
+      const uPinCode = String(updatePickup.pinCode || "").trim();
+      return (
+        (a.contactName === updatePickup.contactName && aPinCode === uPinCode) ||
+        (a.phoneNumber === updatePickup.phoneNumber && aPinCode === uPinCode) ||
+        (a.phoneNumber === updatePickup.phoneNumber && a.contactName === updatePickup.contactName) ||
+        (a.email && updatePickup.email && a.email === updatePickup.email)
+      );
+    });
+    if (matchingPickup) {
+      setPickUp(matchingPickup);
+    }
+  }, [updateId, updateOrderData, pickupAddress]);
+
+  // Fetch Cloned Order Data
+  useEffect(() => {
+    const fetchClonedOrder = async () => {
+      if (!cloneId) return;
+      try {
+        const token = Cookies.get("session");
+        const response = await axios.get(
+          `${REACT_APP_BACKEND_URL}/order/getOrderById/${cloneId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        // Handle both response.data and response.data.data structure
+        const orderData = response.data?.data || response.data;
+
+        if (orderData) {
+          setClonedOrderData(orderData);
+          if (orderData.receiverAddress) {
+            setRecive(orderData.receiverAddress);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching cloned order:", error);
+      }
+    };
+    fetchClonedOrder();
+  }, [cloneId]);
+
+  // Fetch Update Order Data
+  useEffect(() => {
+    const fetchUpdateOrder = async () => {
+      if (!updateId) return;
+      try {
+        const token = Cookies.get("session");
+        const response = await axios.get(
+          `${REACT_APP_BACKEND_URL}/order/getOrderById/${updateId}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        );
+
+        const orderData = response.data?.data || response.data;
+
+        if (orderData) {
+          setUpdateOrderData(orderData);
+          if (orderData.receiverAddress) {
+            setRecive(orderData.receiverAddress);
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching order for update:", error);
+      }
+    };
+    fetchUpdateOrder();
+  }, [updateId]);
 
   const handleSetReceiverAddress = useCallback((newAddress) => {
     setReciveAddress([newAddress]);
@@ -67,9 +170,9 @@ const NewOrder = () => {
   const pickupOptions =
     pickupAddress.length > 0
       ? pickupAddress.map((address) => ({
-          value: address._id,
-          label: address.pickupAddress?.contactName || "Unnamed Contact",
-        }))
+        value: address._id,
+        label: address.pickupAddress?.contactName || "Unnamed Contact",
+      }))
       : [{ value: "no_address", label: "No pickup addresses available" }];
 
   // When user chooses B2C or B2B
@@ -81,8 +184,8 @@ const NewOrder = () => {
 
   return (
     <div className="sm:px-2 min-h-screen max-w-full mx-auto">
-      <div className="flex justify-between py-2">
-        <div className="flex items-center gap-2 justify-center text-gray-700 font-[600] text-[16px]">
+      <div className="flex justify-between mb-2">
+        <div className="flex items-center gap-2 justify-center text-gray-700 font-[600] text-[12px] sm:text-[14px]">
           <button
             type="button"
             onClick={() => navigate(-1)}
@@ -90,7 +193,7 @@ const NewOrder = () => {
           >
             <ArrowLeft className="w-4 h-4 text-gray-500" />
           </button>
-          <p className="text-[14px]">New Order</p>
+          <p className="text-[12px] sm:text-[14px]">{updateId ? "Update Order" : "New Order"}</p>
         </div>
 
         {/* BULK ORDER BUTTON */}
@@ -103,8 +206,8 @@ const NewOrder = () => {
         </button>
       </div>
 
-      <div className="rounded-lg space-y-4">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="rounded-lg space-y-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {/* Pickup Details */}
           <div className="border rounded-lg p-4 space-y-2 bg-white border-[#0CBB7D]">
             <h2 className="text-[14px] text-gray-700 font-[600] flex items-center gap-2">
@@ -117,6 +220,7 @@ const NewOrder = () => {
             <Select
               options={pickupOptions}
               onChange={handlePickupChange}
+              value={Pickup ? { value: Pickup._id, label: Pickup.pickupAddress?.contactName } : null}
               className="w-full rounded-lg text-[12px]"
               // Custom theme (removes blue)
               theme={(theme) => ({
@@ -183,7 +287,7 @@ const NewOrder = () => {
 
           {/* Receiver Details */}
           <div className="border border-[#0CBB7D] rounded-lg p-4 space-y-2 bg-white">
-            <h2 className="text-[14px] font-[600] text-gray-700 flex items-center gap-2">
+            <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 flex items-center gap-2">
               <span className="bg-[#0CBB7D] text-white rounded-lg p-2">
                 <FiTruck className="text-[14px]" />
               </span>
@@ -192,12 +296,13 @@ const NewOrder = () => {
             <AddReceiverAddress
               setRefresh={setRefresh}
               setReceiverAddress={handleSetReceiverAddress}
+              initialData={clonedOrderData?.receiverAddress || updateOrderData?.receiverAddress}
             />
           </div>
         </div>
 
         {/* Package Details */}
-        <ProductDetails Address={{ Recive, Pickup }} />
+        <ProductDetails Address={{ Recive, Pickup }} initialData={clonedOrderData || updateOrderData} userId={userId} updateId={updateId} />
       </div>
 
       {/* POPUPS */}
@@ -205,6 +310,7 @@ const NewOrder = () => {
         isOpen={isModalOpen1}
         onClose={() => setIsModalOpen1(false)}
         setRefresh={setRefresh}
+        userId={userId}
         setPickupAddress={(newAddress) =>
           setPickUpAddress((prev) => [...prev, newAddress])
         }

@@ -19,7 +19,8 @@ import {
   ExportExcel,
   handleManifest,
   handleBulkDownloadManifests,
-  handleCancelOrderAtBooked
+  handleCancelOrderAtBooked,
+  handleClone
 } from "../Common/orderActions";
 import OrdersTable from "../Common/OrdersTable";
 import MobileOrderCard from "../Common/MobileOrderCard";
@@ -261,6 +262,7 @@ const ReadyToShipOrders = ({ userId: initialUserId }) => {
             handleLabel={handleLabel}
             handleManifest={handleManifest}
             handleCancelOrder={handleCancelOrderAtBooked}
+            handleClone={handleClone}
             refresh={refresh}
             setRefresh={setRefresh}
             handleScheduledPickup={handleScheduledPickup}
@@ -324,6 +326,7 @@ const ReadyToShipOrders = ({ userId: initialUserId }) => {
                 handleLabel={handleLabel}
                 handleManifest={handleManifest}
                 handleCancelOrder={handleCancelOrderAtBooked}
+                handleClone={handleClone}
                 refresh={refresh}
                 setRefresh={setRefresh}
                 handleScheduledPickup={handleScheduledPickup}

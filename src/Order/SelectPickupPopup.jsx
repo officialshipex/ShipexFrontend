@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import UpdatePickupAddress from "./UpdatePickupAddress";
 import { Navigate, useNavigate } from "react-router-dom";
 import { Notification } from "../Notification"
+import { MapPin } from "lucide-react";
 
 
 
@@ -30,7 +31,7 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
     const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const effectiveUserId = (userId && userId !== "null" && userId !== "undefined")
         ? userId
-        : (setSelectedData?.[0]?.userId);
+        : (setSelectedData?.[0]?.userId?._id || setSelectedData?.[0]?.userId);
 
     useEffect(() => {
         const fetchPickupAddresses = async () => {
@@ -178,10 +179,13 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
 
     return (
         <div className="fixed inset-0 flex items-center justify-center bg-gray-500 z-[1000] animate-popup-in bg-opacity-50">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-[700px] relative">
-                <h2 className="font-[600] text-[12px] sm:text-[14px] mb-2 text-gray-700">
-                    Select Pickup Address
-                </h2>
+            <div className="bg-white p-4 rounded-lg shadow-lg w-[700px] relative">
+                <div className="flex items-center gap-2 mb-2">
+                    <MapPin className="w-4 h-4 text-[#0CBB7D]" />
+                    <h2 className="font-[600] text-[12px] sm:text-[14px] text-gray-700">
+                        Select Pickup Address
+                    </h2>
+                </div>
                 <Select
                     options={pickupOptions}
                     onChange={handlePickupChange}

@@ -174,7 +174,7 @@ const CostEstimationB2B = () => {
                     {/* PINCODES */}
                     <div className="grid grid-cols-2 gap-2">
                         <div>
-                            <label className="block font-[600] mb-2 text-gray-500 text-[12px]">
+                            <label className="block font-[600] mb-2 text-gray-700 text-[12px]">
                                 Pickup Pincode <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -191,7 +191,7 @@ const CostEstimationB2B = () => {
                         </div>
 
                         <div>
-                            <label className="block font-[600] mb-2 text-gray-500 text-[12px]">
+                            <label className="block font-[600] mb-2 text-gray-700 text-[12px]">
                                 Delivery Pincode <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -212,7 +212,7 @@ const CostEstimationB2B = () => {
                     <div className="grid grid-cols-3 gap-2">
                         {/* ROV TYPE */}
                         <div className="relative" ref={rovRef}>
-                            <label className="block font-[600] mb-2 text-gray-500 text-[12px]">
+                            <label className="block font-[600] mb-2 text-gray-700 text-[12px]">
                                 ROV Type <span className="text-red-500">*</span>
                             </label>
 
@@ -247,7 +247,7 @@ const CostEstimationB2B = () => {
                         </div>
 
                         <div className="relative" ref={paymentRef}>
-                            <label className="block font-[600] mb-2 text-gray-500 text-[12px]">
+                            <label className="block font-[600] mb-2 text-gray-700 text-[12px]">
                                 Payment Type <span className="text-red-500">*</span>
                             </label>
 
@@ -282,7 +282,7 @@ const CostEstimationB2B = () => {
                         </div>
 
                         <div>
-                            <label className="block font-[600] mb-2 text-gray-500 text-[12px]">
+                            <label className="block font-[600] mb-2 text-gray-700 text-[12px]">
                                 Invoice Value (₹) <span className="text-red-500">*</span>
                             </label>
                             <input
@@ -324,7 +324,7 @@ const CostEstimationB2B = () => {
                                     { key: "height", label: "Height (cm)" },
                                 ].map((f) => (
                                     <div key={f.key}>
-                                        <label className="text-[12px] font-[600] text-gray-500 mb-1 block">
+                                        <label className="text-[12px] font-[600] text-gray-700 mb-1 block">
                                             {f.label}
                                         </label>
                                         <input

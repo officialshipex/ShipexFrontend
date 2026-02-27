@@ -15,7 +15,9 @@ import {
   handleInvoice,
   handleBulkDownloadInvoice,
   handleLabel,
-  handleBulkDownloadLabel
+  handleBulkDownloadLabel,
+  handleClone,
+  handleBulkClone
 } from "../../Common/orderActions";
 import OrdersTable from "../../Common/OrdersTable";
 import MobileOrderCard from "../../Common/MobileOrderCard";
@@ -208,6 +210,10 @@ const CancelledOrders = (filterOrder) => {
                     onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setDesktopDropdownOpen(false); }}>
                     Download Labels
                   </li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
+                    onClick={() => { handleBulkClone({ selectedOrders, setRefresh }); setDesktopDropdownOpen(false); }}>
+                    Bulk Clone
+                  </li>
                 </ul>
               </div>
             )}
@@ -233,6 +239,7 @@ const CancelledOrders = (filterOrder) => {
             dropdownDirection={dropdownDirection}
             handleInvoice={handleInvoice}
             handleLabel={handleLabel}
+            handleClone={handleClone}
             refresh={refresh}
             setRefresh={setRefresh}
             showShippingDetails={true}
@@ -265,6 +272,7 @@ const CancelledOrders = (filterOrder) => {
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { ExportExcel({ selectedOrders, orders }); setMobileDropdownOpen(false); }}>Export Excel</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Invoices</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Labels</li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkClone({ selectedOrders, setRefresh }); setMobileDropdownOpen(false); }}>Bulk Clone</li>
                 </ul>
               </div>
             )}
@@ -289,6 +297,7 @@ const CancelledOrders = (filterOrder) => {
                 dropdownDirection={dropdownDirection}
                 handleInvoice={handleInvoice}
                 handleLabel={handleLabel}
+                handleClone={handleClone}
                 refresh={refresh}
                 setRefresh={setRefresh}
                 navigate={navigate}

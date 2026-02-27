@@ -6,7 +6,7 @@ const ImportantTerms = () => {
     "Fixed COD charge or COD % of the order value whichever is higher will be considered while calculating the COD fee.",
     "The above pricing is subject to change based on fuel surcharges and courier company base rates.",
     "Dead/Dry weight or volumetric weight whichever is higher will be considered while calculating the freight charges.",
-    "Volumetric weight is calculated L × B × H (in cms) / 5000 for all courier companies. In case of Ecom Express EGS Shipments it is L × B × H (in cms) / 4500.",
+    "Volumetric weight is calculated L × W × H (in cms) / 5000 for all courier companies. In case of Ecom Express EGS Shipments it is L × W × H (in cms) / 4500.",
     "RTO (return to origin) shipment will be charged differently from the forward delivery rate.",
     "Pickup services may face issues due to operational concerns of the courier company.",
     "Return charges may apply over and above the freight fee in case of Ecom Express.",

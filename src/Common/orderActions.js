@@ -10,40 +10,9 @@ export const handleTrackingByAwb = (awb, navigate) => {
   navigate(`/dashboard/order/tracking/${awb}`);
 };
 
-export const handleClone = async (id, setRefresh) => {
-  try {
-    if (setRefresh) setRefresh(false);
-    const token = Cookies.get("session");
-
-    const payload = { id };
-
-    const response = await axios.post(
-      `${REACT_APP_BACKEND_URL}/order/clone`,
-      payload,
-      {
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    // Check backend response and show appropriate message
-    if (response.data.success) {
-      Notification(response?.data?.message || "Order cloned successfully", "success");
-      if (setRefresh) setRefresh((prev) => !prev);
-    } else {
-      Notification(response.data.message || "Order cannot be cloned", "info");
-    }
-  } catch (error) {
-    console.error("Error cloning order:", error);
-
-    Notification(
-      error.response?.data?.error ||
-      error.response?.data?.message ||
-      "Something went wrong while cloning the order.",
-      "error"
-    );
-  }
+export const handleClone = (id, navigate, userId) => {
+  const url = `/dashboard/order/neworder?cloneId=${id}${userId ? `&userId=${userId}` : ""}`;
+  navigate(url);
 };
 
 export const handleBulkClone = async ({ selectedOrders, setRefresh }) => {

@@ -11,6 +11,7 @@ import PackageDetailsSection from "./PackageDetailsSection";
 import ShippingDetailsSection from "./ShippingDetailsSection";
 import ProductDetailsSection from "./ProductDetailsSection";
 import TrackingDetailsSection from "./TrackingDetailsSection";
+import FreightDeductionSection from "./FreightDeductionSection";
 import EmployeeAuthModal from "../../employeeAuth/EmployeeAuthModal";
 import Loader from "../../Loader"
 
@@ -249,88 +250,97 @@ const ViewOrder = ({ isSidebarAdmin }) => {
   }
 
   return (
-    <div className="p-1 sm:p-2 bg-gray-50">
-      {/* Header */}
-      <ViewOrderHeader order={order} />
-
-      {/* Main Content - Split Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-6 gap-2">
-        {/* Left Section - 80% on desktop */}
-        <div className="lg:col-span-4 space-y-2">
-          {/* Order Details */}
-          <OrderDetailsSection order={order} />
-
-          {/* Pickup Details */}
-          {(isSidebarAdmin || employeeAccess.canUpdate) ? (
-            <PickupDetailsSection
-              order={order}
-              onUpdate={handleUpdatePickupDetails}
-              userId={order?.userId || userId}
-            />
-          ) : (
-            <PickupDetailsSection
-              order={order}
-              onUpdate={() => setShowEmployeeAuthModal(true)}
-              userId={order?.userId || userId}
-            />
-          )}
-
-          {/* Receiver Details */}
-          {(isSidebarAdmin || employeeAccess.canUpdate) ? (
-            <ReceiverDetailsSection
-              order={order}
-              onUpdate={handleUpdateReceiverDetails}
-            />
-          ) : (
-            <ReceiverDetailsSection
-              order={order}
-              onUpdate={() => setShowEmployeeAuthModal(true)}
-            />
-          )}
-
-          {/* Package Details */}
-          {(isSidebarAdmin || employeeAccess.canUpdate) ? (
-            <PackageDetailsSection
-              order={order}
-              onUpdate={handleUpdatePackageDetails}
-            />
-          ) : (
-            <PackageDetailsSection
-              order={order}
-              onUpdate={() => setShowEmployeeAuthModal(true)}
-            />
-          )}
-
-          {/* Shipping Details - Only if not new and not cancelled */}
-          <ShippingDetailsSection order={order} />
-
-          {/* Product Details */}
-          {(isSidebarAdmin || employeeAccess.canUpdate) ? (
-            <ProductDetailsSection
-              order={order}
-              onUpdate={handleUpdateProductDetails}
-            />
-          ) : (
-            <ProductDetailsSection
-              order={order}
-              onUpdate={() => setShowEmployeeAuthModal(true)}
-            />
-          )}
-        </div>
-
-        {/* Right Section - 20% on desktop - Tracking */}
-        <div className="lg:col-span-2">
-          <TrackingDetailsSection tracking={tracking} />
-        </div>
+    <div className="flex flex-col" style={{ height: "calc(100vh - 80px)" }}>
+      {/* Sticky Header */}
+      <div className="flex-shrink-0 px-1 sm:px-2 pt-1 sm:pt-2 bg-gray-50">
+        <ViewOrderHeader order={order} />
       </div>
 
-      {/* Employee Auth Modal */}
-      {!isSidebarAdmin && showEmployeeAuthModal && (
-        <EmployeeAuthModal
-          employeeModalShow={showEmployeeAuthModal}
-          employeeModalClose={() => setShowEmployeeAuthModal(false)}
-        />
-      )}
+      {/* Scrollable Content */}
+      <div className="flex-1 overflow-y-auto px-1 sm:px-2 pb-2 bg-gray-50">
+        {/* Main Content - Split Layout */}
+        <div className="grid grid-cols-1 lg:grid-cols-6 gap-2">
+          {/* Left Section - 80% on desktop */}
+          <div className="lg:col-span-4 space-y-2">
+            {/* Order Details */}
+            <OrderDetailsSection order={order} />
+
+            {/* Pickup Details */}
+            {(isSidebarAdmin || employeeAccess.canUpdate) ? (
+              <PickupDetailsSection
+                order={order}
+                onUpdate={handleUpdatePickupDetails}
+                userId={order?.userId || userId}
+              />
+            ) : (
+              <PickupDetailsSection
+                order={order}
+                onUpdate={() => setShowEmployeeAuthModal(true)}
+                userId={order?.userId || userId}
+              />
+            )}
+
+            {/* Receiver Details */}
+            {(isSidebarAdmin || employeeAccess.canUpdate) ? (
+              <ReceiverDetailsSection
+                order={order}
+                onUpdate={handleUpdateReceiverDetails}
+              />
+            ) : (
+              <ReceiverDetailsSection
+                order={order}
+                onUpdate={() => setShowEmployeeAuthModal(true)}
+              />
+            )}
+
+            {/* Package Details */}
+            {(isSidebarAdmin || employeeAccess.canUpdate) ? (
+              <PackageDetailsSection
+                order={order}
+                onUpdate={handleUpdatePackageDetails}
+              />
+            ) : (
+              <PackageDetailsSection
+                order={order}
+                onUpdate={() => setShowEmployeeAuthModal(true)}
+              />
+            )}
+
+            {/* Shipping Details - Only if not new and not cancelled */}
+            <ShippingDetailsSection order={order} />
+
+            {/* Product Details */}
+            {(isSidebarAdmin || employeeAccess.canUpdate) ? (
+              <ProductDetailsSection
+                order={order}
+                onUpdate={handleUpdateProductDetails}
+              />
+            ) : (
+              <ProductDetailsSection
+                order={order}
+                onUpdate={() => setShowEmployeeAuthModal(true)}
+              />
+            )}
+
+            {/* Freight Deduction Section */}
+            <FreightDeductionSection order={order} />
+          </div>
+
+          {/* Right Section - 20% on desktop - Tracking */}
+          <div className="lg:col-span-2">
+            <TrackingDetailsSection tracking={tracking} />
+          </div>
+        </div>
+
+        {/* Employee Auth Modal */}
+        {!isSidebarAdmin && showEmployeeAuthModal && (
+          <EmployeeAuthModal
+            employeeModalShow={showEmployeeAuthModal}
+            employeeModalClose={() => setShowEmployeeAuthModal(false)}
+          />
+        )}
+      </div>
+      {/* end scrollable content */}
     </div>
   );
 };

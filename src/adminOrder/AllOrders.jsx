@@ -18,7 +18,8 @@ import {
   handleBulkDownloadInvoice,
   ExportExcel,
   handleManifest,
-  handleBulkDownloadManifests
+  handleBulkDownloadManifests,
+  handleClone
 } from "../Common/orderActions";
 import OrdersTable from "../Common/OrdersTable";
 import MobileOrderCard from "../Common/MobileOrderCard";
@@ -143,6 +144,12 @@ const AllOrders = (filterOrder) => {
 
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
+  };
+
+  const handleUpdateOrder = (order) => {
+    const orderUserId = order.userId?._id || order.userId;
+    const url = `/dashboard/order/neworder?updateId=${order._id}${orderUserId ? `&userId=${orderUserId}` : ''}`;
+    navigate(url);
   };
 
   const handleSelectAll = () => {
@@ -297,10 +304,12 @@ const AllOrders = (filterOrder) => {
             handleInvoice={handleInvoice}
             handleLabel={handleLabel}
             handleManifest={handleManifest}
+            handleClone={handleClone}
             refresh={refresh}
             setRefresh={setRefresh}
             showShippingDetails={true}
             showUserDetails={true} // 👈 Admin view
+            handleUpdateOrder={handleUpdateOrder}
           />
         </div>
         <PaginationFooter page={page} totalPages={totalPages} setPage={setPage} limit={limit} setLimit={setLimit} />
@@ -358,11 +367,13 @@ const AllOrders = (filterOrder) => {
                 handleInvoice={handleInvoice}
                 handleLabel={handleLabel}
                 handleManifest={handleManifest}
+                handleClone={handleClone}
                 refresh={refresh}
                 setRefresh={setRefresh}
                 navigate={navigate}
                 showShippingDetails={true}
                 showUserDetails={true} // 👈 Admin view
+                handleUpdateOrder={handleUpdateOrder}
               />
             ))
           ) : (

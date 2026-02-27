@@ -3,13 +3,14 @@ import Modal from "./Modal";
 import axios from "axios";
 // import { toast } from "react-toastify";
 import Cookies from "js-cookie";
-import {Notification} from "../Notification"
+import { Notification } from "../Notification"
 const AddPickupAddress = ({
   isOpen,
   onClose,
   onSave,
   setPickupAddress,
   setRefresh,
+  userId,
 }) => {
   const [pincode, setPincode] = useState("");
   const [city, setCity] = useState("");
@@ -78,7 +79,7 @@ const AddPickupAddress = ({
           } else {
             setCity("");
             setState("");
-            Notification("Pincode not found!","error");
+            Notification("Pincode not found!", "error");
           }
         } catch (error) {
           console.error("Error fetching city and state:", error);
@@ -99,14 +100,14 @@ const AddPickupAddress = ({
 
     const token = Cookies.get("session");
     if (!token) {
-      Notification("Authentication error. Please log in again.","error");
+      Notification("Authentication error. Please log in again.", "error");
       return;
     }
 
     try {
       const response = await axios.post(
         `${REACT_APP_BACKEND_URL}/order/pickupAddress`,
-        formData,
+        { ...formData, userId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -115,7 +116,7 @@ const AddPickupAddress = ({
       );
 
       if (response.status === 200 || response.status === 201) {
-        Notification("Pickup address saved successfully!","success");
+        Notification("Pickup address saved successfully!", "success");
 
         setRefresh(true);
 
@@ -142,7 +143,7 @@ const AddPickupAddress = ({
         "Error saving pickup address:",
         error.response?.data || error.message
       );
-      Notification("Error saving pickup address. Please try again.","error");
+      Notification("Error saving pickup address. Please try again.", "error");
     }
   };
 

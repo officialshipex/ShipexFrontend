@@ -152,6 +152,12 @@ const NewOrder = ({ userId: initialUserId }) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
   };
 
+  const handleUpdateOrder = (order) => {
+    const orderUserId = order.userId?._id || order.userId;
+    const url = `/dashboard/order/neworder?updateId=${order._id}${orderUserId ? `&userId=${orderUserId}` : ''}`;
+    navigate(url);
+  };
+
   const handleSelectAll = () => {
     if (selectedOrders.length === orders.length) setSelectedOrders([]);
     else setSelectedOrders(orders.map(o => o._id));
@@ -355,6 +361,7 @@ const NewOrder = ({ userId: initialUserId }) => {
             setRefresh={setRefresh}
             showShippingDetails={false}
             showUserDetails={true}
+            handleUpdateOrder={handleUpdateOrder}
           />
         </div>
         <PaginationFooter page={page} totalPages={totalPages} setPage={setPage} limit={limit} setLimit={setLimit} />
@@ -420,6 +427,7 @@ const NewOrder = ({ userId: initialUserId }) => {
                 navigate={navigate}
                 showShippingDetails={false}
                 showUserDetails={true}
+                handleUpdateOrder={handleUpdateOrder}
               />
             ))
           ) : (

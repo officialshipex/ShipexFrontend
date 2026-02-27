@@ -18,7 +18,8 @@ import {
   handleBulkDownloadInvoice,
   ExportExcel,
   handleManifest,
-  handleBulkDownloadManifests
+  handleBulkDownloadManifests,
+  handleClone
 } from "../Common/orderActions";
 import OrdersTable from "../Common/OrdersTable";
 import MobileOrderCard from "../Common/MobileOrderCard";
@@ -259,6 +260,7 @@ const InTransitOrders = (filterOrder) => {
             handleInvoice={handleInvoice}
             handleLabel={handleLabel}
             handleManifest={handleManifest}
+            handleClone={handleClone}
             refresh={refresh}
             setRefresh={setRefresh}
             showShippingDetails={true}
@@ -320,6 +322,7 @@ const InTransitOrders = (filterOrder) => {
                 handleInvoice={handleInvoice}
                 handleLabel={handleLabel}
                 handleManifest={handleManifest}
+                handleClone={handleClone}
                 refresh={refresh}
                 setRefresh={setRefresh}
                 navigate={navigate}

@@ -97,9 +97,7 @@ const UpdateB2BPackageDetails = ({ isOpen, onClose, onSave, initialPackages = []
                 {/* Header */}
                 <div className="sticky top-0 bg-white border-b py-3 px-4 flex justify-between items-center z-10">
                     <div className="flex items-center gap-2">
-                        <span className="bg-[#0CBB7D] text-white rounded-lg p-2">
-                            <FiBox className="text-[14px]" />
-                        </span>
+                        <FiBox className="w-4 h-4 text-[#0CBB7D]" />
                         <h2 className="text-[14px] font-[600] text-gray-700">
                             Update B2B Package Details
                         </h2>

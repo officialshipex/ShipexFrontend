@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
-import { FiCopy, FiCheck } from "react-icons/fi";
+import { FiCopy, FiCheck, FiEdit } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import OrderRowActions from "../../Common/OrderRowActions";
 import {
     handleInvoice,
     handleLabel,
     handleManifest,
-    handleCancelOrderAtBooked
+    handleCancelOrderAtBooked,
+    handleClone
 } from "../../Common/orderActions";
 
 const ViewOrderHeader = ({ order }) => {
@@ -16,6 +17,13 @@ const ViewOrderHeader = ({ order }) => {
     const [dropdownOpen, setDropdownOpen] = useState(null);
     const dropdownRefs = useRef([]);
     const toggleButtonRefs = useRef([]);
+
+    const handleUpdateOrder = () => {
+        const orderUserId = order.userId?._id || order.userId;
+        const url = `/dashboard/order/neworder?updateId=${order._id}${orderUserId ? `&userId=${orderUserId}` : ''}`;
+        navigate(url);
+        setDropdownOpen(null);
+    };
 
     const toggleDropdown = (index) => {
         setDropdownOpen(dropdownOpen === index ? null : index);
@@ -84,6 +92,8 @@ const ViewOrderHeader = ({ order }) => {
                         handleLabel={handleLabel}
                         handleManifest={handleManifest}
                         handleCancelOrder={handleCancelOrderAtBooked}
+                        handleClone={handleClone}
+                        handleUpdateOrder={order.status === "new" ? handleUpdateOrder : undefined}
                         setDropdownOpen={setDropdownOpen}
                     />
                 </div>

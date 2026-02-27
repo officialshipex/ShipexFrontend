@@ -62,7 +62,7 @@ const ReceiverDetailsSection = ({ order, onUpdate }) => {
                         </h2>
                     </div>
 
-                    {order.status === "new" && (
+                    {/* {order.status === "new" && (
                         <button
                             onClick={() => setIsEditOpen(true)}
                             className="p-2 bg-gray-500 rounded-full hover:opacity-90 transition"
@@ -70,7 +70,7 @@ const ReceiverDetailsSection = ({ order, onUpdate }) => {
                         >
                             <FaEdit className="text-white text-[12px]" />
                         </button>
-                    )}
+                    )} */}
                 </div>
 
                 {/* ================= DESKTOP VIEW (UNCHANGED) ================= */}

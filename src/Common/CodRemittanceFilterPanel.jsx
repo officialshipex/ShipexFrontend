@@ -67,12 +67,12 @@ const CodRemittanceFilterPanel = ({
     const fieldStyle = "w-full h-[36px] px-3 text-[12px] font-[600] border rounded-lg focus:outline-none text-left flex items-center justify-between transition-all";
 
     return (
-        <div className="fixed inset-0 z-[100] flex justify-end">
+        <div className="fixed inset-0 z-[1000] flex justify-end">
             <div className="absolute inset-0 bg-black/30 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
 
             <div className="relative w-full max-w-[340px] bg-white h-full shadow-2xl flex flex-col animate-slide-in-right">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 border-b">
+                <div className="flex items-center justify-between px-4 py-2 border-b">
                     <h2 className="text-[14px] font-bold text-gray-700 tracking-tight">Filters</h2>
                     <button onClick={onClose} className="p-1.5 hover:bg-gray-100 rounded-full transition-all">
                         <X className="w-5 h-5 text-gray-500" />
@@ -84,7 +84,7 @@ const CodRemittanceFilterPanel = ({
                     {/* User Search */}
                     {showUserFilter && (
                         <div className="space-y-1">
-                            <label className="text-[12px] font-[600] text-gray-400">Search User</label>
+                            <label className="text-[12px] font-[600] text-gray-700">Search User</label>
                             <UserFilter
                                 onUserSelect={(id) => setLocalFilters({ ...localFilters, selectedUserId: id })}
                                 clearTrigger={clearUserTrigger}
@@ -95,7 +95,7 @@ const CodRemittanceFilterPanel = ({
 
                     {/* Remittance ID */}
                     <div className="space-y-1">
-                        <label className="text-[12px] font-[600] text-gray-400">Remittance ID</label>
+                        <label className="text-[12px] font-[600] text-gray-700">Remittance ID</label>
                         <input
                             type="text"
                             placeholder="Enter Remittance ID"
@@ -107,7 +107,7 @@ const CodRemittanceFilterPanel = ({
 
                     {/* UTR */}
                     <div className="space-y-1">
-                        <label className="text-[12px] font-[600] text-gray-400">UTR</label>
+                        <label className="text-[12px] font-[600] text-gray-700">UTR</label>
                         <input
                             type="text"
                             placeholder="Enter UTR"
@@ -119,7 +119,7 @@ const CodRemittanceFilterPanel = ({
 
                     {/* Status Dropdown */}
                     <div className="space-y-1" ref={statusRef}>
-                        <label className="text-[12px] font-[600] text-gray-400 tracking-wider">Status</label>
+                        <label className="text-[12px] font-[600] text-gray-700 tracking-wider">Status</label>
                         <div className="relative">
                             <button
                                 onClick={() => setShowStatusDropdown(!showStatusDropdown)}

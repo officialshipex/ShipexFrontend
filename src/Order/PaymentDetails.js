@@ -7,7 +7,7 @@ import { FiCreditCard } from "react-icons/fi";
 import { Notification } from "../Notification";
 import OtherDetails from "./OtherDetails";
 
-const PaymentDetails = ({ packageData }) => {
+const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
   const [paymentMode, setPaymentMode] = useState("COD");
   const [showAdditionalFees, setShowAdditionalFees] = useState(false);
   const navigate = useNavigate();
@@ -16,6 +16,21 @@ const PaymentDetails = ({ packageData }) => {
     gstin: "",
     ewaybill: "",
   });
+
+  useEffect(() => {
+    if (initialData) {
+      if (initialData.paymentDetails?.method) {
+        setPaymentMode(initialData.paymentDetails.method);
+      }
+      if (initialData.otherDetails) {
+        setOtherDetails({
+          resellerName: initialData.otherDetails.resellerName || "",
+          gstin: initialData.otherDetails.gstin || "",
+          ewaybill: initialData.otherDetails.ewaybill || "",
+        });
+      }
+    }
+  }, [initialData]);
   const [totalPrices, setTotalPrice] = useState("");
   const [fees, setFees] = useState({
     shippingCharges: 0,
@@ -202,6 +217,7 @@ const PaymentDetails = ({ packageData }) => {
     }
 
     const data = {
+      userId: userId,
       pickupAddress: {
         contactName: orderData.address.Pickup.pickupAddress.contactName,
         email: orderData.address.Pickup.pickupAddress.email,
@@ -258,15 +274,29 @@ const PaymentDetails = ({ packageData }) => {
         return;
       }
 
-      await axios.post(`${REACT_APP_BACKEND_URL}/order/neworder`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      Notification("Order created successfully", "success");
-
-      navigate("/dashboard/b2c/order");
+      if (updateId) {
+        // Update existing order
+        await axios.put(
+          `${REACT_APP_BACKEND_URL}/order/updateOrder/${updateId}`,
+          data,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        Notification("Order updated successfully", "success");
+        navigate("/dashboard/b2c/order");
+      } else {
+        // Create new order
+        await axios.post(`${REACT_APP_BACKEND_URL}/order/neworder`, data, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        Notification("Order created successfully", "success");
+        navigate("/dashboard/b2c/order");
+      }
     } catch (error) {
       console.log("error", error);
       Notification("Something went wrong while creating the order.", "error");
@@ -277,8 +307,8 @@ const PaymentDetails = ({ packageData }) => {
 
   return (
     <div>
-      <div className="border mt-4 border-[#0CBB7D] rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
-        <h2 className="text-[14px] font-[600] text-gray-700 mb-2 text-left flex items-center gap-2">
+      <div className="border mt-2 border-[#0CBB7D] rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
+        <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 mb-2 text-left flex items-center gap-2">
           <span className="bg-[#0CBB7D] text-white rounded-lg p-2">
             <FiCreditCard className="text-[14px]" />
           </span>
@@ -390,7 +420,7 @@ const PaymentDetails = ({ packageData }) => {
           disabled={isSubmitting}
           className="bg-[#0CBB7D] font-[600] hover:bg-green-500 text-white text-[12px] px-3 py-2 rounded-lg shadow-sm"
         >
-          {isSubmitting ? "Processing..." : "Create Order"}
+          {isSubmitting ? "Processing..." : (updateId ? "Update Order" : "Create Order")}
         </button>
       </div>
     </div>

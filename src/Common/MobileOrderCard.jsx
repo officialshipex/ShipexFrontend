@@ -33,6 +33,7 @@ const MobileOrderCard = ({
     onViewNdrHistory,
     onTakeAction,
     handleScheduledPickup,
+    handleUpdateOrder,
 }) => {
     const [openPopup, setOpenPopup] = useState(null);
     const [popupPosition, setPopupPosition] = useState("right");
@@ -140,6 +141,7 @@ const MobileOrderCard = ({
                         handleClone={handleClone}
                         setDropdownOpen={() => { }}
                         handleScheduledPickup={handleScheduledPickup}
+                        handleUpdateOrder={order.status === "new" ? handleUpdateOrder : undefined}
                         renderOnly="dropdown"
                     />
                 )}
@@ -148,20 +150,20 @@ const MobileOrderCard = ({
             {/* USER DETAILS (ADMIN ONLY) */}
             {showUserDetails && (
                 <div className="flex items-center justify-between">
-                                    <div className="flex items-center gap-2 min-w-0">
-                                        <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center font-bold text-[#0CBB7D] text-[10px] shrink-0 border border-gray-300">
-                                            {order.userId?.fullname?.charAt(0)}
-                                        </div>
-                                        <div className="min-w-0 leading-tight">
-                                            <p className="font-bold text-gray-700 text-[10px] truncate">{order.userId?.fullname}</p>
-                                            <p className="text-gray-500 text-[10px] truncate">{order.userId?.email}</p>
-                                            {/* <p className="text-gray-400 text-[9px] truncate">{row.user.userId}</p> */}
-                                        </div>
-                                    </div>
-                                    <p className="text-[#0CBB7D] font-medium text-[10px] tracking-widest shrink-0">
-                                        {order.userId.userId}
-                                    </p>
-                                </div>
+                    <div className="flex items-center gap-2 min-w-0">
+                        <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center font-bold text-[#0CBB7D] text-[10px] shrink-0 border border-gray-300">
+                            {order.userId?.fullname?.charAt(0)}
+                        </div>
+                        <div className="min-w-0 leading-tight">
+                            <p className="font-bold text-gray-700 text-[10px] truncate">{order.userId?.fullname}</p>
+                            <p className="text-gray-500 text-[10px] truncate">{order.userId?.email}</p>
+                            {/* <p className="text-gray-400 text-[9px] truncate">{row.user.userId}</p> */}
+                        </div>
+                    </div>
+                    <p className="text-[#0CBB7D] font-medium text-[10px] tracking-widest shrink-0">
+                        {order.userId.userId}
+                    </p>
+                </div>
             )}
 
             {/* DATE + CHANNEL */}
@@ -404,6 +406,7 @@ const MobileOrderCard = ({
                         handleClone={handleClone}
                         setDropdownOpen={() => { }}
                         handleScheduledPickup={handleScheduledPickup}
+                        handleUpdateOrder={order.status === "new" ? handleUpdateOrder : undefined}
                         renderOnly="action"
                     />
                 )

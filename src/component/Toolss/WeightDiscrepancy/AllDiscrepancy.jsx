@@ -97,8 +97,9 @@ const AllDiscrepancy = () => {
       const results = response.data.results || [];
       setOrders(results);
       setTotalPages(response.data.page || 0);
-      const uniqueCouriers = [...new Set(results.map(o => o.courierServiceName).filter(Boolean))];
-      setCourierOptions(uniqueCouriers);
+      if (response.data.courierServices) {
+        setCourierOptions(response.data.courierServices);
+      }
       setLoading(false);
     } catch (error) {
       Notification("Error fetching transactions", "error");

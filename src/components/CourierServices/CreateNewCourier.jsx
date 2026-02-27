@@ -2,11 +2,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import CourierServiceList from "./CourierServiceList";
-// import { toast } from "react-toastify";
 import EmployeeAuthModal from "../../employeeAuth/EmployeeAuthModal";
 import CustomDropdown from "./Dropdown"
 import { Notification } from "../../Notification"
 import Cookies from "js-cookie"
+import { FaEdit,FaPlus  } from "react-icons/fa";
+import { getUserInfoFromToken } from "../../utils/session";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -31,11 +32,44 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
   const [selectedProvider, setSelectedProvider] = useState("");
   const [refresh, setRefresh] = useState(false);
 
+  const fetchServicesForProvider = async (providerName) => {
+    try {
+      let services = [];
+      switch (providerName) {
+        case "NimbusPost":
+          const nimbusRes = await axios.get(`${REACT_APP_BACKEND_URL}/NimbusPost/getCourierServices`);
+          services = nimbusRes.data.map((item) => item.service);
+          break;
+        case "Xpressbees":
+          const xpressRes = await axios.get(`${REACT_APP_BACKEND_URL}/Xpressbees/getCourierList`);
+          services = xpressRes.data.map((item) => item.service);
+          break;
+        case "Shiprocket":
+          const shipRes = await axios.get(`${REACT_APP_BACKEND_URL}/Shiprocket/getAllActiveCourierServices`);
+          services = shipRes.data.map((item) => item.service);
+          break;
+        case "Dtdc":
+          services = ["B2C SMART EXPRESS", "B2C PRIORITY", "B2C GROUND ECONOMY"];
+          break;
+        default:
+          services = [];
+          break;
+      }
+      setProviderServices(services);
+    } catch (error) {
+      console.error(`Error fetching ${providerName} services:`, error);
+      setProviderServices([]);
+    }
+  };
+
   useEffect(() => {
     const fetchCouriers = async () => {
       try {
-        if (isSidebarAdmin) {
-          setEmployeeAccess({ canView: true, canAction: true });
+        const userInfo = getUserInfoFromToken();
+        const isMainAdmin = userInfo?.type !== "employee" && (userInfo?.isAdmin || userInfo?.adminTab);
+
+        if (isSidebarAdmin || isMainAdmin) {
+          setEmployeeAccess({ canView: true, canAction: true, canUpdate: true });
           setShowEmployeeAuthModal(false);
         } else {
           const token = Cookies.get("session");
@@ -57,15 +91,24 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         const response = await axios.get(`${REACT_APP_BACKEND_URL}/allCourier/couriers`);
         setCourierProviders(Array.isArray(response.data) ? response.data : []);
       } catch (error) {
-        setCourierProviders([]);
-        setShowEmployeeAuthModal(true);
+        const userInfo = getUserInfoFromToken();
+        const isMainAdmin = userInfo?.type !== "employee" && (userInfo?.isAdmin || userInfo?.adminTab);
+        if (isMainAdmin) {
+          setEmployeeAccess({ canView: true, canAction: true, canUpdate: true });
+          setShowEmployeeAuthModal(false);
+        } else {
+          setCourierProviders([]);
+          setShowEmployeeAuthModal(true);
+        }
       }
     };
+
+    fetchCouriers();
 
     if (location.state?.courierToEdit) {
       const editCourier = location.state.courierToEdit;
       setFormData({
-        _id: editCourier._id || null, // Ensure _id is included!
+        _id: editCourier._id || null,
         id: editCourier.id || null,
         provider: editCourier.provider || "",
         courier: editCourier.courier || "",
@@ -74,20 +117,11 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         status: editCourier.status || "",
       });
       setSelectedProvider(editCourier.provider);
-      handleChange({ target: { name: "provider", value: editCourier.provider } });
+      fetchServicesForProvider(editCourier.provider);
     }
-
-    fetchCouriers();
-
-    if (location.state?.courierToEdit) {
-      setFormData(location.state.courierToEdit);
-      setSelectedProvider(location.state.courierToEdit.provider);
-      handleChange({ target: { name: "provider", value: location.state.courierToEdit.provider } });
-    }
-    // eslint-disable-next-line
   }, [location.state, isSidebarAdmin, refresh]);
 
-  const canSave = isSidebarAdmin || employeeAccess.canAction;
+  const canSave = isSidebarAdmin || employeeAccess.canAction || employeeAccess.canUpdate;
   const canView = isSidebarAdmin || employeeAccess.canView;
   const canUpdate = isSidebarAdmin || employeeAccess.canUpdate;
 
@@ -97,43 +131,18 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
 
     if (name === "provider") {
       setSelectedProvider(value);
-
-      try {
-        let response;
-        let services = [];
-
-        switch (value) {
-          case "NimbusPost":
-            response = await axios.get(`${REACT_APP_BACKEND_URL}/NimbusPost/getCourierServices`);
-            services = response.data.map((item) => item.service);
-            break;
-          case "Xpressbees":
-            response = await axios.get(`${REACT_APP_BACKEND_URL}/Xpressbees/getCourierList`);
-            services = response.data.map((item) => item.service);
-            break;
-          case "Shiprocket":
-            response = await axios.get(`${REACT_APP_BACKEND_URL}/Shiprocket/getAllActiveCourierServices`);
-            services = response.data.map((item) => item.service);
-            break;
-          case "Dtdc":
-            services = ["B2C SMART EXPRESS", "B2C PRIORITY", "B2C GROUND ECONOMY"];
-            break;
-          default:
-            services = [];
-            break;
-        }
-
-        setProviderServices(services);
-        setFormData((prev) => ({ ...prev, courier: "" }));
-      } catch (error) {
-        console.error(`Error fetching ${value} services:`, error);
-        setProviderServices([]);
-      }
+      setFormData((prev) => ({ ...prev, courier: "" }));
+      fetchServicesForProvider(value);
     }
   };
-  // console.log("location", location.state?.courierToEdit._id)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.provider || !formData.name || !formData.status || !formData.courierType || (providerServices.length > 0 && !formData.courier)) {
+      Notification("Please fill all required fields", "info");
+      return;
+    }
+
     try {
       if (formData._id) {
         await axios.put(`${REACT_APP_BACKEND_URL}/courierServices/couriers/${formData._id}`, formData);
@@ -141,9 +150,9 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         await axios.post(`${REACT_APP_BACKEND_URL}/courierServices/couriers`, formData);
       }
       Notification("Courier saved successfully!", "success");
-      setRefresh(true);
+      setRefresh(prev => !prev);
       setFormData({
-        _id: null, // Reset here as well!
+        _id: null,
         id: null,
         provider: "",
         courier: "",
@@ -151,6 +160,8 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         name: "",
         status: "",
       });
+      setProviderServices([]);
+      setSelectedProvider("");
     } catch (error) {
       Notification("Error saving courier", "error");
       console.error("Error saving courier:", error);
@@ -164,7 +175,11 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         employeeModalShow={showEmployeeAuthModal}
         employeeModalClose={() => {
           setShowEmployeeAuthModal(false);
-          window.history.back();
+          if (window.history.length > 1) {
+            window.history.back();
+          } else {
+            navigate("/adminDashboard");
+          }
         }}
       />
     );
@@ -172,13 +187,23 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
 
   return (
     canView && (
-      <div className="max-w-full mx-auto">
-        <h2 className="text-[12px] md:text-[18px] text-gray-700 font-[600] mb-1">Courier Services Form</h2>
+      <div className="max-w-full sm:px-2 mx-auto">
+        <div className="bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-100 mb-2">
+          <div className="flex items-center gap-2 mb-3 border-b border-gray-50">
+            {formData._id ? (
+              <FaEdit className="text-[#0CBB7D] w-3.5 h-3.5" />
+            ) : (
+              <FaPlus className="text-[#0CBB7D] w-3.5 h-3.5" />
+            )}
 
-        <form onSubmit={handleSubmit} className="flex sm:flex-row flex-col gap-2">
-          <div className="flex gap-2 w-full sm:w-auto">
-            {/* Provider */}
-            <div className="w-full sm:w-auto">
+            <h2 className="text-[12px] md:text-[14px] text-gray-700 font-[600]">
+              {formData._id ? "Edit Courier Service" : "Add New Courier Service"}
+            </h2>
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-2">
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-6 gap-2">
+              {/* Provider */}
               <CustomDropdown
                 label="Provider"
                 name="provider"
@@ -186,27 +211,19 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                 onChange={handleChange}
                 options={[...new Set(courierProviders.map((c) => c.courierProvider))]}
                 placeholder="Select Provider"
-                className=""
               />
-            </div>
 
-            {/* Courier */}
-            {["NimbusPost", "Xpressbees", "Shiprocket", "Dtdc"].includes(selectedProvider) && (
-              <div className="">
-                <CustomDropdown
-                  label={selectedProvider === "Dtdc" ? "Service Type" : "Courier"}
-                  name="courier"
-                  value={formData.courier}
-                  onChange={handleChange}
-                  options={providerServices}
-                  placeholder={`Select ${selectedProvider === "Dtdc" ? "Service Type" : "Courier"}`}
-                  className="w-full max-w-[180px]"
-                />
-              </div>
-            )}
+              {/* Courier */}
+              <CustomDropdown
+                label={selectedProvider === "Dtdc" ? "Service Type" : "Courier"}
+                name="courier"
+                value={formData.courier}
+                onChange={handleChange}
+                options={providerServices}
+                placeholder={selectedProvider ? `Select ${selectedProvider === "Dtdc" ? "Service Type" : "Courier"}` : "Select Provider first"}
+              />
 
-            {/* Courier Type */}
-            <div className="w-full sm:w-auto">
+              {/* Courier Type */}
               <CustomDropdown
                 label="Courier Type"
                 name="courierType"
@@ -214,12 +231,9 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                 onChange={handleChange}
                 options={["Domestic (Surface)", "Domestic (Air)"]}
                 placeholder="Select Type"
-                className="w-full max-w-[180px]"
               />
-            </div>
 
-            {/* Status */}
-            <div className="w-full sm:w-auto">
+              {/* Status */}
               <CustomDropdown
                 label="Status"
                 name="status"
@@ -227,43 +241,36 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                 onChange={handleChange}
                 options={["Enable", "Disable"]}
                 placeholder="Select Status"
-                className="w-full max-w-[180px]"
               />
+
+              {/* Name */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  placeholder="Enter name"
+                  value={formData.name}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-[#0CBB7D] transition-all font-[600] text-gray-700"
+                />
+              </div>
             </div>
 
-          </div>
-          <div className="flex gap-2 w-full">
-            {/* Name */}
-            <div className="w-full sm:w-auto">
-              <label className="block text-[10px] sm:text-[12px] text-gray-500">Name</label>
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                className="w-full sm:w-auto max-w-full px-3 py-2 h-8 border rounded-lg text-[12px] focus:outline-none"
-              />
-            </div>
-
-            {/* Submit Button */}
-            <div className="flex items-end">
+            <div className="flex justify-end">
               <button
                 type="submit"
-                className={`bg-[#0CBB7D] font-[600] text-white h-8 px-3 text-[10px] sm:text-[12px] rounded-lg ${!canSave ? "opacity-50 cursor-not-allowed" : ""
-                  }`}
+                className={`bg-[#0CBB7D] font-[700] text-white py-2 px-3 text-[10px] sm:text-[12px] rounded-lg shadow-sm transition-all hover:bg-opacity-90 active:scale-95 ${!canSave ? "opacity-50 cursor-not-allowed" : ""}`}
                 disabled={!canSave}
               >
-                Save
+                {formData._id ? "Update Courier" : "Save Courier"}
               </button>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
 
         <CourierServiceList refresh={refresh} canUpdate={canUpdate} />
       </div>
-
-
-
     )
   );
 }

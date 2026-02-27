@@ -94,7 +94,7 @@ const UploadStatus = ({ isOpen, onClose, setRefresh }) => {
         }
     };
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[1000]">
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 animate-popup-in z-[1000]">
             <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] relative">
                 <h2 className="text-[12px] sm:text-[14px] text-gray-700 font-[600] mb-2">Upload Status</h2>
 

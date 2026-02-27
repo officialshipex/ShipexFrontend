@@ -143,7 +143,7 @@ const CostEstimation = () => {
   };
 
   return (
-    <div className="px-1 sm:px-2">
+    <div className="sm:px-2">
       <CostEstimationHeader />
 
       <div className="sm:bg-white mx-auto w-full max-w-full border bg-white rounded-lg sm:p-4 p-2 flex flex-col md:flex-row">
@@ -155,7 +155,7 @@ const CostEstimation = () => {
           <div className="grid grid-cols-2 gap-2">
             {/* Pick-up Area Pincode */}
             <div>
-              <label className="block font-[600] mb-2 text-gray-500 text-[12px]">
+              <label className="block font-[600] mb-2 text-gray-700 text-[12px]">
                 Pickup Pincode <span className="text-red-500">*</span>
               </label>
               <input
@@ -175,7 +175,7 @@ const CostEstimation = () => {
 
             {/* Delivery Area Pincode */}
             <div>
-              <label className="block font-[600] mb-2 text-gray-500 text-[12px]">
+              <label className="block font-[600] mb-2 text-gray-700 text-[12px]">
                 Delivery Pincode <span className="text-red-500">*</span>
               </label>
               <input
@@ -198,8 +198,8 @@ const CostEstimation = () => {
           <div className="grid grid-cols-2 gap-2">
             {/* Approximate Weight */}
             <div>
-              <label className="block font-[600] mb-2 text-gray-500 text-[12px]">
-                Approximate Weight <span className="text-red-500">*</span>
+              <label className="block font-[600] mb-2 text-gray-700 text-[12px]">
+                Approximate Weight (kg) <span className="text-red-500">*</span>
               </label>
               <div className="flex items-center w-full rounded-lg overflow-hidden">
                 <input
@@ -235,7 +235,7 @@ const CostEstimation = () => {
 
             {/* Declared Value */}
             <div>
-              <label className="block font-[600] mb-2 text-gray-500 text-[12px]">
+              <label className="block font-[600] mb-2 text-gray-700 text-[12px]">
                 Declared Value in INR <span className="text-red-500">*</span>
               </label>
               <div className="flex items-center w-full overflow-hidden">
@@ -262,7 +262,7 @@ const CostEstimation = () => {
           <div className="grid grid-cols-2 gap-2">
             {/* Payment Type */}
             <div className="relative" ref={dropdownRef}>
-              <label className="block font-[600] mb-2 text-gray-500 text-[12px]">
+              <label className="block font-[600] mb-2 text-gray-700 text-[12px]">
                 Payment Type <span className="text-red-500">*</span>
               </label>
 
@@ -300,7 +300,7 @@ const CostEstimation = () => {
 
             {/* Dimensions */}
             <div>
-              <label className="block font-[600] mb-2 text-gray-500 text-[12px]">
+              <label className="block font-[600] mb-2 text-gray-700 text-[12px]">
                 Dimensions (cm)<span className="text-red-500">*</span>
               </label>
               <div className="flex items-center gap-2">

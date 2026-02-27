@@ -3,7 +3,7 @@ import PaymentDetails from "./PaymentDetails.js";
 import { FiTag, FiTrash2 } from "react-icons/fi";
 import PackageDetails from "./PackageDetails"; // NEW IMPORT
 
-const ProductDetails = ({ Address }) => {
+const ProductDetails = ({ Address, initialData, userId, updateId }) => {
     const [products, setProducts] = useState([
         { id: 1, quantity: 1, hsn: "", name: "", sku: "", unitPrice: "", category: "", discount: "", tax: "" },
     ]);
@@ -21,6 +21,36 @@ const ProductDetails = ({ Address }) => {
     const [finalDeadWeight, setFinalDeadWeight] = useState(0);
     const [finalVolumetricWeight, setFinalVolumetricWeight] = useState(0);
     const [finalApplicableWeight, setFinalApplicableWeight] = useState(0);
+
+    React.useEffect(() => {
+        if (initialData) {
+            // Support both direct and wrapped data (data.data)
+            const data = initialData.data || initialData;
+
+            if (data.productDetails && Array.isArray(data.productDetails)) {
+                setProducts(data.productDetails.map((p, index) => ({
+                    id: index + 1,
+                    ...p
+                })));
+            }
+            if (data.packageDetails) {
+                setDeadWeight(data.packageDetails.deadWeight || 0);
+                setDimensions({
+                    length: data.packageDetails.volumetricWeight?.length || "",
+                    width: data.packageDetails.volumetricWeight?.width || "",
+                    height: data.packageDetails.volumetricWeight?.height || "",
+                });
+            }
+            if (data.orderType) setOrderType(data.orderType);
+            if (data.rovType) setRovType(data.rovType);
+            if (data.B2BPackageDetails) {
+                setB2BPackageDetails(data.B2BPackageDetails.packages || []);
+                setFinalDeadWeight(data.B2BPackageDetails.deadWeight || 0);
+                setFinalVolumetricWeight(data.B2BPackageDetails.volumetricWeight || 0);
+                setFinalApplicableWeight(data.B2BPackageDetails.applicableWeight || 0);
+            }
+        }
+    }, [initialData]);
 
 
 
@@ -120,7 +150,7 @@ const ProductDetails = ({ Address }) => {
     return (
         <div className="max-w-full mx-auto">
             <div className="border border-[#0CBB7D] rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
-                <h2 className="text-[14px] font-[600] text-gray-700 mb-2 flex items-center gap-2">
+                <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 mb-2 flex items-center gap-2">
                     <span className="bg-[#0CBB7D] text-white rounded-lg p-2">
                         <FiTag className="text-[14px]" />
                     </span>
@@ -257,7 +287,7 @@ const ProductDetails = ({ Address }) => {
 
 
             {/* PAYMENT DETAILS */}
-            <PaymentDetails packageData={packageData} />
+            <PaymentDetails packageData={packageData} initialData={initialData} userId={userId} updateId={updateId} />
         </div>
     );
 };

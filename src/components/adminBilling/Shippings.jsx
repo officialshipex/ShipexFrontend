@@ -30,6 +30,7 @@ const Shippings = () => {
   const [limit, setLimit] = useState(20);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [courierOptions, setCourierOptions] = useState([]);
   const [clearTrigger, setClearTrigger] = useState(0);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [actionOpen, setActionOpen] = useState(false);
@@ -73,6 +74,9 @@ const Shippings = () => {
       );
       setTransactions(response.data.results || []);
       setTotal(response.data.total || 0);
+      if (response.data.courierServices) {
+        setCourierOptions(response.data.courierServices);
+      }
       setLoading(false);
     } catch (error) {
       Notification("Error fetching transactions", "error");
@@ -235,11 +239,11 @@ const Shippings = () => {
                 <th className="py-2 px-3 w-10">
                   <div className="flex justify-center items-center">
                     <input
-                    type="checkbox"
-                    checked={transactions.length > 0 && selectedOrders.length === transactions.length}
-                    onChange={handleSelectAll}
-                    className="cursor-pointer accent-[#0CBB7D]"
-                  />
+                      type="checkbox"
+                      checked={transactions.length > 0 && selectedOrders.length === transactions.length}
+                      onChange={handleSelectAll}
+                      className="cursor-pointer accent-[#0CBB7D]"
+                    />
                   </div>
                 </th>
                 <th className="py-2 px-3 text-left">User Details</th>
@@ -274,11 +278,11 @@ const Shippings = () => {
                     <td className="py-2 px-3">
                       <div className="flex justify-center items-center">
                         <input
-                        type="checkbox"
-                        checked={selectedOrders.includes(row._id)}
-                        onChange={() => handleCheckboxChange(row._id)}
-                        className="cursor-pointer accent-[#0CBB7D]"
-                      />
+                          type="checkbox"
+                          checked={selectedOrders.includes(row._id)}
+                          onChange={() => handleCheckboxChange(row._id)}
+                          className="cursor-pointer accent-[#0CBB7D]"
+                        />
                       </div>
                     </td>
                     <td className="py-2 px-3">
@@ -477,7 +481,7 @@ const Shippings = () => {
                                 <span className="text-gray-500 block mb-1">Dimensions (L x W x H)</span>
                                 <span className="font-bold">{row.packageDetails?.volumetricWeight?.length}x{row.packageDetails?.volumetricWeight?.width}x{row.packageDetails?.volumetricWeight?.height} cm</span>
                               </div>
-                              
+
                             </>
                           )}
                         </div>
@@ -521,6 +525,7 @@ const Shippings = () => {
         searchType={awb_number ? "awbNumber" : "orderId"}
         status={status}
         selectedCourier={selectedCourier}
+        courierOptions={courierOptions}
         onClearFilters={handleClearFilters}
         onApplyFilters={(filters) => {
           setSelectedUserId(filters.selectedUserId);

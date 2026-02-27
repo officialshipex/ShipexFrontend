@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Notification } from '../../../Notification';
+import { Clock } from 'lucide-react';
 
 const AddEDD = ({ show, onClose, existingServices = [] }) => {
   const [form, setForm] = useState({
@@ -119,7 +120,7 @@ const AddEDD = ({ show, onClose, existingServices = [] }) => {
           zoneE: Number(form.zoneE),
         }
       });
-      Notification("EDD Add Successfully.","success")
+      Notification("EDD Add Successfully.", "success")
       onClose();
       setForm({
         courier: '',
@@ -131,7 +132,7 @@ const AddEDD = ({ show, onClose, existingServices = [] }) => {
         zoneE: ''
       });
     } catch (err) {
-        Notification("Failed to add EDD","error")
+      Notification("Failed to add EDD", "error")
       setError(err.response?.data?.error || 'Failed to add EDD');
     } finally {
       setLoading(false);
@@ -143,9 +144,12 @@ const AddEDD = ({ show, onClose, existingServices = [] }) => {
   const selectedCourier = couriers.find(c => c.courierProvider === form.courier);
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50 p-4">
+    <div className="fixed inset-0 bg-black bg-opacity-50 animate-popup-in flex justify-center items-center z-50 p-4">
       <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-4 w-full max-w-lg relative space-y-4">
-        <h2 className="text-[14px] sm:text-[16px] font-[600] text-gray-700">Add Estimate Date and Time</h2>
+        <div className="flex items-center gap-2 mb-1">
+          <Clock className="w-4 h-4 text-[#0CBB7D]" />
+          <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">Add Estimate Date and Time</h2>
+        </div>
 
         {error && <p className="text-red-600 text-[10px] sm:text-[12px] font-[600]">{error}</p>}
 
@@ -156,7 +160,7 @@ const AddEDD = ({ show, onClose, existingServices = [] }) => {
             <button
               type="button"
               onClick={() => setOpenCourierDropdown((prev) => !prev)}
-              className="w-full border text-[10px] sm:text-[12px] font-[600] text-gray-500 border-gray-300 rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-2 focus:ring-green-500"
+              className="w-full border text-[10px] sm:text-[12px] font-[600] text-gray-500 border-gray-300 rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] transition-all"
             >
               {selectedCourier ? selectedCourier.courierProvider : 'Select Courier'}
             </button>
@@ -185,9 +189,8 @@ const AddEDD = ({ show, onClose, existingServices = [] }) => {
             <button
               type="button"
               onClick={() => setOpenServiceDropdown((prev) => !prev)}
-              className={`w-full border border-gray-300 text-gray-700 text-[10px] sm:text-[12px] font-[600] rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-2 focus:ring-green-500 ${
-                !form.courier ? 'opacity-50 cursor-not-allowed' : ''
-              }`}
+              className={`w-full border border-gray-300 text-gray-700 text-[10px] sm:text-[12px] font-[600] rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] transition-all ${!form.courier ? 'opacity-50 cursor-not-allowed' : ''
+                }`}
               disabled={!form.courier}
             >
               {form.serviceName || 'Select Courier Service'}
@@ -224,7 +227,7 @@ const AddEDD = ({ show, onClose, existingServices = [] }) => {
                 onChange={(e) => setForm((prev) => ({ ...prev, [zone]: e.target.value }))}
                 min="0"
                 step="any"
-                className="block w-full px-2 py-1 text-gray-700 rounded-lg border text-[10px] sm:text-[12px] border-gray-300 shadow-sm focus:ring-green-500 focus:border-green-500"
+                className="block w-full px-2 py-1 text-gray-700 rounded-lg border text-[10px] sm:text-[12px] border-gray-300 shadow-sm focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] transition-all outline-none"
               />
             </div>
           ))}
@@ -243,9 +246,8 @@ const AddEDD = ({ show, onClose, existingServices = [] }) => {
           <button
             type="submit"
             disabled={loading}
-            className={`px-3 py-2 text-[10px] sm:text-[12px] font-[600] rounded-lg text-white ${
-              loading ? 'bg-green-300 cursor-not-allowed' : 'bg-green-600 hover:bg-green-700'
-            } transition`}
+            className={`px-3 py-2 text-[10px] sm:text-[12px] font-[600] rounded-lg text-white ${loading ? 'bg-green-300 cursor-not-allowed' : 'bg-[#0CBB7D] hover:opacity-90'
+              } transition`}
           >
             {loading ? 'Saving...' : 'Save'}
           </button>

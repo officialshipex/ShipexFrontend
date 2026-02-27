@@ -127,7 +127,7 @@ const PackageDetails = ({
   // --------------------------
 
   return (
-    <div className="border mt-4 border-[#0CBB7D] rounded-lg p-4 bg-white">
+    <div className="border mt-2 border-[#0CBB7D] rounded-lg p-4 bg-white">
 
       {/* HEADER */}
       <h2 className="text-[14px] font-[600] flex items-center gap-2 text-gray-700 mb-2">
@@ -138,7 +138,7 @@ const PackageDetails = ({
       </h2>
 
       {/* PACKAGE TYPE + ROV TYPE */}
-      <div className="mb-4 relative flex sm:flex-row flex-col sm:items-center gap-2 package-dropdown">
+      <div className="mb-2 relative flex sm:flex-row flex-col sm:items-center gap-2 package-dropdown">
 
         {/* PACKAGE TYPE */}
         <div className="flex items-center gap-2">

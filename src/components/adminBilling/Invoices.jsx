@@ -1,13 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { ChevronDown, Filter } from "lucide-react";
+import { ChevronDown, Filter, Search } from "lucide-react";
 import ThreeDotLoader from "../../Loader"
 import { HiOutlineDownload } from "react-icons/hi";
 import NotFound from "../../assets/nodatafound.png"
 import PaginationFooter from "../../Common/PaginationFooter"
 import InvoicesFilterPanel from "../../Common/InvoicesFilterPanel";
-import UserFilter from "../../filter/UserFilter";
 import dayjs from "dayjs";
 import { FiCopy, FiCheck } from "react-icons/fi";
 import { FaBars } from "react-icons/fa";
@@ -173,16 +172,18 @@ const Invoices = () => {
     <div className="space-y-2">
       {/* Desktop Filter Section */}
       <div className="hidden md:flex gap-2 relative sm:items-center">
-        <div className="flex-1 max-w-[300px]">
-          <UserFilter
-            onUserSelect={(id) => {
-              setUserId(id);
-              setSelectedUserId(id);
-              setPage(1);
-            }}
-            clearTrigger={clearFilterFlag}
+        {/* Invoice No input — shown directly in bar */}
+        <div className="relative flex-1 max-w-[240px]">
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-gray-400 pointer-events-none" />
+          <input
+            type="text"
+            value={invoiceNumber}
+            onChange={(e) => { setInvoiceNumber(e.target.value); setPage(1); }}
+            placeholder="Search Invoice No."
+            className="w-full h-9 pl-8 pr-3 font-[600] text-[12px] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] bg-white text-gray-700 placeholder-gray-400 transition-all shadow-sm"
           />
         </div>
+
         <button
           onClick={() => setIsFilterPanelOpen(true)}
           className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-9"
@@ -233,21 +234,22 @@ const Invoices = () => {
       {/* Mobile Filter Section */}
       <div className="flex w-full flex-col md:hidden mb-2">
         <div className="flex items-center gap-2">
-          <div className="flex-1">
-            <UserFilter
-              onUserSelect={(id) => {
-                setUserId(id);
-                setSelectedUserId(id);
-                setPage(1);
-              }}
-              clearTrigger={clearFilterFlag}
+          {/* Invoice No input — shown directly in mobile bar */}
+          <div className="relative flex-1">
+            <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3 h-3 text-gray-400 pointer-events-none" />
+            <input
+              type="text"
+              value={invoiceNumber}
+              onChange={(e) => { setInvoiceNumber(e.target.value); setPage(1); }}
+              placeholder="Search Invoice No."
+              className="w-full h-[32px] pl-7 pr-2 text-[10px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] bg-white text-gray-700 placeholder-gray-400 transition-all shadow-sm"
             />
           </div>
           <button
             onClick={() => setIsFilterPanelOpen(true)}
-            className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm h-[32px] min-w-[100px]"
+            className="flex-shrink-0 flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm h-[32px] whitespace-nowrap"
           >
-            <Filter className="w-4 h-4 text-[#0CBB7D]" />
+            <Filter className="w-3.5 h-3.5 text-[#0CBB7D]" />
             More Filters
           </button>
         </div>
@@ -514,7 +516,6 @@ const Invoices = () => {
         isOpen={isFilterPanelOpen}
         onClose={() => setIsFilterPanelOpen(false)}
         selectedUserId={selectedUserId}
-        invoiceNumber={invoiceNumber}
         month={month}
         year={year}
         MONTHS={MONTHS}
@@ -522,7 +523,7 @@ const Invoices = () => {
         onClearFilters={clearFilters}
         onApplyFilters={(filters) => {
           setSelectedUserId(filters.selectedUserId || null);
-          setInvoiceNumber(filters.invoiceNumber || "");
+          setUserId(filters.selectedUserId || "");
           setMonth(filters.month || "");
           setYear(filters.year || "");
           setPage(1);

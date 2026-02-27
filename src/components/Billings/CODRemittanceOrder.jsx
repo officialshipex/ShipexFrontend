@@ -262,7 +262,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
               Clear All Filters
             </button>
           )}
-          <button onClick={() => setShowUpload(true)} disabled={!employeeAccess.canAction && !employeeAccess.isAdmin} className={`h-[36px] px-3 rounded-lg text-[12px] font-bold transition-all focus:scale-95 flex items-center justify-center gap-1 ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-[#0CBB7D] text-white hover:bg-opacity-90 shadow-sm" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}>
+          <button onClick={() => setShowUpload(true)} disabled={!employeeAccess.canAction && !employeeAccess.isAdmin} className={`h-9 px-3 rounded-lg text-[12px] font-bold transition-all focus:scale-95 flex items-center justify-center gap-1 ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-[#0CBB7D] text-white hover:bg-opacity-90 shadow-sm" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}>
             <Upload className="w-4 h-4" />
             Upload
           </button>
@@ -379,11 +379,11 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 <th className="py-2 px-3 text-left">User</th>
                 <th className="py-2 px-3">Remittance ID</th>
                 <th className="py-2 px-3">UTR</th>
-                <th className="py-2 px-3">COD Available</th>
-                <th className="py-2 px-3">Wallet Transfer</th>
-                <th className="py-2 px-3">Adjusted</th>
-                <th className="py-2 px-3">Early COD</th>
-                <th className="py-2 px-3">Remit Amount</th>
+                <th className="py-2 px-3">Total COD Amount</th>
+                <th className="py-2 px-3">Amount Credited to Wallet	</th>
+                <th className="py-2 px-3">Adjusted Amount</th>
+                <th className="py-2 px-3">Early COD Charges</th>
+                <th className="py-2 px-3">Remittance Amount</th>
                 <th className="py-2 px-3">Status</th>
               </tr>
             </thead>

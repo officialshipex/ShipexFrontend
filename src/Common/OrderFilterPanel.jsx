@@ -46,6 +46,10 @@ const OrderFilterPanel = ({
     const [showCourierDropdown, setShowCourierDropdown] = useState(false);
     const [userClearTrigger, setUserClearTrigger] = useState(false);
 
+    // Search state for dropdowns
+    const [pickupSearch, setPickupSearch] = useState("");
+    const [courierSearch, setCourierSearch] = useState("");
+
     const paymentRef = useRef(null);
     const pickupRef = useRef(null);
     const courierRef = useRef(null);
@@ -75,8 +79,14 @@ const OrderFilterPanel = ({
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (paymentRef.current && !paymentRef.current.contains(event.target)) setShowPaymentDropdown(false);
-            if (pickupRef.current && !pickupRef.current.contains(event.target)) setShowPickupDropdown(false);
-            if (courierRef.current && !courierRef.current.contains(event.target)) setShowCourierDropdown(false);
+            if (pickupRef.current && !pickupRef.current.contains(event.target)) {
+                setShowPickupDropdown(false);
+                setPickupSearch("");
+            }
+            if (courierRef.current && !courierRef.current.contains(event.target)) {
+                setShowCourierDropdown(false);
+                setCourierSearch("");
+            }
             if (searchRef.current && !searchRef.current.contains(event.target)) setShowSuggestions(false);
         };
         document.addEventListener("mousedown", handleClickOutside);
@@ -293,20 +303,38 @@ const OrderFilterPanel = ({
                             </button>
                             {showPickupDropdown && (
                                 <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-10 py-1 animate-popup-in max-h-60 overflow-y-auto">
-                                    {pickupAddresses.map((addr, idx) => {
-                                        const contactName = addr.contactName || addr.address;
-                                        const isSelected = localFilters.selectedPickupAddress.includes(contactName);
-                                        return (
-                                            <div
-                                                key={idx}
-                                                onClick={() => handleTogglePickup(contactName)}
-                                                className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors flex items-center gap-2"
-                                            >
-                                                <input type="checkbox" checked={isSelected} readOnly className="accent-[#0CBB7D] w-3 h-3" />
-                                                <span className="truncate">{contactName}</span>
-                                            </div>
-                                        );
-                                    })}
+                                    <div className="sticky top-0 bg-white px-2 py-1 border-b">
+                                        <input
+                                            type="text"
+                                            placeholder="Search pickup address..."
+                                            className="w-full px-2 py-1 text-[11px] border rounded focus:outline-none focus:border-[#0CBB7D]"
+                                            value={pickupSearch}
+                                            onChange={(e) => setPickupSearch(e.target.value)}
+                                            onClick={(e) => e.stopPropagation()}
+                                        />
+                                    </div>
+                                    {pickupAddresses
+                                        .filter(addr => {
+                                            const name = (addr.contactName || addr.address || "").toLowerCase();
+                                            return name.includes(pickupSearch.toLowerCase());
+                                        })
+                                        .map((addr, idx) => {
+                                            const contactName = addr.contactName || addr.address;
+                                            const isSelected = localFilters.selectedPickupAddress.includes(contactName);
+                                            return (
+                                                <div
+                                                    key={idx}
+                                                    onClick={() => handleTogglePickup(contactName)}
+                                                    className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors flex items-center gap-2"
+                                                >
+                                                    <input type="checkbox" checked={isSelected} readOnly className="accent-[#0CBB7D] w-3 h-3" />
+                                                    <span className="truncate">{contactName}</span>
+                                                </div>
+                                            );
+                                        })}
+                                    {pickupAddresses.filter(addr => (addr.contactName || addr.address || "").toLowerCase().includes(pickupSearch.toLowerCase())).length === 0 && (
+                                        <div className="px-3 py-2 text-[11px] text-gray-400 text-center italic">No address found</div>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -331,19 +359,34 @@ const OrderFilterPanel = ({
                                 </button>
                                 {showCourierDropdown && (
                                     <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-10 py-1 animate-popup-in max-h-60 overflow-y-auto">
-                                        {courierOptions.map((courier, idx) => {
-                                            const isSelected = localFilters.selectedCourier.includes(courier);
-                                            return (
-                                                <div
-                                                    key={idx}
-                                                    onClick={() => handleToggleCourier(courier)}
-                                                    className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors flex items-center gap-2"
-                                                >
-                                                    <input type="checkbox" checked={isSelected} readOnly className="accent-[#0CBB7D] w-3 h-3" />
-                                                    <span className="truncate">{courier}</span>
-                                                </div>
-                                            );
-                                        })}
+                                        <div className="sticky top-0 bg-white px-2 py-1 border-b">
+                                            <input
+                                                type="text"
+                                                placeholder="Search courier service ..."
+                                                className="w-full px-2 py-1 text-[11px] border rounded focus:outline-none focus:border-[#0CBB7D]"
+                                                value={courierSearch}
+                                                onChange={(e) => setCourierSearch(e.target.value)}
+                                                onClick={(e) => e.stopPropagation()}
+                                            />
+                                        </div>
+                                        {courierOptions
+                                            .filter(courier => (courier || "").toLowerCase().includes(courierSearch.toLowerCase()))
+                                            .map((courier, idx) => {
+                                                const isSelected = localFilters.selectedCourier.includes(courier);
+                                                return (
+                                                    <div
+                                                        key={idx}
+                                                        onClick={() => handleToggleCourier(courier)}
+                                                        className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors flex items-center gap-2"
+                                                    >
+                                                        <input type="checkbox" checked={isSelected} readOnly className="accent-[#0CBB7D] w-3 h-3" />
+                                                        <span className="truncate">{courier}</span>
+                                                    </div>
+                                                );
+                                            })}
+                                        {courierOptions.filter(courier => (courier || "").toLowerCase().includes(courierSearch.toLowerCase())).length === 0 && (
+                                            <div className="px-3 py-2 text-[11px] text-gray-400 text-center italic">No courier found</div>
+                                        )}
                                     </div>
                                 )}
                             </div>

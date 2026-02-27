@@ -1,21 +1,25 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-// import { toast } from "react-toastify";
 import StatusDropdown from "../StatusDropdown";
-import {Notification} from "../../../Notification"
+import { Notification } from "../../../Notification";
 
 const AmazonAdd = ({ onCourierSaved, canAction }) => {
-  const navigate = useNavigate();
   const [courierName, setCourierName] = useState("");
   const [codDays, setCodDays] = useState("");
   const [Status, setStatus] = useState("");
   const [apiKey, setApiKey] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   const handleSave = async () => {
+    if (!courierName || !codDays || !Status || !apiKey) {
+      Notification("Please fill all required fields", "info");
+      return;
+    }
+
     try {
+      setLoading(true);
       const newCourier = {
         courierName,
         courierProvider: "Amazon",
@@ -24,98 +28,76 @@ const AmazonAdd = ({ onCourierSaved, canAction }) => {
         credentials: { apiKey },
       };
 
-      const response = await axios.post(`${REACT_APP_BACKEND_URL}/Amazon/getToken`, newCourier);
-      onCourierSaved?.();
-      Notification(response.data.message,"success");
+      const response = await axios.post(`${REACT_APP_BACKEND_URL}/b2b/Amazon/getToken`, newCourier);
+      Notification(response.data.message || "B2B Amazon courier added successfully", "success");
 
       setCourierName("");
       setCodDays("");
       setApiKey("");
       setStatus("");
+      onCourierSaved?.();
     } catch (error) {
-      Notification(error?.response?.data?.message || "Something went wrong.","error");
+      console.error("B2B Amazon Save Error:", error);
+      Notification(error?.response?.data?.message || "Something went wrong.", "error");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="w-full">
-      {/* Desktop View */}
-      <div className="hidden md:flex gap-8">
-        <div>
-          <label className="font-[600] block text-[10px] md:text-[12px] text-gray-500">Courier Name</label>
+    <div className="w-full animate-fadeIn">
+      <div className="grid font-[600] grid-cols-2 xl:flex xl:flex-row items-start xl:items-end gap-2 w-full">
+        <div className="w-full xl:w-56 flex flex-col gap-1">
+          <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700 tracking-tight">Name</label>
           <input
             type="text"
-            className="w-72 px-3 text-[10px] md:text-[12px] text-gray-500 h-9 border focus:outline-none border-gray-300 rounded-lg"
+            placeholder="Amazon B2B"
+            className="w-full px-2 h-9 text-[10px] sm:text-[12px] text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] focus:ring-1 focus:ring-[#0CBB7D]/20 transition-all placeholder:text-gray-300"
             value={courierName}
             onChange={(e) => setCourierName(e.target.value)}
           />
         </div>
-        <div>
-          <label className="font-[600] block text-[10px] md:text-[12px] text-gray-500">COD Days</label>
+
+        <div className="w-full xl:w-20 flex flex-col gap-1">
+          <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700 tracking-tight">Days</label>
           <input
             type="number"
-            className="w-32 px-3 text-[10px] md:text-[12px] text-gray-500 h-9 border border-gray-300 rounded-lg focus:outline-none"
+            placeholder="0"
+            className="w-full px-2 h-9 text-[10px] sm:text-[12px] text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] focus:ring-1 focus:ring-[#0CBB7D]/20 transition-all placeholder:text-gray-300"
             value={codDays}
             onChange={(e) => setCodDays(e.target.value)}
           />
         </div>
-        <div>
+
+        <div className="w-full xl:w-32">
           <StatusDropdown Status={Status} setStatus={setStatus} />
         </div>
-      </div>
 
-      {/* Mobile View */}
-      <div className="md:hidden flex flex-col gap-4">
-        <div>
-          <label className="font-[600] block text-[10px] text-gray-500">Courier Name</label>
+        <div className="w-full xl:flex-1 flex flex-col gap-1">
+          <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700 tracking-tight">API Key</label>
           <input
             type="text"
-            className="w-full px-3 text-[12px] text-gray-500 h-9 border border-gray-300 rounded-lg focus:outline-none"
-            value={courierName}
-            onChange={(e) => setCourierName(e.target.value)}
-          />
-        </div>
-        <div className='flex gap-2 justify-between'>
-          <div className='w-full'>
-            <label className="font-[600] block text-[10px] text-gray-500">COD Days</label>
-            <input
-              type="number"
-              className="w-full px-3 text-[12px] text-gray-500 h-9 border border-gray-300 rounded-lg focus:outline-none"
-              value={codDays}
-              onChange={(e) => setCodDays(e.target.value)}
-            />
-          </div>
-          <div className='w-full'>
-            <StatusDropdown Status={Status} setStatus={setStatus} />
-          </div>
-        </div>
-      </div>
-
-      {/* Credentials Heading */}
-      <h2 className="text-[10px] md:text-[14px] font-[600] text-gray-700 mt-4 mb-2">Credentials</h2>
-
-      {/* Credentials Input - Shared */}
-      <div className="flex flex-col md:flex-row gap-4 md:gap-8">
-        <div className="w-full md:w-72">
-          <label className="font-[600] text-[10px] sm:text-[12px] text-gray-500">API Key <span className="text-red-600">*</span></label>
-          <input
-            type="email"
-            className="w-full px-3 text-[12px] text-gray-500 h-9 border border-gray-300 rounded-lg focus:outline-none"
             placeholder="Enter API Key"
+            className="w-full px-2 h-9 text-[10px] sm:text-[12px] text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] focus:ring-1 focus:ring-[#0CBB7D]/20 transition-all placeholder:text-gray-300"
             value={apiKey}
             onChange={(e) => setApiKey(e.target.value)}
           />
         </div>
-      </div>
 
-      {/* Save Button */}
-      <button
-        className={`bg-[#0CBB7D] text-white py-2 px-4 text-[12px] rounded mt-4 ${!canAction ? "opacity-50 cursor-not-allowed" : ""}`}
-        onClick={handleSave}
-        disabled={!canAction}
-      >
-        Save Courier
-      </button>
+        <button
+          onClick={handleSave}
+          disabled={!canAction || loading}
+          className={`h-9 px-4 xl:px-8 rounded-lg text-[11px] font-[700] transition-all flex items-center justify-center gap-2 whitespace-nowrap min-w-[120px] col-span-2 xl:col-span-1 ${canAction && !loading
+            ? "bg-[#0CBB7D] text-white hover:bg-[#0aa66e] active:scale-[0.98] shadow-sm"
+            : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
+            }`}
+        >
+          {loading ? (
+            <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+          ) : null}
+          {loading ? "Saving..." : "Save"}
+        </button>
+      </div>
     </div>
   );
 };

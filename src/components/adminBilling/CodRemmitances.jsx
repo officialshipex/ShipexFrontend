@@ -329,11 +329,22 @@ const CodRemittances = () => {
                         />
                       </div>
                     </td>
-                    <td className="py-2 px-3 text-gray-700">
-                      <p className="text-[#0CBB7D] font-medium">{row.user?.userId}</p>
-                      <p className="font-medium">{row.user?.name}</p>
-                      <p className="text-gray-500">{row.user?.email}</p>
-                      <p className="text-gray-500">{row.user?.phoneNumber}</p>
+                    <td className="py-2 px-3 text-gray-700 w-[180px] max-w-[180px]">
+                      <p className="text-[#0CBB7D] font-medium truncate">
+                        {row.user?.userId}
+                      </p>
+
+                      <p className="font-medium truncate">
+                        {row.user?.name}
+                      </p>
+
+                      <p className="text-gray-500 truncate">
+                        {row.user?.email}
+                      </p>
+
+                      <p className="text-gray-500 truncate">
+                        {row.user?.phoneNumber}
+                      </p>
                     </td>
                     <td className="py-2 px-3">
                       <p>{dayjs(row.date).format("DD MMM YYYY")}</p>
@@ -435,10 +446,10 @@ const CodRemittances = () => {
                     <div className="flex flex-col">
                       <div className="flex items-center gap-2">
                         <div className="flex flex-col">
-                          <span className="text-gray-400 text-[8px] font-bold uppercase leading-none">Remittance ID</span>
+                          {/* <span className="text-gray-400 text-[8px] font-bold uppercase leading-none">Remittance ID</span> */}
                           <div className="flex items-center gap-1 group">
-                            <span className="font-[600] text-[#0CBB7D] text-[10px] hover:underline cursor-pointer" onClick={() => openRemittanceDetails(row.remittanceId)}>
-                              #{row.remittanceId}
+                            <span className="font-[600] text-gray-700 text-[10px] hover:underline cursor-pointer" onClick={() => openRemittanceDetails(row.remittanceId)}>
+                              Remmitance Id : <span className="font-bold text-[#0CBB7D]">{row.remittanceId}</span>
                             </span>
                             <button onClick={() => handleCopy(row.remittanceId, row.remittanceId + '_remId_mob')}>
                               {copiedId === row.remittanceId + '_remId_mob' ? <FiCheck className="w-2.5 h-2.5 text-green-500" /> : <FiCopy className="w-2.5 h-2.5 text-gray-300" />}
@@ -449,15 +460,15 @@ const CodRemittances = () => {
                           {row.status}
                         </span>
                       </div>
-                      <span className="text-gray-400 text-[10px] mt-0.5">{dayjs(row.date).format("DD MMM YYYY")}</span>
+                      <span className="text-gray-500 text-[10px]">{dayjs(row.date).format("DD MMM YYYY")}</span>
                     </div>
                   </div>
                   <div className="text-right flex flex-col items-end">
                     <div className="flex flex-col items-end">
-                      <span className="text-gray-400 text-[8px] font-bold uppercase leading-none">Amount</span>
+                      {/* <span className="text-gray-400 text-[8px] font-bold uppercase leading-none">Amount</span> */}
                       <p className="font-bold text-[#0CBB7D] text-[10px] tracking-tight">₹{row.remittanceInitiated?.toFixed(2)}</p>
                       <p
-                        className="text-[9px] text-[#0CBB7D] font-bold border-b border-dashed border-[#0CBB7D] cursor-pointer hover:opacity-80 mt-0.5"
+                        className="text-[9px] text-[#0CBB7D] font-bold border-b border-dashed border-[#0CBB7D] cursor-pointer hover:opacity-80"
                         onClick={() => setDetailsPopupId(detailsPopupId === row.remittanceId ? null : row.remittanceId)}
                       >
                         Details

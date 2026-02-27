@@ -2,18 +2,33 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import { toast } from "react-toastify";
 import Cookies from "js-cookie";
-import {Notification} from "../Notification"
+import { Notification } from "../Notification"
 
-const AddReceiverAddress = ({ setReceiverAddress, setRefresh }) => {
+const AddReceiverAddress = ({ setReceiverAddress, setRefresh, initialData }) => {
   const [formData, setFormData] = useState({
-    contactName: "",
-    email: "",
-    phoneNumber: "",
-    address: "",
-    pinCode: "",
-    city: "",
-    state: "",
+    contactName: initialData?.contactName || "",
+    email: initialData?.email || "",
+    phoneNumber: initialData?.phoneNumber || "",
+    address: initialData?.address || "",
+    pinCode: initialData?.pinCode || "",
+    city: initialData?.city || "",
+    state: initialData?.state || "",
   });
+
+  useEffect(() => {
+    if (initialData) {
+      const data = initialData.data || initialData;
+      setFormData({
+        contactName: data.contactName || "",
+        email: data.email || "",
+        phoneNumber: data.phoneNumber || "",
+        address: data.address || "",
+        pinCode: data.pinCode || "",
+        city: data.city || "",
+        state: data.state || "",
+      });
+    }
+  }, [initialData]);
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -25,7 +40,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh }) => {
       const cleanedPhone = value.replace(/\D/g, ""); // Remove non-digit characters
 
       if (cleanedPhone.length > 10) {
-        Notification("Phone number must be exactly 10 digits.","info");
+        Notification("Phone number must be exactly 10 digits.", "info");
         return;
       }
 
@@ -51,7 +66,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh }) => {
 
     // Allow only digits
     if (!/^\d*$/.test(enteredPincode)) {
-      Notification("Pincode must contain only digits.","info");
+      Notification("Pincode must contain only digits.", "info");
       return;
     }
 
@@ -63,7 +78,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh }) => {
 
     // Validate length
     if (enteredPincode.length > 6) {
-      Notification("Pincode must be exactly 6 digits.","info");
+      Notification("Pincode must be exactly 6 digits.", "info");
       return;
     }
 
@@ -71,7 +86,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh }) => {
       try {
         const token = Cookies.get("session");
         if (!token) {
-          Notification("No authentication token found.","error");
+          Notification("No authentication token found.", "error");
           return;
         }
 
@@ -94,11 +109,11 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh }) => {
             city: "",
             state: "",
           }));
-          Notification("Pincode not found!","error");
+          Notification("Pincode not found!", "error");
         }
       } catch (error) {
         console.error("Error fetching city and state:", error);
-        Notification("Pincode not found!","error");
+        Notification("Pincode not found!", "error");
         setFormData((prevData) => ({
           ...prevData,
           city: "",
@@ -130,7 +145,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh }) => {
               value={formData.contactName}
               onChange={handleChange}
               placeholder="Enter Contact Name"
-             className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-[#0CBB7D]"
               required
             />
           </div>
@@ -144,7 +159,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh }) => {
               value={formData.email}
               onChange={handleChange}
               placeholder="receiver.contact@shipex.in"
-          className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-[#0CBB7D]"
               required
             />
           </div>
@@ -158,7 +173,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh }) => {
               value={formData.phoneNumber}
               onChange={handleChange}
               placeholder="Enter Phone Number"
-            className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-[#0CBB7D]"
               required
             />
           </div>
@@ -172,7 +187,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh }) => {
               value={formData.address}
               onChange={handleChange}
               placeholder="Enter Address"
-             className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-[#0CBB7D]"
               required
             />
           </div>
@@ -186,7 +201,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh }) => {
               value={formData.pinCode}
               onChange={handlePincodeChange}
               placeholder="Enter Pincode"
-             className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px] outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px] outline-none focus:ring-1 focus:ring-[#0CBB7D]"
               required
             />
           </div>

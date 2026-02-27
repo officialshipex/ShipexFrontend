@@ -20,6 +20,7 @@ const OrderRowActions = ({
     setRefresh,
     handleClone,
     handleScheduledPickup,
+    handleUpdateOrder,
     setDropdownOpen = () => { },
     renderOnly = "both" // "both", "action", "dropdown"
 }) => {
@@ -64,7 +65,7 @@ const OrderRowActions = ({
             label: "Clone Order",
             className: "sm:bg-[#0CBB7D] bg-white text-[#0CBB7D] sm:text-white sm:border-0 border border-[#0CBB7D]",
             onClick: () =>
-                handleClone ? handleClone(order._id, setRefresh) : null
+                handleClone ? handleClone(order._id, navigate) : null
         },
     });
 
@@ -123,7 +124,7 @@ const OrderRowActions = ({
                             toggleDropdown(index);
                         }}
                     >
-                        <FiMoreHorizontal size={16} className={isOpen ? "text-[#0CBB7D]" : "text-gray-700"}/>
+                        <FiMoreHorizontal size={16} className={isOpen ? "text-[#0CBB7D]" : "text-gray-700"} />
                     </button>
 
                     {isOpen && position && createPortal(
@@ -194,6 +195,35 @@ const OrderRowActions = ({
                                             className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer transition-colors"
                                         >
                                             Download Manifest
+                                        </li>
+                                    )}
+
+                                    {/* Clone Order logic */}
+                                    {handleClone && (
+                                        <li
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                const userId = order.userId?._id || order.userId;
+                                                handleClone(order._id, navigate, userId);
+                                                setDropdownOpen(null);
+                                            }}
+                                            className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer transition-colors"
+                                        >
+                                            Clone Order
+                                        </li>
+                                    )}
+
+                                    {/* Update Order logic - only for new orders */}
+                                    {isNewOrder && handleUpdateOrder && (
+                                        <li
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleUpdateOrder(order);
+                                                setDropdownOpen(null);
+                                            }}
+                                            className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer transition-colors"
+                                        >
+                                            Update Order
                                         </li>
                                     )}
 

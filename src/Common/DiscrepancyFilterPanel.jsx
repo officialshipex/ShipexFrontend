@@ -46,12 +46,22 @@ const DiscrepancyFilterPanel = ({
         }
     }, [isOpen, initialSearchInput, initialSearchType, initialSelectedCourier, initialStatus]);
 
+    const [courierSearch, setCourierSearch] = useState("");
+
+    useEffect(() => {
+        if (!isOpen) {
+            setCourierSearch("");
+        }
+    }, [isOpen]);
+
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (searchTypeRef.current && !searchTypeRef.current.contains(event.target))
                 setShowSearchTypeDropdown(false);
-            if (courierRef.current && !courierRef.current.contains(event.target))
+            if (courierRef.current && !courierRef.current.contains(event.target)) {
                 setShowCourierDropdown(false);
+                setCourierSearch("");
+            }
             if (statusRef.current && !statusRef.current.contains(event.target))
                 setShowStatusDropdown(false);
         };
@@ -68,8 +78,10 @@ const DiscrepancyFilterPanel = ({
     const handleClear = () => {
         const cleared = { searchInput: "", searchType: "awbNumber", selectedCourier: [], status: "" };
         setLocalFilters(cleared);
+        setCourierSearch("");
         onClearFilters();
     };
+
 
     const handleToggleCourier = (courier) => {
         const current = localFilters.selectedCourier;
@@ -79,6 +91,10 @@ const DiscrepancyFilterPanel = ({
             setLocalFilters({ ...localFilters, selectedCourier: [...current, courier] });
         }
     };
+
+    const filteredCouriers = courierOptions.filter(courier =>
+        (courier || "").toLowerCase().includes(courierSearch.toLowerCase())
+    );
 
     const fieldStyle =
         "w-full h-[36px] px-3 text-[12px] font-[600] border rounded-lg focus:outline-none text-left flex items-center justify-between transition-all";
@@ -220,8 +236,18 @@ const DiscrepancyFilterPanel = ({
                             </button>
                             {showCourierDropdown && (
                                 <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-20 py-1 animate-popup-in max-h-56 overflow-y-auto">
-                                    {courierOptions.length > 0 ? (
-                                        courierOptions.map((courier) => {
+                                    <div className="sticky top-0 bg-white px-2 py-1 border-b z-10">
+                                        <input
+                                            type="text"
+                                            placeholder="Search courier service ..."
+                                            className="w-full px-2 py-1 text-[11px] border rounded focus:outline-none focus:border-[#0CBB7D]"
+                                            value={courierSearch}
+                                            onChange={(e) => setCourierSearch(e.target.value)}
+                                            onClick={(e) => e.stopPropagation()}
+                                        />
+                                    </div>
+                                    {filteredCouriers.length > 0 ? (
+                                        filteredCouriers.map((courier) => {
                                             const isSelected = localFilters.selectedCourier.includes(courier);
                                             return (
                                                 <div
@@ -241,7 +267,7 @@ const DiscrepancyFilterPanel = ({
                                         })
                                     ) : (
                                         <div className="px-3 py-3 text-[12px] text-gray-400 text-center">
-                                            No courier services available
+                                            No courier services found
                                         </div>
                                     )}
                                 </div>

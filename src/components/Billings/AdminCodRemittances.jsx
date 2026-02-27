@@ -277,7 +277,7 @@ const AdminCodRemittances = ({ isSidebarAdmin }) => {
               Clear All Filters
             </button>
           )}
-          <button onClick={() => setUpload(true)} className="h-[36px] px-3 rounded-lg text-[12px] font-bold bg-[#0CBB7D] text-white hover:bg-opacity-90 shadow-sm transition-all focus:scale-95 flex items-center justify-center gap-1">
+          <button onClick={() => setUpload(true)} className="h-9 px-3 rounded-lg text-[12px] font-bold bg-[#0CBB7D] text-white hover:bg-opacity-90 shadow-sm transition-all focus:scale-95 flex items-center justify-center gap-1">
             <Upload className="w-4 h-4" />
             Upload
           </button>

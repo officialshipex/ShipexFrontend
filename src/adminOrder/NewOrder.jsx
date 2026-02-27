@@ -18,11 +18,16 @@ import {
   handleBulkDownloadInvoice,
   ExportExcel,
   handleManifest,
-  handleBulkDownloadManifests
+  handleBulkDownloadManifests,
+  handleClone,
+  SavePackageDetails,
+  BulkCancel
 } from "../Common/orderActions";
 import OrdersTable from "../Common/OrdersTable";
 import MobileOrderCard from "../Common/MobileOrderCard";
 import NotFound from "../assets/nodatafound.png";
+import SelectPickupPopup from "../Order/SelectPickupPopup";
+import UpdatePackageDetails from "../Order/UpdatePackageDetails";
 
 const NewOrder = (filterOrder) => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -58,6 +63,17 @@ const NewOrder = (filterOrder) => {
   const [dropdownDirection, setDropdownDirection] = useState({});
   const navigate = useNavigate();
   const location = useLocation();
+
+  const [showBulkShipModal, setShowBulkShipModal] = useState(false);
+  const [selectedData, setSelectedData] = useState([]);
+  const [title, setTitle] = useState("");
+  const [showPackageModal, setShowPackageModal] = useState(false);
+  const [packageDetails, setPackageDetails] = useState({
+    length: "",
+    width: "",
+    height: "",
+    weight: "",
+  });
 
   const [selectedUserId, setSelectedUserId] = useState(new URLSearchParams(location.search).get("userId"));
 
@@ -144,6 +160,12 @@ const NewOrder = (filterOrder) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
   };
 
+  const handleUpdateOrder = (order) => {
+    const orderUserId = order.userId?._id || order.userId;
+    const url = `/dashboard/order/neworder?updateId=${order._id}${orderUserId ? `&userId=${orderUserId}` : ''}`;
+    navigate(url);
+  };
+
   const handleSelectAll = () => {
     if (selectedOrders.length === orders.length) setSelectedOrders([]);
     else setSelectedOrders(orders.map(o => o._id));
@@ -164,6 +186,56 @@ const NewOrder = (filterOrder) => {
     setDateRange([{ startDate: null, endDate: null, key: "selection" }]);
     setPage(1);
     setRefresh(prev => !prev);
+  };
+
+  const validateSameUser = () => {
+    const selectedFullOrders = orders.filter(o => selectedOrders.includes(o._id));
+    if (selectedFullOrders.length === 0) return false;
+
+    const firstUserId = selectedFullOrders[0].userId?._id || selectedFullOrders[0].userId;
+    const sameUser = selectedFullOrders.every(o => (o.userId?._id || o.userId) === firstUserId);
+
+    if (!sameUser) {
+      Notification("Bulk action only allowed for orders of the same user.", "error");
+      return false;
+    }
+    return true;
+  };
+
+  const handleBulkShip = async () => {
+    if (!selectedOrders || selectedOrders.length < 2) {
+      Notification("Please select at least 2 orders to create a bulk shipment.", "info");
+      return;
+    }
+
+    if (!validateSameUser()) return;
+
+    try {
+      const token = Cookies.get("session");
+      const checkResponse = await axios.get(`${REACT_APP_BACKEND_URL}/order/checkBulkPickup`, {
+        params: { orderIds: selectedOrders },
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      const { showPopup, orders: popupOrders } = checkResponse.data;
+      if (!showPopup) {
+        Notification("Processing bulk shipment. Please wait...", "success");
+        const shipResponse = await axios.post(`${REACT_APP_BACKEND_URL}/bulk/create-bulk-order`, { selectedOrders }, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        if (shipResponse.data.success) {
+          Notification(shipResponse.data.message || "Bulk shipment successful.", "success");
+        } else {
+          Notification(shipResponse.data.message || "Failed to create bulk shipment.", "error");
+        }
+        fetchOrders();
+        return;
+      }
+      setTitle("Bulk Ship");
+      setShowBulkShipModal(true);
+      setSelectedData(popupOrders);
+    } catch (error) {
+      Notification("Something went wrong while processing bulk shipment.", "error");
+    }
   };
 
   return (
@@ -214,12 +286,41 @@ const NewOrder = (filterOrder) => {
               <div className="absolute right-0 mt-1 w-48 text-[10px] bg-white border border-gray-200 shadow-sm z-[60] font-[600] overflow-hidden animate-popup-in">
                 <ul className="py-1">
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
+                    onClick={() => { handleBulkShip(); setDesktopDropdownOpen(false); }}>
+                    Bulk Ship
+                  </li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
+                    onClick={() => {
+                      if (validateSameUser()) {
+                        setShowPackageModal(true);
+                      }
+                      setDesktopDropdownOpen(false);
+                    }}>
+                    Update Package Details
+                  </li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
+                    onClick={() => {
+                      if (validateSameUser()) {
+                        const fullOrders = orders.filter(o => selectedOrders.includes(o._id));
+                        setSelectedData(fullOrders);
+                        setTitle("Update Address");
+                        setShowBulkShipModal(true);
+                      }
+                      setDesktopDropdownOpen(false);
+                    }}>
+                    Update Pickup Address
+                  </li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
                     onClick={() => { ExportExcel({ selectedOrders, orders }); setDesktopDropdownOpen(false); }}>
                     Export Excel
                   </li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
                     onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setDesktopDropdownOpen(false); }}>
                     Download Invoices
+                  </li>
+                  <li className="px-3 py-2 text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2"
+                    onClick={() => { BulkCancel({ selectedOrders, setRefresh }); setDesktopDropdownOpen(false); }}>
+                    Bulk Delete
                   </li>
                 </ul>
               </div>
@@ -247,10 +348,12 @@ const NewOrder = (filterOrder) => {
             handleInvoice={handleInvoice}
             handleLabel={handleLabel}
             handleManifest={handleManifest}
+            handleClone={handleClone}
             refresh={refresh}
             setRefresh={setRefresh}
             showShippingDetails={false}
             showUserDetails={true} // 👈 Admin view
+            handleUpdateOrder={handleUpdateOrder}
           />
         </div>
         <PaginationFooter page={page} totalPages={totalPages} setPage={setPage} limit={limit} setLimit={setLimit} />
@@ -279,8 +382,23 @@ const NewOrder = (filterOrder) => {
             {mobileDropdownOpen && (
               <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-sm z-[60] text-[10px] font-[600] overflow-hidden animate-popup-in">
                 <ul className="py-1">
+                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkShip(); setMobileDropdownOpen(false); }}>Bulk Ship</li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { if (validateSameUser()) setShowPackageModal(true); setMobileDropdownOpen(false); }}>Update Package Details</li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer"
+                    onClick={() => {
+                      if (validateSameUser()) {
+                        const fullOrders = orders.filter(o => selectedOrders.includes(o._id));
+                        setSelectedData(fullOrders);
+                        setTitle("Update Address");
+                        setShowBulkShipModal(true);
+                      }
+                      setMobileDropdownOpen(false);
+                    }}>
+                    Update Pickup Address
+                  </li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { ExportExcel({ selectedOrders, orders }); setMobileDropdownOpen(false); }}>Export Excel</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Invoices</li>
+                  <li className="px-3 py-2 text-red-600 hover:bg-red-50 cursor-pointer" onClick={() => { BulkCancel({ selectedOrders, setRefresh }); setMobileDropdownOpen(false); }}>Bulk Delete</li>
                 </ul>
               </div>
             )}
@@ -306,11 +424,13 @@ const NewOrder = (filterOrder) => {
                 handleInvoice={handleInvoice}
                 handleLabel={handleLabel}
                 handleManifest={handleManifest}
+                handleClone={handleClone}
                 refresh={refresh}
                 setRefresh={setRefresh}
                 navigate={navigate}
                 showShippingDetails={false}
                 showUserDetails={true} // 👈 Admin view
+                handleUpdateOrder={handleUpdateOrder}
               />
             ))
           ) : (
@@ -350,7 +470,47 @@ const NewOrder = (filterOrder) => {
         showAwb={false}
         showCourier={false}
         showUserSearch={true} // 👈 Admin view
+        showUser={true}
       />
+
+      <UpdatePackageDetails
+        isOpen={showPackageModal} onClose={() => setShowPackageModal(false)}
+        onSave={details => SavePackageDetails({ details, selectedOrders, setRefresh, refresh })}
+        packageDetails={packageDetails} setPackageDetails={setPackageDetails}
+      />
+
+      {showBulkShipModal && (
+        <SelectPickupPopup
+          onClose={() => setShowBulkShipModal(false)}
+          setSelectedData={selectedData}
+          title={title}
+          setRefresh={setRefresh}
+          refresh={refresh}
+          userId={selectedData?.[0]?.userId?._id || selectedData?.[0]?.userId}
+          onPickupSelected={async (formData) => {
+            if (title !== "Bulk Ship") {
+              setRefresh(prev => !prev);
+              setShowBulkShipModal(false);
+              return;
+            }
+            try {
+              setShowBulkShipModal(false);
+              Notification("Processing bulk shipment. Please wait...", "info");
+              const token = Cookies.get("session");
+              const shipResponse = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/bulk/create-bulk-order`, { selectedOrders, wh: formData }, {
+                headers: { Authorization: `Bearer ${token}` }
+              });
+              if (shipResponse.data.success) Notification(shipResponse.data.message || `${shipResponse.data.successCount} orders shipped.`, "success");
+              else Notification(shipResponse.data.message || "Failed to create bulk shipment.", "error");
+              fetchOrders();
+            } catch (error) {
+              Notification("Something went wrong while processing bulk shipment.", "error");
+            } finally {
+              setShowBulkShipModal(false);
+            }
+          }}
+        />
+      )}
     </div>
   );
 };

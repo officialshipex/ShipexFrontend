@@ -18,7 +18,9 @@ import {
   handleBulkDownloadInvoice,
   ExportExcel,
   handleManifest,
-  handleBulkDownloadManifests
+  handleBulkDownloadManifests,
+  handleClone,
+  handleBulkClone
 } from "../Common/orderActions";
 import OrdersTable from "../Common/OrdersTable";
 import MobileOrderCard from "../Common/MobileOrderCard";
@@ -218,6 +220,10 @@ const CancelledOrders = (filterOrder) => {
                     Export Excel
                   </li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
+                    onClick={() => { handleBulkClone({ selectedOrders, setRefresh }); setDesktopDropdownOpen(false); }}>
+                    Bulk Clone
+                  </li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
                     onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setDesktopDropdownOpen(false); }}>
                     Download Invoices
                   </li>
@@ -247,6 +253,7 @@ const CancelledOrders = (filterOrder) => {
             handleInvoice={handleInvoice}
             handleLabel={handleLabel}
             handleManifest={handleManifest}
+            handleClone={handleClone}
             refresh={refresh}
             setRefresh={setRefresh}
             showShippingDetails={true}
@@ -281,6 +288,7 @@ const CancelledOrders = (filterOrder) => {
                 <ul className="py-1">
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { ExportExcel({ selectedOrders, orders }); setMobileDropdownOpen(false); }}>Export Excel</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Invoices</li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkClone({ selectedOrders, setRefresh }); setMobileDropdownOpen(false); }}>Bulk Clone</li>
                 </ul>
               </div>
             )}
@@ -306,6 +314,7 @@ const CancelledOrders = (filterOrder) => {
                 handleInvoice={handleInvoice}
                 handleLabel={handleLabel}
                 handleManifest={handleManifest}
+                handleClone={handleClone}
                 refresh={refresh}
                 setRefresh={setRefresh}
                 navigate={navigate}

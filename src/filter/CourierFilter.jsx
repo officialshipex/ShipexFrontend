@@ -27,6 +27,18 @@ const CourierFilter = ({
     return selectedCourier.join(", ");
   };
 
+  const [searchTerm, setSearchTerm] = React.useState("");
+
+  React.useEffect(() => {
+    if (!showDropdown) {
+      setSearchTerm("");
+    }
+  }, [showDropdown]);
+
+  const filteredOptions = courierOptions.filter((c) =>
+    (c || "").toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className={`relative w-full ${width}`} ref={dropdownRef}>
       <button
@@ -46,8 +58,18 @@ const CourierFilter = ({
       {showDropdown && (
         <div className="absolute w-full bg-white border border-gray-100 rounded-lg shadow-xl z-[110]
                         max-h-60 overflow-y-auto mt-1 py-1 animate-popup-in">
-          {courierOptions.length > 0 ? (
-            courierOptions.map((courier, idx) => {
+          <div className="sticky top-0 bg-white px-2 py-1 border-b z-10">
+            <input
+              type="text"
+              placeholder="Search courier service ..."
+              className="w-full px-2 py-1 text-[11px] border rounded focus:outline-none focus:border-[#0CBB7D]"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              onClick={(e) => e.stopPropagation()}
+            />
+          </div>
+          {filteredOptions.length > 0 ? (
+            filteredOptions.map((courier, idx) => {
               const isSelected = selectedCourier.includes(courier);
               return (
                 <div

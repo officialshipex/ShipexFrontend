@@ -1,17 +1,16 @@
 import { useState, useRef, useEffect } from "react";
-import { FaChevronDown } from "react-icons/fa";
+import { ChevronDown } from "lucide-react";
 
-const StatusDropdown = ({ Status, setStatus }) => {
-  const [open, setOpen] = useState(false);
+const StatusDropdown = ({ Status, setStatus, label = "Status" }) => {
+  const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const options = ["Enable", "Disable"];
 
-  // Close dropdown if clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setOpen(false);
+        setIsOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -19,28 +18,35 @@ const StatusDropdown = ({ Status, setStatus }) => {
   }, []);
 
   return (
-    <div className="relative sm:w-32 w-full" ref={dropdownRef}>
-      <label className="font-[600] block text-[10px] md:text-[12px] text-gray-500">Status</label>
-      <button
-        onClick={() => setOpen((prev) => !prev)}
-        className="w-full p-2 border-2 rounded-lg flex font-[400] text-gray-500 justify-between items-center text-[12px] focus:outline-none bg-white"
-      >
-        {Status || "Select"}
-        <FaChevronDown className="ml-2 text-[12px] text-gray-500" />
-      </button>
+    <div className="relative w-full flex flex-col gap-1" ref={dropdownRef}>
+      {label && (
+        <label className="block text-[10px] sm:text-[12px] font-[600] text-gray-700 tracking-tight">
+          {label}
+        </label>
+      )}
 
-      {open && (
-        <ul className="absolute z-10 mt-1 bg-white border text-gray-500 border-gray-200 rounded-lg shadow-md w-full text-[12px]">
+      <div
+        onClick={() => setIsOpen(!isOpen)}
+        className={`bg-white cursor-pointer px-2 h-9 border rounded-lg font-[600] flex justify-between items-center transition-all ${isOpen ? "border-[#0CBB7D] ring-1 ring-[#0CBB7D]/20" : "border-gray-200"}`}
+      >
+        <span className={`truncate text-[10px] sm:text-[12px] ${Status ? "text-gray-700" : "text-gray-300"}`}>
+          {Status || "Select"}
+        </span>
+        <ChevronDown
+          className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180 text-[#0CBB7D]" : ""}`}
+        />
+      </div>
+
+      {isOpen && (
+        <ul className="absolute z-[70] top-full left-0 w-full bg-white border border-gray-100 mt-1 rounded-lg shadow-lg max-h-56 overflow-y-auto animate-popup-in py-1">
           {options.map((option) => (
             <li
               key={option}
               onClick={() => {
                 setStatus(option);
-                setOpen(false);
+                setIsOpen(false);
               }}
-              className={`px-3 py-2 cursor-pointer hover:bg-green-50 ${
-                Status === option ? "bg-[#e9d5ff] font-semibold text-[#7c3aed]" : ""
-              }`}
+              className={`px-3 py-2 text-[10px] sm:text-[12px] transition-colors cursor-pointer ${Status === option ? "bg-green-50 text-[#0CBB7D]" : "text-gray-600 hover:bg-gray-50"}`}
             >
               {option}
             </li>

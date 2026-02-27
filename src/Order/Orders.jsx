@@ -191,6 +191,12 @@ const Orders = (filterOrder) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
   };
 
+  const handleUpdateOrder = (order) => {
+    const orderUserId = order.userId?._id || order.userId;
+    const url = `/dashboard/order/neworder?updateId=${order._id}${orderUserId ? `&userId=${orderUserId}` : ''}`;
+    navigate(url);
+  };
+
   const handleSelectAll = () => {
     if (selectedOrders.length === orders.length) setSelectedOrders([]);
     else setSelectedOrders(orders.map(o => o._id));
@@ -298,7 +304,13 @@ const Orders = (filterOrder) => {
                     Update Package Details
                   </li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
-                    onClick={() => { setTitle("Update Address"); setShowBulkShipModal(true); setDesktopDropdownOpen(false); }}>
+                    onClick={() => {
+                      const fullOrders = orders.filter(o => selectedOrders.includes(o._id));
+                      setSelectedData(fullOrders);
+                      setTitle("Update Address");
+                      setShowBulkShipModal(true);
+                      setDesktopDropdownOpen(false);
+                    }}>
                     Update Pickup Address
                   </li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
@@ -342,6 +354,7 @@ const Orders = (filterOrder) => {
             setRefresh={setRefresh}
             handleClone={handleClone}
             showShippingDetails={false}
+            handleUpdateOrder={handleUpdateOrder}
           />
         </div>
       </div>
@@ -371,7 +384,16 @@ const Orders = (filterOrder) => {
                 <ul className="py-1">
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkShip(); setMobileDropdownOpen(false); }}>Bulk Ship</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { setShowPackageModal(true); setMobileDropdownOpen(false); }}>Update Package Details</li>
-                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { setTitle("Update Address"); setShowBulkShipModal(true); setMobileDropdownOpen(false); }}>Update Pickup Address</li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer"
+                    onClick={() => {
+                      const fullOrders = orders.filter(o => selectedOrders.includes(o._id));
+                      setSelectedData(fullOrders);
+                      setTitle("Update Address");
+                      setShowBulkShipModal(true);
+                      setMobileDropdownOpen(false);
+                    }}>
+                    Update Pickup Address
+                  </li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { ExportExcel({ selectedOrders, orders }); setMobileDropdownOpen(false); }}>Export Excel</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Invoices</li>
                   {/* <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer text-[10px] font-medium" onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Labels</li> */}
@@ -405,6 +427,7 @@ const Orders = (filterOrder) => {
                 handleClone={handleClone}
                 navigate={navigate}
                 showShippingDetails={false}
+                handleUpdateOrder={handleUpdateOrder}
               />
             ))
 
@@ -458,7 +481,7 @@ const Orders = (filterOrder) => {
       {showBulkShipModal && (
         <SelectPickupPopup
           onClose={() => setShowBulkShipModal(false)}
-          setSelectedData={selectedOrders}
+          setSelectedData={selectedData}
           title={title}
           setRefresh={setRefresh}
           refresh={refresh}

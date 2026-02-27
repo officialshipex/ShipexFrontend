@@ -37,6 +37,7 @@ const OrdersTable = ({
     onViewNdrHistory,
     onTakeAction,
     handleScheduledPickup,
+    handleUpdateOrder,
 }) => {
 
     const truncateText = (text, limit = 30) => {
@@ -579,6 +580,7 @@ const OrdersTable = ({
                                             handleClone={handleClone}
                                             setRefresh={setRefresh}
                                             handleScheduledPickup={handleScheduledPickup}
+                                            handleUpdateOrder={order.status === "new" ? handleUpdateOrder : undefined}
                                         />
                                     </div>
                                 </td>

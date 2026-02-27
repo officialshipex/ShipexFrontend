@@ -108,7 +108,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                     </div>
 
 
-                    {order.status === "new" && (
+                    {/* {order.status === "new" && (
                         <button
                             onClick={handleOpenEditPopup}
                             className="p-2 bg-gray-500 rounded-full hover:opacity-90 transition"
@@ -116,7 +116,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                         >
                             <FaEdit className="text-white text-[12px]" />
                         </button>
-                    )}
+                    )} */}
                 </div>
 
                 {/* View Mode - Table with horizontal scroll for mobile */}

@@ -40,7 +40,7 @@ const PackageDetailsSection = ({ order, onUpdate }) => {
                         </h2>
                     </div>
 
-                    {order.status === "new" && (
+                    {/* {order.status === "new" && (
                         <button
                             onClick={() => setIsEditOpen(true)}
                             className="p-2 bg-gray-500 rounded-full hover:opacity-90 transition"
@@ -48,7 +48,7 @@ const PackageDetailsSection = ({ order, onUpdate }) => {
                         >
                             <FaEdit className="text-white text-[12px]" />
                         </button>
-                    )}
+                    )} */}
                 </div>
 
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 font-[600] text-[10px] sm:text-[12px]">
@@ -58,7 +58,7 @@ const PackageDetailsSection = ({ order, onUpdate }) => {
                     </div>
                     <div>
                         <span className="font-[600] text-gray-700">Dead Weight:</span>
-                        <p className="text-gray-500">{order.packageDetails?.deadWeight || "B2C"}</p>
+                        <p className="text-gray-500">{order.packageDetails?.deadWeight || "B2C"} KG</p>
                     </div>
 
 

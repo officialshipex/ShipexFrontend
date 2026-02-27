@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { Link, useNavigate, useLocation, Outlet } from 'react-router-dom'
-import { FiChevronDown } from "react-icons/fi";
+import { ChevronDown } from "lucide-react";
 
 const Courier = () => {
     const navigate = useNavigate()
@@ -38,55 +38,48 @@ const Courier = () => {
     }, [])
 
     return (
-        <div className="sm:p-2 p-1 max-w-full mx-auto">
-            {/* Desktop Tabs as Buttons */}
-            <div className="hidden sm:flex gap-2">
-                {tabs.map(tab => (
-                    <Link
-                        key={tab.path}
-                        to={tab.path}
-                        className={`px-3 py-2 rounded-lg text-[12px] font-[600] transition-all duration-200 ${location.pathname === tab.path
-                            ? 'bg-[#0CBB7D] text-white'
-                            : 'text-gray-700 hover:bg-green-200 bg-white'
-                            }`}
-                    >
-                        {tab.label}
-                    </Link>
-                ))}
-            </div>
-
-            {/* Custom Mobile Dropdown */}
-            <div className="sm:hidden mb-2 relative" ref={dropdownRef}>
-                <button
-                    onClick={toggleDropdown}
-                    className="w-full text-left text-[12px] border bg-[#0CBB7D] rounded-lg px-3 py-2 font-[600] text-white focus:outline-none flex items-center justify-between"
-                >
-                    <span>{selectedTab?.label || "Select Option"}</span>
-                    <FiChevronDown
-                        className={`w-4 h-4 text-white transition-transform duration-200 ${isOpen ? "rotate-180" : ""
-                            }`}
-                    />
-                </button>
-
-                <div
-                    className={`absolute z-10 w-full bg-white border border-gray-300 rounded-lg mt-1 shadow-sm overflow-hidden transition-all duration-300 ease-in-out transform ${isOpen ? "max-h-[500px] opacity-100 scale-100" : "max-h-0 opacity-0 scale-95"
-                        }`}
-                >
+        <div className="max-w-full mx-auto">
+            {/* Desktop Tabs */}
+            <div className="hidden sm:flex sm:px-2 flex-row justify-between items-center gap-2 mb-2">
+                <div className="flex flex-wrap gap-2">
                     {tabs.map((tab) => (
-                        <div
+                        <Link
                             key={tab.path}
-                            onClick={() => handleSelect(tab.path)}
-                            className={`px-3 py-2 text-[12px] cursor-pointer font-[600] transition-all ${location.pathname === tab.path
-                                ? "bg-green-200 text-gray-700"
-                                : "text-gray-700 hover:bg-green-50"
+                            to={tab.path}
+                            className={`px-3 py-2 text-[12px] rounded-lg font-[600] transition-all duration-200 shadow-sm border ${location.pathname === tab.path
+                                ? "bg-[#0CBB7D] text-white border-[#0CBB7D]"
+                                : "bg-white text-gray-700 border-gray-200 hover:bg-green-200"
                                 }`}
                         >
                             {tab.label}
-                        </div>
+                        </Link>
                     ))}
                 </div>
             </div>
 
+            {/* Mobile Tab Dropdown */}
+            <div className="relative sm:hidden mb-2" ref={dropdownRef}>
+                <button
+                    className="w-full px-3 py-2 bg-white border border-gray-200 shadow-sm rounded-lg text-[12px] font-[600] text-gray-700 flex justify-between items-center"
+                    onClick={toggleDropdown}
+                >
+                    {selectedTab?.label || "Select Option"} <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180" : ""}`} />
+                </button>
+                {isOpen && (
+                    <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[100] overflow-hidden animate-popup-in">
+                        {tabs.map((tab) => (
+                            <button
+                                key={tab.path}
+                                className={`w-full text-left px-3 py-2 text-[12px] font-[600] transition-colors ${location.pathname === tab.path ? "bg-green-50 text-[#0CBB7D]" : "text-gray-700 hover:bg-gray-50"
+                                    }`}
+                                onClick={() => handleSelect(tab.path)}
+                            >
+                                {tab.label}
+                            </button>
+                        ))}
+                    </div>
+                )}
+            </div>
 
             {/* Render Tab Content */}
             <div className="mt-2">

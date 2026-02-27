@@ -175,8 +175,8 @@ const CancelledOrder = (filterOrder) => {
     handleBulkDownloadManifests(selectedOrders);
   };
 
-  const handleBulkCloneOrder=async ()=>{
-    handleBulkClone({selectedOrders,setRefresh})
+  const handleBulkCloneOrder = async () => {
+    handleBulkClone({ selectedOrders, setRefresh })
   }
 
 
@@ -245,7 +245,7 @@ const CancelledOrder = (filterOrder) => {
                     Download Labels
                   </li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
-                    onClick={() => { handleBulkCloneOrder({ selectedOrders }); setDesktopDropdownOpen(false); }}>
+                    onClick={() => { handleBulkClone({ selectedOrders, setRefresh }); setDesktopDropdownOpen(false); }}>
                     Bulk Clone
                   </li>
                 </ul>
@@ -310,6 +310,7 @@ const CancelledOrder = (filterOrder) => {
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Invoices</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadManifest(); setMobileDropdownOpen(false); }}>Download Manifests</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Labels</li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkClone({ selectedOrders, setRefresh }); setMobileDropdownOpen(false); }}>Bulk Clone</li>
                 </ul>
               </div>
             )}

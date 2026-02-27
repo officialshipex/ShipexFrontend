@@ -158,6 +158,12 @@ const NewOrders = (filterOrder) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
   };
 
+  const handleUpdateOrder = (order) => {
+    const orderUserId = order.userId?._id || order.userId;
+    const url = `/dashboard/order/neworder?updateId=${order._id}${orderUserId ? `&userId=${orderUserId}` : ''}`;
+    navigate(url);
+  };
+
   const handleSelectAll = () => {
     if (selectedOrders.length === orders.length) setSelectedOrders([]);
     else setSelectedOrders(orders.map(o => o._id));
@@ -304,6 +310,7 @@ const NewOrders = (filterOrder) => {
             setRefresh={setRefresh}
             handleClone={handleClone}
             showShippingDetails={false}
+            handleUpdateOrder={handleUpdateOrder}
           />
         </div>
       </div>
@@ -366,6 +373,7 @@ const NewOrders = (filterOrder) => {
                 handleClone={handleClone}
                 navigate={navigate}
                 showShippingDetails={false}
+                handleUpdateOrder={handleUpdateOrder}
               />
             ))
           ) : (

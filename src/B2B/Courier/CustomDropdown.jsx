@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { ChevronDownIcon } from "@heroicons/react/solid";
+import { ChevronDown } from "lucide-react";
 
-const CustomDropdown = ({ options, selected, onChange, label }) => {
+const CustomDropdown = ({ options, selected, onChange, label, placeholder = "Select" }) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const selectedLabel = options.find((opt) => opt.value === selected)?.label || "Select";
+  const selectedLabel = options.find((opt) => opt.value === selected)?.label || "";
 
   const handleClickOutside = (event) => {
     if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -19,37 +19,43 @@ const CustomDropdown = ({ options, selected, onChange, label }) => {
   }, []);
 
   return (
-    <div ref={dropdownRef} className="relative w-full md:w-72">
+    <div ref={dropdownRef} className="relative w-full flex flex-col gap-1">
       {label && (
-        <label className="block text-[10px] md:text-[12px] font-[600] text-gray-500 mb-1">
+        <label className="block text-[10px] sm:text-[12px] font-[600] text-gray-500 tracking-tight">
           {label}
         </label>
       )}
 
-      <button
+      <div
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center justify-between w-full px-3 h-9 border text-[10px] md:text-[12px] text-gray-600 font-[600] rounded-lg bg-white shadow-sm focus:outline-none"
+        className={`bg-white font-[600] text-[10px] sm:text-[12px] cursor-pointer px-2 h-9 border rounded-lg flex justify-between items-center transition-all ${isOpen ? "border-[#0CBB7D] ring-1 ring-[#0CBB7D]/20" : "border-gray-300 hover:border-gray-300"}`}
       >
-        {selectedLabel}
-        <ChevronDownIcon className="w-4 h-4 text-gray-400" />
-      </button>
+        <span className={`truncate ${selectedLabel ? "text-gray-700" : "text-gray-400"}`}>
+          {selectedLabel || placeholder}
+        </span>
+        <ChevronDown
+          className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180 text-[#0CBB7D]" : ""}`}
+        />
+      </div>
 
       {isOpen && (
-        <ul className="absolute z-20 mt-1 w-full bg-white border rounded-lg shadow-md max-h-48 overflow-y-auto">
-          {options.map((option) => (
-            <li
-              key={option.value}
-              onClick={() => {
-                onChange(option.value);
-                setIsOpen(false);
-              }}
-              className={`px-3 py-2 text-[10px] font-[600] text-gray-500 md:text-[12px] cursor-pointer hover:bg-green-100 ${
-                selected === option.value ? "bg-green-50 text-green-700" : ""
-              }`}
-            >
-              {option.label}
-            </li>
-          ))}
+        <ul className="absolute z-[70] font-[600] top-full left-0 w-full bg-white border border-gray-100 mt-1 rounded-lg shadow-lg max-h-56 overflow-y-auto animate-popup-in py-1">
+          {options.length > 0 ? (
+            options.map((option) => (
+              <li
+                key={option.value}
+                onClick={() => {
+                  onChange(option.value);
+                  setIsOpen(false);
+                }}
+                className={`px-3 py-2 text-[10px] sm:text-[12px] font-[600] transition-colors cursor-pointer ${selected === option.value ? "bg-green-50 text-[#0CBB7D]" : "text-gray-600 hover:bg-gray-50"}`}
+              >
+                {option.label}
+              </li>
+            ))
+          ) : (
+            <li className="px-3 py-2 text-[10px] sm:text-[12px] text-gray-400 italic text-center">No options</li>
+          )}
         </ul>
       )}
     </div>

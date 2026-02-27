@@ -144,6 +144,12 @@ const AllOrders = () => {
     setDropdownOpen(dropdownOpen === index ? null : index);
   };
 
+  const handleUpdateOrder = (order) => {
+    const orderUserId = order.userId?._id || order.userId;
+    const url = `/dashboard/order/neworder?updateId=${order._id}${orderUserId ? `&userId=${orderUserId}` : ''}`;
+    navigate(url);
+  };
+
   const handleSelectAll = () => {
     if (selectedOrders.length === orders.length) setSelectedOrders([]);
     else setSelectedOrders(orders.map(o => o._id));
@@ -243,6 +249,7 @@ const AllOrders = () => {
             refresh={refresh}
             setRefresh={setRefresh}
             showShippingDetails={true}
+            handleUpdateOrder={handleUpdateOrder}
           />
         </div>
       </div>
@@ -300,6 +307,7 @@ const AllOrders = () => {
                 setRefresh={setRefresh}
                 navigate={navigate}
                 showShippingDetails={true}
+                handleUpdateOrder={handleUpdateOrder}
               />
             ))
           ) : (

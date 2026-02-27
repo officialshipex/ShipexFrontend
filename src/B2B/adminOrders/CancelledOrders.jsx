@@ -207,7 +207,7 @@ const CancelledOrders = ({ userId: initialUserId }) => {
                     Export Excel
                   </li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer"
-                    onClick={() => { handleBulkClone(selectedOrders, setRefresh); setDesktopDropdownOpen(false); }}>
+                    onClick={() => { handleBulkClone({ selectedOrders, setRefresh }); setDesktopDropdownOpen(false); }}>
                     Bulk Clone
                   </li>
                 </ul>
@@ -269,7 +269,7 @@ const CancelledOrders = ({ userId: initialUserId }) => {
               <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-sm z-[60] text-[10px] font-[600] overflow-hidden animate-popup-in">
                 <ul className="py-1">
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { ExportExcel({ selectedOrders, orders }); setMobileDropdownOpen(false); }}>Export Excel</li>
-                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkClone(selectedOrders, setRefresh); setMobileDropdownOpen(false); }}>Bulk Clone</li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkClone({ selectedOrders, setRefresh }); setMobileDropdownOpen(false); }}>Bulk Clone</li>
                 </ul>
               </div>
             )}

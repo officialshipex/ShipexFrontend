@@ -18,6 +18,7 @@ import {
   handleBulkDownloadInvoice,
   ExportExcel,
   handleManifest,
+  handleClone,
 } from "../../Common/orderActions";
 import OrdersTable from "../../Common/OrdersTable";
 import MobileOrderCard from "../../Common/MobileOrderCard";
@@ -239,6 +240,7 @@ const DeliveredOrders = ({ userId: initialUserId }) => {
             handleInvoice={handleInvoice}
             handleLabel={handleLabel}
             handleManifest={handleManifest}
+            handleClone={handleClone}
             refresh={refresh}
             setRefresh={setRefresh}
             showShippingDetails={true}
@@ -299,6 +301,7 @@ const DeliveredOrders = ({ userId: initialUserId }) => {
                 handleInvoice={handleInvoice}
                 handleLabel={handleLabel}
                 handleManifest={handleManifest}
+                handleClone={handleClone}
                 refresh={refresh}
                 setRefresh={setRefresh}
                 navigate={navigate}

@@ -3,6 +3,8 @@ import axios from "axios";
 import { ChevronDown } from "lucide-react"; // 👈 arrow icon
 import UploadStatus from "./UploadStatus";
 import Loader from "../../../Loader"
+import PaginationFooter from "../../../Common/PaginationFooter";
+import NotFound from "../../../assets/nodatafound.png";
 
 const StatusMaping = () => {
     const [couriers, setCouriers] = useState([]);
@@ -12,6 +14,11 @@ const StatusMaping = () => {
     const dropdownRef = useRef(null);
     const [loading, setLoading] = useState(false);
     const [isUploadStatusModalOpen, setIsUploadStatusModalOpen] = useState(false);
+
+    // Pagination state
+    const [page, setPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(1);
+    const [limit] = useState(20);
 
     const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -82,19 +89,26 @@ const StatusMaping = () => {
         const fetchStatus = async () => {
             if (!selectedCourier) return;
             try {
-                setLoading(true); // Start loading
+                setLoading(true);
                 const response = await axios.get(
-                    `${REACT_APP_BACKEND_URL}/statusMap/status?courierProvider=${encodeURIComponent(selectedCourier)}`
+                    `${REACT_APP_BACKEND_URL}/statusMap/status?courierProvider=${encodeURIComponent(selectedCourier)}&page=${page}&limit=${limit}`
                 );
-                setStatus(response.data.data[0]?.data || []);
-                setLoading(false); // End loading
+                // The new backend response structure: { data: paginatedData, totalPages, ... }
+                setStatus(response.data.data || []);
+                setTotalPages(response.data.totalPages || 1);
+                setLoading(false);
             } catch (error) {
-                setLoading(false); // End loading on error as well
+                setLoading(false);
                 console.log("Error fetching status", error.response);
             }
         };
         fetchStatus();
-    }, [REACT_APP_BACKEND_URL, selectedCourier]);
+    }, [REACT_APP_BACKEND_URL, selectedCourier, page, limit]);
+
+    // Reset page when courier changes
+    useEffect(() => {
+        setPage(1);
+    }, [selectedCourier]);
 
 
     // Close dropdown when clicking outside
@@ -111,9 +125,9 @@ const StatusMaping = () => {
     }, []);
 
     return (
-        <div className="px-1 sm:px-2 w-full max-w-full">
+        <div className="sm:px-2 w-full max-w-full">
             <div className="mb-1">
-                <h1 className="text-[12px] md:text-[18px] text-gray-700 font-[600]">
+                <h1 className="text-[12px] md:text-[14px] text-gray-700 font-[600]">
                     Status Map
                 </h1>
             </div>
@@ -134,7 +148,7 @@ const StatusMaping = () => {
                     </button>
 
                     {isOpen && (
-                        <ul className="absolute z-10 mt-1 w-full bg-white border rounded-lg shadow-sm max-h-48 overflow-y-auto">
+                        <ul className="absolute z-50 mt-1 w-full bg-white border rounded-lg shadow-sm max-h-48 animate-popup-in overflow-y-auto">
                             {couriers.map((courier) => (
                                 <li
                                     key={courier._id}
@@ -177,64 +191,86 @@ const StatusMaping = () => {
                 }}
             />
 
-            {/* Loader */}
-            {loading && (
-                <div className="text-center py-6 text-gray-700 font-medium">
-                    <Loader />
-                </div>
-            )}
-
             {/* Desktop Table */}
-            {!loading && status.length > 0 && (
-                <div className="hidden sm:block overflow-x-auto border rounded shadow-sm bg-white w-full">
-                    <table className="table-fixed w-full text-[12px] sm:text-[12px] border-collapse">
-                        <thead>
-                            <tr className="bg-[#0CBB7D] border border-[#0CBB7D] text-white font-[600]">
-                                {Object.keys(status[0]).map((key) => (
-                                    <th key={key} className="py-2 px-3 text-left">{key}</th>
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {status.map((item, idx) => (
-                                <tr key={idx} className="border border-gray-200">
+            {status.length > 0 && (
+                <div className="hidden sm:block overflow-hidden shadow-sm bg-white w-full">
+                    <div className="h-[calc(100vh-190px)] overflow-y-auto overflow-x-auto relative">
+                        <table className="table-fixed min-w-full text-[12px] border-collapse bg-white">
+                            <thead className="bg-[#0CBB7D] text-white font-[600] sticky top-0 z-10 shadow-sm">
+                                <tr className="">
                                     {Object.keys(status[0]).map((key) => (
-                                        <td key={key} className="py-2 px-3 break-words text-gray-700 font-[400]">
-                                            {item[key] !== undefined ? String(item[key]) : ""}
-                                        </td>
+                                        <th key={key} className="py-2 px-3 text-left whitespace-nowrap">{key}</th>
                                     ))}
                                 </tr>
-                            ))}
-                        </tbody>
-                    </table>
-
+                            </thead>
+                            <tbody className="relative">
+                                {loading ? (
+                                    <tr>
+                                        <td colSpan={Object.keys(status[0]).length} className="py-10 text-center">
+                                            <Loader />
+                                        </td>
+                                    </tr>
+                                ) : (
+                                    status.map((item, idx) => (
+                                        <tr key={idx} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
+                                            {Object.keys(status[0]).map((key) => (
+                                                <td key={key} className="py-2 px-3 break-words text-gray-700 font-[400]">
+                                                    {item[key] !== undefined ? String(item[key]) : ""}
+                                                </td>
+                                            ))}
+                                        </tr>
+                                    ))
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             )}
 
             {/* Mobile List/Card */}
-            {!loading && status.length > 0 && (
-                <div className="block sm:hidden space-y-2">
-                    {status.map((item, idx) => (
-                        <div
-                            key={idx}
-                            className="border border-gray-200 rounded-lg px-3 py-2 bg-white shadow-sm"
-                        >
-                            {Object.entries(item).map(([key, value]) => (
-                                <div key={key} className="flex justify-between text-[10px]">
-                                    <span className="font-semibold text-gray-500">{key}</span>
-                                    <span className="text-gray-700 text-right break-words max-w-[60%]">
-                                        {value !== undefined ? String(value) : ""}
-                                    </span>
-                                </div>
-                            ))}
+            {status.length > 0 && (
+                <div className="block sm:hidden animate-popup-in h-[calc(100vh-180px)] overflow-y-auto space-y-2 relative">
+                    {loading ? (
+                        <div className="py-10 flex justify-center items-center h-full">
+                            <Loader />
                         </div>
-                    ))}
+                    ) : (
+                        status.map((item, idx) => (
+                            <div
+                                key={idx}
+                                className="border border-gray-200 rounded-lg px-3 py-2 bg-white shadow-sm"
+                            >
+                                {Object.entries(item).map(([key, value]) => (
+                                    <div key={key} className="flex justify-between text-[10px] py-0.5 first:pt-0 last:pb-0 border-b border-gray-50 last:border-0">
+                                        <span className="font-semibold text-gray-500 shrink-0">{key}</span>
+                                        <span className="text-gray-700 text-right break-words max-w-[65%]">
+                                            {value !== undefined ? String(value) : ""}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        ))
+                    )}
                 </div>
+            )}
+
+            {status.length > 0 && (
+                <PaginationFooter
+                    page={page}
+                    setPage={setPage}
+                    totalPages={totalPages}
+                />
             )}
 
             {/* No data */}
             {!loading && status.length === 0 && (
-                <div className="text-gray-500 text-xs text-center py-6">No status data</div>
+                <div className="flex flex-col items-center justify-center py-10">
+                    <img
+                        src={NotFound}
+                        alt="No Data Found"
+                        className="w-60 h-60 object-contain"
+                    />
+                </div>
             )}
         </div>
     );

@@ -95,8 +95,9 @@ const CompleteWeightDiscrepancy = () => {
       setTotal(totalCount);
       setTotalPages(Math.ceil(totalCount / limit));
 
-      const uniqueCouriers = [...new Set(results.map(o => o.courierServiceName).filter(Boolean))];
-      setCourierOptions(uniqueCouriers);
+      if (response.data.courierServices) {
+        setCourierOptions(response.data.courierServices);
+      }
       setLoading(false);
     } catch (error) {
       Notification("Error fetching transactions", "error");
