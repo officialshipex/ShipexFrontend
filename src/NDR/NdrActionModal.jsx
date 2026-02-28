@@ -12,7 +12,7 @@ const ACTIONS = [
 const InputField = ({ label, icon: Icon, ...props }) => (
   <div className="flex flex-col gap-1">
     <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700 flex items-center gap-1.5">
-      {Icon && <Icon className="w-3 h-3 text-[#0CBB7D]" />}
+      {/* {Icon && <Icon className="w-3 h-3 text-[#0CBB7D]" />} */}
       {label}
     </label>
     <input
@@ -221,7 +221,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
             <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">Take NDR Action</h2>
             <p className="text-[10px] text-gray-500 font-[500]">
               AWB: <span className="text-[#0CBB7D] font-[600]">{order.awb_number}</span>
-              {provider && <span className="ml-2 text-gray-400">• {provider}</span>}
+              {/* {provider && <span className="ml-2 text-gray-400">• {provider}</span>} */}
             </p>
           </div>
           <button
@@ -247,16 +247,16 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
               <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
             </button>
             {dropdownOpen && (
-              <ul className="absolute z-30 mt-1 bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden animate-popup-in text-[12px] w-[calc(100%-2rem)] max-w-[calc(28rem-2rem)]">
+              <ul className="absolute z-30 mt-16 bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden animate-popup-in text-[12px] w-[calc(100%-2rem)] max-w-[calc(28rem-2rem)]">
                 {ACTIONS.map(({ label, value }) => (
                   <li
                     key={value}
                     onClick={() => { setAction(value); setDropdownOpen(false); setRemarks(""); setScheduledDate(""); setAddress({ line1: "", line2: "", city: "", state: "", pincode: "", customerName: "" }); }}
                     className={`px-3 py-2 cursor-pointer font-[600] transition-colors flex items-center gap-2 ${action === value ? "bg-green-50 text-[#0CBB7D]" : "text-gray-700 hover:bg-gray-50"}`}
                   >
-                    {value === "RE-ATTEMPT" && <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />}
-                    {value === "CHANGE_ADDRESS" && <span className="w-2 h-2 rounded-full bg-[#0CBB7D] shrink-0" />}
-                    {value === "RTO" && <span className="w-2 h-2 rounded-full bg-red-400 shrink-0" />}
+                    {value === "RE-ATTEMPT"}
+                    {value === "CHANGE_ADDRESS"}
+                    {value === "RTO"}
                     {label}
                   </li>
                 ))}
@@ -268,7 +268,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
           {action && (
             <div className="flex flex-col gap-1">
               <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700 flex items-center gap-1.5">
-                <MessageSquare className="w-3 h-3 text-[#0CBB7D]" />
+                {/* <MessageSquare className="w-3 h-3 text-[#0CBB7D]" /> */}
                 Remarks <span className="text-red-400">*</span>
               </label>
               <textarea

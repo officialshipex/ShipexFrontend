@@ -53,7 +53,13 @@ const InTransitOrders = (filterOrder) => {
   const [orderId, setOrderId] = useState("");
   const [awbNumber, setAwbNumber] = useState("");
   const [paymentType, setPaymentType] = useState("");
-  const [dateRange, setDateRange] = useState([{ startDate: null, endDate: null, key: "selection" }]);
+  const [dateRange, setDateRange] = useState([
+    {
+      startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+      endDate: dayjs().endOf("day").toDate(),
+      key: "selection",
+    },
+  ]);
   const [pickupAddresses, setPickupAddresses] = useState([]);
   const [selectedPickupAddress, setSelectedPickupAddress] = useState("");
   const [courierOptions, setCourierOptions] = useState([]);
@@ -165,7 +171,13 @@ const InTransitOrders = (filterOrder) => {
     setPaymentType("");
     setSelectedPickupAddress("");
     setSelectedCourier("");
-    setDateRange([{ startDate: null, endDate: null, key: "selection" }]);
+    setDateRange([
+      {
+        startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+        endDate: dayjs().endOf("day").toDate(),
+        key: "selection",
+      },
+    ]);
     setPage(1);
     setRefresh(prev => !prev);
   };

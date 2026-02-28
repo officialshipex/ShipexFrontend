@@ -52,7 +52,13 @@ const RTODamaged = (filterOrder) => {
   const [orderId, setOrderId] = useState("");
   const [awbNumber, setAwbNumber] = useState("");
   const [paymentType, setPaymentType] = useState("");
-  const [dateRange, setDateRange] = useState([{ startDate: null, endDate: null, key: "selection" }]);
+  const [dateRange, setDateRange] = useState([
+    {
+      startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+      endDate: dayjs().endOf("day").toDate(),
+      key: "selection",
+    },
+  ]);
   const [pickupAddresses, setPickupAddresses] = useState([]);
   const [selectedPickupAddress, setSelectedPickupAddress] = useState("");
   const [courierOptions, setCourierOptions] = useState([]);
@@ -112,7 +118,7 @@ const RTODamaged = (filterOrder) => {
         id,
         page,
         limit,
-        status:["RTO Damaged"],
+        status: ["RTO Damaged"],
         searchQuery,
         orderId: orderId || undefined,
         awbNumber: awbNumber || undefined,
@@ -164,7 +170,13 @@ const RTODamaged = (filterOrder) => {
     setPaymentType("");
     setSelectedPickupAddress("");
     setSelectedCourier("");
-    setDateRange([{ startDate: null, endDate: null, key: "selection" }]);
+    setDateRange([
+      {
+        startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+        endDate: dayjs().endOf("day").toDate(),
+        key: "selection",
+      },
+    ]);
     setPage(1);
     setRefresh(prev => !prev);
   };
@@ -322,8 +334,8 @@ const RTODamaged = (filterOrder) => {
                 toggleButtonRefs={toggleButtonRefs}
                 dropdownDirection={dropdownDirection}
                 handleInvoice={handleInvoice}
-            handleLabel={handleLabel}
-            handleManifest={handleManifest}
+                handleLabel={handleLabel}
+                handleManifest={handleManifest}
                 refresh={refresh}
                 setRefresh={setRefresh}
                 navigate={navigate}

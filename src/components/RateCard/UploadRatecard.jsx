@@ -3,7 +3,8 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import { toast } from "react-toastify";
 import Cookies from "js-cookie";
-import { FaUpload } from "react-icons/fa";
+import { FaUpload, FaTimes } from "react-icons/fa";
+import { FiUploadCloud, FiDownload, FiFileText } from "react-icons/fi";
 import { Notification } from "../../Notification"
 
 const UploadRatecard = ({ isOpen, onClose, setRefresh }) => {
@@ -82,46 +83,88 @@ const UploadRatecard = ({ isOpen, onClose, setRefresh }) => {
         }
     };
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[1000]">
-            <div className="bg-white p-6 rounded-lg shadow-lg w-[400px] relative">
-                <h2 className="text-[12px] sm:text-[14px] text-gray-700 font-[600] mb-2">Upload Rate Card</h2>
+        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-[1000] animate-in fade-in duration-300">
+            <div className="bg-white p-4 rounded-lg shadow-sm w-[500px] relative animate-popup-in border border-gray-100">
 
-                <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
-                    Download Sample file{" "}
-                    <button
-                        onClick={handleDownload}
-                        className="text-[#0CBB7D] cursor-pointer"
-                    >
-                        click here{" "}
-                    </button>
-                    {/* <span className="text-purple-500 cursor-pointer">click here</span> */}
-                </p>
+                {/* Header */}
+                <div className="mb-4">
+                    <h2 className="text-[12px] sm:text-[14px] font-bold text-gray-700 flex items-center gap-2">
+                        <div className="bg-green-100 p-2 rounded-lg text-[#0CBB7D]">
+                            <FiUploadCloud size={18} />
+                        </div>
+                        Upload Rate Card
+                    </h2>
+                    <p className="text-[10px] sm:text-[12px] text-gray-500 mt-1">Update your courier rate card via excel file</p>
+                </div>
 
-                <label className="cursor-pointer flex text-[10px] sm:text-[12px] font-[600] items-center gap-2 text-[#0CBB7D] bg-white px-3 py-2 mt-4 rounded-lg border-2 border-[#0CBB7D] transition">
-                    <div className="flex justify-between items-center w-full">
-                        <span>Upload File</span>
-                        <FaUpload className="text-[#0CBB7D]" />
+                {/* Sample Download Section */}
+                <div className="bg-gray-50 border border-gray-100 rounded-lg px-3 py-2 mb-4">
+                    <div className="flex items-center justify-between">
+                        <span className="text-[10px] sm:text-[12px] font-semibold text-gray-600">Need the template?</span>
+                        <button
+                            onClick={handleDownload}
+                            className="text-[#0CBB7D] hover:underline flex items-center gap-1.5 text-[10px] sm:text-[12px] font-bold transition-all"
+                        >
+                            <FiDownload /> Download Sample
+                        </button>
                     </div>
-                    <input type="file" className="hidden" onChange={handleFileChange} />
-                </label>
+                </div>
 
-                {selectedFile && (
-                    <p className="text-[10px] sm:text-[12px] text-gray-500">Selected: {selectedFile.name}</p>
-                )}
-                <button onClick={handleSubmit} className="px-3 py-2 me-3 mt-3 bg-[#0CBB7D] text-white rounded-lg text-[10px] font-[600] sm:text-[12px]">
-                    Submit
-                </button>
+                {/* Upload Zone */}
+                <div className="space-y-2">
+                    <label className="group cursor-pointer block relative">
+                        <div className={`
+                            border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center transition-all duration-300
+                            ${selectedFile ? 'border-[#0CBB7D] bg-green-50/30' : 'border-gray-200 hover:border-[#0CBB7D] hover:bg-gray-50'}
+                        `}>
+                            <div className={`p-4 rounded-full mb-3 transition-colors ${selectedFile ? 'bg-[#0CBB7D] text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-green-100 group-hover:text-[#0CBB7D]'}`}>
+                                <FaUpload size={16} />
+                            </div>
+                            <span className="text-[10px] sm:text-[12px] font-bold text-gray-700 tracking-tight">
+                                {selectedFile ? 'Change File' : 'Choose Excel File'}
+                            </span>
+                        </div>
+                        <input type="file" className="hidden" onChange={handleFileChange} accept=".xlsx, .xls" />
+                    </label>
 
-                {/* Move Close Button inside modal */}
+                    {/* Selected File Card */}
+                    {selectedFile && (
+                        <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-200 shadow-sm animate-in slide-in-from-top-2">
+                            <div className="bg-green-100 p-2 rounded-lg text-[#0CBB7D]">
+                                <FiFileText size={18} />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                                <p className="text-[11px] font-bold text-gray-700 truncate">{selectedFile.name}</p>
+                                <p className="text-[9px] text-gray-400">{(selectedFile.size / 1024).toFixed(1)} KB</p>
+                            </div>
+                            <button
+                                onClick={() => setSelectedFile(null)}
+                                className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                            >
+                                <FaTimes size={14} />
+                            </button>
+                        </div>
+                    )}
+                </div>
+
+                {/* Actions */}
+                <div className="flex justify-end items-center mt-8 gap-3">
+                    <button
+                        onClick={handleSubmit}
+                        className="py-2 px-3 bg-[#0CBB7D] text-white rounded-lg text-[10px] sm:text-[12px] font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2"
+                    >
+                        Confirm & Upload
+                    </button>
+                </div>
+
+                {/* Close Button */}
                 <button
-                    className="absolute top-2 right-4 text-gray-500 hover:text-gray-800"
+                    className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-all"
                     onClick={onClose}
                 >
-                    ✖
+                    <FaTimes size={16} />
                 </button>
             </div>
-
-            {/* <div className="mt-4"></div> */}
         </div>
     );
 };

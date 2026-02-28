@@ -5,17 +5,6 @@ import { useEffect } from "react";
 import { ChevronDown, ChevronUp, Copy, Check } from "lucide-react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Bluedart from "../../../assets/bluedart.png";
-import Delehivery from "../../../assets/delehivery.png";
-import EcomExpress from "../../../assets/ecom-expresss.avif";
-import Shadowfax from "../../../assets/shadowfax.png";
-import Xpressbees from "../../../assets/xpressbees.png";
-import Shiprocket from "../../../assets/shiprocket.webp";
-import NimbusPost from "../../../assets/nimbuspost.webp";
-import ShreeMaruti from "../../../assets/shreemaruti.png";
-import Smartship from "../../../assets/bluedart.png";
-import DTDC from "../../../assets/dtdc.png";
-import Amazon from "../../../assets/amazon.jpg";
 import Shipex from "../../../assets/shipexNoBG.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -26,6 +15,7 @@ import {
   faMapMarkerAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import Loader from "../../../Loader";
+import { getCarrierLogo } from "../../../Common/getCarrierLogo";
 
 function Tracing2() {
   const [input, setInput] = useState(""); // Multi-AWB input
@@ -38,22 +28,6 @@ function Tracing2() {
   const [adminTab, setAdminTab] = useState(false);
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-  const carrierLogos = {
-    Bluedart,
-    Delhivery: Delehivery,
-    EcomExpress,
-    Shadowfax,
-    Xpressbees,
-    NimbusPost,
-    Shiprocket,
-    "Shree Maruti": ShreeMaruti,
-    ShreeMaruti,
-    DTDC,
-    Dtdc: DTDC,
-    Amazon,
-    "Amazon Shipping": Amazon,
-    Smartship
-  };
 
 
   useEffect(() => {
@@ -230,7 +204,6 @@ function Tracing2() {
             <TrackingCard
               key={trackingAwb?.awb_number || idx}
               trackingAwb={trackingAwb}
-              carrierLogos={carrierLogos}
               statusSteps={statusSteps}
               CopyableText={CopyableText}
             />
@@ -248,7 +221,7 @@ function Tracing2() {
   );
 }
 
-function TrackingCard({ trackingAwb, carrierLogos, statusSteps, CopyableText }) {
+function TrackingCard({ trackingAwb, statusSteps, CopyableText }) {
   const [showOrder, setShowOrder] = useState(false);
   const [showProducts, setShowProducts] = useState(false);
 
@@ -313,7 +286,7 @@ function TrackingCard({ trackingAwb, carrierLogos, statusSteps, CopyableText }) 
           <div className="flex items-center gap-2 max-w-full md:max-w-[50%] min-w-0">
             <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center flex-shrink-0">
               <img
-                src={carrierLogos[trackingAwb.provider]}
+                src={getCarrierLogo(trackingAwb.provider)}
                 alt={trackingAwb.provider}
                 className="w-8 h-8 object-contain"
               />

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 // import { toast } from "react-toastify";
 import Cookies from "js-cookie";
-import {Notification} from "../../Notification"
+import { Notification } from "../../Notification"
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -76,19 +76,19 @@ const AsignPopup = ({ isOpen, onClose }) => {
 
   const handleAssign = async () => {
     if (!selectedPlan || !selectedSeller) {
-      Notification("Please select a plan and a seller.","info");
+      Notification("Please select a plan and a seller.", "info");
       return;
     }
 
     const selectedSellerDetails = sellers.find((seller) => seller.id === selectedSeller);
     if (!selectedSellerDetails) {
-      Notification("Seller not found.","error");
+      Notification("Seller not found.", "error");
       return;
     }
 
     const filteredRateCards = plans.filter((card) => card.plan === selectedPlan);
     if (filteredRateCards.length === 0) {
-      Notification("No rate cards found for the selected plan.","error");
+      Notification("No rate cards found for the selected plan.", "error");
       return;
     }
 
@@ -102,14 +102,14 @@ const AsignPopup = ({ isOpen, onClose }) => {
     try {
       const response = await axios.put(`${REACT_APP_BACKEND_URL}/users/assignPlan`, data);
       if (response.status >= 200 && response.status < 300) {
-        Notification("Assigned Successfully","success");
+        Notification("Assigned Successfully", "success");
         onClose();
       } else {
-        Notification(`Unexpected response: ${response.status}`,"error");
+        Notification(`Unexpected response: ${response.status}`, "error");
       }
     } catch (error) {
       console.error("Error assigning plan:", error);
-      Notification(`An error occurred: ${error.response?.data?.error || error.message}`,"error");
+      Notification(`An error occurred: ${error.response?.data?.error || error.message}`, "error");
     }
   };
 
@@ -124,14 +124,14 @@ const AsignPopup = ({ isOpen, onClose }) => {
         <label className="block text-[12px] font-[600] text-gray-500 mb-1">Select Plan</label>
         <div className="relative mb-2">
           <button
-            className="w-full border-2 border-gray-300 rounded-lg text-gray-500 p-2 text-left flex justify-between items-center h-9 text-[10px] sm:text-[12px]"
+            className="w-full border border-gray-300 rounded-lg text-gray-500 p-2 text-left flex justify-between items-center h-9 text-[10px] sm:text-[12px]"
             onClick={() => setPlanDropdownOpen(!planDropdownOpen)}
           >
             <span>{selectedPlan ? selectedPlan : "Choose Plan"}</span>
             <ChevronDownIcon isOpen={planDropdownOpen} />
           </button>
           {planDropdownOpen && (
-            <div className="absolute z-10 bg-white text-gray-500 border-2 rounded-lg w-full mt-1 max-h-40 overflow-auto">
+            <div className="absolute z-10 bg-white text-gray-500 border border-gray-300 rounded-lg w-full mt-1 max-h-40 overflow-auto shadow-sm">
               {planOptions.map((plan) => (
                 <div
                   key={plan}
@@ -154,13 +154,13 @@ const AsignPopup = ({ isOpen, onClose }) => {
           <input
             type="text"
             placeholder="Search Seller..."
-            className="w-full border-2 p-2 text-gray-500 focus:outline-none border-gray-300 rounded-lg mb-2 h-9 placeholder:text-[12px]"
+            className="w-full border border-gray-300 p-2 text-gray-500 focus:outline-none focus:border-[#0CBB7D] rounded-lg mb-2 h-9 placeholder:text-[12px] text-[12px]"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onFocus={() => setSellerDropdownOpen(true)}
           />
           <button
-            className="w-full border-2 p-2 rounded-lg text-left flex justify-between items-center text-gray-500 border-gray-300 h-9 text-[12px]"
+            className="w-full border border-gray-300 p-2 rounded-lg text-left flex justify-between items-center text-gray-500 h-9 text-[12px]"
             onClick={() => setSellerDropdownOpen(!sellerDropdownOpen)}
           >
             <span>
@@ -172,7 +172,7 @@ const AsignPopup = ({ isOpen, onClose }) => {
             <ChevronDownIcon isOpen={sellerDropdownOpen} />
           </button>
           {sellerDropdownOpen && (
-            <div className="absolute z-10 bg-white text-[12px] text-gray-500 border rounded-lg w-full mt-1 max-h-60 overflow-auto">
+            <div className="absolute z-10 bg-white text-[12px] text-gray-500 border border-gray-300 rounded-lg w-full mt-1 max-h-60 overflow-auto shadow-sm">
               {sellers
                 .filter(
                   (seller) =>

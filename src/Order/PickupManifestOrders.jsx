@@ -23,7 +23,13 @@ const PickupManifestOrders = ({ orderType = "B2C" }) => {
     const [totalPages, setTotalPages] = useState(1);
     const [refresh, setRefresh] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
-    const [dateRange, setDateRange] = useState([{ startDate: null, endDate: null, key: "selection" }]);
+    const [dateRange, setDateRange] = useState([
+        {
+            startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+            endDate: dayjs().endOf("day").toDate(),
+            key: "selection",
+        },
+    ]);
     const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
 
     // Filters (same as ReadyToShipOrders for consistency)
@@ -135,7 +141,13 @@ const PickupManifestOrders = ({ orderType = "B2C" }) => {
         setPaymentType("");
         setSelectedPickupAddress([]);
         setSelectedCourier([]);
-        setDateRange([{ startDate: null, endDate: null, key: "selection" }]);
+        setDateRange([
+            {
+                startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+                endDate: dayjs().endOf("day").toDate(),
+                key: "selection",
+            },
+        ]);
         setPage(1);
         setRefresh(prev => !prev);
     };

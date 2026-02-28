@@ -444,6 +444,13 @@ const OrdersTable = ({
                                             : "-"}
                                     </p>
 
+                                    <p className="text-gray-500 text-[10px]">
+                                        Delivered On :{" "}
+                                        {order.tracking
+                                            ? `${dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("DD MMM YYYY")}`
+                                            : "-"}
+                                    </p>
+
 
                                     {/* AWB + COPY (SAME BEHAVIOR AS ORDER ID) */}
                                     {order.awb_number && (

@@ -48,7 +48,13 @@ const AllOrders = (filterOrder) => {
   const [awbNumber, setAwbNumber] = useState("");
   const [paymentType, setPaymentType] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("All");
-  const [dateRange, setDateRange] = useState([{ startDate: null, endDate: null, key: "selection" }]);
+  const [dateRange, setDateRange] = useState([
+    {
+      startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+      endDate: dayjs().endOf("day").toDate(),
+      key: "selection",
+    },
+  ]);
   const [pickupAddresses, setPickupAddresses] = useState([]);
   const [selectedPickupAddress, setSelectedPickupAddress] = useState("");
   const [courierOptions, setCourierOptions] = useState([]);
@@ -170,7 +176,13 @@ const AllOrders = (filterOrder) => {
     setSelectedPickupAddress("");
     setSelectedCourier("");
     setSelectedUserId(null);
-    setDateRange([{ startDate: null, endDate: null, key: "selection" }]);
+    setDateRange([
+      {
+        startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+        endDate: dayjs().endOf("day").toDate(),
+        key: "selection",
+      },
+    ]);
     setPage(1);
     setRefresh(prev => !prev);
   };

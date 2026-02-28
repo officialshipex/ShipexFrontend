@@ -22,7 +22,13 @@ const PickupManifestOrders = ({ orderType = "B2C", userId: initialUserId }) => {
     const [totalPages, setTotalPages] = useState(1);
     const [refresh, setRefresh] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
-    const [dateRange, setDateRange] = useState([{ startDate: null, endDate: null, key: "selection" }]);
+    const [dateRange, setDateRange] = useState([
+        {
+            startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+            endDate: dayjs().endOf("day").toDate(),
+            key: "selection",
+        },
+    ]);
     const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
 
     // Filters
@@ -131,7 +137,13 @@ const PickupManifestOrders = ({ orderType = "B2C", userId: initialUserId }) => {
         setSelectedPickupAddress([]);
         setSelectedCourier([]);
         setSelectedUserId(null);
-        setDateRange([{ startDate: null, endDate: null, key: "selection" }]);
+        setDateRange([
+            {
+                startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+                endDate: dayjs().endOf("day").toDate(),
+                key: "selection",
+            },
+        ]);
         setPage(1);
         setRefresh(prev => !prev);
     };

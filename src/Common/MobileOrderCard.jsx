@@ -229,15 +229,15 @@ const MobileOrderCard = ({
 
                     <div className="text-[10px] flex justify-center items-center text-gray-500">
                         <div className="flex items-start gap-1">
-                            <span>Booked On :</span>
+                            <span>Delivered On :</span>
 
-                            {order.shipmentCreatedAt ? (
+                            {order.tracking[order.tracking.length - 1].StatusDateTime ? (
                                 <div className="flex flex-col leading-tight">
                                     <span>
-                                        {dayjs(order.shipmentCreatedAt).format("DD MMM YYYY")}
+                                        {dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("DD MMM YYYY")}
                                     </span>
                                     <span>
-                                        {dayjs(order.shipmentCreatedAt).format("hh:mm A")}
+                                        {dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("hh:mm A")}
                                     </span>
                                 </div>
                             ) : (

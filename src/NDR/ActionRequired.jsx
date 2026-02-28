@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
+import dayjs from "dayjs";
 import { Notification } from "../Notification";
 import DateFilter from "../filter/DateFilter";
 import OrderFilterPanel from "../Common/OrderFilterPanel";
@@ -45,7 +46,13 @@ const ActionRequired = () => {
   const [orderId, setOrderId] = useState("");
   const [awbNumber, setAwbNumber] = useState("");
   const [paymentType, setPaymentType] = useState("");
-  const [dateRange, setDateRange] = useState([{ startDate: null, endDate: null, key: "selection" }]);
+  const [dateRange, setDateRange] = useState([
+    {
+      startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+      endDate: dayjs().endOf("day").toDate(),
+      key: "selection",
+    },
+  ]);
   const [pickupAddresses, setPickupAddresses] = useState([]);
   const [selectedPickupAddress, setSelectedPickupAddress] = useState("");
   const [courierOptions, setCourierOptions] = useState([]);
@@ -116,7 +123,7 @@ const ActionRequired = () => {
 
   useEffect(() => {
     fetchOrders();
-  }, [page, limit, refresh, dateRange]);
+  }, [page, limit, refresh, dateRange, searchQuery, orderId, awbNumber, paymentType, selectedCourier, selectedPickupAddress]);
 
   const handleSelectAll = () => {
     if (selectedOrders.length === orders.length) setSelectedOrders([]);
@@ -134,7 +141,13 @@ const ActionRequired = () => {
     setPaymentType("");
     setSelectedPickupAddress("");
     setSelectedCourier("");
-    setDateRange([{ startDate: null, endDate: null, key: "selection" }]);
+    setDateRange([
+      {
+        startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+        endDate: dayjs().endOf("day").toDate(),
+        key: "selection",
+      },
+    ]);
     setPage(1);
     setRefresh(prev => !prev);
   };
@@ -348,14 +361,13 @@ const ActionRequired = () => {
         selectedCourier={selectedCourier}
         onClearFilters={handleClearFilters}
         onApplyFilters={(filters) => {
-          setSearchQuery(filters.searchQuery);
-          setOrderId(filters.orderId);
-          setAwbNumber(filters.awbNumber);
+          setSearchQuery(filters.searchQuery?.trim() || "");
+          setOrderId(filters.orderId?.trim() || "");
+          setAwbNumber(filters.awbNumber?.trim() || "");
           setPaymentType(filters.paymentType);
           setSelectedPickupAddress(filters.selectedPickupAddress);
           setSelectedCourier(filters.selectedCourier);
           setPage(1);
-          setRefresh(prev => !prev);
           setIsFilterPanelOpen(false);
         }}
         courierOptions={courierOptions}

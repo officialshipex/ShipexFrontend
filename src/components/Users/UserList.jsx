@@ -236,7 +236,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
 
           {/* Desktop Table View */}
           <div className="hidden md:block">
-            <table className="min-w-full">
+            <table className="min-w-full bg-white">
               <thead className="sticky top-0 z-20">
                 <tr className="text-[12px]">
                   {["User ID", "User Details", "Business Details", "KYC", "Rate Card", "Balance", "Account Manager", "Registration Date", "Last Scheduled Date", "Action"].map((header, idx) => (

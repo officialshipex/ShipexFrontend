@@ -250,6 +250,12 @@ const CarrierSelection = () => {
                       <span>{orderDetails?.packageDetails?.weight || orderDetails?.packageDetails?.applicableWeight} kg</span>
                     </div>
                     <div className="flex justify-between">
+                      <span className="text-gray-500">Dimensions (L*W*H):</span>
+                      <span>
+                        {orderDetails?.packageDetails?.volumetricWeight?.length} * {orderDetails?.packageDetails?.volumetricWeight?.width} * {orderDetails?.packageDetails?.volumetricWeight?.height}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
                       <span className="text-gray-500">Volumetric Weight:</span>
                       <span>
                         {Number(
@@ -265,12 +271,7 @@ const CarrierSelection = () => {
                       <span className="text-gray-500 font-semibold">Applicable Weight:</span>
                       <span className="font-semibold">{orderDetails?.packageDetails?.applicableWeight} kg</span>
                     </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-500">L*W*H:</span>
-                      <span>
-                        {orderDetails?.packageDetails?.volumetricWeight?.length} * {orderDetails?.packageDetails?.volumetricWeight?.width} * {orderDetails?.packageDetails?.volumetricWeight?.height}
-                      </span>
-                    </div>
+                    
                   </div>
                 </div>
               </div>

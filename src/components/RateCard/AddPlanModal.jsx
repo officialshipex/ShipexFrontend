@@ -3,12 +3,12 @@ import axios from "axios";
 import { AiOutlineClose } from "react-icons/ai";
 // import toast from "react-hot-toast";
 import Cookies from "js-cookie";
-import {Notification} from "../../Notification"
+import { Notification } from "../../Notification"
 
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-const AddPlanModal = ({ isOpen, onClose,onSuccess,rateType,setPlanNameAdd }) => {
+const AddPlanModal = ({ isOpen, onClose, onSuccess, rateType, setPlanNameAdd }) => {
     const [planName, setPlanName] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const inputRef = useRef(null);
@@ -27,19 +27,19 @@ const AddPlanModal = ({ isOpen, onClose,onSuccess,rateType,setPlanNameAdd }) => 
         if (!planName.trim()) return;
         setIsSubmitting(true);
         try {
-            if(rateType==="b2b"){
-                await axios.post(`${REACT_APP_BACKEND_URL}/b2b/saveRate/createPlanName`, { planName: planName.trim() },{headers:{Authorization:`Bearer ${token}`}});
+            if (rateType === "b2b") {
+                await axios.post(`${REACT_APP_BACKEND_URL}/b2b/saveRate/createPlanName`, { planName: planName.trim() }, { headers: { Authorization: `Bearer ${token}` } });
             } else {
-                await axios.post(`${REACT_APP_BACKEND_URL}/saveRate/createPlanName`, { planName: planName.trim() },{headers:{Authorization:`Bearer ${token}`}});
+                await axios.post(`${REACT_APP_BACKEND_URL}/saveRate/createPlanName`, { planName: planName.trim() }, { headers: { Authorization: `Bearer ${token}` } });
             }
             setPlanName("");
             setIsSubmitting(false);
-            Notification("Plan created successfully!","success");
+            Notification("Plan created successfully!", "success");
             setPlanNameAdd(true);
             if (onSuccess) onSuccess(); // Optionally tell parent to refresh or show toast
             onClose(); // Close the modal after success
         } catch (error) {
-            Notification("Failed to create plan!","error");
+            Notification("Failed to create plan!", "error");
             setIsSubmitting(false);
         }
     };
@@ -63,7 +63,7 @@ const AddPlanModal = ({ isOpen, onClose,onSuccess,rateType,setPlanNameAdd }) => 
                         value={planName}
                         onChange={(e) => setPlanName(e.target.value)}
                         placeholder="Plan Name"
-                        className="w-full border-2 text-[10px] sm:text-[12px] font-bold placeholder:text-gray-500 text-gray-700 border-gray-400 focus:outline-none px-3 py-2 rounded-lg"
+                        className="w-full border border-gray-300 text-[11px] sm:text-[12px] font-medium placeholder:text-gray-400 text-gray-700 focus:border-[#0CBB7D] focus:outline-none px-3 py-2 rounded-lg transition-all"
                         required
                         disabled={isSubmitting}
                     />

@@ -10,6 +10,7 @@ import Amazon from "../assets/amazon.jpg";
 import Smartship from "../assets/bluedart.png";
 import DTDC from "../assets/dtdc.png";
 import Ekart from "../assets/ekart.png";
+import ShipexIndia from "../assets/shipexNoBG.png"
 
 export const getCarrierLogo = (courierServiceName = "") => {
   const name = courierServiceName?.toLowerCase();
@@ -26,6 +27,7 @@ export const getCarrierLogo = (courierServiceName = "") => {
   if (name?.includes("amazon")) return Amazon;
   if (name?.includes("smartship")) return Smartship;
   if (name?.includes("ekart")) return Ekart;
+  if (name?.includes("shipex")) return ShipexIndia;
 
   return ""; // default fallback
 };

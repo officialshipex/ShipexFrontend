@@ -52,7 +52,13 @@ const RTO = (filterOrder) => {
   const [orderId, setOrderId] = useState("");
   const [awbNumber, setAwbNumber] = useState("");
   const [paymentType, setPaymentType] = useState("");
-  const [dateRange, setDateRange] = useState([{ startDate: null, endDate: null, key: "selection" }]);
+  const [dateRange, setDateRange] = useState([
+    {
+      startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+      endDate: dayjs().endOf("day").toDate(),
+      key: "selection",
+    },
+  ]);
   const [pickupAddresses, setPickupAddresses] = useState([]);
   const [selectedPickupAddress, setSelectedPickupAddress] = useState("");
   const [courierOptions, setCourierOptions] = useState([]);
@@ -142,7 +148,7 @@ const RTO = (filterOrder) => {
 
   useEffect(() => {
     fetchOrders();
-  }, [page, limit, refresh, dateRange]);
+  }, [page, limit, refresh, dateRange, searchQuery, orderId, awbNumber, paymentType, selectedCourier, selectedPickupAddress]);
 
   const toggleDropdown = (index) => {
     setDropdownOpen(dropdownOpen === index ? null : index);
@@ -164,7 +170,13 @@ const RTO = (filterOrder) => {
     setPaymentType("");
     setSelectedPickupAddress("");
     setSelectedCourier("");
-    setDateRange([{ startDate: null, endDate: null, key: "selection" }]);
+    setDateRange([
+      {
+        startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+        endDate: dayjs().endOf("day").toDate(),
+        key: "selection",
+      },
+    ]);
     setPage(1);
     setRefresh(prev => !prev);
   };
@@ -366,14 +378,13 @@ const RTO = (filterOrder) => {
         selectedCourier={selectedCourier}
         onClearFilters={handleClearFilters}
         onApplyFilters={(filters) => {
-          setSearchQuery(filters.searchQuery);
-          setOrderId(filters.orderId);
-          setAwbNumber(filters.awbNumber);
+          setSearchQuery(filters.searchQuery?.trim() || "");
+          setOrderId(filters.orderId?.trim() || "");
+          setAwbNumber(filters.awbNumber?.trim() || "");
           setPaymentType(filters.paymentType);
           setSelectedPickupAddress(filters.selectedPickupAddress);
           setSelectedCourier(filters.selectedCourier);
           setPage(1);
-          setRefresh(prev => !prev);
           setIsFilterPanelOpen(false);
         }}
         courierOptions={courierOptions}

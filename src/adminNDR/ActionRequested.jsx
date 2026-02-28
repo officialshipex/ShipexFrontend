@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import Cookies from "js-cookie";
+import dayjs from "dayjs";
 import { ChevronDown, Filter, FileText, Download } from "lucide-react";
 import { Notification } from "../Notification";
 import { FaBars } from "react-icons/fa";
@@ -44,7 +45,13 @@ const ActionRequested = ({ userId: initialUserId }) => {
   const [orderId, setOrderId] = useState("");
   const [awbNumber, setAwbNumber] = useState("");
   const [paymentType, setPaymentType] = useState("");
-  const [dateRange, setDateRange] = useState([{ startDate: null, endDate: null, key: "selection" }]);
+  const [dateRange, setDateRange] = useState([
+    {
+      startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+      endDate: dayjs().endOf("day").toDate(),
+      key: "selection",
+    },
+  ]);
   const [pickupAddresses, setPickupAddresses] = useState([]);
   const [selectedPickupAddress, setSelectedPickupAddress] = useState("");
   const [courierOptions, setCourierOptions] = useState([]);
@@ -96,8 +103,9 @@ const ActionRequested = ({ userId: initialUserId }) => {
       const params = {
         page,
         limit,
-        status: "Action Requested",
-        ndrStatus: "Action Requested",
+        // tab:"Action Requested",
+        status: "Action_Requested",
+        ndrStatus: "Action_Requested",
         searchQuery: searchQuery || undefined,
         orderId: orderId || undefined,
         awbNumber: awbNumber || undefined,
@@ -128,7 +136,7 @@ const ActionRequested = ({ userId: initialUserId }) => {
 
   useEffect(() => {
     fetchOrders();
-  }, [page, limit, refresh, dateRange, selectedUserId]);
+  }, [page, limit, refresh, dateRange, selectedUserId, searchQuery, orderId, awbNumber, paymentType, selectedCourier, selectedPickupAddress]);
 
   const handleSelectAll = () => {
     if (selectedOrders.length === orders.length) setSelectedOrders([]);
@@ -147,7 +155,13 @@ const ActionRequested = ({ userId: initialUserId }) => {
     setSelectedPickupAddress("");
     setSelectedCourier("");
     setSelectedUserId(null);
-    setDateRange([{ startDate: null, endDate: null, key: "selection" }]);
+    setDateRange([
+      {
+        startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+        endDate: dayjs().endOf("day").toDate(),
+        key: "selection",
+      },
+    ]);
     setPage(1);
     setRefresh(prev => !prev);
   };
@@ -338,15 +352,14 @@ const ActionRequested = ({ userId: initialUserId }) => {
         selectedUserId={selectedUserId}
         onClearFilters={handleClearFilters}
         onApplyFilters={(filters) => {
-          setSearchQuery(filters.searchQuery);
-          setOrderId(filters.orderId);
-          setAwbNumber(filters.awbNumber);
+          setSearchQuery(filters.searchQuery?.trim() || "");
+          setOrderId(filters.orderId?.trim() || "");
+          setAwbNumber(filters.awbNumber?.trim() || "");
           setPaymentType(filters.paymentType);
           setSelectedPickupAddress(filters.selectedPickupAddress);
           setSelectedCourier(filters.selectedCourier);
           setSelectedUserId(filters.selectedUserId);
           setPage(1);
-          setRefresh(prev => !prev);
           setIsFilterPanelOpen(false);
         }}
         courierOptions={courierOptions}

@@ -8,6 +8,7 @@ import Sidebar from "../../components/Sidebar";
 import ShipexLogo from "../../assets/Shipex.jpg"; // adjust path as needed
 import grouplogo from "../../assets/Group.png"; // adjust path as needed
 import BulkUploadPopup from "../../Order/BulkUploadPopup"
+import SelectOrderTypePopup from "../../Order/SelectOrderTypePopup"
 import { FaPlus, FaWallet, FaSyncAlt, FaCaretDown, FaEllipsisV } from "react-icons/fa";
 import { FiUser, FiCreditCard, FiShield, FiLogOut } from "react-icons/fi";
 
@@ -58,6 +59,8 @@ const Navbar = () => {
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const mobileSearchInputRef = useRef(null);
   const mobileSearchRef = useRef(null);
+  const [showSelectOrderType, setShowSelectOrderType] = useState(false);
+  const [selectedOrderType, setSelectedOrderType] = useState("");
 
   // const dropdownRef = useRef(null);
 
@@ -301,7 +304,13 @@ const Navbar = () => {
   };
 
   const handleBulkUpload = () => {
+    setShowSelectOrderType(true);
+  };
+
+  const handleSelectOrderType = (type) => {
+    setSelectedOrderType(type);
     setUpload(true);
+    setShowSelectOrderType(false);
   };
 
   const handleCalculateRate = () => {
@@ -863,10 +872,20 @@ const Navbar = () => {
 
       {/* Sidebar (Opens Only in Mobile) */}
       {isSidebarOpen && <Sidebar onClose={() => setIsSidebarOpen(false)} />}
+      <SelectOrderTypePopup
+        isOpen={showSelectOrderType}
+        onClose={() => setShowSelectOrderType(false)}
+        onSelect={handleSelectOrderType}
+      />
       {upload && (
         <BulkUploadPopup
           onClose={() => setUpload(false)}
           setRefresh={setRefresh}
+          selectedOrderType={selectedOrderType}
+          onBack={() => {
+            setUpload(false);
+            setShowSelectOrderType(true);
+          }}
 
         />
       )}
