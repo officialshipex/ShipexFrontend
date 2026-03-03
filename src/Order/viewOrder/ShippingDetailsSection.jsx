@@ -23,7 +23,7 @@ const ShippingDetailsSection = ({ order }) => {
 
 
     // Only show if status is not "new" and not "Cancelled"
-    if (order.status === "new" || order.status === "Cancelled") {
+    if (order.status === "new") {
         return null;
     }
 

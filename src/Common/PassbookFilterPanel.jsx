@@ -17,12 +17,12 @@ const PassbookFilterPanel = ({
     showUserFilter = true,
 }) => {
     const [localFilters, setLocalFilters] = useState({
-        selectedUserId: null,
-        searchUser: "",
-        awbNumber: "",
-        orderId: "",
-        category: "",
-        description: ""
+        selectedUserId: initialSelectedUserId || null,
+        searchUser: initialSelectedUserId ? "Selected User" : "",
+        awbNumber: initialAwbNumber || "",
+        orderId: initialOrderId || "",
+        category: initialCategory || "",
+        description: initialDescription || ""
     });
 
     const categoryRef = useRef(null);
@@ -36,6 +36,15 @@ const PassbookFilterPanel = ({
 
     useEffect(() => {
         if (isOpen) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "auto";
+        }
+    }, [isOpen]);
+
+    // Sync localFilters with parent values whenever they change OR panel opens
+    useEffect(() => {
+        if (isOpen) {
             setLocalFilters({
                 selectedUserId: initialSelectedUserId || null,
                 searchUser: initialSelectedUserId ? "Selected User" : "",
@@ -44,9 +53,6 @@ const PassbookFilterPanel = ({
                 category: initialCategory || "",
                 description: initialDescription || ""
             });
-            document.body.style.overflow = "hidden";
-        } else {
-            document.body.style.overflow = "auto";
         }
     }, [isOpen, initialSelectedUserId, initialAwbNumber, initialOrderId, initialCategory, initialDescription]);
 

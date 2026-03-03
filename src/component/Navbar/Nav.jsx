@@ -784,8 +784,8 @@ const Navbar = () => {
                     checked={isAdminTab}
                     onChange={(e) => handleToggleAdmin(e.target.checked)}
                   />
-                  <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-focus:outline-none peer-checked:bg-[#0CBB7D] transition-colors duration-300"></div>
-                  <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300 transform peer-checked:translate-x-5"></div>
+                  <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-focus:outline-none peer-checked:bg-[#0CBB7D] transition-colors duration-300"></div>
+                  <div className="absolute left-1 top-1.5 bg-white w-3 h-3 rounded-full transition-transform duration-300 transform peer-checked:translate-x-5"></div>
                 </label>
               </li>
             )}
@@ -845,8 +845,8 @@ const Navbar = () => {
                     checked={isAdminTab}
                     onChange={(e) => handleToggleAdmin(e.target.checked)}
                   />
-                  <div className="w-11 h-6 bg-gray-300 rounded-full peer-checked:bg-[#0CBB7D] transition-all duration-300"></div>
-                  <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transform transition-all duration-300 peer-checked:translate-x-5"></div>
+                  <div className="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-[#0CBB7D] transition-all duration-300"></div>
+                  <div className="absolute left-1 top-1.5 bg-white w-3 h-3 rounded-full transform transition-all duration-300 peer-checked:translate-x-5"></div>
                 </label>
               </li>
             )}

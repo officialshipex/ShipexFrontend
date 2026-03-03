@@ -1,39 +1,26 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-// import ReadyToShipOrders from "./ReadyToShipOrders";
 import RTOOrders from "./RTOorders";
-import UndeliveredOrders from "./UndeliveredOrders"
-// import NotPickedOrders from "./NotPickedOrders";
+import UndeliveredOrders from "./UndeliveredOrders";
+import ActionRequired from "./ActionRequired";
+import ActionRequested from "./ActionRequested";
 import axios from "axios";
 import Cookies from "js-cookie";
 import EmployeeAuthModal from "../../employeeAuth/EmployeeAuthModal";
 import { ChevronDown } from "lucide-react";
-import ActionRequired from "./ActionRequired";
-import ActionRequested from "./ActionRequested";
 
 const LastMile = ({ isSidebarAdmin }) => {
   const [showDropdown, setShowDropdown] = useState(false);
-  const [showModal, setShowModal] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
-  const [orders, setOrders] = useState([]);
-  const [refresh, setRefresh] = useState(false);
-  const [filteredOrders, setFilteredOrders] = useState([]);
-  const [orderIds, setOrderIds] = useState("");
-  const [awbNumbers, setAwbNumbers] = useState("");
-  const [productName, setProductName] = useState("");
-  const [channel, setChannel] = useState("");
-  const [type, setType] = useState("");
-  const [courier, setCourier] = useState("");
-  const [attempts, setAttempts] = useState("");
-  const location = useLocation();
   const [showEmployeeAuthModal, setShowEmployeeAuthModal] = useState(false);
   const [employeeAccess, setEmployeeAccess] = useState({ isAdmin: false, canView: false });
+
+  const location = useLocation();
   const navigate = useNavigate();
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-  const tabs = ["RTO", "Undelivered","Action Required","Action Requested"];
-  const isOperationFirstMileRoute = location.pathname === "/adminDashboard/operations/lastmile";
-  const tabStorageKey = isOperationFirstMileRoute ? "activeOperationLastMileTab" : "activeOrderTab";
+  const tabs = ["RTO", "Undelivered", "Action Required", "Action Requested"];
+  const tabStorageKey = "activeOperationLastMileTab";
+
   const [activeTab, setActiveTab] = useState(() => {
     return localStorage.getItem(tabStorageKey) || "RTO";
   });
@@ -46,14 +33,14 @@ const LastMile = ({ isSidebarAdmin }) => {
   }, [activeTab]);
 
   useEffect(() => {
-    const fetchOrders = async () => {
+    const checkAccess = async () => {
       try {
         if (isSidebarAdmin) {
-          setEmployeeAccess({ isAdmin: true, canView: true, canAction: true });
+          setEmployeeAccess({ isAdmin: true, canView: true });
           setShowEmployeeAuthModal(false);
-          return;
         } else {
           const token = Cookies.get("session");
+          if (!token) { setShowEmployeeAuthModal(true); return; }
           const employeeResponse = await axios.get(
             `${REACT_APP_BACKEND_URL}/staffRole/verify`,
             { headers: { Authorization: `Bearer ${token}` } }
@@ -61,102 +48,88 @@ const LastMile = ({ isSidebarAdmin }) => {
           const employeeInfo = employeeResponse.data.employee;
           const canView = !!employeeInfo?.accessRights?.ndr?.['All NDR']?.view;
           setEmployeeAccess({ canView });
-
-          if (!canView) {
-            setShowEmployeeAuthModal(true);
-            return;
-          }
+          if (!canView) setShowEmployeeAuthModal(true);
         }
-        const token = Cookies.get("session");
-        const response = await axios.get(
-          `${REACT_APP_BACKEND_URL}/order/orders`,
-          { headers: { authorization: `Bearer ${token}` } }
-        );
-        setOrders(response.data.orders);
-        setRefresh(false);
-        setFilteredOrders(response.data.orders);
       } catch (error) {
-        console.error("Error fetching orders:", error);
+        console.error("Error verifying employee access:", error);
+        setShowEmployeeAuthModal(true);
       }
     };
-    fetchOrders();
-  }, [refresh, isSidebarAdmin]);
+    checkAccess();
+  }, [isSidebarAdmin]);
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case "RTO":
-        return <RTOOrders orders={filteredOrders} userId={userId} />;
-      case "Undelivered":
-        return <UndeliveredOrders orders={filteredOrders} userId={userId} />;
-      case "Action Required":
-        return <ActionRequired orders={filteredOrders} userId={userId} />;
-        case "Action Requested":
-        return <ActionRequested orders={filteredOrders} userId={userId} />;
-      // case "Ready To Ship":
-      default:
-        return <div>Select a tab to view orders.</div>;
+      case "RTO": return <RTOOrders userId={userId} />;
+      case "Undelivered": return <UndeliveredOrders userId={userId} />;
+      case "Action Required": return <ActionRequired userId={userId} />;
+      case "Action Requested": return <ActionRequested userId={userId} />;
+      default: return <div className="p-4 text-center text-gray-500">Select a tab to view orders.</div>;
     }
   };
 
   return (
-    <div className={`md:px-2 px-1 ${showModal ? "overflow-hidden" : ""}`}>
-      <div className="mb-1">
-        <h1 className="text-[12px] md:text-[18px] font-[600] text-gray-700">Last Mile</h1>
+    <div className="md:px-2">
+      <div className="mb-2">
+        <h1 className="text-[12px] md:text-[14px] font-[600] text-gray-700">Last Mile</h1>
       </div>
-      <div className="flex justify-between items-center md:grid md:grid-cols-2 w-full">
+
+      <div className="flex flex-col gap-2 mb-2">
+        {/* Tabs for larger screens */}
         <div className="hidden md:flex flex-wrap gap-2">
           {tabs.map((tab) => (
             <button
               key={tab}
-              className={`px-3 py-2 text-[12px] rounded-lg font-[600] transition-all duration-200 ${
-                activeTab === tab ? "bg-[#0CBB7D] text-white" : "bg-white text-gray-700 hover:bg-green-200"
-              }`}
+              className={`px-3 py-2 text-[12px] rounded-lg font-[600] transition-all duration-200 shadow-sm border ${activeTab === tab
+                  ? "bg-[#0CBB7D] text-white border-[#0CBB7D]"
+                  : "bg-white text-gray-700 border-gray-200 hover:bg-green-50"
+                }`}
               onClick={() => setActiveTab(tab)}
             >
               {tab}
             </button>
           ))}
         </div>
+
+        {/* Dropdown for mobile */}
+        <div className="relative md:hidden">
+          <button
+            className="w-full px-3 py-2 bg-white border border-gray-200 shadow-sm rounded-lg text-[12px] font-[600] text-gray-700 flex justify-between items-center"
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
+            {activeTab} <ChevronDown className={`w-4 h-4 transition-transform ${showDropdown ? "rotate-180" : ""}`} />
+          </button>
+          {showDropdown && (
+            <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[100] overflow-hidden animate-popup-in">
+              {tabs.map((tab) => (
+                <button
+                  key={tab}
+                  className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${activeTab === tab ? "bg-green-50 text-[#0CBB7D]" : "text-gray-700 hover:bg-gray-50"
+                    }`}
+                  onClick={() => { setActiveTab(tab); setShowDropdown(false); }}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
+
       {!isSidebarAdmin && showEmployeeAuthModal && (
         <EmployeeAuthModal
           employeeModalShow={showEmployeeAuthModal}
           employeeModalClose={() => {
             setShowEmployeeAuthModal(false);
-            window.history.back();
+            navigate(-1);
           }}
         />
       )}
+
       {(isSidebarAdmin || employeeAccess.isAdmin || employeeAccess.canView) && (
-        <>
-          <div className="relative md:hidden mb-2">
-            <button
-              className="w-full px-3 py-2 bg-[#0CBB7D] text-white rounded-lg text-[10px] font-[600] flex justify-between items-center"
-              onClick={() => setShowDropdown(!showDropdown)}
-            >
-              {activeTab} <ChevronDown className="w-3 h-3 ml-2" />
-            </button>
-            {showDropdown && (
-              <div className="absolute top-full left-0 w-full mt-1 bg-white border rounded-lg shadow-lg z-10">
-                {tabs.map((tab) => (
-                  <button
-                    key={tab}
-                    className={`w-full text-left px-3 py-2 text-[10px] font-[600] text-gray-700 hover:bg-gray-200 ${
-                      activeTab === tab ? "bg-green-100" : "bg-green-50"
-                    }`}
-                    onClick={() => {
-                      setActiveTab(tab);
-                      setShowDropdown(false);
-                    }}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-            )}
-          </div>
-          <div className="overflow-x-auto">{renderTabContent()}</div>
-        </>
+        <div className="w-full">
+          {renderTabContent()}
+        </div>
       )}
     </div>
   );

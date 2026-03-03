@@ -49,18 +49,18 @@ const OrderRowActions = ({
                     : `/dashboard/order/courierSelection/${order._id}`
                 ),
         },
-        Booked: {
-            label: "Schedule Pickup",
-            className: "sm:bg-[#0CBB7D] bg-white text-[#0CBB7D] sm:text-white sm:border-0 border border-[#0CBB7D]",
-            onClick: () =>
-                handleScheduledPickup(order),
-        },
-        "Ready To Ship": {
-            label: "Download Manifest",
-            className: "sm:bg-[#0CBB7D] bg-white text-[#0CBB7D] sm:text-white sm:border-0 border border-[#0CBB7D]",
-            onClick: () =>
-                handleManifest(order._id),
-        },
+        // Booked: {
+        //     label: "Schedule Pickup",
+        //     className: "sm:bg-[#0CBB7D] bg-white text-[#0CBB7D] sm:text-white sm:border-0 border border-[#0CBB7D]",
+        //     onClick: () =>
+        //         handleScheduledPickup(order),
+        // },
+        // "Ready To Ship": {
+        //     label: "Download Manifest",
+        //     className: "sm:bg-[#0CBB7D] bg-white text-[#0CBB7D] sm:text-white sm:border-0 border border-[#0CBB7D]",
+        //     onClick: () =>
+        //         handleManifest(order._id),
+        // },
         Cancelled: {
             label: "Clone Order",
             className: "sm:bg-[#0CBB7D] bg-white text-[#0CBB7D] sm:text-white sm:border-0 border border-[#0CBB7D]",
@@ -74,9 +74,9 @@ const OrderRowActions = ({
     // Status-based visibility logic
     const showCancel = ["Ready To Ship", "Booked", "Not Picked"].includes(order.status);
     const cancelLabel = isNewOrder ? "Delete Order" : "Cancel Order";
-    const restrictedForManifest = ["new", "Booked", "Not Picked", "Cancelled"];
+    const restrictedForManifest = ["new", "Cancelled"];
     const showDownloadManifest = !restrictedForManifest.includes(order.status);
-    const restrictedForLabel = ["new", "Booked", "Ready To Ship", "Not Picked", "Cancelled"];
+    const restrictedForLabel = ["new",  "Cancelled"];
     const showDownloadLabel = !restrictedForLabel.includes(order.status);
 
     // Calculate position whenever we open

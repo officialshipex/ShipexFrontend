@@ -69,8 +69,12 @@ const PickupManifestOrders = ({ orderType = "B2C", userId: initialUserId }) => {
             }
         };
         updateHeight();
+        const timeoutId = setTimeout(updateHeight, 300);
         window.addEventListener("resize", updateHeight);
-        return () => window.removeEventListener("resize", updateHeight);
+        return () => {
+            window.removeEventListener("resize", updateHeight);
+            clearTimeout(timeoutId);
+        };
     }, []);
 
     const fetchManifests = async () => {

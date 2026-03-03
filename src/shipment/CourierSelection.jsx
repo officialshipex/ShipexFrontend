@@ -86,8 +86,9 @@ const CarrierSelection = () => {
 
       Notification(response?.data?.message || "Shipment created successfully", "success");
       setShipmentResponse(response.data);
-      setShowScheduleModal(true);
-      // navigate("/dashboard/b2c/order");
+      // TODO: Open SchedulePickupModal once implemented
+      // setShowScheduleModal(true);
+      navigate("/dashboard/b2c/order");
     } catch (error) {
       Notification(error.response?.data?.message || "Something went wrong", "error");
       console.log("service error", error);
@@ -271,7 +272,7 @@ const CarrierSelection = () => {
                       <span className="text-gray-500 font-semibold">Applicable Weight:</span>
                       <span className="font-semibold">{orderDetails?.packageDetails?.applicableWeight} kg</span>
                     </div>
-                    
+
                   </div>
                 </div>
               </div>
@@ -735,7 +736,8 @@ const CarrierSelection = () => {
         }
       </div >
 
-      {showScheduleModal && shipmentResponse && (
+      {/* TODO: Uncomment once SchedulePickupModal is implemented */}
+      {/* {showScheduleModal && shipmentResponse && (
         <SchedulePickupModal
           orderId={shipmentResponse.order?._id || id}
           awb={shipmentResponse.awb_number}
@@ -745,7 +747,7 @@ const CarrierSelection = () => {
             navigate("/dashboard/b2c/order");
           }}
         />
-      )}
+      )} */}
     </div >
   );
 };

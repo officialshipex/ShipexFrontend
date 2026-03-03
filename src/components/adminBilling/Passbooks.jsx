@@ -1,9 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
-import { FaCalendarAlt, FaWallet, FaRupeeSign, FaFilter, FaBars, FaBook, FaUndo } from "react-icons/fa";
+import { FaCalendarAlt, FaWallet, FaRupeeSign, FaFilter, FaBars, FaBook, FaUndo, FaBookOpen } from "react-icons/fa";
 import dayjs from "dayjs";
-import { useNavigate, Link } from "react-router-dom";
-import { ChevronDown } from "lucide-react";
+import { useNavigate, Link, useLocation } from "react-router-dom";
+import { ChevronDown, Filter, X } from "lucide-react";
 import ThreeDotLoader from "../../Loader"
 import { motion, AnimatePresence } from "framer-motion";
 import { getCarrierLogo } from "../../Common/getCarrierLogo";
@@ -15,8 +15,8 @@ import DateFilter from "../../filter/DateFilter";
 import OrderAwbFilter from "../../filter/OrderAwbFilter";
 import PaginationFooter from "../../Common/PaginationFooter";
 import NoDataFound from "../../assets/nodatafound.png";
-import { FiCopy, FiCheck } from "react-icons/fi";
-import { Filter } from "lucide-react";
+import { FiCopy, FiCheck, FiBookOpen } from "react-icons/fi";
+
 import PassbookFilterPanel from "../../Common/PassbookFilterPanel";
 
 const Passbooks = () => {
@@ -40,10 +40,44 @@ const Passbooks = () => {
   const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
+  const [pricePopupPos, setPricePopupPos] = useState(null);
+  const pricePopupTimerRef = useRef(null);
+  const [mobilePricePopupId, setMobilePricePopupId] = useState(null);
 
   const desktopActionRef = useRef();
   const mobileActionRef = useRef();
   const navigate = useNavigate();
+  const location = useLocation();
+  // Ref to skip fetch while nav-state is being applied (prevents showing all-data flash)
+  const skipNextFetchRef = useRef(false);
+
+  const handleClearFilters = () => {
+    setSelectedUserId(null);
+    setDateRange(null);
+    setCategory("");
+    setDescription("");
+    setAwbNumber("");
+    setOrderId("");
+    setClearTrigger((prev) => !prev);
+    setShowFilters(false);
+    setPage(1);
+  };
+
+  useEffect(() => {
+    if (location.state?.awbNumber) {
+      // Mark that we're about to update multiple states from nav
+      // The fetchTransactions dependency useEffect will fire multiple times
+      // during state settling — skip those and let the final settled state fire
+      skipNextFetchRef.current = true;
+      setAwbNumber(location.state.awbNumber.trim());
+      setSelectedUserId(null);
+      setDateRange(null);
+      setCategory("");
+      setDescription("");
+      setOrderId("");
+      setPage(1);
+    }
+  }, [location.state]);
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -86,6 +120,11 @@ const Passbooks = () => {
   };
 
   useEffect(() => {
+    if (skipNextFetchRef.current) {
+      // States are still settling from nav — skip this intermediate fetch
+      skipNextFetchRef.current = false;
+      return;
+    }
     fetchTransactions();
   }, [selectedUserId, dateRange, page, limit, category, description, awbNumber, orderId]);
 
@@ -98,17 +137,6 @@ const Passbooks = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleClearFilters = () => {
-    setSelectedUserId(null);
-    setDateRange(null);
-    setCategory("");
-    setDescription("");
-    setAwbNumber("");
-    setOrderId("");
-    setClearTrigger(prev => !prev);
-    setShowFilters(false);
-    setPage(1);
-  };
 
   const handleSelectAll = () => {
     if (selectedTransactions.length === transactions.length && transactions.length > 0) {
@@ -395,9 +423,37 @@ const Passbooks = () => {
                       </span>
                     </td>
                     <td className="py-2 px-3">
-                      <span className={`text-[12px] ${row.category === "debit" ? "text-red-500" : "text-[#0CBB7D]"}`}>
-                        ₹{Number(row.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
-                      </span>
+                      <div className="flex items-center gap-1 justify-start">
+                        <span className={`text-[12px] ${row.category === "debit" ? "text-red-500" : "text-[#0CBB7D]"} font-medium`}>
+                          ₹{Number(row.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
+                        </span>
+                        {row.category === "debit" && (
+                          <div
+                            className="relative cursor-help ml-0.5"
+                            onMouseEnter={(e) => {
+                              if (pricePopupTimerRef.current) clearTimeout(pricePopupTimerRef.current);
+                              const rect = e.currentTarget.getBoundingClientRect();
+                              const dir = rect.top < window.innerHeight * 0.4 ? "bottom" : "top";
+                              setPricePopupPos({
+                                x: rect.left + rect.width / 2,
+                                y: dir === "top" ? rect.top - 10 : rect.bottom + 10,
+                                dir,
+                                order: row
+                              });
+                            }}
+                            onMouseLeave={() => {
+                              pricePopupTimerRef.current = setTimeout(() => {
+                                setPricePopupPos(null);
+                              }, 150);
+                            }}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-[#0CBB7D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                              <path d="M12 8v4m0 4h.01" strokeWidth="2" strokeLinecap="round" />
+                            </svg>
+                          </div>
+                        )}
+                      </div>
                     </td>
                     <td className="py-2 px-3 text-gray-700">₹{Number(row.balanceAfterTransaction).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
                     <td className="py-2 px-3">
@@ -510,10 +566,10 @@ const Passbooks = () => {
                 {/* Details Grid */}
                 <div className="grid grid-cols-2 gap-y-1 mb-1 p-0.5">
                   <div>
-                    <p className="text-gray-400 font-[600] text-[10px]">Order ID</p>
+                    <p className="text-gray-700 text-[10px]">Order ID</p>
                     <div className="flex items-center gap-1">
                       <Link to={`/dashboard/order/neworder/updateOrder/${row.orderId}`} className="text-[#0CBB7D] font-[600] hover:text-[#0CBB7D] text-[10px]">
-                        #{row.orderId}
+                        {row.orderId}
                       </Link>
                       <button onClick={() => handleCopy(row.orderId, row.id + '_orderId_mobile')}>
                         {copiedId === row.id + '_orderId_mobile' ? <FiCheck className="w-2.5 h-2.5 text-[#0CBB7D]" /> : <FiCopy className="w-2.5 h-2.5 text-gray-400" />}
@@ -521,7 +577,7 @@ const Passbooks = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-gray-400 font-[600] text-[10px]">AWB Number</p>
+                    <p className="text-gray-700 text-[10px]">AWB Number</p>
                     <div className="flex items-center justify-end gap-1">
                       <p className="text-[#0CBB7D] font-[600] truncate hover:underline text-[10px]" onClick={() => handleTrackingByAwb(row.awb_number)}>
                         {row.awb_number || "N/A"}
@@ -535,13 +591,29 @@ const Passbooks = () => {
                   </div>
                   <div className="border-t border-gray-50 pt-1 mt-1 col-span-2 flex justify-between items-center">
                     <div>
-                      <p className="text-gray-400 font-[600] text-[10px]">Amount</p>
-                      <p className={`font-[600] text-[10px] ${row.category === "debit" ? "text-red-500" : "text-[#0CBB7D]"}`}>
-                        ₹{Number(row.amount).toFixed(2)}
-                      </p>
+                      <p className="text-gray-700 text-[10px]">Amount</p>
+                      <div className="flex items-center gap-1">
+                        <p className={`font-[600] text-[10px] ${row.category === "debit" ? "text-red-500" : "text-[#0CBB7D]"}`}>
+                          ₹{Number(row.amount).toFixed(2)}
+                        </p>
+                        {row.category === "debit" && (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setMobilePricePopupId(mobilePricePopupId === (row.id || row._id) ? null : (row.id || row._id));
+                            }}
+                            className="text-[#0CBB7D] p-1.5 -m-1.5"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <circle cx="12" cy="12" r="10" strokeWidth="2" />
+                              <path d="M12 8v4m0 4h.01" strokeWidth="2" strokeLinecap="round" />
+                            </svg>
+                          </button>
+                        )}
+                      </div>
                     </div>
                     <div className="text-right">
-                      <p className="text-gray-400 font-[600] text-[10px]">Balance After</p>
+                      <p className="text-gray-700 text-[10px]">Balance After</p>
                       <p className="text-gray-700 font-[600] text-[10px]">₹{Number(row.balanceAfterTransaction).toFixed(2)}</p>
                     </div>
                   </div>
@@ -600,6 +672,7 @@ const Passbooks = () => {
       </div>
 
       <PassbookFilterPanel
+        key={`${awbNumber}-${orderId}-${category}-${description}-${selectedUserId}`}
         isOpen={isFilterPanelOpen}
         onClose={() => setIsFilterPanelOpen(false)}
         selectedUserId={selectedUserId}
@@ -662,6 +735,107 @@ const Passbooks = () => {
           </div>
         )}
       </AnimatePresence>
+
+      {/* Mobile Price Breakup Modal */}
+      <AnimatePresence>
+        {mobilePricePopupId && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 md:hidden">
+            <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setMobilePricePopupId(null)}></div>
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              className="bg-white rounded-xl shadow-2xl p-4 w-full max-w-xs relative z-10"
+            >
+              <div className="flex justify-between items-center mb-3">
+                <h3 className="font-bold text-gray-800 text-[12px] uppercase">Price Breakup</h3>
+                <X className="w-4 h-4 text-gray-400 cursor-pointer" onClick={() => setMobilePricePopupId(null)} />
+              </div>
+              <div className="space-y-2 text-[12px]">
+                {(() => {
+                  const row = transactions.find(t => (t.id || t._id) === mobilePricePopupId);
+                  if (!row) return null;
+                  if (row.orderType === "B2C") {
+                    return (
+                      <div className="space-y-1.5">
+                        <div className="flex justify-between"><span className="text-gray-500">Freight</span><span className="font-bold">₹ {row.priceBreakup?.freight ?? 0}</span></div>
+                        <div className="flex justify-between"><span className="text-gray-500">COD</span><span className="font-bold">₹ {row.priceBreakup?.cod ?? 0}</span></div>
+                        <div className="flex justify-between"><span className="text-gray-500">GST</span><span className="font-bold">₹ {row.priceBreakup?.gst ?? 0}</span></div>
+                        <div className="flex justify-between border-t pt-2 mt-1"><span className="font-bold text-gray-800">Total</span><span className="font-bold text-[#0CBB7D]">₹ {row.priceBreakup?.total ?? row.amount ?? 0}</span></div>
+                      </div>
+                    );
+                  } else {
+                    return (
+                      <div className="space-y-1.5">
+                        {row.rateBreakup && Object.keys(row.rateBreakup).length > 0
+                          ? Object.entries(row.rateBreakup).map(([key, val]) => (
+                            <div key={key} className="flex justify-between">
+                              <span className="text-gray-500 capitalize">{key}</span>
+                              <span className="font-bold">{typeof val === "number" ? `₹ ${val}` : val}</span>
+                            </div>
+                          ))
+                          : <p className="text-gray-400 italic text-center py-2">No breakup available</p>
+                        }
+                        <div className="flex justify-between border-t border-dashed pt-2 mt-1"><span className="font-bold text-gray-800">Total</span><span className="font-bold text-[#0CBB7D]">₹ {row.amount || 0}</span></div>
+                      </div>
+                    );
+                  }
+                })()}
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Desktop Price Breakdown Popup (Fixed position) */}
+      {pricePopupPos && (
+        <div
+          style={{
+            position: "fixed",
+            zIndex: 9999,
+            left: pricePopupPos.x,
+            ...(pricePopupPos.dir === "top"
+              ? { bottom: window.innerHeight - pricePopupPos.y }
+              : { top: pricePopupPos.y }),
+            transform: "translateX(-50%)",
+            pointerEvents: "auto",
+          }}
+          className="bg-white border shadow-2xl rounded-lg p-3 w-60 text-[10px] text-gray-700 whitespace-normal max-h-[300px] overflow-y-auto custom-scrollbar"
+          onMouseEnter={() => {
+            if (pricePopupTimerRef.current) clearTimeout(pricePopupTimerRef.current);
+          }}
+          onMouseLeave={() => {
+            pricePopupTimerRef.current = setTimeout(() => {
+              setPricePopupPos(null);
+            }, 150);
+          }}
+        >
+          <div className="sticky top-0 bg-white pb-1 mb-2 border-b z-10">
+            <p className="font-[700] text-gray-800">Price Breakup</p>
+          </div>
+          {pricePopupPos.order.orderType === "B2C" ? (
+            <div className="space-y-1">
+              <div className="flex justify-between"><span className="text-gray-500">Freight</span><span className="font-[600]">₹ {pricePopupPos.order.priceBreakup?.freight ?? 0}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">COD</span><span className="font-[600]">₹ {pricePopupPos.order.priceBreakup?.cod ?? 0}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">GST</span><span className="font-[600]">₹ {pricePopupPos.order.priceBreakup?.gst ?? 0}</span></div>
+              <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-gray-800">Total</span><span className="font-[700] text-[#0CBB7D]">₹ {pricePopupPos.order.priceBreakup?.total ?? pricePopupPos.order.amount ?? 0}</span></div>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {pricePopupPos.order.rateBreakup && Object.keys(pricePopupPos.order.rateBreakup).length > 0
+                ? Object.entries(pricePopupPos.order.rateBreakup).map(([key, val]) => (
+                  <div key={key} className="flex justify-between">
+                    <span className="text-gray-500 capitalize">{key}</span>
+                    <span className="font-[600]">{typeof val === "number" ? `₹ ${val}` : val}</span>
+                  </div>
+                ))
+                : <p className="text-gray-400 italic">No breakup available</p>
+              }
+              <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-gray-800">Total</span><span className="font-[700] text-[#0CBB7D]">₹ {pricePopupPos.order.amount || 0}</span></div>
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 };

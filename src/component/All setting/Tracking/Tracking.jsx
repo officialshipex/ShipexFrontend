@@ -283,27 +283,35 @@ function TrackingCard({ trackingAwb, statusSteps, CopyableText }) {
       {/* Courier summary */}
       <div className="flex flex-row justify-between items-center px-3 pt-4 pb-2 gap-2">
         <div className="flex flex-col font-[600] text-[10px] gap-1 items-start sm:text-[12px] text-gray-700">
-          <div className="flex items-center gap-2 max-w-full md:max-w-[50%] min-w-0">
+          <div className="flex items-center gap-2 max-w-full md:max-w-[100%] min-w-0">
             <div className="w-10 h-10 rounded bg-gray-100 flex items-center justify-center flex-shrink-0">
               <img
-                src={getCarrierLogo(trackingAwb.provider)}
-                alt={trackingAwb.provider}
+                src={getCarrierLogo(trackingAwb.courierServiceName)}
+                alt={trackingAwb.courierServiceName}
                 className="w-8 h-8 object-contain"
               />
             </div>
-            <span className="font-[600] text-[12px] sm:text-[14px] text-gray-700">
-              {trackingAwb.provider === "Smartship" ? "Bluedart" : trackingAwb.provider}
-            </span>
+            <div className="flex flex-col text-[10px] sm:text-[12px]">
+              <span className="font-[600] text-gray-700">
+                {trackingAwb.courierServiceName}
+              </span>
+              
+                <div className="font-[600] flex gap-1 text-gray-500">
+                  <p>{trackingAwb.createdAt ? new Date(trackingAwb.createdAt).toLocaleDateString() : "-"}</p>
+                  <p>{trackingAwb.createdAt ? new Date(trackingAwb.createdAt).toLocaleTimeString() : "-"}</p>
+                </div>
+              
+            </div>
           </div>
           <CopyableText label="Order ID" text={trackingAwb.orderId} copyKey="orderId" />
-          <CopyableText label="Tracking ID" text={trackingAwb.awb_number} copyKey="trackingId" />
+          <CopyableText label="AWB Number" text={trackingAwb.awb_number} copyKey="trackingId" />
           {(trackingAwb.status === "RTO" || trackingAwb.status === "RTO In-transit" || trackingAwb.status === "RTO Delivered") && (
-            <CopyableText label="RTO Tracking ID" text={trackingAwb.awb_number} copyKey="trackingId" />
+            <CopyableText label="RTO AWB Number" text={trackingAwb.awb_number} copyKey="rtoTrackingId" />
           )}
           <span>
             Status :{" "}
             <span
-              className={`font-[600] text-[8px] sm:text-[10px] p-1 rounded-lg ${isCancelled ? "bg-red-600 text-white" : "bg-[#0CBB7D] text-white"
+              className={`text-[10px] px-2 py-0.5 rounded ${isCancelled ? "bg-red-100 text-red-600" : "text-[#0CBB7D] bg-green-100"
                 }`}
             >
               {trackingAwb.status}
@@ -323,6 +331,12 @@ function TrackingCard({ trackingAwb, statusSteps, CopyableText }) {
             <div className="font-[600] flex gap-1 text-gray-500">
               <p>{trackingAwb.estimatedDeliveryDate ? new Date(trackingAwb.estimatedDeliveryDate).toLocaleDateString() : "-"}</p>
               {/* <p>{trackingAwb.estimatedDeliveryDate ? new Date(trackingAwb.estimatedDeliveryDate).toLocaleTimeString() : "-"}</p> */}
+            </div>
+          </div>
+          <div className="flex gap-1">
+            <p>Pickup Date :{" "}</p>
+            <div className="font-[600] flex gap-1 text-gray-500">
+              <p>{trackingAwb.pickupDate ? new Date(trackingAwb.pickupDate).toLocaleDateString() : "-"}</p>
             </div>
           </div>
           <div className="flex gap-1">

@@ -479,7 +479,7 @@ const CodRemittances = () => {
 
                 <div className="grid grid-cols-2 gap-2 text-[10px] mb-2">
                   <div>
-                    <p className="text-gray-400">UTR Number</p>
+                    <p className="text-gray-700">UTR Number</p>
                     <div className="flex items-center gap-1 group">
                       <p className="font-bold text-[#0CBB7D]">{row.utr || "N/A"}</p>
                       {row.utr && row.utr !== "N/A" && (
@@ -490,7 +490,7 @@ const CodRemittances = () => {
                     </div>
                   </div>
                   <div className="text-right">
-                    <p className="text-gray-400">Method</p>
+                    <p className="text-gray-700">Method</p>
                     <p className="font-bold text-[#0CBB7D]">{row.remittanceMethod || "N/A"}</p>
                   </div>
                 </div>

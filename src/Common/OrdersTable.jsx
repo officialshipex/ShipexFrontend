@@ -180,7 +180,7 @@ const OrdersTable = ({
 
                                 <div className="flex gap-2 items-center justify-start">
                                     {/* CHANNEL BADGE */}
-                                    <p className="uppercase text-[10px] leading-none text-[#0CBB7D] bg-green-200 py-0.5 px-2 rounded w-fit">
+                                    <p className="uppercase text-[10px] leading-none text-[#0CBB7D] bg-green-100 py-0.5 px-2 rounded w-fit">
                                         {order?.channel || "CUSTOM"}
                                     </p>
                                     {/* CHANNEL ID */}
@@ -444,12 +444,14 @@ const OrdersTable = ({
                                             : "-"}
                                     </p>
 
-                                    <p className="text-gray-500 text-[10px]">
-                                        Delivered On :{" "}
-                                        {order.tracking
-                                            ? `${dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("DD MMM YYYY")}`
-                                            : "-"}
-                                    </p>
+                                    {order.status === "Delivered" && (
+                                        <p className="text-gray-500 text-[10px]">
+                                            Delivered On :{" "}
+                                            {order.tracking
+                                                ? `${dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("DD MMM YYYY")}`
+                                                : "-"}
+                                        </p>
+                                    )}
 
 
                                     {/* AWB + COPY (SAME BEHAVIOR AS ORDER ID) */}
@@ -503,7 +505,7 @@ const OrdersTable = ({
 
                             )}
                             <td className="py-2 px-3 whitespace-nowrap">
-                                <span className="px-2 py-0.5 rounded text-[10px] bg-green-100 text-[#0CBB7D]">{order.status}</span>
+                                <span className={`px-2 py-0.5 rounded text-[10px] ${order.status === "Cancelled" ? "bg-red-100 text-red-600" : "bg-green-100 text-[#0CBB7D]"}`}>{order.status}</span>
                             </td>
 
                             {/* NDR DETAILS */}

@@ -328,7 +328,7 @@ const ViewOrder = ({ isSidebarAdmin }) => {
 
           {/* Right Section - 20% on desktop - Tracking */}
           <div className="lg:col-span-2">
-            <TrackingDetailsSection tracking={tracking} />
+            <TrackingDetailsSection tracking={tracking} orderStatus={order.status} />
           </div>
         </div>
 

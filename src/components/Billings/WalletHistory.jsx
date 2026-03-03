@@ -408,7 +408,7 @@ const WalletHistory = ({
                     </div>
                     <div className="space-y-1">
                       <div className="flex items-center gap-1">
-                        <span className="text-[#0CBB7D] font-[600] text-[10px]">{row.paymentDetails?.transactionId}</span>
+                        <span className="text-gray-700 font-[600] text-[10px]">Transaction Id : <span className="text-[#0CBB7D] font-[600]">{row.paymentDetails?.transactionId}</span></span>
                         <button onClick={() => handleCopy(row.paymentDetails?.transactionId, row._id + '_txn_mobile')}>
                           {copiedId === row._id + '_txn_mobile' ? <FiCheck className="w-3 h-3 text-[#0CBB7D]" /> : <FiCopy className="w-3 h-3 text-gray-300" />}
                         </button>

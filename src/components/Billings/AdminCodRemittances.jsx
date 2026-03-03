@@ -578,7 +578,7 @@ const AdminCodRemittances = ({ isSidebarAdmin }) => {
               <div className="flex items-center justify-between px-4 py-2 border-b border-gray-100 bg-white">
                 <h2 className="text-[16px] font-bold text-gray-700 tracking-tight">Filters</h2>
                 <button onClick={() => setIsFilterPanelOpen(false)} className="p-1.5 hover:bg-gray-100 rounded-full transition-all group">
-                  <X className="w-5 h-5 text-gray-400 group-hover:text-red-500" />
+                  <X className="w-5 h-5 text-gray-400 group-hover:text-gray-700" />
                 </button>
               </div>
 
@@ -602,7 +602,7 @@ const AdminCodRemittances = ({ isSidebarAdmin }) => {
                   <input
                     type="text"
                     placeholder="Enter Order ID"
-                    className="w-full h-9 px-3 text-[12px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-all text-gray-700 placeholder:text-gray-400 placeholder:font-[500]"
+                    className="w-full h-9 px-3 font-[600] text-[12px] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-all text-gray-700 placeholder:text-gray-400"
                     value={localFilters.orderId}
                     onChange={e => setLocalFilters(prev => ({ ...prev, orderId: e.target.value }))}
                   />
@@ -614,7 +614,7 @@ const AdminCodRemittances = ({ isSidebarAdmin }) => {
                   <input
                     type="text"
                     placeholder="Enter AWB Number"
-                    className="w-full h-9 px-3 text-[12px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-all text-gray-700 placeholder:text-gray-400 placeholder:font-[500]"
+                    className="w-full h-9 px-3 font-[600] text-[12px] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-all text-gray-700 placeholder:text-gray-400"
                     value={localFilters.awbNumber}
                     onChange={e => setLocalFilters(prev => ({ ...prev, awbNumber: e.target.value }))}
                   />
@@ -718,7 +718,7 @@ const AdminCodRemittances = ({ isSidebarAdmin }) => {
                                 onClick={() => setLocalFilters(prev => ({ ...prev, couriers: [] }))}
                                 className="text-[10px] text-red-500 font-bold hover:underline"
                               >
-                                Clear All
+                                Clear All Filters
                               </button>
                             </div>
                           )}

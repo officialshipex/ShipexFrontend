@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Notification } from "../../Notification";
+import { X, Check, MapPin, Calendar } from "lucide-react";
 
 
 const SchedulePickupModal = ({ orderId, awb, pickupAddress, onClose }) => {
@@ -73,16 +74,16 @@ const SchedulePickupModal = ({ orderId, awb, pickupAddress, onClose }) => {
                 <h2 className="text-[12px] sm:text-[14px] font-[600] mb-2 text-gray-700">Schedule Your B2B Pick Up</h2>
                 <button
                     onClick={() => onClose(false)}
-                    className="absolute right-4 top-4 text-[14px] text-gray-400 hover:text-gray-600 transition"
+                    className="absolute right-4 top-4 text-gray-400 hover:text-gray-600 transition p-1 hover:bg-gray-100 rounded-full"
                 >
-                    ×
+                    <X className="w-4 h-4" />
                 </button>
 
                 {/* Success Banner */}
                 <div className="bg-green-50 text-green-700 rounded-lg px-3 py-2 flex items-center gap-2 mb-2 border border-green-100">
-                    <span className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center text-xs flex-shrink-0">
-                        ✓
-                    </span>
+                    <div className="w-5 h-5 bg-green-500 text-white rounded-full flex items-center justify-center flex-shrink-0">
+                        <Check className="w-3 h-3" strokeWidth={3} />
+                    </div>
                     <p className="text-[12px] leading-relaxed">
                         Your package has been booked successfully. The AWB number is{" "}
                         <span className="font-[600] text-[#0CBB7D]">{awb}</span>.
@@ -91,14 +92,16 @@ const SchedulePickupModal = ({ orderId, awb, pickupAddress, onClose }) => {
 
                 {/* Pickup Address */}
                 <div className="bg-gray-50 border rounded-lg px-3 py-2 mb-2">
-                    <p className="font-[600] mb-1 text-[10px] sm:text-[12px] text-gray-700">📍 Pick Up Address</p>
+                    <p className="font-[600] mb-1 text-[10px] sm:text-[12px] text-gray-700 flex items-center gap-1.5">
+                        <MapPin className="w-3.5 h-3.5 text-[#0CBB7D]" /> Pick Up Address
+                    </p>
                     <p className="text-[10px] sm:text-[12px] text-gray-500">{pickupAddress}</p>
                 </div>
 
                 {/* Date Selection */}
                 <div className="bg-green-50 border border-green-100 rounded-lg px-3 py-2 mb-2">
-                    <p className="font-[600] mb-2 text-[10px] sm:text-[12px] text-gray-700">
-                        📅 Please select a suitable date for your order to be picked up
+                    <p className="font-[600] mb-2 text-[10px] sm:text-[12px] text-gray-700 flex items-center gap-1.5">
+                        <Calendar className="w-3.5 h-3.5 text-[#0CBB7D]" /> Please select a suitable date for your order to be picked up
                     </p>
 
                     <div className="flex flex-wrap gap-2">

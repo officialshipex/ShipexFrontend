@@ -64,7 +64,7 @@ const Settings = () => {
       <div className="max-w-full mx-auto">
         {isMainSettingsPage ? (
           <div>
-            <h1 className="md:text-[18px] text-[14px] font-[600] mb-2 text-gray-700">
+            <h1 className="md:text-[14px] text-[12px] font-[600] mb-2 text-gray-700">
               Settings
             </h1>
 

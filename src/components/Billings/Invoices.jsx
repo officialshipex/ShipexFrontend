@@ -450,7 +450,7 @@ const Invoices = ({
               <img
                 src={NotFound}
                 alt="No Data Found"
-                className="w-[180px] opacity-60"
+                className="w-60 h-60"
               />
               {/* <p className="text-gray-400 font-[600] mt-2">No records found</p> */}
             </div>

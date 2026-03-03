@@ -16,9 +16,11 @@ const outerRadius = 70;
 const COLORS = {
     'Delhivery': '#8884d8',
     'Ecom Express': '#8dd1e3',
-    'ShreeMaruti': "#82ca9D",
+    'Shree Maruti': "#82ca9D",
     'Amazon Shipping': '#82ca9d',
     'Dtdc': '#0CBB7D',
+    'Xpressbees': '#2d1ba4ff',
+    'Ekart': '#84930eff',
     'Bluedart': '#ffc658',
     'COD': '#ffc658',
     'Prepaid': '#0CBB7D',

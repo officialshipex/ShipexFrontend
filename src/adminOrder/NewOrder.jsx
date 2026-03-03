@@ -94,8 +94,12 @@ const NewOrder = (filterOrder) => {
       }
     };
     updateHeight();
+    const timeoutId = setTimeout(updateHeight, 300);
     window.addEventListener("resize", updateHeight);
-    return () => window.removeEventListener("resize", updateHeight);
+    return () => {
+      window.removeEventListener("resize", updateHeight);
+      clearTimeout(timeoutId);
+    };
   }, []);
 
   useEffect(() => {

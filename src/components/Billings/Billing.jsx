@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import axios from "axios";
 import ShippingComponent from "./Shippings";
 import InvoicesComponent from "./Invoices";
@@ -22,10 +22,17 @@ const icons = {
 
 const Billing = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [showDropdown, setShowDropdown] = useState(false);
   const [selectedItem, setSelectedItem] = useState("Shipping");
   const [totalShipments, setTotalShipments] = useState(0);
   const [totalFreightCharges, setTotalFreightCharges] = useState(0);
+
+  useEffect(() => {
+    if (location.state?.tab === "PassBook") {
+      setSelectedItem("PassBook");
+    }
+  }, [location.state]);
   const [searchQueries, setSearchQueries] = useState({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);

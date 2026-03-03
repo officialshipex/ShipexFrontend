@@ -454,8 +454,8 @@ const WalletHistorys = () => {
                         ))
                     ) : (
                         <div className="text-center py-10">
-                            <img src={NotFound} alt="No Data" className="w-40 h-40 mx-auto opacity-50 mb-2" />
-                            <p className="text-gray-400 font-medium">No records found</p>
+                            <img src={NotFound} alt="No Data" className="w-60 h-60 mx-auto" />
+                            {/* <p className="text-gray-400 font-medium">No records found</p> */}
                         </div>
                     )}
                 </div>

@@ -629,10 +629,10 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
           <div className="fixed inset-0 z-[110] flex justify-end">
             <div className="absolute inset-0 bg-black/40 backdrop-blur-[4px] transition-all" onClick={() => setIsFilterPanelOpen(false)}></div>
             <motion.div initial={{ x: "100%" }} animate={{ x: 0 }} exit={{ x: "0%" }} transition={{ type: "spring", damping: 25, stiffness: 200 }} className="relative w-full max-w-[340px] bg-white h-full shadow-2xl flex flex-col border-l border-gray-200">
-              <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 bg-white">
-                <h2 className="text-[16px] font-bold text-gray-700 tracking-tight">Remittance Filters</h2>
+              <div className="flex items-center justify-between px-4 py-2 border-b border-gray-100 bg-white">
+                <h2 className="text-[16px] font-bold text-gray-700 tracking-tight">Filters</h2>
                 <button onClick={() => setIsFilterPanelOpen(false)} className="p-1.5 hover:bg-gray-100 rounded-full transition-all group">
-                  <X className="w-5 h-5 text-gray-400 group-hover:text-red-500" />
+                  <X className="w-5 h-5 text-gray-400 group-hover:text-gray-700" />
                 </button>
               </div>
 
@@ -649,7 +649,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                   <div className="relative">
                     <input
                       type="text"
-                      placeholder="RE123456"
+                      placeholder="Enter Remittance ID"
                       className="w-full h-9 pl-3 pr-3 text-[12px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-all text-gray-700 placeholder:text-gray-400"
                       value={localFilters.remittanceId}
                       onChange={e => setLocalFilters(prev => ({ ...prev, remittanceId: e.target.value }))}

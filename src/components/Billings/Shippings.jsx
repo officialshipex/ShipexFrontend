@@ -9,7 +9,7 @@ import { saveAs } from "file-saver";
 import { HiDotsHorizontal } from "react-icons/hi";
 import { FaFilter, FaBars } from "react-icons/fa";
 import { FaTruck, FaPlane } from "react-icons/fa";
-import { FiCopy, FiCheck } from "react-icons/fi";
+import { FiCopy, FiCheck, FiEye, FiExternalLink } from "react-icons/fi";
 import { Filter, X, ChevronDown } from "lucide-react";
 import ShippingFilterPanel from "../../Common/ShippingFilterPanel";
 import DateFilter from "../../filter/DateFilter";
@@ -64,6 +64,9 @@ const Shippings = (filterOrder) => {
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [clearTrigger, setClearTrigger] = useState(0);
   const [weightPopupId, setWeightPopupId] = useState(null);
+  const [pricePopupPos, setPricePopupPos] = useState(null); // { x, y, dir, order }
+  const pricePopupTimerRef = useRef(null);
+  const [mobilePricePopupId, setMobilePricePopupId] = useState(null);
   const paymentRef = useRef(null);
   const dateRef = useRef(null);
   const pickupRef = useRef(null);
@@ -479,13 +482,13 @@ const Shippings = (filterOrder) => {
                 <th className="py-2 px-3 text-left bg-[#0CBB7D] shadow-[0_1px_0_0_#0CBB7D]">
                   <div className="flex justify-center items-center">
                     <input
-                    type="checkbox"
-                    checked={
-                      selectedOrders.length === orders.length && orders.length > 0
-                    }
-                    onChange={handleSelectAll}
-                    className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
-                  />
+                      type="checkbox"
+                      checked={
+                        selectedOrders.length === orders.length && orders.length > 0
+                      }
+                      onChange={handleSelectAll}
+                      className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
+                    />
                   </div>
                 </th>
                 <th className="py-2 px-3 text-left">Order ID</th>
@@ -493,15 +496,44 @@ const Shippings = (filterOrder) => {
                 <th className="py-2 px-3 text-left">Courier Service Name</th>
                 <th className="py-2 px-3 text-left">Status</th>
                 <th className="py-2 px-3 text-left">Assigned Weight</th>
-                <th className="py-2 px-3 text-left">Applied Charges</th>
-                <th className="py-2 px-3 text-left">Excess Charges</th>
-                <th className="py-2 px-3 text-left">Total Freight Charges</th>
                 <th className="py-2 px-3 text-left">
-                  Entered Weight & Dimension
+                  <div className="flex items-center gap-1">
+                    <span>Applied Chgs.</span>
+                    <div className="relative group">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-white opacity-75 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M12 8v4m0 4h.01" strokeWidth="2" strokeLinecap="round" /></svg>
+                      <div className="absolute left-1/2 -translate-x-1/2 top-5 z-[200] hidden group-hover:block bg-gray-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap shadow-lg">Applied Charges</div>
+                    </div>
+                  </div>
+                </th>
+                <th className="py-2 px-3 text-left">Excess Chgs.</th>
+                <th className="py-2 px-3 text-left">
+                  <div className="flex items-center gap-1">
+                    <span>Total Freight</span>
+                    <div className="relative group">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-white opacity-75 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M12 8v4m0 4h.01" strokeWidth="2" strokeLinecap="round" /></svg>
+                      <div className="absolute left-1/2 -translate-x-1/2 top-5 z-[200] hidden group-hover:block bg-gray-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap shadow-lg">Total Freight Charges</div>
+                    </div>
+                  </div>
                 </th>
                 <th className="py-2 px-3 text-left">
-                  Charged Weight & Dimension
+                  <div className="flex items-center gap-1">
+                    <span>Ent. Wt &amp; Dim</span>
+                    <div className="relative group">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-white opacity-75 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M12 8v4m0 4h.01" strokeWidth="2" strokeLinecap="round" /></svg>
+                      <div className="absolute left-1/2 -translate-x-1/2 top-5 z-[200] hidden group-hover:block bg-gray-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap shadow-lg">Entered Weight &amp; Dimension</div>
+                    </div>
+                  </div>
                 </th>
+                <th className="py-2 px-3 text-left">
+                  <div className="flex items-center gap-1">
+                    <span>Chgd. Wt &amp; Dim</span>
+                    <div className="relative group">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-white opacity-75 cursor-help" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M12 8v4m0 4h.01" strokeWidth="2" strokeLinecap="round" /></svg>
+                      <div className="absolute left-1/2 -translate-x-1/2 top-5 z-[200] hidden group-hover:block bg-gray-800 text-white text-[10px] px-2 py-1 rounded whitespace-nowrap shadow-lg">Charged Weight &amp; Dimension</div>
+                    </div>
+                  </div>
+                </th>
+                <th className="py-2 px-3 text-left">Action</th>
               </tr>
             </thead>
 
@@ -509,7 +541,7 @@ const Shippings = (filterOrder) => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="11" className="text-center py-4">
+                  <td colSpan="12" className="text-center py-4">
                     <ThreeDotLoader />
                   </td>
                 </tr>
@@ -522,11 +554,11 @@ const Shippings = (filterOrder) => {
                     <td className="py-2 px-3 whitespace-nowrap align-middle">
                       <div className="flex justify-center items-center">
                         <input
-                        type="checkbox"
-                        checked={selectedOrders.includes(order._id)}
-                        onChange={() => handleCheckboxChange(order._id)}
-                        className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
-                      />
+                          type="checkbox"
+                          checked={selectedOrders.includes(order._id)}
+                          onChange={() => handleCheckboxChange(order._id)}
+                          className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
+                        />
                       </div>
                     </td>
                     <td className="py-2 px-3 whitespace-nowrap">
@@ -571,12 +603,17 @@ const Shippings = (filterOrder) => {
                         )}
                       </div>
                     </td>
-                    <td>
-                      <p className="py-2 px-3 whitespace-nowrap">
-                        {order.courierServiceName
-                          ? `${order.courierServiceName}`
-                          : "_ _"}
-                      </p>
+                    <td className="py-2 px-3">
+                      <div className="relative group inline-block max-w-[140px]">
+                        <p className="truncate max-w-[140px] cursor-default text-gray-700" title="">
+                          {order.courierServiceName || "_ _"}
+                        </p>
+                        {order.courierServiceName && order.courierServiceName.length > 20 && (
+                          <div className="absolute z-[200] hidden group-hover:block bg-white text-gray-700 text-[10px] p-2 rounded shadow-2xl border whitespace-nowrap top-full left-0 mt-1">
+                            {order.courierServiceName}
+                          </div>
+                        )}
+                      </div>
                     </td>
                     <td className="py-2 px-3 whitespace-nowrap">
                       <span className="px-2 rounded py-0.5 text-[10px] bg-green-100 text-[#0CBB7D]">
@@ -594,22 +631,73 @@ const Shippings = (filterOrder) => {
                         </p>
                       )}
                     </td>
+                    {/* Applied Charges with smart-direction breakup popup */}
                     <td className="py-2 px-3 whitespace-nowrap text-center">
-                      <p className="">
-                        {order.totalFreightCharges
-                          ? `₹ ${order.totalFreightCharges}`
-                          : "_ _"}
-                      </p>
+                      <div className="flex items-center justify-center gap-1">
+                        <span>
+                          {order.totalFreightCharges ? `₹ ${order.totalFreightCharges}` : "_ _"}
+                        </span>
+                        {order.totalFreightCharges && (
+                          <div
+                            className="relative cursor-help"
+                            onMouseEnter={(e) => {
+                              if (pricePopupTimerRef.current) clearTimeout(pricePopupTimerRef.current);
+                              const rect = e.currentTarget.getBoundingClientRect();
+                              // Improved: if in upper 40% of screen, open bottom. Else open top.
+                              const dir = rect.top < window.innerHeight * 0.4 ? "bottom" : "top";
+                              setPricePopupPos({
+                                x: rect.left + rect.width / 2,
+                                y: dir === "top" ? rect.top - 10 : rect.bottom + 10,
+                                dir,
+                                order
+                              });
+                            }}
+                            onMouseLeave={() => {
+                              pricePopupTimerRef.current = setTimeout(() => {
+                                setPricePopupPos(null);
+                              }, 150);
+                            }}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-[#0CBB7D]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" /><path d="M12 8v4m0 4h.01" strokeWidth="2" strokeLinecap="round" /></svg>
+                          </div>
+                        )}
+                      </div>
                     </td>
+                    {/* Excess Charges */}
                     <td className="py-2 px-3 whitespace-nowrap text-center">
                       <p>_ _</p>
                     </td>
+                    {/* Total Freight Charges with smart-direction breakup popup */}
                     <td className="py-2 px-3 whitespace-nowrap text-center">
-                      <p className="">
-                        {order.totalFreightCharges
-                          ? `₹ ${order.totalFreightCharges}`
-                          : "_ _"}
-                      </p>
+                      <div className="flex items-center justify-center gap-1">
+                        <span>
+                          {order.totalFreightCharges ? `₹ ${order.totalFreightCharges}` : "_ _"}
+                        </span>
+                        {order.totalFreightCharges && (
+                          <div
+                            className="relative cursor-help"
+                            onMouseEnter={(e) => {
+                              if (pricePopupTimerRef.current) clearTimeout(pricePopupTimerRef.current);
+                              const rect = e.currentTarget.getBoundingClientRect();
+                              // Improved: if in upper 40% of screen, open bottom. Else open top.
+                              const dir = rect.top < window.innerHeight * 0.4 ? "bottom" : "top";
+                              setPricePopupPos({
+                                x: rect.left + rect.width / 2,
+                                y: dir === "top" ? rect.top - 10 : rect.bottom + 10,
+                                dir,
+                                order
+                              });
+                            }}
+                            onMouseLeave={() => {
+                              pricePopupTimerRef.current = setTimeout(() => {
+                                setPricePopupPos(null);
+                              }, 150);
+                            }}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-[#0CBB7D]" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" /><path d="M12 8v4m0 4h.01" strokeWidth="2" strokeLinecap="round" /></svg>
+                          </div>
+                        )}
+                      </div>
                     </td>
 
                     {order?.orderType === "B2C" ? (
@@ -631,11 +719,19 @@ const Shippings = (filterOrder) => {
                     <td className="py-2 px-3 whitespace-nowrap text-center">
                       _ _
                     </td>
+                    <td className="py-2 px-3">
+                      <button
+                        onClick={() => navigate("/dashboard/billing", { state: { tab: "PassBook", awbNumber: order.awb_number } })}
+                        className="bg-[#0CBB7D] text-white px-3 py-1 rounded-md hover:bg-opacity-90 transition-all font-[600] text-[12px]"
+                      >
+                        History
+                      </button>
+                    </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="11" className="text-center py-4">
+                  <td colSpan="12" className="text-center py-4">
                     <div className="flex flex-col items-center justify-center">
                       <img
                         src={NotFound}
@@ -712,16 +808,23 @@ const Shippings = (filterOrder) => {
                       <span className="text-gray-500 text-[10px]">{dayjs(row.shipmentCreatedAt || row.createdAt).format("DD MMM YYYY, hh:mm A")}</span>
                     </div>
                   </div>
-                  <div className="text-right">
+                  <div className="flex items-center gap-1">
                     <span className="px-2 py-0.5 rounded text-[10px] bg-green-100 text-[#0CBB7D]">
                       {row.status}
                     </span>
+                    <button
+                      onClick={() => navigate("/dashboard/billing", { state: { tab: 'PassBook', awbNumber: row.awb_number } })}
+                      className="text-[#0CBB7D] hover:text-[#099e68] transition-all"
+                      title="View in Passbook"
+                    >
+                      <FiExternalLink className="w-3 h-3" />
+                    </button>
                   </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-2 text-[10px] mb-2">
                   <div>
-                    <p className="text-gray-400 mb-0.5">AWB Number</p>
+                    <p className="text-gray-700 mb-0.5">AWB Number</p>
                     <div className="flex items-center gap-1 group">
                       <p className="text-[#0CBB7D] font-bold active:underline" onClick={() => handleTrackingByAwb(row.awb_number)}>
                         {row.awb_number || "N/A"}
@@ -734,15 +837,28 @@ const Shippings = (filterOrder) => {
                     </div>
                   </div>
                   <div>
-                    <p className="text-gray-400 mb-0.5 text-right">Freight Charges</p>
-                    <p className="text-[#0CBB7D] font-bold text-right">₹{row.totalFreightCharges || 0}</p>
+                    <p className="text-gray-700 mb-0.5 text-right">Freight Charges</p>
+                    <div className="flex items-center justify-end gap-1">
+                      <p className="text-[#0CBB7D] font-bold">₹{row.totalFreightCharges || 0}</p>
+                      {row.totalFreightCharges && (
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setMobilePricePopupId(mobilePricePopupId === row._id ? null : row._id);
+                          }}
+                          className="text-[#0CBB7D] cursor-pointer flex-shrink-0 p-1.5 -m-1.5"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10" strokeWidth="2" /><path d="M12 8v4m0 4h.01" strokeWidth="2" strokeLinecap="round" /></svg>
+                        </button>
+                      )}
+                    </div>
                   </div>
                   <div>
-                    <p className="text-gray-400 mb-0.5">Courier Service Name</p>
+                    <p className="text-gray-700 mb-0.5">Courier Service Name</p>
                     <p className="text-gray-700 font-bold">{row.courierServiceName || "N/A"}</p>
                   </div>
                   <div>
-                    <p className="text-gray-400 text-right">Weight</p>
+                    <p className="text-gray-700 text-right">Weight</p>
                     <p
                       className="text-gray-700 font-bold text-right border-b border-dashed border-gray-400 inline-block float-right cursor-pointer"
                       onClick={() => setWeightPopupId(weightPopupId === row._id ? null : row._id)}
@@ -782,6 +898,49 @@ const Shippings = (filterOrder) => {
                                 <span className="text-gray-500 block mb-1">Dimensions (L x W x H)</span>
                                 <span className="font-bold">{row.packageDetails?.volumetricWeight?.length}x{row.packageDetails?.volumetricWeight?.width}x{row.packageDetails?.volumetricWeight?.height} cm</span>
                               </div>
+                            </>
+                          )}
+                        </div>
+                      </motion.div>
+                    </div>
+                  )}
+                </AnimatePresence>
+
+                {/* Price Breakup Popup for Mobile */}
+                <AnimatePresence>
+                  {mobilePricePopupId === row._id && (
+                    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+                      <div className="absolute inset-0 bg-black/40" onClick={() => setMobilePricePopupId(null)}></div>
+                      <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        className="bg-white rounded-lg shadow-xl p-4 w-full max-w-xs relative z-10"
+                      >
+                        <div className="flex justify-between items-center mb-3">
+                          <h3 className="font-bold text-gray-700 uppercase text-[12px]">Price Breakup</h3>
+                          <X className="w-4 h-4 text-gray-400 cursor-pointer" onClick={() => setMobilePricePopupId(null)} />
+                        </div>
+                        <div className="space-y-2 text-[12px]">
+                          {row.orderType === "B2C" ? (
+                            <>
+                              <div className="flex justify-between"><span className="text-gray-500">Freight</span><span className="font-bold">₹ {row.priceBreakup?.freight ?? 0}</span></div>
+                              <div className="flex justify-between"><span className="text-gray-500">COD</span><span className="font-bold">₹ {row.priceBreakup?.cod ?? 0}</span></div>
+                              <div className="flex justify-between"><span className="text-gray-500">GST</span><span className="font-bold">₹ {row.priceBreakup?.gst ?? 0}</span></div>
+                              <div className="flex justify-between border-t pt-2 mt-1"><span className="font-bold text-gray-800">Total</span><span className="font-bold text-[#0CBB7D]">₹ {row.priceBreakup?.total ?? row.totalFreightCharges ?? 0}</span></div>
+                            </>
+                          ) : (
+                            <>
+                              {row.rateBreakup && Object.keys(row.rateBreakup).length > 0
+                                ? Object.entries(row.rateBreakup).map(([key, val]) => (
+                                  <div key={key} className="flex justify-between">
+                                    <span className="text-gray-500 capitalize">{key}</span>
+                                    <span className="font-bold">{typeof val === "number" ? `₹ ${val}` : val}</span>
+                                  </div>
+                                ))
+                                : <p className="text-gray-400 italic text-center py-2">No breakup available</p>
+                              }
+                              <div className="flex justify-between border-t pt-2 mt-1"><span className="font-bold text-gray-800">Total</span><span className="font-bold text-[#0CBB7D]">₹ {row.totalFreightCharges ?? 0}</span></div>
                             </>
                           )}
                         </div>
@@ -829,6 +988,56 @@ const Shippings = (filterOrder) => {
           setIsFilterPanelOpen(false);
         }}
       />
+
+      {/* Fixed Price Breakup Popup - renders at root level, never clipped */}
+      {pricePopupPos && (
+        <div
+          style={{
+            position: "fixed",
+            zIndex: 9999,
+            left: pricePopupPos.x,
+            ...(pricePopupPos.dir === "top"
+              ? { bottom: window.innerHeight - pricePopupPos.y }
+              : { top: pricePopupPos.y }),
+            transform: "translateX(-50%)",
+            pointerEvents: "auto",
+          }}
+          className="bg-white border shadow-2xl rounded-lg p-3 w-60 text-[10px] text-gray-700 whitespace-normal max-h-[300px] overflow-y-auto custom-scrollbar"
+          onMouseEnter={() => {
+            if (pricePopupTimerRef.current) clearTimeout(pricePopupTimerRef.current);
+          }}
+          onMouseLeave={() => {
+            pricePopupTimerRef.current = setTimeout(() => {
+              setPricePopupPos(null);
+            }, 150);
+          }}
+        >
+          <div className="sticky top-0 bg-white pb-1 mb-2 border-b z-10 flex justify-between items-center">
+            <p className="font-[700] text-gray-800">Price Breakup</p>
+          </div>
+          {pricePopupPos.order.orderType === "B2C" ? (
+            <div className="space-y-1">
+              <div className="flex justify-between"><span className="text-gray-500">Freight</span><span className="font-[600]">₹ {pricePopupPos.order.priceBreakup?.freight ?? 0}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">COD</span><span className="font-[600]">₹ {pricePopupPos.order.priceBreakup?.cod ?? 0}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">GST</span><span className="font-[600]">₹ {pricePopupPos.order.priceBreakup?.gst ?? 0}</span></div>
+              <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-gray-800">Total</span><span className="font-[700] text-[#0CBB7D]">₹ {pricePopupPos.order.priceBreakup?.total ?? pricePopupPos.order.totalFreightCharges ?? 0}</span></div>
+            </div>
+          ) : (
+            <div className="space-y-1">
+              {pricePopupPos.order.rateBreakup && Object.keys(pricePopupPos.order.rateBreakup).length > 0
+                ? Object.entries(pricePopupPos.order.rateBreakup).map(([key, val]) => (
+                  <div key={key} className="flex justify-between">
+                    <span className="text-gray-500 capitalize">{key}</span>
+                    <span className="font-[600]">{typeof val === "number" ? `₹ ${val}` : val}</span>
+                  </div>
+                ))
+                : <p className="text-gray-400 italic">No breakup available</p>
+              }
+              <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-gray-800">Total</span><span className="font-[700] text-[#0CBB7D]">₹ {pricePopupPos.order.totalFreightCharges ?? 0}</span></div>
+            </div>
+          )}
+        </div>
+      )}
 
     </div >
   );

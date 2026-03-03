@@ -166,7 +166,7 @@ const CourierSelection = () => {
                         />
                         <div className="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-[#0CBB7D] relative transition-all duration-300">
                           <div
-                            className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${courier.status === "Active" ? "translate-x-5" : "translate-x-1"
+                            className={`absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-transform ${courier.status === "Active" ? "translate-x-5" : "translate-x-1"
                               }`}
                           ></div>
                         </div>

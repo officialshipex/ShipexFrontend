@@ -34,7 +34,7 @@ const OrdersPage = () => {
   const tabs = [
     "New",
     "Booked",
-    "Pickup & Manifest",
+    // "Pickup & Manifest",
     "Ready to Ship",
     "In Transit",
     "Out for Delivery",

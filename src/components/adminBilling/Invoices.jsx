@@ -463,11 +463,11 @@ const Invoices = () => {
 
                   <div className="grid grid-cols-2 gap-2 mb-2 px-1">
                     <div className="space-y-0.5">
-                      <p className="text-gray-500 text-[10px] tracking-tight">Shipments</p>
+                      <p className="text-gray-700 text-[10px] tracking-tight">Shipments</p>
                       <p className="text-gray-700 font-bold text-[10px]">{inv.totalShipments}</p>
                     </div>
                     <div className="text-right space-y-0.5">
-                      <p className="text-gray-500 text-[10px] tracking-tight">Period</p>
+                      <p className="text-gray-700 text-[10px] tracking-tight">Period</p>
                       <p className="text-gray-700 font-bold text-[10px]">{dayjs(inv.periodEnd).format("MMMM YYYY")}</p>
                     </div>
                   </div>
