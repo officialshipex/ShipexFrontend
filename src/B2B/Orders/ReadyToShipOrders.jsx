@@ -16,6 +16,7 @@ import {
   handleBulkDownloadInvoice,
   cancelOrder,
   handleLabel,
+  BulkCancel,
   handleBulkDownloadLabel
 } from "../../Common/orderActions";
 import OrdersTable from "../../Common/OrdersTable";

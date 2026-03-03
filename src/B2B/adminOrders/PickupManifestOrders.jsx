@@ -514,7 +514,7 @@ const PickupManifestOrders = ({ userId: initialUserId }) => {
                                     <div>
                                         <p className="text-[9px] text-gray-500 uppercase tracking-wider font-bold">Pickup Date</p>
                                         <div className="flex items-center gap-1.5 mt-0.5 text-gray-700 font-bold text-[11px]">
-                                            <Calendar className={`w-3.5 h-3.5 text-[#0CBB7D]`} />
+                                            {/* <Calendar className={`w-3.5 h-3.5 text-[#0CBB7D]`} /> */}
                                             {dayjs(m.pickupDate).format('DD MMM YYYY')}
                                         </div>
                                     </div>
@@ -522,7 +522,7 @@ const PickupManifestOrders = ({ userId: initialUserId }) => {
                                         onClick={() => handleDownloadManifest(m)}
                                         className="bg-white text-[#0CBB7D] border border-[#0CBB7D] px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-50 shadow-sm flex items-center gap-1.5"
                                     >
-                                        <Download className="w-3 h-3" /> Manifest
+                                        Download Manifest
                                     </button>
                                 </div>
                             </div>

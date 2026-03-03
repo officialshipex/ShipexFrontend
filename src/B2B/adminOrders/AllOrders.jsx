@@ -18,6 +18,7 @@ import {
   handleBulkDownloadInvoice,
   ExportExcel,
   handleClone,
+  handleManifest,
   handleBulkClone,
 } from "../../Common/orderActions";
 import OrdersTable from "../../Common/OrdersTable";
