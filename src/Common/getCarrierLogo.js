@@ -28,6 +28,7 @@ export const getCarrierLogo = (courierServiceName = "") => {
   if (name?.includes("smartship")) return Smartship;
   if (name?.includes("ekart")) return Ekart;
   if (name?.includes("shipex")) return ShipexIndia;
+  if (name?.includes("boxd")) return "";   // BoxdLogistics – add logo asset when available
 
   return ""; // default fallback
 };

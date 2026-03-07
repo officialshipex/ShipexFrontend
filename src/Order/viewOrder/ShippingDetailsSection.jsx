@@ -68,11 +68,17 @@ const ShippingDetailsSection = ({ order }) => {
 
                 <div>
                     <span className="font-[600] text-gray-700">Delivered Date:</span>
-                    <p className="text-gray-500">
-                        {order.tracking
-                            ? dayjs(order.tracking[order.tracking.length-1].StatusDateTime).format("DD MMM YYYY, hh:mm A")
-                            : "-"}
-                    </p>
+                    {order.status === "Delivered" ? (
+                        <p className="text-gray-500">
+                            {order.tracking
+                                ? dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("DD MMM YYYY, hh:mm A")
+                                : "-"}
+                        </p>
+                    ) : (
+                        <p className="text-gray-500">
+                            -
+                        </p>
+                    )}
                 </div>
 
                 <div>

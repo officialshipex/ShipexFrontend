@@ -19,6 +19,7 @@ import { Notification } from "../../Notification";
 import Loader from "../../Loader"
 import { FaEllipsisV, FaTrashAlt, FaUpload, FaDownload, FaTruck } from "react-icons/fa";
 import Zipypost from "./Zipypost/ZipypostAdd";
+import BoxdLogisticsAdd from "./BoxdLogistics/BoxdLogisticsAdd";
 import { getCarrierLogo } from "../../Common/getCarrierLogo";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -35,7 +36,8 @@ const courierOptions = [
   { value: "Amazon", label: "Amazon Shipping" },
   { value: "Ekart", label: "Ekart" },
   { value: "Vamaship", label: "Vamaship" },
-  { value: "ZipyPost", label: "ZipyPost" }
+  { value: "ZipyPost", label: "ZipyPost" },
+  { value: "BoxdLogistics", label: "Boxd Logistics" }
 ];
 
 const AddNewCourier = ({ isSidebarAdmin }) => {
@@ -235,6 +237,8 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
         return <Zipypost {...props} />;
       case "SmartShip":
         return <SmartShip {...props} />;
+      case "BoxdLogistics":
+        return <BoxdLogisticsAdd {...props} />;
       default:
         return null;
     }

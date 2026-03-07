@@ -264,7 +264,7 @@ const NewOrder = (filterOrder) => {
           </div>
           <button
             onClick={() => setIsFilterPanelOpen(true)}
-            className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap min-w-[120px]"
+            className="flex-shrink-0 flex items-center border border-gray-300 justify-center gap-2 px-3 py-2 bg-white border rounded-lg text-[10px] sm:text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap min-w-[120px]"
           >
             <Filter className="w-4 h-4 text-[#0CBB7D]" />
             More Filters

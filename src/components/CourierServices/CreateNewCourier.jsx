@@ -6,7 +6,7 @@ import EmployeeAuthModal from "../../employeeAuth/EmployeeAuthModal";
 import CustomDropdown from "./Dropdown"
 import { Notification } from "../../Notification"
 import Cookies from "js-cookie"
-import { FaEdit,FaPlus  } from "react-icons/fa";
+import { FaEdit, FaPlus } from "react-icons/fa";
 import { getUserInfoFromToken } from "../../utils/session";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -214,14 +214,16 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
               />
 
               {/* Courier */}
-              <CustomDropdown
-                label={selectedProvider === "Dtdc" ? "Service Type" : "Courier"}
-                name="courier"
-                value={formData.courier}
-                onChange={handleChange}
-                options={providerServices}
-                placeholder={selectedProvider ? `Select ${selectedProvider === "Dtdc" ? "Service Type" : "Courier"}` : "Select Provider first"}
-              />
+              {selectedProvider === 'Dtdc' && (
+                <CustomDropdown
+                  label={selectedProvider === "Dtdc" ? "Service Type" : "Courier"}
+                  name="courier"
+                  value={formData.courier}
+                  onChange={handleChange}
+                  options={providerServices}
+                  placeholder={selectedProvider ? `Select ${selectedProvider === "Dtdc" ? "Service Type" : "Courier"}` : "Select Provider first"}
+                />
+              )}
 
               {/* Courier Type */}
               <CustomDropdown

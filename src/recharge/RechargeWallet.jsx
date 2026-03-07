@@ -8,7 +8,7 @@ import { Notification } from "../Notification";
 import { FiCreditCard, FiArrowLeft, FiActivity } from "react-icons/fi";
 
 const RechargeWallet = () => {
-  const [amount, setAmount] = useState(1000);
+  const [amount, setAmount] = useState("1000");
   const [user, setUser] = useState(null);
   const [balance, setBalance] = useState(null);
   const [walletId, setWalletId] = useState(null);
@@ -28,8 +28,9 @@ const RechargeWallet = () => {
   };
 
   const handlePayment = async () => {
-    if (amount < 500) {
-      Notification("Minimum amount should be 500", "warning");
+    const numericAmount = Number(amount);
+    if (numericAmount < 1000) {
+      Notification("Minimum amount should be 1000", "warning");
       return;
     }
 
@@ -41,7 +42,7 @@ const RechargeWallet = () => {
       const token = Cookies.get("session");
       const { data } = await axios.post(
         `${REACT_APP_BACKEND_URL}/razorpay/create-order`,
-        { amount, walletId },
+        { amount: Number(amount), walletId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -107,7 +108,10 @@ const RechargeWallet = () => {
   }
 
   const handleAmountChange = (value) => {
-    setAmount(value);
+    const val = value.toString();
+    // Remove leading zeros but allow single "0" or empty string
+    const sanitized = val.replace(/^0+(?=\d)/, '');
+    setAmount(sanitized);
   };
 
   return (
@@ -154,26 +158,26 @@ const RechargeWallet = () => {
               <input
                 type="number"
                 className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg sm:text-[14px] text-[12px] font-bold text-gray-700 focus:outline-none focus:border-[#0CBB7D] focus:ring-1 focus:ring-green-50 transition-all placeholder-gray-300"
-                min={500}
+                min={1000}
                 value={amount}
-                onChange={(e) => handleAmountChange(Number(e.target.value))}
-                placeholder="0"
+                onChange={(e) => handleAmountChange(e.target.value)}
+                placeholder="1000"
               />
             </div>
-            <p className={`text-[10px] flex items-center gap-1 ${amount < 500 ? "text-red-500" : "text-gray-400"}`}>
-              {amount < 500 && <FiActivity />} Minimum amount required is ₹ 500
+            <p className={`text-[10px] flex items-center gap-1 ${Number(amount) < 1000 ? "text-red-500" : "text-gray-400"}`}>
+              {Number(amount) < 1000 && <FiActivity />} Minimum amount required is ₹ 1000
             </p>
           </div>
 
           {/* Quick Amount Chips */}
           <div className="grid grid-cols-4 gap-2">
-            {[500, 1000, 2500, 5000].map((val) => (
+            {[1000, 2500, 5000, 10000].map((val) => (
               <button
                 key={val}
                 onClick={() => handleAmountChange(val)}
-                className={`py-2 px-1 rounded-lg sm:text-[12px] text-[10px] font-semibold transition-all duration-200 border ${amount === val
-                    ? "bg-[#0CBB7D] text-white border-[#0CBB7D] shadow-md transform scale-105"
-                    : "bg-white text-gray-600 border-gray-200 hover:border-[#0CBB7D] hover:bg-green-50"
+                className={`py-2 px-1 rounded-lg sm:text-[12px] text-[10px] font-semibold transition-all duration-200 border ${Number(amount) === val
+                  ? "bg-[#0CBB7D] text-white border-[#0CBB7D] shadow-md transform scale-105"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-[#0CBB7D] hover:bg-green-50"
                   }`}
               >
                 ₹ {val}
@@ -185,10 +189,10 @@ const RechargeWallet = () => {
           <div className="pt-4 space-y-2">
             <button
               onClick={handlePayment}
-              disabled={amount < 500}
-              className={`w-full py-2 rounded-lg font-bold sm:text-[12px] text-[10px] text-white shadow-sm transition-all duration-300 transform active:scale-95 ${amount < 500
-                  ? "bg-gray-300 cursor-not-allowed shadow-none"
-                  : "bg-[#0CBB7D] hover:bg-[#0aa66d] hover:shadow-xl shadow-green-200"
+              disabled={Number(amount) < 1000}
+              className={`w-full py-2 rounded-lg font-bold sm:text-[12px] text-[10px] text-white shadow-sm transition-all duration-300 transform active:scale-95 ${Number(amount) < 1000
+                ? "bg-gray-300 cursor-not-allowed shadow-none"
+                : "bg-[#0CBB7D] hover:bg-[#0aa66d] hover:shadow-xl shadow-green-200"
                 }`}
             >
               Proceed to Pay ₹ {amount || 0}

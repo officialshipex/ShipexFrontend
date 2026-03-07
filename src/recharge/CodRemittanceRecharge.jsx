@@ -10,7 +10,7 @@ import { FaMoneyBillWave } from "react-icons/fa";
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const CodRemittanceRecharge = () => {
-  const [amount, setAmount] = useState(1000);
+  const [amount, setAmount] = useState("1000");
   const [user, setUser] = useState(null);
   const [balance, setBalance] = useState(null);
   const [walletId, setWalletId] = useState(null);
@@ -31,7 +31,7 @@ const CodRemittanceRecharge = () => {
 
       const response = await axios.post(
         `${REACT_APP_BACKEND_URL}/cod/codRemittanceRecharge`,
-        { amount, walletId },
+        { amount: Number(amount), walletId },
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -48,7 +48,7 @@ const CodRemittanceRecharge = () => {
       navigate("/dashboard");
 
       // Update balance logic if we stayed on page (but we navigated away)
-      setBalance((prev) => prev - amount);
+      setBalance((prev) => prev - Number(amount));
 
     } catch (error) {
       if (error.response?.status === 404) {
@@ -101,7 +101,10 @@ const CodRemittanceRecharge = () => {
   }, [navigate]);
 
   const handleAmountChange = (value) => {
-    setAmount(value);
+    const val = value.toString();
+    // Remove leading zeros but allow single "0" or empty string
+    const sanitized = val.replace(/^0+(?=\d)/, "");
+    setAmount(sanitized);
   };
 
   return (
@@ -150,12 +153,12 @@ const CodRemittanceRecharge = () => {
                 className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg sm:text-[14px] text-[12px] font-bold text-gray-700 focus:outline-none focus:border-[#F59E0B] focus:ring-1 focus:ring-yellow-50 transition-all placeholder-gray-300"
                 min={500}
                 value={amount}
-                onChange={(e) => handleAmountChange(Number(e.target.value))}
+                onChange={(e) => handleAmountChange(e.target.value)}
                 placeholder="0"
               />
             </div>
-            <p className={`text-[10px] flex items-center gap-1 ${amount < 500 ? "text-red-500" : "text-gray-400"}`}>
-              {amount < 500 && <FiActivity />} Minimum transfer amount is ₹ 500
+            <p className={`text-[10px] flex items-center gap-1 ${Number(amount) < 500 ? "text-red-500" : "text-gray-400"}`}>
+              {Number(amount) < 500 && <FiActivity />} Minimum transfer amount is ₹ 500
             </p>
           </div>
 
@@ -165,9 +168,9 @@ const CodRemittanceRecharge = () => {
               <button
                 key={val}
                 onClick={() => handleAmountChange(val)}
-                className={`py-2 px-1 rounded-lg sm:text-[12px] text-[10px] font-semibold transition-all duration-200 border ${amount === val
-                    ? "bg-[#F59E0B] text-white border-[#F59E0B] shadow-md transform scale-105"
-                    : "bg-white text-gray-600 border-gray-200 hover:border-[#F59E0B] hover:bg-yellow-50"
+                className={`py-2 px-1 rounded-lg sm:text-[12px] text-[10px] font-semibold transition-all duration-200 border ${Number(amount) === val
+                  ? "bg-[#F59E0B] text-white border-[#F59E0B] shadow-md transform scale-105"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-[#F59E0B] hover:bg-yellow-50"
                   }`}
               >
                 ₹ {val}
@@ -179,10 +182,10 @@ const CodRemittanceRecharge = () => {
           <div className="pt-4">
             <button
               onClick={handlePayment}
-              disabled={loading || amount < 500 || (balance || 0) < amount}
-              className={`w-full py-2 rounded-lg font-bold sm:text-[12px] text-[10px] text-white shadow-lg transition-all duration-300 transform active:scale-95 flex justify-center items-center gap-2 ${loading || amount < 500 || (balance || 0) < amount
-                  ? "bg-gray-300 cursor-not-allowed shadow-none"
-                  : "bg-[#F59E0B] hover:bg-[#e08e00] hover:shadow-xl shadow-yellow-200"
+              disabled={loading || Number(amount) < 500 || (balance || 0) < Number(amount)}
+              className={`w-full py-2 rounded-lg font-bold sm:text-[12px] text-[10px] text-white shadow-lg transition-all duration-300 transform active:scale-95 flex justify-center items-center gap-2 ${loading || Number(amount) < 500 || (balance || 0) < Number(amount)
+                ? "bg-gray-300 cursor-not-allowed shadow-none"
+                : "bg-[#F59E0B] hover:bg-[#e08e00] hover:shadow-xl shadow-yellow-200"
                 }`}
             >
               {loading ? (
@@ -193,7 +196,7 @@ const CodRemittanceRecharge = () => {
                 `Transfer ₹ ${amount || 0} to Wallet`
               )}
             </button>
-            {(balance || 0) < amount && (
+            {(balance || 0) < Number(amount) && (
               <p className="text-red-500 text-[10px] text-center mt-2 font-medium">
                 Insufficient remittance balance
               </p>
