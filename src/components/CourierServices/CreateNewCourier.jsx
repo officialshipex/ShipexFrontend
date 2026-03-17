@@ -265,7 +265,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                 className={`bg-[#0CBB7D] font-[700] text-white py-2 px-3 text-[10px] sm:text-[12px] rounded-lg shadow-sm transition-all hover:bg-opacity-90 active:scale-95 ${!canSave ? "opacity-50 cursor-not-allowed" : ""}`}
                 disabled={!canSave}
               >
-                {formData._id ? "Update Courier" : "Save Courier"}
+                {formData._id ? "Update Courier Service" : "Save Courier Service"}
               </button>
             </div>
           </form>

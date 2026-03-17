@@ -66,6 +66,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
   const platform = order?.platform || "";
 
   const isZipyPost = partner === "ZipyPost";
+  const isBoxdLogistics = partner === "BoxdLogistics";
   const isAmazon = provider === "Amazon Shipping";
   const isEcomExpress = provider === "EcomExpress";
   const isSmartship = provider === "Smartship";
@@ -183,6 +184,19 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
         payload.customer_name = address.customerName;
         payload.new_phone = mobile;
         payload.new_pincode = address.pincode;
+      }
+    } else if (isBoxdLogistics) {
+      // BoxdLogistics: supports Reattempt, Change Address (update-address), RTO
+      payload.action = action;   // RE-ATTEMPT / CHANGE_ADDRESS / RTO
+      payload.remarks = remarks;
+      if (mobile) payload.new_phone = mobile;
+      if (isChangeAddress) {
+        payload.new_address = address.line1;
+        payload.new_address2 = address.line2;
+        payload.updated_city = address.city;
+        payload.updated_state = address.state;
+        payload.new_pincode = address.pincode;
+        payload.customer_name = address.customerName;
       }
     } else {
       // Shiprocket / NimbusPost / others
@@ -327,7 +341,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
                   onChange={(e) => setAddress({ ...address, state: e.target.value })}
                   placeholder="State"
                 />
-                {(isEkart || isDelhivery || isZipyPost) && (
+                {(isEkart || isDelhivery || isZipyPost || isBoxdLogistics) && (
                   <div className="col-span-2">
                     <InputField
                       label="Pincode"
@@ -343,7 +357,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
           )}
 
           {/* Mobile number field */}
-          {action && (isChangeAddress || isSmartship || isShreeMaruti || (isEcomExpress && isReattempt)) && (
+          {action && (isChangeAddress || isSmartship || isShreeMaruti || isBoxdLogistics || (isEcomExpress && isReattempt)) && (
             <InputField
               label={isChangeAddress ? "New Contact Number" : "Contact Number"}
               icon={Phone}

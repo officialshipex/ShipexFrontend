@@ -98,8 +98,8 @@ const OrdersGraphSection = ({ selectedUserId, filters = {}, refresh, selectedDat
         "amazonshippingindia": "Amazon Shipping",
         ecomexpress: "Ecom Express",
         delhivery: "Delhivery",
-        shreemaruti: "ShreeMaruti",
-        "shree maruti": "ShreeMaruti",
+        shreemaruti: "Shree Maruti",
+        "shree maruti": "Shree Maruti",
     };
 
     const mapCourierName = (rawName) => {

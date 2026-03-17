@@ -1,25 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import NimbusPostAdd from "./NimbusPost/NimbuspostAdd";
-import Shiprocket from "./ShipRocket/ShipRocketAdd";
-import Dtdc from "./DTDC/DtdcAdd";
-import Delhivery from "./Delhivery/DelhiveryAdd";
-import ShreeMaruti from "./ShreeMaruti/ShreeMarutiAdd";
-import XpressbeesAdd from "./Xpressbees/XpressbeesAdd";
-import SmartShip from "./SmartShip/SmartShipAdd";
-import EcomExpressAdd from "./EcomExpress/EcomExpressAdd";
-import AmazonAdd from "./Amazon/AmazonAdd";
-import Ekart from "./Ekart/EkartAdd"
+import CourierAdd from "./CourierAdd";
 import EmployeeAuthModal from "../../employeeAuth/EmployeeAuthModal";
 import CustomDropdown from "./CustomDropdown";
-import Vamaship from "./Vamaship/VamashipAdd";
 import Cookies from "js-cookie";
 import { Notification } from "../../Notification";
-import Loader from "../../Loader"
+import Loader from "../../Loader";
 import { FaEllipsisV, FaTrashAlt, FaUpload, FaDownload, FaTruck } from "react-icons/fa";
-import Zipypost from "./Zipypost/ZipypostAdd";
-import BoxdLogisticsAdd from "./BoxdLogistics/BoxdLogisticsAdd";
 import { getCarrierLogo } from "../../Common/getCarrierLogo";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -29,15 +17,16 @@ const courierOptions = [
   { value: "Shiprocket", label: "Shiprocket" },
   { value: "Dtdc", label: "Dtdc" },
   { value: "Delhivery", label: "Delhivery" },
-  { value: "ShreeMaruti", label: "Shree Maruti" },
+  { value: "Shree Maruti", label: "Shree Maruti" },
   { value: "Xpressbees", label: "Xpressbees" },
   { value: "SmartShip", label: "SmartShip" },
   { value: "EcomExpress", label: "EcomExpress" },
-  { value: "Amazon", label: "Amazon Shipping" },
+  { value: "Amazon Shipping", label: "Amazon Shipping" },
   { value: "Ekart", label: "Ekart" },
   { value: "Vamaship", label: "Vamaship" },
   { value: "ZipyPost", label: "ZipyPost" },
-  { value: "BoxdLogistics", label: "Boxd Logistics" }
+  { value: "BoxdLogistics", label: "BoxdLogistics" },
+  {value:"Proship",label:"Proship"}
 ];
 
 const AddNewCourier = ({ isSidebarAdmin }) => {
@@ -211,38 +200,15 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
   );
 
   const getInputField = () => {
-    const props = { onCourierSaved: handleCourierSaved, canAction };
-    switch (selectedOption) {
-      case "NimbusPost":
-        return <NimbusPostAdd {...props} />;
-      case "Shiprocket":
-        return <Shiprocket {...props} />;
-      case "Dtdc":
-        return <Dtdc {...props} />;
-      case "Delhivery":
-        return <Delhivery {...props} />;
-      case "ShreeMaruti":
-        return <ShreeMaruti {...props} />;
-      case "Xpressbees":
-        return <XpressbeesAdd {...props} />;
-      case "EcomExpress":
-        return <EcomExpressAdd {...props} />;
-      case "Amazon":
-        return <AmazonAdd {...props} />;
-      case "Ekart":
-        return <Ekart {...props} />;
-      case "Vamaship":
-        return <Vamaship {...props} />;
-      case "ZipyPost":
-        return <Zipypost {...props} />;
-      case "SmartShip":
-        return <SmartShip {...props} />;
-      case "BoxdLogistics":
-        return <BoxdLogisticsAdd {...props} />;
-      default:
-        return null;
-    }
+    return (
+      <CourierAdd
+        provider={selectedOption}
+        onCourierSaved={handleCourierSaved}
+        canAction={canAction}
+      />
+    );
   };
+
 
   if (!isSidebarAdmin && showEmployeeAuthModal) {
     return (

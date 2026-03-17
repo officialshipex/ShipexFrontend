@@ -247,6 +247,7 @@ const Orders = (filterOrder) => {
           headers: { Authorization: `Bearer ${token}` }
         });
         if (shipResponse.data.success) {
+          console.log(shipResponse.data)
           Notification(shipResponse.data.message || "Bulk shipment successful.", "success");
         } else {
           Notification(shipResponse.data.message || "Failed to create bulk shipment.", "error");
@@ -258,6 +259,7 @@ const Orders = (filterOrder) => {
       setShowBulkShipModal(true);
       setSelectedData(popupOrders);
     } catch (error) {
+      
       Notification("Something went wrong while processing bulk shipment.", "error");
     }
   };

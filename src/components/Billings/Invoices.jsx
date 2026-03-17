@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { ChevronDown, Filter } from "lucide-react";
 import ThreeDotLoader from "../../Loader";
 import { HiOutlineDownload } from "react-icons/hi";
+import { FaFileExcel } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
 import NotFound from "../../assets/nodatafound.png";
 import PaginationFooter from "../../Common/PaginationFooter";
@@ -370,19 +371,29 @@ const Invoices = ({
                         {inv.status}
                       </span>
                     </td>
-                    <td className="px-3 py-2">
-                      <div className="flex justify-center">
+                    <td className="px-3 py-2 text-center">
+                      <div className="flex justify-center gap-2">
                         {inv.invoiceUrl && (
                           <a
                             href={inv.invoiceUrl}
                             target="_blank"
                             rel="noreferrer"
                             className="inline-flex items-center justify-center bg-[#0CBB7D] text-white w-8 h-8 rounded-lg hover:shadow-md hover:bg-opacity-90 transition-all shadow-sm"
-                            title="Download Invoice"
+                            title="Download Invoice PDF"
                           >
                             <HiOutlineDownload className="w-4 h-4" />
                           </a>
                         )}
+                        <button
+                          onClick={() => {
+                            const url = `${REACT_APP_BACKEND_URL}/invoice/export-excel?invoiceNumber=${inv.invoiceNumber}`;
+                            window.open(url, "_blank");
+                          }}
+                          className="inline-flex items-center justify-center bg-[#0CBB7D] text-white w-8 h-8 rounded-lg hover:shadow-md hover:bg-opacity-90 transition-all shadow-sm"
+                          title="Download Invoice Excel"
+                        >
+                          <FaFileExcel className="w-3.5 h-3.5" />
+                        </button>
                       </div>
                     </td>
                   </tr>
@@ -528,8 +539,8 @@ const Invoices = ({
                   </div>
                 </div>
 
-                {inv.invoiceUrl && (
-                  <div className="flex justify-end">
+                <div className="flex justify-end gap-2">
+                  {inv.invoiceUrl && (
                     <a
                       href={inv.invoiceUrl}
                       target="_blank"
@@ -537,10 +548,20 @@ const Invoices = ({
                       className="px-3 py-1.5 bg-green-50 text-[#0CBB7D] border border-green-100 rounded-lg flex items-center gap-2 font-[600] text-[10px] hover:bg-green-100 transition-colors"
                     >
                       <HiOutlineDownload className="w-4 h-4" />
-                      Download Invoice
+                      PDF
                     </a>
-                  </div>
-                )}
+                  )}
+                  <button
+                    onClick={() => {
+                      const url = `${REACT_APP_BACKEND_URL}/invoice/export-excel?invoiceNumber=${inv.invoiceNumber}`;
+                      window.open(url, "_blank");
+                    }}
+                    className="px-3 py-1.5 bg-green-50 text-[#0CBB7D] border border-green-100 rounded-lg flex items-center gap-2 font-[600] text-[10px] hover:bg-green-100 transition-colors"
+                  >
+                    <FaFileExcel className="w-3.5 h-3.5" />
+                    Excel
+                  </button>
+                </div>
               </div>
             ))
           )}

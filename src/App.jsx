@@ -27,9 +27,6 @@ import AdminDashboard from "./components/Dashboard/MainDashboard.jsx"; // Admin 
 // import CourierList from "./components/Courier/CourierList.jsx";
 import AddNewCourier from "./components/Courier/AddNewCourier.jsx";
 import AddNewCourierB2B from "./B2B/Courier/AddNewCourier";
-import NimbusPostAdd from "./components/Courier/NimbusPost/NimbuspostAdd.jsx";
-import ShipRocketAdd from "./components/Courier/ShipRocket/ShipRocketAdd.jsx";
-import XpressbeesAdd from "./components/Courier/Xpressbees/XpressbeesAdd.jsx";
 import CourierServiceList from "./components/CourierServices/CourierServiceList.jsx";
 import CreateNewCourier from "./components/CourierServices/CreateNewCourier.jsx";
 import CreateNewCourierB2B from "./B2B/CourierServices/CreateNewCourier";
@@ -1057,21 +1054,7 @@ function App() {
                     }
                   />
 
-                  {/* Integration Routes for Couriers */}
-                  <Route
-                    path="/dashboard/setup/courier/add/nimbuspost"
-                    element={<NimbusPostAdd />}
-                  />
-                  <Route
-                    path="/dashboard/setup/courier/add/shiprocket"
-                    element={<ShipRocketAdd />}
-                  />
-                  <Route
-                    path="/dashboard/setup/courier/add/xpressbees"
-                    element={<XpressbeesAdd />}
-                  />
-                  {/* <Route path="/dashboard/setup/courier/add/DelhiveryAdd" element={<DelhiveryAdd />} /> */}
-                  {/* <Route path="/dashboard/setup/courier/add/DtdcAdd" element={<DtdcAdd />} /> */}
+                  {/* Integration Routes for Couriers -> Now handled by generic AddNewCourier */}
 
                   {/* Courier-services */}
                   <Route

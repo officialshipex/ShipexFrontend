@@ -118,8 +118,13 @@ const CostEstimation = () => {
           },
         }
       );
-
-      if (response.data[0].forward.finalCharges === null) {
+      console.log("response", response)
+      if (response.data.length === 0) {
+        Notification("No courier available for this pincode", "info");
+        setCourierData([]);
+        setIsDataFetched(false);
+      }
+      if (response.data[0]?.forward.finalCharges === null) {
         Notification("Pincode serviceability is not available", "info");
         setCourierData([]);
         setIsDataFetched(false);

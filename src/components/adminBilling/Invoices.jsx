@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { ChevronDown, Filter, Search } from "lucide-react";
 import ThreeDotLoader from "../../Loader"
 import { HiOutlineDownload } from "react-icons/hi";
+import { FaFileExcel } from "react-icons/fa";
 import NotFound from "../../assets/nodatafound.png"
 import PaginationFooter from "../../Common/PaginationFooter"
 import InvoicesFilterPanel from "../../Common/InvoicesFilterPanel";
@@ -355,17 +356,29 @@ const Invoices = () => {
                       </span>
                     </td>
                     <td className="px-3 py-2">
-                      {inv.invoiceUrl && (
-                        <a
-                          href={inv.invoiceUrl}
-                          target="_blank"
-                          rel="noreferrer"
+                      <div className="flex items-center gap-2">
+                        {inv.invoiceUrl && (
+                          <a
+                            href={inv.invoiceUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center justify-center bg-[#0CBB7D] text-white w-8 h-8 rounded-lg hover:shadow-md hover:bg-opacity-90 transition-all shadow-sm"
+                            title="Download Invoice PDF"
+                          >
+                            <HiOutlineDownload className="w-4 h-4" />
+                          </a>
+                        )}
+                        <button
+                          onClick={() => {
+                            const url = `${REACT_APP_BACKEND_URL}/invoice/export-excel?invoiceNumber=${inv.invoiceNumber}`;
+                            window.open(url, "_blank");
+                          }}
                           className="inline-flex items-center justify-center bg-[#0CBB7D] text-white w-8 h-8 rounded-lg hover:shadow-md hover:bg-opacity-90 transition-all shadow-sm"
-                          title="Download Invoice"
+                          title="Download Invoice Excel"
                         >
-                          <HiOutlineDownload className="w-4 h-4" />
-                        </a>
-                      )}
+                          <FaFileExcel className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -486,16 +499,29 @@ const Invoices = () => {
                       </div>
                     </div>
 
-                    {inv.invoiceUrl && (
-                      <a
-                        href={inv.invoiceUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="p-1.5 bg-[#0CBB7D] ml-2 text-white rounded-lg flex items-center justify-center shadow active:scale-95 transition-transform"
+                    <div className="flex gap-2 ml-2">
+                      {inv.invoiceUrl && (
+                        <a
+                          href={inv.invoiceUrl}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="p-1.5 bg-[#0CBB7D] text-white rounded-lg flex items-center justify-center shadow active:scale-95 transition-transform"
+                          title="Download Invoice PDF"
+                        >
+                          <HiOutlineDownload className="w-4 h-4" />
+                        </a>
+                      )}
+                      <button
+                        onClick={() => {
+                          const url = `${REACT_APP_BACKEND_URL}/invoice/export-excel?invoiceNumber=${inv.invoiceNumber}`;
+                          window.open(url, "_blank");
+                        }}
+                        className="p-1.5 bg-[#0CBB7D] text-white rounded-lg flex items-center justify-center shadow active:scale-95 transition-transform"
+                        title="Download Invoice Excel"
                       >
-                        <HiOutlineDownload className="w-4 h-4" />
-                      </a>
-                    )}
+                        <FaFileExcel className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
