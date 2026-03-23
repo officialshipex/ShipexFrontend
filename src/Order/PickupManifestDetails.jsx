@@ -252,7 +252,7 @@ const PickupManifestDetails = () => {
     return (
         <div className="w-full sm:px-2">
             {/* Header */}
-            <div className="bg-white p-2 rounded-lg shadow-sm mb-2 sticky top-16 z-40">
+            <div className="bg-white p-2 rounded-lg shadow-sm mb-2 sticky z-40">
                 <div className="flex items-center justify-between gap-2">
                     <div className="flex items-center gap-2 flex-wrap">
                         <button
