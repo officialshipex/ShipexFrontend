@@ -254,7 +254,7 @@ const PickupManifestOrders = ({ orderType = "B2C" }) => {
                         <tbody className="divide-y">
                             {loading ? (
                                 <tr>
-                                    <td colSpan="6" className="py-10 text-center"><ThreeDotLoader /></td>
+                                    <td colSpan="7" className="py-10 text-center"><ThreeDotLoader /></td>
                                 </tr>
                             ) : manifests.length > 0 ? (
                                 manifests.map((m) => (
@@ -336,7 +336,7 @@ const PickupManifestOrders = ({ orderType = "B2C" }) => {
                                 ))
                             ) : (
                                 <tr>
-                                    <td colSpan="6" className="py-10 text-center">
+                                    <td colSpan="7" className="py-10 text-center">
                                         <div className="flex flex-col items-center">
                                             <img src={NotFound} alt="No Data" className="w-60 h-60" />
                                             {/* <p className="text-gray-400 text-[12px]">No manifests found</p> */}

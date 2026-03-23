@@ -262,10 +262,10 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
               Clear All Filters
             </button>
           )}
-          <button onClick={() => setShowUpload(true)} disabled={!employeeAccess.canAction && !employeeAccess.isAdmin} className={`h-9 px-3 rounded-lg text-[12px] font-bold transition-all focus:scale-95 flex items-center justify-center gap-1 ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-[#0CBB7D] text-white hover:bg-opacity-90 shadow-sm" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}>
+          {/* <button onClick={() => setShowUpload(true)} disabled={!employeeAccess.canAction && !employeeAccess.isAdmin} className={`h-9 px-3 rounded-lg text-[12px] font-bold transition-all focus:scale-95 flex items-center justify-center gap-1 ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-[#0CBB7D] text-white hover:bg-opacity-90 shadow-sm" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}>
             <Upload className="w-4 h-4" />
             Upload
-          </button>
+          </button> */}
 
           <div className="relative" ref={bulkActionRef}>
             <button
@@ -309,13 +309,13 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
             More Filters
           </button>
 
-          <button
+          {/* <button
             onClick={() => setShowUpload(true)}
             disabled={!employeeAccess.canAction && !employeeAccess.isAdmin}
             className={`p-2.5 rounded-lg active:scale-95 transition-transform ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-[#0CBB7D] text-white" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}
           >
             <FiUpload className="w-3 h-3" />
-          </button>
+          </button> */}
 
           {isAnyFilterApplied && (
             <button onClick={handleClearFilters} className="p-2.5 bg-red-50 text-red-500 rounded-lg border border-red-100">

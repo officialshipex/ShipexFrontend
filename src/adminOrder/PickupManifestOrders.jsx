@@ -84,7 +84,9 @@ const PickupManifestOrders = ({ orderType = "B2C", userId: initialUserId }) => {
             const params = {
                 page,
                 limit,
-                searchQuery: searchQuery || orderId || awbNumber || undefined,
+                searchQuery: searchQuery || undefined,
+                orderId: orderId || undefined,
+                awbNumber: awbNumber || undefined,
                 startDate: dateRange[0].startDate ? dayjs(dateRange[0].startDate).startOf('day').toISOString() : undefined,
                 endDate: dateRange[0].endDate ? dayjs(dateRange[0].endDate).endOf('day').toISOString() : undefined,
                 pickupContactName: selectedPickupAddress.length > 0 ? (Array.isArray(selectedPickupAddress) ? selectedPickupAddress.join(",") : selectedPickupAddress) : undefined,
