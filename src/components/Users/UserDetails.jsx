@@ -65,6 +65,74 @@ const ReferralCommissionEditModal = ({
   );
 };
 
+// Change Password Modal
+const ChangePasswordModal = ({
+  isOpen,
+  onClose,
+  email,
+  onSave,
+}) => {
+  const [newPassword, setNewPassword] = useState("");
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [isOpen]);
+
+  const handleSave = () => {
+    if (newPassword.length < 8) {
+      setError("Password must be at least 8 characters long");
+      return;
+    }
+    onSave(newPassword);
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 animate-popup-in bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white p-6 rounded-lg w-full max-w-md shadow-2xl">
+        <h2 className="text-[14px] sm:text-[16px] font-[600] mb-4 text-gray-700">
+          Change Password
+        </h2>
+        <p className="text-[12px] text-gray-500 mb-2">Change password for: {email}</p>
+        <input
+          type="password"
+          value={newPassword}
+          onChange={(e) => {
+            setNewPassword(e.target.value);
+            if (e.target.value.length >= 8) setError("");
+          }}
+          className={`w-full border ${error ? "border-red-500" : "border-gray-300"} rounded-lg px-3 py-2 text-[12px] sm:text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0CBB7D] focus:border-transparent`}
+          placeholder="Enter new 8-character password"
+        />
+        {error && <p className="text-red-500 text-[10px] mt-1">{error}</p>}
+        <div className="flex justify-end gap-2 mt-4">
+          <button
+            onClick={onClose}
+            className="px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-[10px] sm:text-[12px] font-[600] transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleSave}
+            className="px-3 py-2 rounded-lg bg-[#0CBB7D] text-white hover:bg-opacity-90 text-[10px] sm:text-[12px] font-[600] transition-colors"
+          >
+            Update Password
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function ProfileCard() {
   const [activeTab, setActiveTab] = useState("My Profile");
   const { id } = useParams();
@@ -89,6 +157,7 @@ export default function ProfileCard() {
   const [notificationSettings, setNotificationSettings] = useState(null);
   const [apiAccess, setApiAccess] = useState(false);
   const [showKAMEditModal, setShowKAMEditModal] = useState(false);
+  const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [rateCardType, setRateCardType] = useState("");
   useEffect(() => {
     const fetchAdmin = async () => {
@@ -227,6 +296,23 @@ export default function ProfileCard() {
     } catch (error) {
       Notification("Failed to update Referral Commission.", "error");
       console.error("Error updating referral commission:", error);
+    }
+  };
+
+  const handleChangePassword = async (newPassword) => {
+    try {
+      const token = Cookies.get("session");
+      await axios.post(
+        `${REACT_APP_BACKEND_URL}/external/changePasswordAdmin`,
+        { email: userData.email, newPassword },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      Notification("Password updated successfully!", "success");
+      setShowChangePasswordModal(false);
+    } catch (error) {
+      Notification(error.response?.data?.message || "Failed to update password.", "error");
+      console.log("Error updating password:", error);
     }
   };
 
@@ -714,6 +800,18 @@ export default function ProfileCard() {
                     label: "Referral Code",
                     value: userData?.referralCode || "N/A",
                   },
+                  {
+                    label: "Change Password",
+                    value: admin && (
+                      <button
+                        onClick={() => setShowChangePasswordModal(true)}
+                        className="text-[#0CBB7D] hover:text-green-500 flex items-center gap-1 font-[600]"
+                      >
+                        <Settings size={14} />
+                        Change
+                      </button>
+                    ),
+                  },
                 ].map((item, index) => (
                   <div key={index} className="flex justify-between items-center">
                     <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
@@ -1015,6 +1113,15 @@ export default function ProfileCard() {
         onClose={() => setShowKAMEditModal(false)}
         userId={id}
       />
+
+      {showChangePasswordModal && (
+        <ChangePasswordModal
+          isOpen={showChangePasswordModal}
+          onClose={() => setShowChangePasswordModal(false)}
+          email={userData?.email}
+          onSave={handleChangePassword}
+        />
+      )}
 
       <EarlyCODModal
         isOpen={showEarlyCODModal}

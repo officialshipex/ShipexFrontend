@@ -122,7 +122,7 @@ const SidebarItem = ({
       {extent && (
         <ul
           className={`pl-[60px] space-y-2 text-[14px] text-gray-500 overflow-hidden transition-[max-height,opacity] duration-300 ease-in-out
-        ${isOpen ? "max-h-60 opacity-100 pointer-events-auto" : "max-h-0 opacity-0 pointer-events-none"}
+        ${isOpen ? "max-h-[1000px] opacity-100 pointer-events-auto" : "max-h-0 opacity-0 pointer-events-none"}
         custom-scrollbar`}
         >
           {list.map((item, index) => (
@@ -161,6 +161,82 @@ const accessMap = {
   // "Operations": "operations",
   // Add more mappings as needed
 };
+
+const sidebarItems = [
+  { icon: faHome, text: "Dashboard", path: "/" },
+  { icon: faPlusSquare, text: "Add Order", path: "/dashboard/order/neworder" },
+  { icon: faCartShopping, text: "B2C", path: "/dashboard/b2c/order" },
+  { icon: faCartShopping, text: "B2C", path: "/adminDashboard/b2c/order" },
+  { icon: faTruckRampBox, text: "B2B", path: "/dashboard/b2b/order" },
+  { icon: faTruckRampBox, text: "B2B", path: "/adminDashboard/b2b/order" },
+  { icon: faExclamationTriangle, text: "NDR", path: "/dashboard/ndr" },
+  {
+    icon: faProjectDiagram, text: "Operations", extent: true, list: [
+      { name: "First Mile", path: "/adminDashboard/operations/firstmile" },
+      { name: "Mid Mile", path: "/adminDashboard/operations/midmile" },
+      { name: "Last Mile", path: "/adminDashboard/operations/lastmile" },
+      { name: "Delay Delivered", path: "/adminDashboard/operations/delayDelivered" }
+    ],
+  },
+  { icon: faExclamationTriangle, text: "NDR", path: "/adminDashboard/ndr" },
+  { icon: faFileInvoiceDollar, text: "Billing", path: "/dashboard/billing" },
+  {
+    icon: faMoneyBillWave,
+    text: "Finance",
+    extent: true,
+    list: [
+      { name: "COD", path: "/finance/COD" },
+      { name: "Billing", path: "/finance/billing" },
+    ],
+  },
+  {
+    icon: faTools,
+    text: "Tools",
+    extent: true,
+    list: [
+      { name: "Rate Calculator", path: "/dashboard/tools/Cost_Estimation/b2c" },
+      { name: "Weight Discrepancy", path: "/dashboard/tools/Weight_Dependency" },
+      { name: "Weight Discrepancy", path: "/adminDashboard/tools/Weight_Dependency" },
+    ],
+  },
+  {
+    icon: faUserCog,
+    text: "Setup & Manage",
+    extent: true,
+    list: [
+      { name: "Pickup Address", path: "/dashboard/Setup&Manage/Pickup_address" },
+      { name: "Users", path: "/dashboard/user" },
+      { name: "Channels", path: "/dashboard/Setup&Manage/Channel" },
+      { name: "Courier", path: "/dashboard/Setup&Manage/Courier" },
+      { name: "Roles", path: "/dashboard/Setup&Manage/Role_List" },
+      { name: "Allocate Sellers", path: "/dashboard/Setup&Manage/allocateRoles" },
+      { name: "Status Map", path: "/adminDashboard/Setup&Manage/statusMap" },
+      { name: "EDD Mapping", path: "/adminDashboard/Setup&Manage/EDD-map" },
+      { name: "EPD Mapping", path: "/adminDashboard/Setup&Manage/EPD-map" },
+      { name: "Pincode Information", path: "/adminDashboard/Setup&Manage/pincode-information" }
+    ],
+  },
+  {
+    icon: faTruck,
+    text: "Courier",
+    extent: true,
+    list: [
+      { name: "Couriers", path: "/adminDashboard/setup/courier/add" },
+      { name: "Courier services", path: "/adminDashboard/setup/courierservices/add" },
+    ],
+  },
+  {
+    icon: faReceipt, text: "Rate Card",
+    extent: true,
+    list: [
+      { name: "B2C", path: "/adminDashboard/b2c/ratecard" },
+      { name: "B2B", path: "/adminDashboard/b2b/ratecard" },
+      { name: "Zone Matrix (B2B)", path: "/adminDashboard/b2b/zonematrix" }
+    ]
+  },
+  { icon: faCogs, text: "Settings", path: "/dashboard/settings" },
+  { icon: faUserFriends, text: "Referral", path: "/adminDashboard/referral" },
+];
 
 const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -218,97 +294,22 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
       }
     };
     fetchRoleAccess();
-  }, [isAdminProp, adminTabProp, searchParams, REACT_APP_BACKEND_URL, location.pathname]);
+  }, [isAdminProp, adminTabProp]);
 
 
   useEffect(() => {
     if (adminTab === undefined) return;
+    const path = location.pathname;
     // Only redirect if on the root paths
-    if (isAdmin && adminTab && (location.pathname === "/" || location.pathname === "/dashboard")) {
+    if (isAdmin && adminTab && (path === "/" || path === "/dashboard")) {
       navigate("/adminDashboard", { replace: true });
-    } else if ((!isAdmin || !adminTab) && (location.pathname === "/" || location.pathname === "/adminDashboard")) {
+    } else if ((!isAdmin || !adminTab) && (path === "/" || path === "/adminDashboard")) {
       navigate("/dashboard", { replace: true });
     }
-  }, [adminTab, isAdmin, location.pathname, navigate]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [adminTab, isAdmin]);
 
-  const sidebarItems = [
-    { icon: faHome, text: "Dashboard", path: "/" },
-    { icon: faPlusSquare, text: "Add Order", path: "/dashboard/order/neworder" },
-    { icon: faCartShopping, text: "B2C", path: "/dashboard/b2c/order" },
-    { icon: faCartShopping, text: "B2C", path: "/adminDashboard/b2c/order" },
-    { icon: faTruckRampBox, text: "B2B", path: "/dashboard/b2b/order" },
-    { icon: faTruckRampBox, text: "B2B", path: "/adminDashboard/b2b/order" },
-    { icon: faExclamationTriangle, text: "NDR", path: "/dashboard/ndr" },
-    {
-      icon: faProjectDiagram, text: "Operations", extent: true, list: [
-        { name: "First Mile", path: "/adminDashboard/operations/firstmile" },
-        { name: "Mid Mile", path: "/adminDashboard/operations/midmile" },
-        { name: "Last Mile", path: "/adminDashboard/operations/lastmile" },
-        { name: "Delay Delivered", path: "/adminDashboard/operations/delayDelivered" }
-      ],
-    },
-    { icon: faExclamationTriangle, text: "NDR", path: "/adminDashboard/ndr" },
-    { icon: faFileInvoiceDollar, text: "Billing", path: "/dashboard/billing" },
-    {
-      icon: faMoneyBillWave,
-      text: "Finance",
-      extent: true,
-      list: [
-        { name: "COD", path: "/finance/COD" },
-        { name: "Billing", path: "/finance/billing" }
-        // { name: "Seller COD Remittance", path: "/finance/sellerCodRemittance" },
-        // { name: "Courier COD Remittance", path: "/finance/courierCodRemittance" },
-      ],
-    },
-    {
-      icon: faTools,
-      text: "Tools",
-      extent: true,
-      list: [
-        { name: "Rate Calculator", path: "/dashboard/tools/Cost_Estimation/b2c" },
-        { name: "Weight Discrepancy", path: "/dashboard/tools/Weight_Dependency" },
-        { name: "Weight Discrepancy", path: "/adminDashboard/tools/Weight_Dependency" },
-      ],
-    },
-    {
-      icon: faUserCog,
-      text: "Setup & Manage",
-      extent: true,
-      list: [
-        { name: "Pickup Address", path: "/dashboard/Setup&Manage/Pickup_address" },
-        { name: "Users", path: "/dashboard/user" },
-        { name: "Channels", path: "/dashboard/Setup&Manage/Channel" },
-        { name: "Courier", path: "/dashboard/Setup&Manage/Courier" },
-        { name: "Roles", path: "/dashboard/Setup&Manage/Role_List" },
-        { name: "Allocate Sellers", path: "/dashboard/Setup&Manage/allocateRoles" },
-        { name: "Status Map", path: "/adminDashboard/Setup&Manage/statusMap" },
-        { name: "EDD Mapping", path: "/adminDashboard/Setup&Manage/EDD-map" },
-        { name: "Pincode Information", path: "/adminDashboard/Setup&Manage/pincode-information" }
-      ],
-    },
-    {
-      icon: faTruck,
-      text: "Courier",
-      extent: true,
-      list: [
-        { name: "Couriers", path: "/adminDashboard/setup/courier/add" },
-        { name: "Courier services", path: "/adminDashboard/setup/courierservices/add" },
-      ],
-    },
-    {
-      icon: faReceipt, text: "Rate Card",
-      extent: true,
-      list: [
-        { name: "B2C", path: "/adminDashboard/b2c/ratecard" },
-        { name: "B2B", path: "/adminDashboard/b2b/ratecard" },
-        { name: "Zone Matrix (B2B)", path: "/adminDashboard/b2b/zonematrix" }
-      ]
-      //  path: "/adminDashboard/ratecard"
-    },
-    { icon: faCogs, text: "Settings", path: "/dashboard/settings" },
-    // { icon: faPhone, text: "Support", path: "/dashboard/support" },
-    { icon: faUserFriends, text: "Referral", path: "/adminDashboard/referral" },
-  ];
+  // sidebarItems is now defined outside the component (stable reference)
 
   const [expanded, setExpanded] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -468,7 +469,7 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
 
             if (item.text === "Setup & Manage") {
               const filteredList = item.list.filter((subItem) =>
-                ["Users", "Roles", "Status Map", "EDD Mapping", "Pincode Information"].includes(subItem.name) ||
+                ["Users", "Roles", "Status Map", "EDD Mapping", "EPD Mapping", "Pincode Information"].includes(subItem.name) ||
                 (subItem.name === "Allocate Sellers" && isAdmin === true && adminTab === true)
               );
               return filteredList.length > 0 ? { ...item, list: filteredList } : null;
@@ -518,6 +519,7 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
                   subItem.name !== "Allocate Sellers" &&
                   subItem.name !== "Status Map" &&
                   subItem.name !== "EDD Mapping" &&
+                  subItem.name !== "EPD Mapping" &&
                   subItem.name !== "Pincode Information"
               );
               return filteredList.length > 0 ? { ...item, list: filteredList } : null;
@@ -550,7 +552,7 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
             if (item.text === "Setup & Manage") {
               filteredList = filteredList.filter(
                 (subItem) =>
-                  !["Users", "Roles", "Allocate Sellers", "Status Map", "EDD Mapping", "Pincode Information"].includes(subItem.name)
+                  !["Users", "Roles", "Allocate Sellers", "Status Map", "EDD Mapping", "EPD Mapping", "Pincode Information"].includes(subItem.name)
               );
             }
             if (item.text === "Operations") {
@@ -584,7 +586,7 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
 
     // Default: show nothing until rights are loaded
     return [];
-  }, [isAdmin, adminTab, isEmployee, employeeAccessRights, sidebarItems]);
+  }, [isAdmin, adminTab, isEmployee, employeeAccessRights]);
 
   const toggleSidebar = () => {
     setExpanded((prev) => {
@@ -625,7 +627,7 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
       )}
 
       <aside
-        className={`fixed top-0 left-0 h-full border-r transition-all duration-500 ease-in-out mt-[56px] sm:mt-[60px] 
+        className={`fixed top-0 left-0 h-[calc(100vh-56px)] sm:h-[calc(100vh-60px)] border-r transition-all duration-500 ease-in-out mt-[56px] sm:mt-[60px] 
           ${expanded ? "w-60 z-50 bg-white" : "w-16 z-50 bg-white"} ${isMobile && !expanded ? "-translate-x-full" : "translate-x-0 z-49"}`}
         onMouseEnter={() => {
           if (!isMobile) {

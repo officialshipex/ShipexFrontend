@@ -14,6 +14,32 @@ const getWeightValue = (name, fallback) => {
   return n > 0 ? n : fallback;
 };
 
+const formatPickupDate = (date) => {
+  if (!date) return "—";
+  const d = new Date(date);
+  const now = new Date();
+  const isToday =
+    d.getDate() === now.getDate() &&
+    d.getMonth() === now.getMonth() &&
+    d.getFullYear() === now.getFullYear();
+
+  const tomorrow = new Date();
+  tomorrow.setDate(now.getDate() + 1);
+  const isTomorrow =
+    d.getDate() === tomorrow.getDate() &&
+    d.getMonth() === tomorrow.getMonth() &&
+    d.getFullYear() === tomorrow.getFullYear();
+
+  if (isToday) return "Today";
+  if (isTomorrow) return "Tomorrow";
+
+  return d.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+};
+
 const CarrierSelection = () => {
   const { id } = useParams();
   const [orderDetails, setOrderDetails] = useState({});
@@ -115,7 +141,7 @@ const CarrierSelection = () => {
           `${REACT_APP_BACKEND_URL}/order/ship/${id}`,
           { headers: { authorization: `Bearer ${token}` } }
         );
-        // console.log("courier", response.data)
+        console.log("courier", response.data)
         setOrderDetails(response.data.order);
         setPlan(response.data.updatedRates);
       } catch (error) { } finally {
@@ -521,14 +547,19 @@ const CarrierSelection = () => {
                     </div>
                     <div className="grid grid-cols-1 gap-1 p-2 bg-green-50 rounded-lg font-[600] border-t border-gray-100">
                       <div className="flex justify-between">
+                        <span className="text-gray-500">Estimated Pickup Date</span>
+                        <div>{formatPickupDate(item?.pickupDate)}</div>
+                      </div>
+
+                      <div className="flex justify-between">
                         <span className="text-gray-500">Estimated Delivery Date</span>
                         <div>
                           {item?.estimatedDeliveryDate
                             ? new Date(item.estimatedDeliveryDate).toLocaleDateString("en-GB", {
-                              day: "2-digit",
-                              month: "short",
-                              year: "numeric",
-                            })
+                                day: "2-digit",
+                                month: "short",
+                                year: "numeric",
+                              })
                             : "—"}
                         </div>
                       </div>
@@ -600,6 +631,7 @@ const CarrierSelection = () => {
                     <tr className="bg-[#0CBB7D] text-white text-[12px] font-[600]">
                       <th className="py-2 px-3 text-left bg-[#0CBB7D]">Courier Partner</th>
                       <th className="py-2 px-3 text-center bg-[#0CBB7D]">Mode</th>
+                      <th className="py-2 px-3 text-center bg-[#0CBB7D]">Estimated Pickup Date</th>
                       <th className="py-2 px-3 text-center bg-[#0CBB7D]">Estimated Delivery Date</th>
                       <th className="py-2 px-3 text-center bg-[#0CBB7D]">Chargeable Weight</th>
                       <th className="py-2 px-3 text-center bg-[#0CBB7D]">Charges</th>
@@ -626,6 +658,9 @@ const CarrierSelection = () => {
                           ) : (
                             <FaTruck className="inline-block text-gray-500 text-[18px] align-middle" />
                           )}
+                        </td>
+                        <td className="text-center font-[600] text-[12px]">
+                          {formatPickupDate(item?.pickupDate)}
                         </td>
                         <td className="text-center font-[600] text-[12px]">
                           {item?.estimatedDeliveryDate

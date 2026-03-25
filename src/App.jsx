@@ -107,6 +107,7 @@ import AllocateRoles from "./components/Set-up&Mannage/Role/AllocateRoles.jsx";
 import WalletHistoryForm from "./components/adminBilling/WalletHistoryForm.jsx";
 import YourSellers from "./components/Set-up&Mannage/Role/YourSellers.jsx";
 import EDDMapping from "./components/Set-up&Mannage/EDDMapping/EDDMapping";
+import EPDMapping from "./components/Set-up&Mannage/EPDMapping/EPDMapping";
 import ResetPasswordPage from "./components/Authentication/ResetPasswordPage";
 import FirstMile from "./Operations/firstMile/FirstMile.jsx";
 import MidMile from "./Operations/midMile/MidMile.jsx";
@@ -908,6 +909,18 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <EDDMapping
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
+                  <Route
+                    path="/adminDashboard/Setup&Manage/EPD-map"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <EPDMapping
                           isSidebarAdmin={isAuthenticated && user?.adminTab}
                         />
                       ) : (
