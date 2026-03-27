@@ -123,6 +123,8 @@ const BusinessTypeSelection = () => {
         },
       })
       setChecked(res.data.user.isVerified)
+      setIsPhoneVerified(res.data?.user?.isPhoneVerified || false);
+      setIsEmailVerified(res.data?.user?.isEmailVerified || false);
     }
     fetchUserData();
   }, [])
@@ -139,27 +141,17 @@ const BusinessTypeSelection = () => {
     }
   };
   const allKycVerified =
-    isBillingVerified &&
-    (selectedType === "company" ? isGstinVerified : true) &&
+    (selectedType === "company" ? isGstinVerified : isBillingVerified) &&
     isAadharVerified &&
     isPanVerified &&
     isBankVerified;
 
   useEffect(() => {
-    // Only auto-set step on initial load
+    // Only auto-set step on initial load if everything is fully verified
     if (allKycVerified) {
-      setCurrentStep(1); // Document Verification step
-    } else {
-      setCurrentStep(0); // Billing / GST step
+      setCurrentStep(1);
     }
-  }, [
-    isBillingVerified,
-    isGstinVerified,
-    isAadharVerified,
-    isPanVerified,
-    isBankVerified,
-    selectedType
-  ]);
+  }, [allKycVerified]);
 
   const canSubmitKyc =
     isPhoneVerified &&
@@ -246,7 +238,7 @@ const BusinessTypeSelection = () => {
 
         Notification("Billing info saved successfully!", "success")
         setIsBillingVerified(true)
-        // setCurrentStep(prev => prev + 1);
+        setCurrentStep(prev => prev + 1);
         console.log("biling", response.data);
       } catch (error) {
         console.log("Error in billing info", error)
@@ -344,7 +336,9 @@ const BusinessTypeSelection = () => {
           postalCode: response_billing.data.postalCode || "",
         })
         if (response_billing.data.address) {
-          setIsBillingVerified(true)
+          setIsBillingVerified(true);
+          setSelectedType("individual");
+          setCurrentStep(1);
         }
         //aadhar
         const response_a = await axios.get(
@@ -437,7 +431,9 @@ const BusinessTypeSelection = () => {
         setState(response_g.data.state || "");
         setPincode(response_g.data.pincode || "");
         if (response_g.data.gstin) {
-          setIsGstinVerified(true)
+          setIsGstinVerified(true);
+          setSelectedType("company");
+          setCurrentStep(1);
         }
         console.log(response_g.data)
       } catch (error) {
@@ -663,7 +659,7 @@ const BusinessTypeSelection = () => {
         setCity(response.data.data.city);
         setState(response.data.data.state);
         setPincode(response.data.data.pincode);
-        // setCurrentStep(prev => prev + 1); // <--- Add this line
+        setCurrentStep(prev => prev + 1); // <--- Add this line
         Notification("GST Verified Successfully", "success")
       } else {
 
