@@ -29,7 +29,7 @@ const RechargeWallet = () => {
 
   const handlePayment = async () => {
     const numericAmount = Number(amount);
-    if (numericAmount < 1000) {
+    if (numericAmount < 0) {
       Notification("Minimum amount should be 1000", "warning");
       return;
     }
@@ -158,14 +158,14 @@ const RechargeWallet = () => {
               <input
                 type="number"
                 className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg sm:text-[14px] text-[12px] font-bold text-gray-700 focus:outline-none focus:border-[#0CBB7D] focus:ring-1 focus:ring-green-50 transition-all placeholder-gray-300"
-                min={1000}
+                min={0}
                 value={amount}
                 onChange={(e) => handleAmountChange(e.target.value)}
                 placeholder="1000"
               />
             </div>
-            <p className={`text-[10px] flex items-center gap-1 ${Number(amount) < 1000 ? "text-red-500" : "text-gray-400"}`}>
-              {Number(amount) < 1000 && <FiActivity />} Minimum amount required is ₹ 1000
+            <p className={`text-[10px] flex items-center gap-1 ${Number(amount) < 0 ? "text-red-500" : "text-gray-400"}`}>
+              {Number(amount) < 0 && <FiActivity />} Minimum amount required is ₹ 1000
             </p>
           </div>
 
@@ -189,8 +189,8 @@ const RechargeWallet = () => {
           <div className="pt-4 space-y-2">
             <button
               onClick={handlePayment}
-              disabled={Number(amount) < 1000}
-              className={`w-full py-2 rounded-lg font-bold sm:text-[12px] text-[10px] text-white shadow-sm transition-all duration-300 transform active:scale-95 ${Number(amount) < 1000
+              disabled={Number(amount) < 0}
+              className={`w-full py-2 rounded-lg font-bold sm:text-[12px] text-[10px] text-white shadow-sm transition-all duration-300 transform active:scale-95 ${Number(amount) < 1
                 ? "bg-gray-300 cursor-not-allowed shadow-none"
                 : "bg-[#0CBB7D] hover:bg-[#0aa66d] hover:shadow-xl shadow-green-200"
                 }`}
