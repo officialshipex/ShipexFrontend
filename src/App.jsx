@@ -32,6 +32,7 @@ import CreateNewCourier from "./components/CourierServices/CreateNewCourier.jsx"
 import CreateNewCourierB2B from "./B2B/CourierServices/CreateNewCourier";
 // import AllCostingRateCards from "./components/RateCard/AllCostingRateCards.jsx";
 import AllRateCards from "./components/RateCard/AllRateCards.jsx";
+import CostingRateCard from "./components/RateCard/CostingRateCard.jsx";
 // import CostingRateCardForm from "./components/RateCard/CostingRateCardForm.jsx";
 // import PlanModal from "./components/RateCard/PlanModal.jsx";
 import RateCardForm from "./components/RateCard/RateCardForm.jsx";
@@ -1081,6 +1082,17 @@ function App() {
                       <AllRateCards
                         isSidebarAdmin={isAuthenticated && user?.adminTab}
                       />
+                    }
+                  />
+                  <Route
+                    path="/adminDashboard/costingRateCard"
+                    element={
+                      employeeAuthenticated ||
+                        (isAuthenticated && (user?.isAdmin || user?.adminTab)) ? (
+                        <CostingRateCard />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
                     }
                   />
                   <Route

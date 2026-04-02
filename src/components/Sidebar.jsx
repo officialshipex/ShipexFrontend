@@ -231,7 +231,8 @@ const sidebarItems = [
     list: [
       { name: "B2C", path: "/adminDashboard/b2c/ratecard" },
       { name: "B2B", path: "/adminDashboard/b2b/ratecard" },
-      { name: "Zone Matrix (B2B)", path: "/adminDashboard/b2b/zonematrix" }
+      { name: "Zone Matrix (B2B)", path: "/adminDashboard/b2b/zonematrix" },
+      { name: "Costing Rate Card", path: "/adminDashboard/costingRateCard" }
     ]
   },
   { icon: faCogs, text: "Settings", path: "/dashboard/settings" },
