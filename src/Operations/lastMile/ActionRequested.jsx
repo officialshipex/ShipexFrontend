@@ -99,8 +99,7 @@ const ActionRequested = ({ userId: selectedUserId }) => {
       const params = {
         page,
         limit,
-        status: "Action_Requested",
-        ndrStatus: "Action_Requested",
+        tab: "Action_Requested",
         searchQuery: searchQuery || undefined,
         orderId: orderId || undefined,
         awbNumber: awbNumber || undefined,

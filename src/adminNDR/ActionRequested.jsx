@@ -103,9 +103,7 @@ const ActionRequested = ({ userId: initialUserId }) => {
       const params = {
         page,
         limit,
-        // tab:"Action Requested",
-        status: "Action_Requested",
-        ndrStatus: "Action_Requested",
+        tab: "Action_Requested",
         searchQuery: searchQuery || undefined,
         orderId: orderId || undefined,
         awbNumber: awbNumber || undefined,

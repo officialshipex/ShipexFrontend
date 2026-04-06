@@ -175,7 +175,6 @@ const sidebarItems = [
       { name: "First Mile", path: "/adminDashboard/operations/firstmile" },
       { name: "Mid Mile", path: "/adminDashboard/operations/midmile" },
       { name: "Last Mile", path: "/adminDashboard/operations/lastmile" },
-      { name: "Delay Delivered", path: "/adminDashboard/operations/delayDelivered" }
     ],
   },
   { icon: faExclamationTriangle, text: "NDR", path: "/adminDashboard/ndr" },

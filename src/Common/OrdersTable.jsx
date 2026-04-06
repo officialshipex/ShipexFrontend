@@ -444,13 +444,27 @@ const OrdersTable = ({
                                             : "-"}
                                     </p>
 
-                                    {order.status === "Delivered" && (
+                                    {order.status === "Delivered" ? (
                                         <p className="text-gray-500 text-[10px]">
                                             Delivered On :{" "}
-                                            {order.tracking
+                                            {order.tracking && order.tracking.length > 0
                                                 ? `${dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("DD MMM YYYY")}`
                                                 : "-"}
                                         </p>
+                                    ) : order.status === "RTO Delivered" ? (
+                                        <p className="text-gray-500 text-[10px]">
+                                            RTO Delivered On :{" "}
+                                            {order.tracking && order.tracking.length > 0
+                                                ? `${dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("DD MMM YYYY")}`
+                                                : "-"}
+                                        </p>
+                                    ) : (
+                                        order.status !== "new" && order.tracking && order.tracking.length > 0 && (
+                                            <p className="text-gray-500 text-[10px]">
+                                                Last Scan :{" "}
+                                                {dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("DD MMM YYYY")}
+                                            </p>
+                                        )
                                     )}
 
 

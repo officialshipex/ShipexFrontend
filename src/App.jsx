@@ -123,7 +123,6 @@ import WhatsApp from "./component/All setting/Notification/Whatsapp/Whatsapp";
 import Message from "./component/All setting/Notification/Message/Message";
 import Email from "./component/All setting/Notification/Email/Email";
 import Notification from "./component/All setting/Notification/Notification";
-import DelayDelivered from "./Operations/delayDelivered/DelayDelivered";
 import Couriers from "./components/Courier/Courier";
 //B2B
 
@@ -979,18 +978,7 @@ function App() {
                       )
                     }
                   />
-                  <Route
-                    path="/adminDashboard/operations/delayDelivered"
-                    element={
-                      isAuthenticated || employeeAuthenticated ? (
-                        <DelayDelivered
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
-                        />
-                      ) : (
-                        <Navigate to="/login" />
-                      )
-                    }
-                  />
+                  
                   <Route
                     path="/adminDashboard/setup/courier/add"
                     element={

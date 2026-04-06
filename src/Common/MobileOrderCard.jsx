@@ -227,44 +227,29 @@ const MobileOrderCard = ({
                         </div>
                     </div>
 
-                    <div className="text-[10px] flex justify-center items-center text-gray-500">
-                        {
-                            order.status === "Delivered" ? (
+                    <div className="text-[10px] flex flex-col items-end text-gray-500">
+                        <div className="flex items-start gap-1">
+                            <span>Booked On :</span>
+                            <span>{dayjs(order.shipmentCreatedAt).format("DD MMM YYYY")}</span>
+                        </div>
+                        {order.status === "Delivered" ? (
+                            <div className="flex items-start gap-1">
+                                <span>Delivered On :</span>
+                                <span>{dayjs(order.tracking[order.tracking.length - 1]?.StatusDateTime).format("DD MMM YYYY")}</span>
+                            </div>
+                        ) : order.status === "RTO Delivered" ? (
+                            <div className="flex items-start gap-1">
+                                <span>RTO Delivered On :</span>
+                                <span>{dayjs(order.tracking[order.tracking.length - 1]?.StatusDateTime).format("DD MMM YYYY")}</span>
+                            </div>
+                        ) : (
+                            order.status !== "new" && order.tracking && order.tracking.length > 0 && (
                                 <div className="flex items-start gap-1">
-                                    <span>Delivered On :</span>
-
-                                    {order.tracking[order.tracking.length - 1].StatusDateTime ? (
-                                        <div className="flex flex-col leading-tight">
-                                            <span>
-                                                {dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("DD MMM YYYY")}
-                                            </span>
-                                            <span>
-                                                {dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("hh:mm A")}
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        <span>-</span>
-                                    )}
-                                </div>
-                            ) : (
-                                <div className="flex items-start gap-1">
-                                    <span>Booked On :</span>
-
-                                    {order.tracking[order.tracking.length - 1]?.StatusDateTime ? (
-                                        <div className="flex flex-col leading-tight">
-                                            <span>
-                                                {dayjs(order.shipmentCreatedAt).format("DD MMM YYYY")}
-                                            </span>
-                                            <span>
-                                                {dayjs(order.shipmentCreatedAt).format("hh:mm A")}
-                                            </span>
-                                        </div>
-                                    ) : (
-                                        <span>-</span>
-                                    )}
+                                    <span>Last Scan :</span>
+                                    <span>{dayjs(order.tracking[order.tracking.length - 1]?.StatusDateTime).format("DD MMM YYYY")}</span>
                                 </div>
                             )
-                        }
+                        )}
                     </div>
                 </div>
             )
