@@ -158,9 +158,14 @@ export default function UserServiceManagement({
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-10 rounded-lg cursor-pointer hover:border-[#0CBB7D] transition-all group"
           >
-            <span className={`text-[10px] sm:text-[12px] truncate ${selectedService ? "text-gray-700" : "text-gray-400"}`}>
-              {selectedService ? selectedService.courierServiceName : "Select a Courier Service"}
-            </span>
+            <div className="flex items-center gap-2 truncate">
+              <span className={`text-[10px] sm:text-[12px] truncate ${selectedService ? "text-gray-700" : "text-gray-400"}`}>
+                {selectedService ? selectedService.courierServiceName : "Select a Courier Service"}
+              </span>
+              {selectedService?.isCustomRate && (
+                <span className="text-[10px] bg-orange-100 text-orange-600 px-1.5 py-[1px] rounded-lg font-[600] shrink-0">custom</span>
+              )}
+            </div>
             <FiChevronDown className={`text-gray-400 group-hover:text-[#0CBB7D] transition-transform flex-shrink-0 ${isDropdownOpen ? "rotate-180" : ""}`} />
           </div>
 
@@ -176,7 +181,12 @@ export default function UserServiceManagement({
                   className={`px-4 py-2.5 text-[12px] sm:text-[13px] border-b border-gray-50 last:border-0 hover:bg-[#0CBB7D]/5 hover:text-[#0CBB7D] cursor-pointer transition-colors flex items-center justify-between ${selectedService?.courierServiceName === service.courierServiceName ? 'bg-[#0CBB7D]/10 text-[#0CBB7D]' : 'text-gray-700'}`}
                 >
                   <div className="flex flex-col">
-                    <span>{service.courierServiceName}</span>
+                    <div className="flex items-center gap-2">
+                       <span>{service.courierServiceName}</span>
+                       {service.isCustomRate && (
+                         <span className="text-[10px] bg-orange-100 text-orange-600 px-1.5 py-[1px] rounded-lg font-[600]">custom</span>
+                       )}
+                    </div>
                     <span className="text-[9px] text-gray-400 font-bold uppercase">{service.courierProviderName} • {service.mode || 'N/A'}</span>
                   </div>
                   {service.status === "Active" ? (

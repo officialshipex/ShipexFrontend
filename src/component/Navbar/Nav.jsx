@@ -11,6 +11,7 @@ import BulkUploadPopup from "../../Order/BulkUploadPopup"
 import SelectOrderTypePopup from "../../Order/SelectOrderTypePopup"
 import { FaPlus, FaWallet, FaSyncAlt, FaCaretDown, FaEllipsisV } from "react-icons/fa";
 import { FiUser, FiCreditCard, FiShield, FiLogOut } from "react-icons/fi";
+import { FiUserCheck } from "react-icons/fi";
 
 
 import {
@@ -62,12 +63,95 @@ const Navbar = () => {
   const [showSelectOrderType, setShowSelectOrderType] = useState(false);
   const [selectedOrderType, setSelectedOrderType] = useState("");
 
+  // --- User Login As (admin impersonation) ---
+  const [showUserLoginPopup, setShowUserLoginPopup] = useState(false);
+  const [userSearchQuery, setUserSearchQuery] = useState("");
+  const [userSuggestions, setUserSuggestions] = useState([]);
+  const [userSearchLoading, setUserSearchLoading] = useState(false);
+  const [userLoginLoading, setUserLoginLoading] = useState(false);
+  const userLoginSearchRef = useRef(null);
+  const userLoginPopupRef = useRef(null);
+
   // const dropdownRef = useRef(null);
 
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
   const [showEmployeeAuthModal, setShowEmployeeAuthModal] = useState(false);
+
+  // Debounced user search for impersonation
+  useEffect(() => {
+    if (!showUserLoginPopup) return;
+    if (!userSearchQuery.trim()) {
+      setUserSuggestions([]);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      try {
+        setUserSearchLoading(true);
+        const token = Cookies.get("session");
+        const res = await axios.get(
+          `${REACT_APP_BACKEND_URL}/user/searchUsers?q=${encodeURIComponent(userSearchQuery.trim())}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        setUserSuggestions(res.data.users || []);
+      } catch (e) {
+        console.error("User search error:", e);
+      } finally {
+        setUserSearchLoading(false);
+      }
+    }, 350);
+    return () => clearTimeout(timer);
+  }, [userSearchQuery, showUserLoginPopup]);
+
+  const handleAdminLoginAsUser = async (user) => {
+    try {
+      setUserLoginLoading(true);
+      const token = Cookies.get("session");
+      const res = await axios.post(
+        `${REACT_APP_BACKEND_URL}/user/adminLoginAsUser`,
+        { userId: user.id },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      if (res.data.success) {
+        // Backup the current admin token so we can return later
+        const currentAdminToken = Cookies.get("session");
+        if (currentAdminToken) {
+          localStorage.setItem("admin_token_backup", currentAdminToken);
+        }
+
+        const userToken = res.data.token;
+        // Perform impersonation in the SAME tab to avoid confusion
+        window.location.href = `/login?token=${userToken}`;
+        setShowUserLoginPopup(false);
+        setUserSearchQuery("");
+        setUserSuggestions([]);
+      }
+    } catch (e) {
+      console.error("adminLoginAsUser error:", e);
+    } finally {
+      setUserLoginLoading(false);
+    }
+  };
+  const handleReturnToAdmin = () => {
+    const backup = localStorage.getItem("admin_token_backup");
+    if (backup) {
+      Cookies.set("session", backup, { expires: 1, path: "/" });
+      localStorage.removeItem("admin_token_backup");
+      // Reset all tab states
+      localStorage.removeItem("activeNdrTab");
+      localStorage.removeItem("activeOrderTab");
+      localStorage.removeItem("activeOperationFirstMileTab");
+      localStorage.removeItem("activeOperationMidMileTab");
+      localStorage.removeItem("activeOperationLastMileTab");
+      localStorage.removeItem("activeUserDiscrepancyTab");
+      localStorage.removeItem("activeDiscrepancyTab");
+      localStorage.removeItem("activeSidebarItem");
+      localStorage.removeItem("kyc");
+      window.location.href = "/adminDashboard";
+    }
+  };
+
   // Handle outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -237,7 +321,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     deleteSession();
-
+    localStorage.removeItem("admin_token_backup");
     // navigate("/login");
     window.location.href = "/login";
   };
@@ -342,9 +426,27 @@ const Navbar = () => {
 
 
   return (
-    <div className="pb-[60px]">
+    <div className={localStorage.getItem("admin_token_backup") ? "pb-[88px] sm:pb-[92px]" : "pb-[55px] sm:pb-[60px]"}>
+      {/* Impersonation Banner */}
+      {localStorage.getItem("admin_token_backup") && (
+        <div className="fixed top-0 left-0 right-0 z-[1000] bg-gradient-to-r from-orange-600 to-orange-500 text-white h-[32px] px-4 shadow-md flex items-center justify-center gap-3 animate-slide-down-smooth">
+          <div className="flex items-center gap-2">
+            <FiUserCheck className="text-[16px] animate-pulse" />
+            <span className="text-[10px] sm:text-[12px] font-[600] tracking-wide uppercase">
+              Impersonation Mode Active: <span className="underline decoration-orange-300 decoration-2 underline-offset-2">{userData?.fullname || "User"}</span>
+            </span>
+          </div>
+          <button
+            onClick={handleReturnToAdmin}
+            className="bg-white text-orange-600 px-3 py-0.5 rounded-full text-[10px] font-[800] hover:bg-orange-50 transition transform hover:scale-105 active:scale-95 shadow-sm"
+          >
+            RETURN TO ADMIN
+          </button>
+        </div>
+      )}
+
       {/* Navbar */}
-      <div className="w-full bg-white shadow fixed top-0 left-0 right-0 z-50">
+      <div className={`w-full bg-white shadow fixed left-0 right-0 z-50 ${localStorage.getItem("admin_token_backup") ? "top-[32px]" : "top-0"}`}>
         <div className="flex items-center justify-end gap-2 px-3 py-1.5 min-h-[55px] sm:min-h-[60px]">
           {/* Left Side: Sidebar Toggle (Hidden in Mobile) */}
           <div className="flex items-center justify-center">
@@ -385,7 +487,7 @@ const Navbar = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Action Grid */}
-                <div className="grid grid-cols-3 gap-3 text-center animate-popup-in text-gray-700">
+                <div className={`grid gap-3 text-center animate-popup-in text-gray-700 ${userData?.isAdmin ? 'grid-cols-3' : 'grid-cols-3'}`}>
 
                   {/* Add Order */}
                   <div
@@ -431,6 +533,23 @@ const Navbar = () => {
                     </div>
                     <p className="text-[12px] font-[600] mt-1">Calculate Rate</p>
                   </div>
+
+                  {/* User Login — admin only */}
+                  {/* {userData?.isAdmin && (
+                    <div
+                      onClick={() => {
+                        setShowUserLoginPopup(true);
+                        setShowQuickPopup(false);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className="flex flex-col items-center justify-center bg-gray-50 border border-[#0CBB7D] rounded-lg py-3 cursor-pointer hover:bg-gray-100 transition"
+                    >
+                      <div className="bg-[#E1F7F2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
+                        <FiUserCheck />
+                      </div>
+                      <p className="text-[12px] font-[600] mt-1">User Login</p>
+                    </div>
+                  )} */}
 
                 </div>
               </div>
@@ -581,13 +700,13 @@ const Navbar = () => {
 
               {/* Dropdown Actions */}
               {showActions && (
-                <div className="absolute left-1/2 -translate-x-1/2 mt-3 z-50 w-[500px]">
+                <div className={`absolute left-1/2 -translate-x-1/2 mt-3 z-50 ${userData?.isAdmin ? 'w-[620px]' : 'w-[500px]'}`}>
                   <div className="bg-white animate-popup-in border border-gray-200 rounded-lg shadow-sm px-3 py-2 w-full">
                     {/* Arrow */}
                     <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white rotate-45 border-l border-t border-gray-200"></div>
 
                     {/* Action Grid */}
-                    <div className="grid grid-cols-3 gap-2">
+                    <div className={`grid gap-2 ${userData?.isAdmin ? 'grid-cols-3' : 'grid-cols-3'}`}>
                       <div
                         onClick={() => {
                           handleNewOrderClick();
@@ -623,6 +742,22 @@ const Navbar = () => {
                         </div>
                         <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">Calculate Rate</span>
                       </div>
+
+                      {/* User Login — admin only (desktop) */}
+                      {/* {userData?.isAdmin && (
+                        <div
+                          onClick={() => {
+                            setShowActions(false);
+                            setShowUserLoginPopup(true);
+                          }}
+                          className="flex flex-col items-center justify-center bg-gray-50 rounded-lg py-4 cursor-pointer hover:bg-gray-100 transition"
+                        >
+                          <div className="bg-[#e1f7f2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
+                            <FiUserCheck />
+                          </div>
+                          <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">User Login</span>
+                        </div>
+                      )} */}
 
                       {/* <div
                       onClick={() => { setShowActions(false); handleCreateTicket(); }}
@@ -890,6 +1025,134 @@ const Navbar = () => {
         />
       )}
       <AddCase isOpen={isModalOpen} onClose={closeModal} refresh={setRefresh} />
+
+      {/* ═══════════════════════════════════════════════════════════════
+           ADMIN: Login As User Popup
+          ═══════════════════════════════════════════════════════════════ */}
+      {showUserLoginPopup && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-40 z-[999] flex items-center justify-center p-4"
+          onClick={() => {
+            setShowUserLoginPopup(false);
+            setUserSearchQuery("");
+            setUserSuggestions([]);
+          }}
+        >
+          <div
+            ref={userLoginPopupRef}
+            className="bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 animate-popup-in"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between mb-5">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 bg-[#E1F7F2] rounded-full flex items-center justify-center">
+                  <FiUserCheck className="text-[#0CBB7D] text-[16px]" />
+                </div>
+                <div>
+                  <h2 className="text-[14px] font-[700] text-gray-800">Login as User</h2>
+                  <p className="text-[11px] text-gray-400 font-[500]">Admin access — no password required</p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setShowUserLoginPopup(false);
+                  setUserSearchQuery("");
+                  setUserSuggestions([]);
+                }}
+                className="w-7 h-7 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 text-[14px] transition"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Search Input */}
+            <div className="relative" ref={userLoginSearchRef}>
+              <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 bg-gray-50 focus-within:border-[#0CBB7D] focus-within:bg-white transition">
+                <FiSearch className="text-[#0CBB7D] text-[14px] flex-shrink-0" />
+                <input
+                  type="text"
+                  autoFocus
+                  placeholder="Search by name, email, phone or company…"
+                  value={userSearchQuery}
+                  onChange={(e) => setUserSearchQuery(e.target.value)}
+                  className="w-full bg-transparent text-[12px] font-[500] text-gray-700 outline-none placeholder:text-gray-400"
+                />
+                {userSearchLoading && (
+                  <svg className="animate-spin h-4 w-4 text-[#0CBB7D] flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                  </svg>
+                )}
+                {userSearchQuery && !userSearchLoading && (
+                  <button
+                    onClick={() => { setUserSearchQuery(""); setUserSuggestions([]); }}
+                    className="text-gray-400 hover:text-gray-600 flex-shrink-0 text-[12px]"
+                  >✕</button>
+                )}
+              </div>
+
+              {/* Suggestions Dropdown */}
+              {userSuggestions.length > 0 && (
+                <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-100 rounded-xl shadow-lg z-50 overflow-y-auto max-h-[300px] custom-scrollbar">
+                  {userSuggestions.map((u) => (
+                    <button
+                      key={u.id}
+                      disabled={userLoginLoading}
+                      onClick={() => handleAdminLoginAsUser(u)}
+                      className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#F0FDF9] transition text-left border-b border-gray-50 last:border-0 disabled:opacity-60"
+                    >
+                      {/* Avatar */}
+                      <div className="w-8 h-8 rounded-full bg-[#0CBB7D] text-white text-[12px] font-[700] flex items-center justify-center flex-shrink-0">
+                        {u.fullname?.charAt(0).toUpperCase() || "U"}
+                      </div>
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[12px] font-[600] text-gray-800 truncate">{u.fullname}</p>
+                        <p className="text-[11px] text-gray-400 truncate">{u.email}</p>
+                      </div>
+                      {/* Company badge */}
+                      {u.company && (
+                        <span className="text-[10px] font-[600] bg-green-50 text-[#0CBB7D] px-2 py-0.5 rounded-full flex-shrink-0 truncate max-w-[90px]">
+                          {u.company}
+                        </span>
+                      )}
+                      {/* Open icon */}
+                      {userLoginLoading ? (
+                        <svg className="animate-spin h-3.5 w-3.5 text-[#0CBB7D] flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                        </svg>
+                      ) : (
+                        <svg className="w-3.5 h-3.5 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                        </svg>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Empty state */}
+              {userSearchQuery.trim() && !userSearchLoading && userSuggestions.length === 0 && (
+                <div className="mt-3 text-center py-6">
+                  <div className="w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-2">
+                    <FiUser className="text-gray-400 text-[16px]" />
+                  </div>
+                  <p className="text-[12px] text-gray-400 font-[500]">No users found for "{userSearchQuery}"</p>
+                </div>
+              )}
+
+              {/* Initial hint */}
+              {!userSearchQuery.trim() && (
+                <p className="text-[11px] text-gray-400 text-center mt-4 font-[500]">
+                  Type a name, email, phone or company to find a user
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

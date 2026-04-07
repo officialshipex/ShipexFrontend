@@ -6,14 +6,14 @@ const backendUrl = process.env.REACT_APP_BACKEND_URL;
 
 // Create session (store token in cookie)
 export function createSession(token) {
-  
-    const expiresAt = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
-    Cookies.set('session', token, {
-        expires: expiresAt,
-        secure: true,
-        sameSite: 'lax',
-        path: '/',
-    })
+
+  const expiresAt = new Date(Date.now() + 1 * 24 * 60 * 60 * 1000);
+  Cookies.set('session', token, {
+    expires: expiresAt,
+    secure: true,
+    sameSite: 'lax',
+    path: '/',
+  })
 }
 
 export async function getSession(role) {
@@ -35,18 +35,18 @@ export async function getSession(role) {
 
 // Get the session token
 export function getTokens() {
-    const token = Cookies.get('session');
-    console.log(token)
-    if (!token) {
-        return null;
-    }
-    return token;
+  const token = Cookies.get('session');
+  console.log(token)
+  if (!token) {
+    return null;
+  }
+  return token;
 }
 
 // Function to delete session
 export function deleteSession() {
   Cookies.remove('session', { path: '/' });
-  
+
 }
 
 // Function to get user information from the token

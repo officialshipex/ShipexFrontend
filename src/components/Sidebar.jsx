@@ -619,7 +619,7 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
     <>
       {isMobile && (
         <button
-          className="fixed top-[8px] left-2 z-50 text-[#0CBB7D] p-2"
+          className={`fixed left-2 z-50 text-[#0CBB7D] p-2 transition-all duration-300 ${localStorage.getItem("admin_token_backup") ? "top-[40px]" : "top-[8px]"}`}
           onClick={toggleSidebar}
         >
           <FontAwesomeIcon icon={expanded ? faTimes : faBars} className="text-lg" />
@@ -627,7 +627,10 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
       )}
 
       <aside
-        className={`fixed top-0 left-0 h-[calc(100vh-56px)] sm:h-[calc(100vh-60px)] border-r transition-all duration-500 ease-in-out mt-[56px] sm:mt-[60px] 
+        className={`fixed left-0 border-r transition-all duration-500 ease-in-out 
+          ${localStorage.getItem("admin_token_backup") 
+            ? "top-[32px] mt-[56px] sm:mt-[60px] h-[calc(100vh-88px)] sm:h-[calc(100vh-92px)]" 
+            : "top-0 mt-[56px] sm:mt-[60px] h-[calc(100vh-56px)] sm:h-[calc(100vh-60px)]"} 
           ${expanded ? "w-60 z-50 bg-white" : "w-16 z-50 bg-white"} ${isMobile && !expanded ? "-translate-x-full" : "translate-x-0 z-49"}`}
         onMouseEnter={() => {
           if (!isMobile) {

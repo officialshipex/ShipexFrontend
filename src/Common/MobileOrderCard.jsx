@@ -42,6 +42,23 @@ const MobileOrderCard = ({
 
     const products = order?.productDetails || [];
 
+    const formatTrackingDate = (dateStr, showTime = false) => {
+        if (!dateStr) return "-";
+        const date = new Date(dateStr);
+        const day = String(date.getUTCDate()).padStart(2, "0");
+        const month = date.toLocaleString("en-US", { month: "short", timeZone: "UTC" });
+        const year = date.getUTCFullYear();
+
+        if (!showTime) return `${day} ${month} ${year}`;
+
+        let hours = date.getUTCHours();
+        const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+        const amPm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12;
+
+        return `${day} ${month} ${year} | ${hours}:${minutes} ${amPm}`;
+    };
+
 
     // 🔥 Decide popup position dynamically
     const calculatePosition = (e) => {
@@ -235,18 +252,25 @@ const MobileOrderCard = ({
                         {order.status === "Delivered" ? (
                             <div className="flex items-start gap-1">
                                 <span>Delivered On :</span>
-                                <span>{dayjs(order.tracking[order.tracking.length - 1]?.StatusDateTime).format("DD MMM YYYY")}</span>
+                                <span title={order.tracking && order.tracking.length > 0 ? formatTrackingDate(order.tracking[order.tracking.length - 1].StatusDateTime, true) : ""}>
+                                    {order.tracking && order.tracking.length > 0
+                                        ? formatTrackingDate(order.tracking[order.tracking.length - 1].StatusDateTime)
+                                        : "-"}</span>
                             </div>
                         ) : order.status === "RTO Delivered" ? (
                             <div className="flex items-start gap-1">
                                 <span>RTO Delivered On :</span>
-                                <span>{dayjs(order.tracking[order.tracking.length - 1]?.StatusDateTime).format("DD MMM YYYY")}</span>
+                                <span title={order.tracking && order.tracking.length > 0 ? formatTrackingDate(order.tracking[order.tracking.length - 1].StatusDateTime, true) : ""}>
+                                    {order.tracking && order.tracking.length > 0
+                                        ? formatTrackingDate(order.tracking[order.tracking.length - 1].StatusDateTime)
+                                        : "-"}</span>
                             </div>
                         ) : (
                             order.status !== "new" && order.tracking && order.tracking.length > 0 && (
                                 <div className="flex items-start gap-1">
                                     <span>Last Scan :</span>
-                                    <span>{dayjs(order.tracking[order.tracking.length - 1]?.StatusDateTime).format("DD MMM YYYY")}</span>
+                                    <span title={formatTrackingDate(order.tracking[order.tracking.length - 1].StatusDateTime, true)}>
+                                        {formatTrackingDate(order.tracking[order.tracking.length - 1].StatusDateTime)}</span>
                                 </div>
                             )
                         )}

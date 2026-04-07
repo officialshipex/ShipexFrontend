@@ -45,6 +45,23 @@ const OrdersTable = ({
         return text.length > limit ? text.slice(0, limit) + "..." : text;
     };
 
+    const formatTrackingDate = (dateStr, showTime = false) => {
+        if (!dateStr) return "-";
+        const date = new Date(dateStr);
+        const day = String(date.getUTCDate()).padStart(2, "0");
+        const month = date.toLocaleString("en-US", { month: "short", timeZone: "UTC" });
+        const year = date.getUTCFullYear();
+
+        if (!showTime) return `${day} ${month} ${year}`;
+
+        let hours = date.getUTCHours();
+        const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+        const amPm = hours >= 12 ? "PM" : "AM";
+        hours = hours % 12 || 12;
+
+        return `${day} ${month} ${year} | ${hours}:${minutes} ${amPm}`;
+    };
+
 
     return (
         <table className="min-w-full table-auto">
@@ -445,24 +462,24 @@ const OrdersTable = ({
                                     </p>
 
                                     {order.status === "Delivered" ? (
-                                        <p className="text-gray-500 text-[10px]">
+                                        <p className="text-gray-500 text-[10px]" title={order.tracking && order.tracking.length > 0 ? formatTrackingDate(order.tracking[order.tracking.length - 1].StatusDateTime, true) : ""}>
                                             Delivered On :{" "}
                                             {order.tracking && order.tracking.length > 0
-                                                ? `${dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("DD MMM YYYY")}`
+                                                ? formatTrackingDate(order.tracking[order.tracking.length - 1].StatusDateTime)
                                                 : "-"}
                                         </p>
                                     ) : order.status === "RTO Delivered" ? (
-                                        <p className="text-gray-500 text-[10px]">
+                                        <p className="text-gray-500 text-[10px]" title={order.tracking && order.tracking.length > 0 ? formatTrackingDate(order.tracking[order.tracking.length - 1].StatusDateTime, true) : ""}>
                                             RTO Delivered On :{" "}
                                             {order.tracking && order.tracking.length > 0
-                                                ? `${dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("DD MMM YYYY")}`
+                                                ? formatTrackingDate(order.tracking[order.tracking.length - 1].StatusDateTime)
                                                 : "-"}
                                         </p>
                                     ) : (
                                         order.status !== "new" && order.tracking && order.tracking.length > 0 && (
-                                            <p className="text-gray-500 text-[10px]">
+                                            <p className="text-gray-500 text-[10px]" title={formatTrackingDate(order.tracking[order.tracking.length - 1].StatusDateTime, true)}>
                                                 Last Scan :{" "}
-                                                {dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("DD MMM YYYY")}
+                                                {formatTrackingDate(order.tracking[order.tracking.length - 1].StatusDateTime)}
                                             </p>
                                         )
                                     )}

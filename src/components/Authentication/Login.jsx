@@ -33,7 +33,26 @@ const LoginPage = ({ setIsAuthenticated }) => {
         const param = new URLSearchParams(window.location.search);
         const token = param.get("token");
 
-        if (token) createSession(token);
+        if (token) {
+          // 1. Clear old localStorage state to avoid tab mixups
+          localStorage.removeItem("activeNdrTab");
+          localStorage.removeItem("activeOrderTab");
+          localStorage.removeItem("activeOperationFirstMileTab");
+          localStorage.removeItem("activeOperationMidMileTab");
+          localStorage.removeItem("activeOperationLastMileTab");
+          localStorage.removeItem("activeUserDiscrepancyTab");
+          localStorage.removeItem("activeDiscrepancyTab");
+          localStorage.removeItem("activeSidebarItem");
+          localStorage.removeItem("kyc");
+
+          // 2. Set the new session
+          createSession(token);
+
+          // 3. Force a full page reload to the dashboard. 
+          // This ensures App.jsx and Sidebar.jsx fetch everything fresh with the new token.
+          window.location.href = "/dashboard";
+          return;
+        }
 
         const response = await getSession();
         if (response?.success) {
@@ -254,7 +273,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    
+
                   </span>
                 ) : (
                   "Log In"
