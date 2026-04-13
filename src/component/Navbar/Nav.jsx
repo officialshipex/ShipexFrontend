@@ -487,7 +487,7 @@ const Navbar = () => {
                 onClick={(e) => e.stopPropagation()}
               >
                 {/* Action Grid */}
-                <div className={`grid gap-3 text-center animate-popup-in text-gray-700 ${userData?.isAdmin ? 'grid-cols-3' : 'grid-cols-3'}`}>
+                <div className={`grid gap-3 text-center animate-popup-in text-gray-700 ${userData?.isAdmin ? 'grid-cols-2' : 'grid-cols-3'}`}>
 
                   {/* Add Order */}
                   <div
@@ -535,7 +535,7 @@ const Navbar = () => {
                   </div>
 
                   {/* User Login — admin only */}
-                  {/* {userData?.isAdmin && (
+                  {userData?.isAdmin && (
                     <div
                       onClick={() => {
                         setShowUserLoginPopup(true);
@@ -549,7 +549,7 @@ const Navbar = () => {
                       </div>
                       <p className="text-[12px] font-[600] mt-1">User Login</p>
                     </div>
-                  )} */}
+                  )}
 
                 </div>
               </div>
@@ -706,7 +706,7 @@ const Navbar = () => {
                     <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-3 h-3 bg-white rotate-45 border-l border-t border-gray-200"></div>
 
                     {/* Action Grid */}
-                    <div className={`grid gap-2 ${userData?.isAdmin ? 'grid-cols-3' : 'grid-cols-3'}`}>
+                    <div className={`grid gap-2 ${userData?.isAdmin ? 'grid-cols-4' : 'grid-cols-3'}`}>
                       <div
                         onClick={() => {
                           handleNewOrderClick();
@@ -744,7 +744,7 @@ const Navbar = () => {
                       </div>
 
                       {/* User Login — admin only (desktop) */}
-                      {/* {userData?.isAdmin && (
+                      {userData?.isAdmin && (
                         <div
                           onClick={() => {
                             setShowActions(false);
@@ -757,7 +757,7 @@ const Navbar = () => {
                           </div>
                           <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">User Login</span>
                         </div>
-                      )} */}
+                      )}
 
                       {/* <div
                       onClick={() => { setShowActions(false); handleCreateTicket(); }}

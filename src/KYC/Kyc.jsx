@@ -144,7 +144,9 @@ const BusinessTypeSelection = () => {
     (selectedType === "company" ? isGstinVerified : isBillingVerified) &&
     isAadharVerified &&
     isPanVerified &&
-    isBankVerified;
+    isBankVerified &&
+    isPhoneVerified &&
+    isEmailVerified;
 
   useEffect(() => {
     // Only auto-set step on initial load if everything is fully verified
@@ -338,7 +340,7 @@ const BusinessTypeSelection = () => {
         if (response_billing.data.address) {
           setIsBillingVerified(true);
           setSelectedType("individual");
-          setCurrentStep(1);
+          // Removed auto-advancement to ensure user sees phone/email verification
         }
         //aadhar
         const response_a = await axios.get(
@@ -433,7 +435,7 @@ const BusinessTypeSelection = () => {
         if (response_g.data.gstin) {
           setIsGstinVerified(true);
           setSelectedType("company");
-          setCurrentStep(1);
+          // Removed auto-advancement to ensure user sees phone/email verification
         }
         console.log(response_g.data)
       } catch (error) {
@@ -447,8 +449,12 @@ const BusinessTypeSelection = () => {
   const handleNext = async () => {
     setNext(true);
 
-    if (currentStep === 0 && !isBillingVerified && !isGstinVerified) {
-      // Wait for billing verification before allowing next step
+    if (currentStep === 0 && (!isBillingVerified && !isGstinVerified || !isPhoneVerified || !isEmailVerified)) {
+      if (!isPhoneVerified || !isEmailVerified) {
+        Notification("Please verify your Email and Mobile number first!", "warning");
+      } else {
+        Notification("Please verify your billing information first!", "warning");
+      }
       return;
     }
 
@@ -1493,12 +1499,12 @@ const BusinessTypeSelection = () => {
             <button
               onClick={handleNext}
               disabled={
-                (currentStep === 0 && !(isBillingVerified || isGstinVerified)) ||
+                (currentStep === 0 && (!(isBillingVerified || isGstinVerified) || !isPhoneVerified || !isEmailVerified)) ||
                 (currentStep === 1 && !canSubmitKyc)
               }
               className={`py-2 px-3 sm:text-[12px] text-[10px] rounded-lg font-[600]
     flex items-center gap-1 transition
-    ${(currentStep === 0 && !(isBillingVerified || isGstinVerified)) ||
+    ${(currentStep === 0 && (!(isBillingVerified || isGstinVerified) || !isPhoneVerified || !isEmailVerified)) ||
                   (currentStep === 1 && !canSubmitKyc)
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-[#0CBB7D] hover:bg-[#09946A] text-white"

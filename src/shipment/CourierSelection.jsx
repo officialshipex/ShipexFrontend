@@ -220,7 +220,7 @@ const CarrierSelection = () => {
             <span className="text-gray-500 text-[10px] sm:text-[12px]">To</span>
             <div className="relative group inline-block">
               <p className="text-gray-700 border-b border-dashed border-gray-400 cursor-pointer font-[600] text-[10px] sm:text-[12px]">
-                {orderDetails?.pickupAddress?.city || ""}, {orderDetails?.pickupAddress?.state || ""}
+                {orderDetails?.receiverAddress?.city || ""}, {orderDetails?.receiverAddress?.state || ""}
               </p>
 
 

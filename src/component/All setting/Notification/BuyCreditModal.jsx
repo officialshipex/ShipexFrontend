@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
 import {Notification} from "../../../Notification"
-const BuyCreditModal = ({ onClose, onSuccess }) => {
+const BuyCreditModal = ({ onClose, onSuccess, targetUserId }) => {
     const [amount, setAmount] = useState("");
     const [loading, setLoading] = useState(false);
 
@@ -17,7 +17,7 @@ const BuyCreditModal = ({ onClose, onSuccess }) => {
                     "Content-Type": "application/json",
                     Authorization: `Bearer ${token}`,
                 },
-                body: JSON.stringify({ amount }),
+                body: JSON.stringify({ amount, userId: targetUserId }),
             });
 
             const data = await response.json();

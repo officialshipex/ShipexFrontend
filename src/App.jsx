@@ -123,6 +123,8 @@ import WhatsApp from "./component/All setting/Notification/Whatsapp/Whatsapp";
 import Message from "./component/All setting/Notification/Message/Message";
 import Email from "./component/All setting/Notification/Email/Email";
 import Notification from "./component/All setting/Notification/Notification";
+import CreditHistory from "./component/All setting/Notification/CreditHistory";
+import AIOrderUpdation from "./component/All setting/Notification/AIOrderUpdation";
 import Couriers from "./components/Courier/Courier";
 //B2B
 
@@ -134,6 +136,7 @@ import CourierServices from "./components/CourierServices/CourierServices";
 import CostEstimationB2B from "./component/Toolss/Cost Estimates/CostEstimationB2B";
 
 import B2BCourrierSelection from "./B2B/Shipments/CourierSelection";
+import AdminNotification from "./component/Toolss/AdminNotification/AdminNotification.jsx";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -252,7 +255,7 @@ function App() {
           <div className="flex-grow p-2 overflow-hidden">
             <AnimatePresence mode="wait">
               <motion.div
-                key={location.pathname}
+                key={location.pathname.startsWith('/adminDashboard/tools/notification') || location.pathname.startsWith('/dashboard/settings/notification') ? 'notification-parent' : location.pathname}
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
@@ -489,6 +492,19 @@ function App() {
                       )
                     }
                   />
+                  {/* <Route
+                    path="/adminDashboard/support" // New route for NewOrder page
+                    element={
+                      employeeAuthenticated ||
+                        (isAuthenticated && user?.adminTab) ? (
+                        <SupportPage
+                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  /> */}
                   <Route
                     path="/dashboard/order/courierSelection/:id" // New route for NewOrder page
                     element={
@@ -709,6 +725,25 @@ function App() {
                       )
                     }
                   />
+
+                  {/* Admin Notification Tools */}
+                  <Route
+                    path="/adminDashboard/tools/notification"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <AdminNotification />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  >
+                    <Route index element={<Navigate to="whatsapp" replace />} />
+                    <Route path="whatsapp" element={<WhatsApp />} />
+                    <Route path="message" element={<Message />} />
+                    <Route path="email" element={<Email />} />
+                    <Route path="credit-history" element={<CreditHistory />} />
+                    <Route path="ai-order-updation" element={<AIOrderUpdation />} />
+                  </Route>
 
                   {/* Setup&Manage */}
                   <Route
@@ -1139,6 +1174,8 @@ function App() {
                       <Route path="whatsapp" element={<WhatsApp />} />
                       <Route path="message" element={<Message />} />
                       <Route path="email" element={<Email />} />
+                      <Route path="credit-history" element={<CreditHistory />} />
+                      <Route path="ai-order-updation" element={<AIOrderUpdation />} />
                     </Route>
                   </Route>
 

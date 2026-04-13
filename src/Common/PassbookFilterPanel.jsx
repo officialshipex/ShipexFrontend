@@ -15,6 +15,11 @@ const PassbookFilterPanel = ({
     onClearFilters,
     onApplyFilters,
     showUserFilter = true,
+    showAwbFilter = true,
+    descriptionOptions = [
+        "Freight Charges Applied", "Freight Charges Received", "Auto-accepted Weight Dispute charge",
+        "Weight Dispute Charges Applied", "COD Charges Received", "RTO Freight Charges Applied"
+    ],
 }) => {
     const [localFilters, setLocalFilters] = useState({
         selectedUserId: initialSelectedUserId || null,
@@ -126,16 +131,18 @@ const PassbookFilterPanel = ({
                     </div>
 
                     {/* AWB Number */}
-                    <div className="space-y-1">
-                        <label className="text-[12px] font-[600] text-gray-700">AWB Number</label>
-                        <input
-                            type="text"
-                            placeholder="Enter AWB Number"
-                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D]`}
-                            value={localFilters.awbNumber}
-                            onChange={(e) => setLocalFilters({ ...localFilters, awbNumber: e.target.value })}
-                        />
-                    </div>
+                    {showAwbFilter && (
+                        <div className="space-y-1">
+                            <label className="text-[12px] font-[600] text-gray-700">AWB Number</label>
+                            <input
+                                type="text"
+                                placeholder="Enter AWB Number"
+                                className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D]`}
+                                value={localFilters.awbNumber}
+                                onChange={(e) => setLocalFilters({ ...localFilters, awbNumber: e.target.value })}
+                            />
+                        </div>
+                    )}
 
                     {/* Category */}
                     <div className="space-y-1" ref={categoryRef}>
@@ -181,10 +188,7 @@ const PassbookFilterPanel = ({
                             </button>
                             {showDescriptionDropdown && (
                                 <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-10 py-1 animate-popup-in max-h-60 overflow-y-auto">
-                                    {[
-                                        "Freight Charges Applied", "Freight Charges Received", "Auto-accepted Weight Dispute charge",
-                                        "Weight Dispute Charges Applied", "COD Charges Received", "RTO Freight Charges Applied"
-                                    ].map((desc) => (
+                                    {descriptionOptions.map((desc) => (
                                         <div
                                             key={desc}
                                             onClick={() => { setLocalFilters({ ...localFilters, description: desc }); setShowDescriptionDropdown(false); }}

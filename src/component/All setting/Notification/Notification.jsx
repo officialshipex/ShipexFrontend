@@ -5,7 +5,7 @@ import BuyCreditModal from "./BuyCreditModal";
 import Cookies from "js-cookie";
 
 
-const Notification = () => {
+const Notification = ({ targetUserId = null, basePath = "/dashboard/settings/notification" }) => {
     const navigate = useNavigate();
     const location = useLocation();
     const dropdownRef = useRef(null);
@@ -16,9 +16,11 @@ const Notification = () => {
     const [loadingBalance, setLoadingBalance] = useState(false);
 
     const tabs = [
-        { label: "WhatsApp", path: "/dashboard/settings/notification/whatsapp" },
-        { label: "Message", path: "/dashboard/settings/notification/message" },
-        { label: "Email (Free)", path: "/dashboard/settings/notification/email" },
+        { label: "WhatsApp", path: `${basePath}/whatsapp` },
+        { label: "Message", path: `${basePath}/message` },
+        { label: "Email (Free)", path: `${basePath}/email` },
+        { label: "AI Smart Calling", path: `${basePath}/ai-order-updation` },
+        { label: "Credit History", path: `${basePath}/credit-history` },
     ];
     const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const token = Cookies.get("session");
@@ -34,10 +36,16 @@ const Notification = () => {
     };
 
     const fetchCreditBalance = async () => {
+        if (basePath.startsWith("/adminDashboard") && !targetUserId) {
+            setCreditBalance(0);
+            return;
+        }
         try {
             setLoadingBalance(true);
-            // Example API call
-            const response = await fetch(`${REACT_APP_BACKEND_URL}/notification/getCreditBalance`, {
+            const params = new URLSearchParams();
+            if (targetUserId) params.append("userId", targetUserId);
+
+            const response = await fetch(`${REACT_APP_BACKEND_URL}/notification/getCreditBalance?${params.toString()}`, {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -53,7 +61,7 @@ const Notification = () => {
 
     useEffect(() => {
         fetchCreditBalance();
-    }, []);
+    }, [targetUserId]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -68,16 +76,16 @@ const Notification = () => {
     }, []);
 
     return (
-        <div className="max-w-full mx-auto">
+        <div className="w-full">
             {/* Header section */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                 <div>
                     <h1 className="text-[12px] sm:text-[14px] mb-1 text-gray-700 font-[600]">
-                        Manage Your Notification
+                        Manage {targetUserId ? "User" : "Your"} Notification
                     </h1>
                 </div>
 
-                <div className="flex items-center justify-between gap-3 mt-2 sm:mt-0">
+                <div className="flex items-center justify-between gap-2 mt-2 sm:mt-0">
                     <div className="flex flex-col items-start">
                         <div className="flex gap-4">
                             <span className="text-[10px] sm:text-[12px] font-[600] text-gray-700">
@@ -104,7 +112,7 @@ const Notification = () => {
             </div>
 
             {/* Desktop Tabs */}
-            <div className="hidden sm:flex gap-2 mt-2">
+            <div className="hidden sm:flex gap-2">
                 {tabs.map((tab) => (
                     <Link
                         key={tab.path}
@@ -120,7 +128,7 @@ const Notification = () => {
             </div>
 
             {/* Mobile Dropdown */}
-            <div className="sm:hidden mb-2 mt-3 relative" ref={dropdownRef}>
+            <div className="sm:hidden mb-2 mt-2 relative" ref={dropdownRef}>
                 <button
                     onClick={toggleDropdown}
                     className="w-full text-left text-[12px] border bg-white rounded-lg px-3 py-2 font-[600] text-gray-700 focus:outline-none flex items-center justify-between"
@@ -154,14 +162,15 @@ const Notification = () => {
             </div>
 
             {/* Render Tab Content */}
-            <div className="mt-3">
-                <Outlet />
+            <div className="mt-2">
+                <Outlet context={{ targetUserId, isAdmin: basePath.startsWith("/adminDashboard") }} />
             </div>
 
             {isModalOpen && (
                 <BuyCreditModal
                     onClose={() => setIsModalOpen(false)}
                     onSuccess={fetchCreditBalance}
+                    targetUserId={targetUserId}
                 />
             )}
 

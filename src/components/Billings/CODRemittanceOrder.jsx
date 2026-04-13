@@ -50,7 +50,8 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
   const [bulkActionOpen, setBulkActionOpen] = useState(false);
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
 
-  const bulkActionRef = useRef(null);
+  const bulkActionDesktopRef = useRef(null);
+  const bulkActionMobileRef = useRef(null);
   const statusRef = useRef(null);
 
   const [openRemittancePopup, setOpenRemittancePopup] = useState(false);
@@ -73,8 +74,17 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (bulkActionRef.current && !bulkActionRef.current.contains(event.target)) setBulkActionOpen(false);
-      if (statusRef.current && !statusRef.current.contains(event.target)) setStatusDropdownOpen(false);
+      const isOutsideDesktop = bulkActionDesktopRef.current && !bulkActionDesktopRef.current.contains(event.target);
+      const isOutsideMobile = bulkActionMobileRef.current && !bulkActionMobileRef.current.contains(event.target);
+
+      // Only close if it's outside BOTH (because they share the same state)
+      if (isOutsideDesktop && isOutsideMobile) {
+        setBulkActionOpen(false);
+      }
+
+      if (statusRef.current && !statusRef.current.contains(event.target)) {
+        setStatusDropdownOpen(false);
+      }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
@@ -267,7 +277,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
             Upload
           </button> */}
 
-          <div className="relative" ref={bulkActionRef}>
+          <div className="relative" ref={bulkActionDesktopRef}>
             <button
               disabled={selectedRemittanceIds.length === 0}
               onClick={() => setBulkActionOpen(!bulkActionOpen)}
@@ -335,7 +345,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
             <span className="text-[10px] font-bold text-gray-700 tracking-tight">Select All</span>
           </div>
 
-          <div className="relative" ref={bulkActionRef}>
+          <div className="relative" ref={bulkActionMobileRef}>
             <button
               onClick={() => setBulkActionOpen(!bulkActionOpen)}
               className={`py-[8px] px-3 rounded-lg border transition-all ${selectedRemittanceIds.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] shadow-sm" : "border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed"}`}

@@ -368,9 +368,14 @@ export default function ProfileCard() {
         }
       );
 
+      const getChannelName = (f) => {
+        if (f === "isAdminWhatsAppEnable") return "WhatsApp";
+        if (f === "isAdminEmailEnable") return "Email";
+        return "SMS";
+      };
+
       Notification(
-        `${field === "isAdminWhatsAppEnable" ? "WhatsApp" : "SMS"} notification ${value ? "enabled" : "disabled"
-        }.`,
+        `${getChannelName(field)} notification ${value ? "enabled" : "disabled"}.`,
         "success"
       );
     } catch (error) {
@@ -846,6 +851,20 @@ export default function ProfileCard() {
                       type="checkbox"
                       checked={!!notificationSettings?.isAdminSMSEnable}
                       onChange={(e) => handleNotificationToggle("isAdminSMSEnable", e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-[#0CBB7D] transition-all"></div>
+                    <div className="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform peer-checked:translate-x-4"></div>
+                  </label>
+                </div>
+
+                <div className="flex justify-between items-center">
+                  <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">Email Notification</p>
+                  <label className="relative inline-flex items-center cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={!!notificationSettings?.isAdminEmailEnable}
+                      onChange={(e) => handleNotificationToggle("isAdminEmailEnable", e.target.checked)}
                       className="sr-only peer"
                     />
                     <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-[#0CBB7D] transition-all"></div>

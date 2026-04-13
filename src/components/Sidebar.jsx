@@ -196,6 +196,7 @@ const sidebarItems = [
       { name: "Rate Calculator", path: "/dashboard/tools/Cost_Estimation/b2c" },
       { name: "Weight Discrepancy", path: "/dashboard/tools/Weight_Dependency" },
       { name: "Weight Discrepancy", path: "/adminDashboard/tools/Weight_Dependency" },
+      { name: "Notification", path: "/adminDashboard/tools/notification" },
     ],
   },
   {
@@ -235,6 +236,7 @@ const sidebarItems = [
     ]
   },
   { icon: faCogs, text: "Settings", path: "/dashboard/settings" },
+  // {icon:faCogs,text:"Support",path:"/adminDashboard/support"},
   { icon: faUserFriends, text: "Referral", path: "/adminDashboard/referral" },
 ];
 
@@ -462,7 +464,10 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
 
             if (item.text === "Tools") {
               const filteredList = item.list.filter((subItem) =>
-                ["/adminDashboard/tools/Weight_Dependency"].includes(subItem.path)
+                [
+                  "/adminDashboard/tools/Weight_Dependency",
+                  "/adminDashboard/tools/notification"
+                ].includes(subItem.path)
               );
               return filteredList.length > 0 ? { ...item, list: filteredList } : null;
             }
