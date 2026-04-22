@@ -19,8 +19,10 @@ const OrderRowActions = ({
     refresh,
     setRefresh,
     handleClone,
-    handleScheduledPickup,
     handleUpdateOrder,
+    onVerifyOrder,
+    aiVerifyEnabled,
+    verifyingOrders,
     setDropdownOpen = () => { },
     renderOnly = "both" // "both", "action", "dropdown"
 }) => {
@@ -143,6 +145,24 @@ const OrderRowActions = ({
                                 onClick={(e) => e.stopPropagation()}
                             >
                                 <ul className="text-[10px] font-[600]">
+                                    {/* Verify Order logic */}
+                                    {onVerifyOrder && order.status === "Booked" && (
+                                        <li
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                if (aiVerifyEnabled && !verifyingOrders.has(order._id)) onVerifyOrder(order._id);
+                                                setDropdownOpen(null);
+                                            }}
+                                            className={`px-3 py-2 transition-colors ${
+                                                aiVerifyEnabled 
+                                                    ? "text-[#0CBB7D] hover:bg-green-50 cursor-pointer" 
+                                                    : "text-gray-400 cursor-not-allowed"
+                                            }`}
+                                        >
+                                            {verifyingOrders?.has(order._id) ? "Verifying..." : "Verify Order"}
+                                        </li>
+                                    )}
+
                                     {/* Label logic */}
                                     {showDownloadLabel && (
                                         order.provider === "Amazon Shipping" ? (

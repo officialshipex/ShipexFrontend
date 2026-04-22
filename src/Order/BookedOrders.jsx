@@ -33,6 +33,8 @@ import {
 import MobileOrderCard from "../Common/MobileOrderCard";
 import SchedulePickupModal from "../shipment/SchedulePickupModal";
 
+// ── constant ──────────────────────────────────────────────────────────────────
+
 const BookedOrders = (filterOrder) => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [orders, setOrders] = useState([]);
@@ -70,6 +72,10 @@ const BookedOrders = (filterOrder) => {
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [selectedOrderForPickup, setSelectedOrderForPickup] = useState(null);
 
+  // AI Calling state
+  const [aiVerifyEnabled, setAiVerifyEnabled] = useState(false);
+  const [verifyingOrders, setVerifyingOrders] = useState(new Set()); // track per-order loading
+
   const [tableHeight, setTableHeight] = useState("calc(100vh - 260px)");
   const tableRef = useRef(null);
 
@@ -77,6 +83,80 @@ const BookedOrders = (filterOrder) => {
   const { id } = useParams();
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
+  // ── Fetch AI verify setting on mount ────────────────────────────────────
+  useEffect(() => {
+    const fetchAiSettings = async () => {
+      try {
+        const token = Cookies.get("session");
+        const res = await fetch(`${REACT_APP_BACKEND_URL}/ai-calling/settings`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        if (data.success) {
+          setAiVerifyEnabled(
+            data.isAiOrderVerifyEnable === true &&
+            data.isAdminAiOrderVerifyEnable !== false
+          );
+        }
+      } catch (e) {
+        console.error("AI settings fetch failed:", e);
+      }
+    };
+    fetchAiSettings();
+  }, []);
+
+  // ── Verify single order ─────────────────────────────────────────────────
+  const handleVerifyOrder = async (orderId) => {
+    if (!aiVerifyEnabled) {
+      Notification("Enable AI Order Verification in Settings → Notification → AI Smart Calling first.", "error");
+      return;
+    }
+    try {
+      const token = Cookies.get("session");
+      setVerifyingOrders(prev => new Set([...prev, orderId]));
+      const res = await fetch(`${REACT_APP_BACKEND_URL}/ai-calling/initiate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ orderId, serviceType: "order_verification" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        Notification("AI verification call initiated successfully!", "success");
+      } else {
+        Notification(data.message || "Failed to initiate call", "error");
+      }
+    } catch (e) {
+      Notification("Failed to initiate AI verification call", "error");
+    } finally {
+      setVerifyingOrders(prev => { const s = new Set(prev); s.delete(orderId); return s; });
+    }
+  };
+
+  // ── Bulk Verify Orders ──────────────────────────────────────────────────
+  const handleBulkVerifyOrders = async () => {
+    if (!aiVerifyEnabled) {
+      Notification("Enable AI Order Verification in Settings → Notification → AI Smart Calling first.", "error");
+      return;
+    }
+    if (selectedOrders.length === 0) return;
+    try {
+      const token = Cookies.get("session");
+      Notification(`Initiating AI verification for ${selectedOrders.length} order(s)...`, "success");
+      const res = await fetch(`${REACT_APP_BACKEND_URL}/ai-calling/initiate`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+        body: JSON.stringify({ orderIds: selectedOrders, serviceType: "order_verification" }),
+      });
+      const data = await res.json();
+      if (data.success) {
+        Notification(data.message, "success");
+      } else {
+        Notification(data.message || "Bulk verification failed", "error");
+      }
+    } catch (e) {
+      Notification("Bulk AI verification failed", "error");
+    }
+  };
 
   useEffect(() => {
     const updateHeight = () => {
@@ -294,6 +374,17 @@ const BookedOrders = (filterOrder) => {
                     onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setDesktopDropdownOpen(false); }}>
                     Download Labels
                   </li>
+                  <li
+                    className={`px-3 py-2 flex items-center gap-2 cursor-pointer ${
+                      aiVerifyEnabled
+                        ? "text-[#0CBB7D] hover:bg-green-50"
+                        : "text-gray-400 cursor-not-allowed"
+                    }`}
+                    title={aiVerifyEnabled ? "" : "Enable AI Calling in Settings first"}
+                    onClick={() => { if (aiVerifyEnabled) { handleBulkVerifyOrders(); setDesktopDropdownOpen(false); } }}
+                  >
+                    Verify Orders
+                  </li>
                   <li className="px-3 py-2 text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2"
                     onClick={() => { handleBulkCancel({ selectedOrders, setRefresh }); setDesktopDropdownOpen(false); }}>
                     Bulk Cancel
@@ -330,6 +421,9 @@ const BookedOrders = (filterOrder) => {
             handleClone={handleClone}
             showShippingDetails={true}
             handleScheduledPickup={handleScheduledPickup}
+            onVerifyOrder={handleVerifyOrder}
+            aiVerifyEnabled={aiVerifyEnabled}
+            verifyingOrders={verifyingOrders}
           />
         </div>
         <PaginationFooter page={page} totalPages={totalPages} setPage={setPage} limit={limit} setLimit={setLimit} />
@@ -362,6 +456,14 @@ const BookedOrders = (filterOrder) => {
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Invoices</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadManifest(); setMobileDropdownOpen(false); }}>Download Manifests</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Labels</li>
+                  <li
+                    className={`px-3 py-2 cursor-pointer ${
+                      aiVerifyEnabled ? "text-[#0CBB7D] hover:bg-green-50" : "text-gray-400 cursor-not-allowed"
+                    }`}
+                    onClick={() => { if (aiVerifyEnabled) { handleBulkVerifyOrders(); setMobileDropdownOpen(false); } }}
+                  >
+                    Verify Order {!aiVerifyEnabled && "(Disabled)"}
+                  </li>
                   <li className="px-3 py-2 text-red-600 hover:bg-red-50 cursor-pointer" onClick={() => { BulkCancel({ selectedOrders, setRefresh }); setMobileDropdownOpen(false); }}>Bulk Cancel</li>
                 </ul>
               </div>
@@ -395,6 +497,9 @@ const BookedOrders = (filterOrder) => {
                 navigate={navigate}
                 showShippingDetails={true}
                 handleScheduledPickup={handleScheduledPickup}
+                onVerifyOrder={handleVerifyOrder}
+                aiVerifyEnabled={aiVerifyEnabled}
+                verifyingOrders={verifyingOrders}
               />
             ))
           ) : (

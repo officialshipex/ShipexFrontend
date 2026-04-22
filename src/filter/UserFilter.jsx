@@ -128,7 +128,7 @@ const UserFilter = ({ onUserSelect, clearTrigger }) => {
                                     setSelectedUserId(user._id);
                                     setSearchUser(`${user.fullname} (${user.email})`);
                                     setUserSuggestions([]);
-                                    onUserSelect(user._id);
+                                    onUserSelect(user._id, user);
                                 }}
                             >
                                 <div className="w-1/4 flex items-center justify-center p-2">

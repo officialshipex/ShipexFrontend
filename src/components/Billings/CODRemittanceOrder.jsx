@@ -179,7 +179,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
       "User Name": row.user?.fullname || "N/A",
       "Remittance ID": row.remittanceId,
       "UTR": row.utr || "N/A",
-      "COD Available": row.codAvailable || 0,
+      "Total COD Amount": (Number(row.codAvailable) || 0) + (Number(row.adjustedAmount) || 0),
       "Amount Credited to Wallet": row.amountCreditedToWallet || 0,
       "Early COD Charges": row.earlyCodCharges || 0,
       "Adjusted Amount": row.adjustedAmount || 0,
@@ -437,7 +437,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                         )}
                       </div>
                     </td>
-                    <td className="py-2 px-3 text-gray-700">₹{(Number(row.codAvailable) || 0).toFixed(2)}</td>
+                    <td className="py-2 px-3 text-gray-700">₹{((Number(row.codAvailable) || 0) + (Number(row.adjustedAmount) || 0)).toFixed(2)}</td>
                     <td className="py-2 px-3 text-red-500">₹{(Number(row.amountCreditedToWallet) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3 text-gray-700">₹{(Number(row.adjustedAmount) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3 text-red-700">₹{(Number(row.earlyCodCharges) || 0).toFixed(2)}</td>
@@ -461,7 +461,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
           <img src={NoDataFound} className="w-40 mx-auto mt-20 opacity-50" />
         ) : (
           remitedData.map((row, index) => (
-            <div key={index} className="bg-white border border-gray-200 rounded-lg shadow-sm p-2 text-[10px] animate-popup-in relative">
+            <div key={index} className={`bg-white border border-gray-200 rounded-lg shadow-sm p-2 text-[10px] animate-popup-in relative ${detailsPopupId === row.remittanceId ? 'z-50' : 'z-10'}`}>
               {/* Header Bar - Consistent with Admin UI */}
               <div className="flex gap-2 justify-between rounded-lg bg-green-50 py-1.5 px-2 items-center mb-1.5">
                 <div className="flex items-center gap-2">
@@ -498,7 +498,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 </div>
               </div>
 
-              {/* Details Grid - Restructured to 3 columns like Admin UI */}
+              {/* Details Grid - Reverted to original 3 columns */}
               <div className="grid grid-cols-3 gap-2 mb-1 p-0.5 items-center">
                 <div>
                   <p className="text-gray-500 font-[600] text-[10px] tracking-tighter">Remittance ID</p>
@@ -564,7 +564,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 </div>
               </div>
 
-              {/* Floating Breakdown Popup (matching Remittance.jsx style) - Smart Positioning */}
+              {/* Reverted Breakdown Popup UI */}
               <AnimatePresence>
                 {detailsPopupId === row.remittanceId && (
                   <>
@@ -583,8 +583,8 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                       </div>
                       <div className="space-y-2 text-[10px]">
                         <div className="flex justify-between items-center">
-                          <span className="text-gray-500 font-medium">COD Amount</span>
-                          <span className="text-gray-700 font-bold">₹{(Number(row.codAvailable) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                          <span className="text-gray-500 font-medium whitespace-nowrap">Total COD Amount</span>
+                          <span className="text-gray-700 font-bold">₹{((Number(row.codAvailable) || 0) + (Number(row.adjustedAmount) || 0)).toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between items-center">
                           <span className="text-gray-500 font-medium">Wallet Transfer</span>
@@ -615,10 +615,10 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
       <PaginationFooter page={page} setPage={setPage} totalPages={totalPages} limit={limit} setLimit={setLimit} />
 
       {openRemittancePopup && (
-        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[120] backdrop-blur-sm p-4">
-          <div className="bg-white w-full max-w-4xl rounded-2xl shadow-2xl overflow-hidden relative animate-popup-in">
-            <button onClick={() => setOpenRemittancePopup(false)} className="absolute right-5 top-5 text-gray-400 hover:text-red-500 transition-all z-[130] p-1.5 hover:bg-gray-100 rounded-full"><X className="w-6 h-6" /></button>
-            <div className="p-1 min-h-[400px]"><RemittanceDetails remittanceId={selectedRemittanceId} /></div>
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center z-[140] backdrop-blur-sm p-4">
+          <div className="bg-white w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl overflow-y-auto relative animate-popup-in">
+            <button onClick={() => setOpenRemittancePopup(false)} className="absolute right-4 top-4 text-gray-400 hover:text-red-500 transition-all z-[150] p-1.5 hover:bg-gray-100 rounded-full bg-white/80 backdrop-blur-sm border shadow-sm"><X className="w-5 h-5" /></button>
+            <div className="p-1 pb-10 min-h-[300px]"><RemittanceDetails remittanceId={selectedRemittanceId} /></div>
           </div>
         </div>
       )}

@@ -370,7 +370,7 @@ const CodRemittances = () => {
                         )}
                       </div>
                     </td>
-                    <td className="py-2 px-3">{row.codAvailable?.toFixed(2)}</td>
+                    <td className="py-2 px-3">{((Number(row.codAvailable) || 0) + (Number(row.adjustedAmount) || 0)).toFixed(2)}</td>
                     <td className="py-2 px-3">{row.amountCreditedToWallet?.toFixed(2)}</td>
                     <td className="py-2 px-3">{row.earlyCodCharges?.toFixed(2)}</td>
                     <td className="py-2 px-3">{row.adjustedAmount?.toFixed(2)}</td>
@@ -434,7 +434,7 @@ const CodRemittances = () => {
             </div>
           ) : (
             transactions.map((row) => (
-              <div key={row._id} className="bg-white rounded-lg shadow-sm animate-popup-in border border-gray-200 px-3 py-2 relative">
+              <div key={row._id} className={`bg-white rounded-lg shadow-sm animate-popup-in border border-gray-200 px-3 py-2 relative ${detailsPopupId === row.remittanceId ? 'z-50' : 'z-10'}`}>
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex items-center gap-2 flex-1">
                     <input
@@ -514,8 +514,8 @@ const CodRemittances = () => {
                         </div>
                         <div className="space-y-1.5 text-[10px]">
                           <div className="flex justify-between">
-                            <span className="text-gray-400 font-medium">Total COD Amount</span>
-                            <span className="text-gray-700 font-bold">₹{row.codAvailable?.toFixed(2)}</span>
+                            <span className="text-gray-400 font-medium font-bold">Total COD Amount</span>
+                            <span className="text-gray-700 font-bold">₹{((Number(row.codAvailable) || 0) + (Number(row.adjustedAmount) || 0)).toFixed(2)}</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-400 font-medium">Credited to Wallet</span>

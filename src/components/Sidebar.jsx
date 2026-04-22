@@ -197,6 +197,7 @@ const sidebarItems = [
       { name: "Weight Discrepancy", path: "/dashboard/tools/Weight_Dependency" },
       { name: "Weight Discrepancy", path: "/adminDashboard/tools/Weight_Dependency" },
       { name: "Notification", path: "/adminDashboard/tools/notification" },
+      { name: "Important Announcement", path: "/adminDashboard/tools/announcement" },
     ],
   },
   {
@@ -466,7 +467,8 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
               const filteredList = item.list.filter((subItem) =>
                 [
                   "/adminDashboard/tools/Weight_Dependency",
-                  "/adminDashboard/tools/notification"
+                  "/adminDashboard/tools/notification",
+                  "/adminDashboard/tools/announcement"
                 ].includes(subItem.path)
               );
               return filteredList.length > 0 ? { ...item, list: filteredList } : null;

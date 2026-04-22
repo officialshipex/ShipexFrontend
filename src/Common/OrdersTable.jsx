@@ -38,6 +38,10 @@ const OrdersTable = ({
     onTakeAction,
     handleScheduledPickup,
     handleUpdateOrder,
+    // AI Verify Order
+    onVerifyOrder,
+    aiVerifyEnabled = false,
+    verifyingOrders = new Set(),
 }) => {
 
     const truncateText = (text, limit = 30) => {
@@ -592,17 +596,18 @@ const OrdersTable = ({
                                 <td className="py-2 px-3 text-center">
                                     <button
                                         onClick={() => onTakeAction && onTakeAction(order)}
-                                        className="bg-[#0CBB7D] text-white px-3 py-1.5 rounded-lg text-[10px] font-[600] hover:bg-opacity-90 transition-all shadow-sm"
+                                        className="bg-[#0CBB7D] text-white px-3 py-1.5 rounded-lg text-[10px] font-[600] hover:bg-opacity-90 transition-all shadow-sm w-full"
                                     >
                                         Take Action
                                     </button>
                                 </td>
                             )}
 
-                            {/* ACTIONS */}
+                                     {/* ACTIONS */}
                             {showActionColumn && (
                                 <td className="py-2 px-3 text-center">
-                                    <div className="flex justify-center items-center gap-2">
+                                    <div className="flex flex-col justify-center items-center gap-1.5">
+                                        <div className="flex justify-center items-center gap-2">
                                         <OrderRowActions
                                             index={index}
                                             order={order}
@@ -621,7 +626,11 @@ const OrdersTable = ({
                                             setRefresh={setRefresh}
                                             handleScheduledPickup={handleScheduledPickup}
                                             handleUpdateOrder={order.status === "new" ? handleUpdateOrder : undefined}
+                                            onVerifyOrder={onVerifyOrder}
+                                            aiVerifyEnabled={aiVerifyEnabled}
+                                            verifyingOrders={verifyingOrders}
                                         />
+                                        </div>
                                     </div>
                                 </td>
                             )}

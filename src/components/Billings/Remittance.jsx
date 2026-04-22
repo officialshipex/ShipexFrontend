@@ -344,7 +344,7 @@ const Remittance = ({
                   <td colSpan={11} className="py-10 text-center">
                     <div className="flex flex-col items-center justify-center">
                       <img src={NoDataFound} alt="No Data Found" className="w-60 h-60 mb-2" />
-                      
+
                     </div>
                   </td>
                 </tr>
@@ -396,7 +396,7 @@ const Remittance = ({
                         )}
                       </div>
                     </td>
-                    <td className="py-2 px-3 text-gray-600">₹{(Number(row?.orderDetails?.codcal) || 0).toFixed(2)}</td>
+                    <td className="py-2 px-3 text-gray-600">₹{((Number(row.codAvailable) || 0) + (Number(row.adjustedAmount) || 0)).toFixed(2)}</td>
                     <td className="py-2 px-3 text-gray-600">₹{(Number(row?.amountCreditedToWallet) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3 text-gray-600">₹{(Number(row.adjustedAmount) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3 text-red-500">₹{(Number(row.earlyCodCharges) || 0).toFixed(2)}</td>
@@ -457,7 +457,7 @@ const Remittance = ({
             </div>
           ) : (
             remitedData.map((row) => (
-              <div key={row.remittanceId} className="bg-white rounded-lg shadow-sm animate-popup-in border border-gray-200 px-3 py-2 relative">
+              <div key={row.remittanceId} className={`bg-white rounded-lg shadow-sm animate-popup-in border border-gray-200 px-3 py-2 relative ${detailsPopupId === row.remittanceId ? 'z-50' : 'z-10'}`}>
                 <div className="flex justify-between items-start mb-2">
                   <div className="flex items-center gap-2 flex-1">
                     <input
@@ -469,7 +469,7 @@ const Remittance = ({
                     <div className="flex flex-col">
                       <div className="flex items-center gap-2">
                         <div className="flex flex-col">
-                          
+
                           <div className="flex items-center gap-1 group">
                             <span className="text-gray-400 text-[10px] leading-none">Remittance ID :</span>
                             <span className="font-[600] text-[#0CBB7D] text-[10px] hover:underline cursor-pointer" onClick={() => openRemittanceDetails(row.remittanceId)}>
@@ -545,8 +545,8 @@ const Remittance = ({
                         </div>
                         <div className="space-y-1.5 text-[10px]">
                           <div className="flex justify-between">
-                            <span className="text-gray-400 font-medium text-left">Total COD</span>
-                            <span className="text-gray-700 font-bold">₹{(Number(row?.orderDetails?.codcal) || 0).toFixed(2)}</span>
+                            <span className="text-gray-400 font-medium text-left">Total COD Amount</span>
+                            <span className="text-gray-700 font-bold">₹{((Number(row.codAvailable) || 0) + (Number(row.adjustedAmount) || 0)).toFixed(2)}</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-400 font-medium text-left">Wallet Transfer</span>

@@ -19,7 +19,7 @@ const Notification = ({ targetUserId = null, basePath = "/dashboard/settings/not
         { label: "WhatsApp", path: `${basePath}/whatsapp` },
         { label: "Message", path: `${basePath}/message` },
         { label: "Email (Free)", path: `${basePath}/email` },
-        { label: "AI Smart Calling", path: `${basePath}/ai-order-updation` },
+        { label: "Smart Calling", path: `${basePath}/ai-order-updation` },
         { label: "Credit History", path: `${basePath}/credit-history` },
     ];
     const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

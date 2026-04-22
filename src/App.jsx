@@ -137,6 +137,7 @@ import CostEstimationB2B from "./component/Toolss/Cost Estimates/CostEstimationB
 
 import B2BCourrierSelection from "./B2B/Shipments/CourierSelection";
 import AdminNotification from "./component/Toolss/AdminNotification/AdminNotification.jsx";
+import Announcement from "./component/Toolss/Announcement/Announcement.jsx";
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -744,6 +745,17 @@ function App() {
                     <Route path="credit-history" element={<CreditHistory />} />
                     <Route path="ai-order-updation" element={<AIOrderUpdation />} />
                   </Route>
+
+                  <Route
+                    path="/adminDashboard/tools/announcement"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <Announcement />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
 
                   {/* Setup&Manage */}
                   <Route

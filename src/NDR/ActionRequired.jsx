@@ -25,6 +25,8 @@ import {
   handleBulkDownloadManifests
 } from "../Common/orderActions";
 
+const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
 const ActionRequired = () => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [orders, setOrders] = useState([]);
@@ -69,7 +71,6 @@ const ActionRequired = () => {
 
   const navigate = useNavigate();
   const { id } = useParams();
-  const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     const updateHeight = () => {

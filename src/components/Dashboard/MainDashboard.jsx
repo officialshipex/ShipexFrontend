@@ -11,6 +11,58 @@ import { Notification } from "../../Notification"
 import { FiAlertCircle } from "react-icons/fi";
 import DateFilter from "../../filter/DateFilter";
 import UserFilter from "../../filter/UserFilter";
+import { FiBell, FiX } from "react-icons/fi";
+
+const AnnouncementItem = ({ ann, idx, setAnnouncements, announcements }) => {
+    const textRef = useRef(null);
+    const containerRef = useRef(null);
+    const [isOverflowing, setIsOverflowing] = useState(false);
+
+    useEffect(() => {
+        const checkOverflow = () => {
+            if (textRef.current && containerRef.current) {
+                const isOver = textRef.current.offsetWidth > containerRef.current.offsetWidth;
+                setIsOverflowing(isOver);
+            }
+        };
+
+        checkOverflow();
+        const timer = setTimeout(checkOverflow, 100);
+        window.addEventListener("resize", checkOverflow);
+        return () => {
+            window.removeEventListener("resize", checkOverflow);
+            clearTimeout(timer);
+        };
+    }, [ann.message]);
+
+    return (
+        <div className="flex items-center justify-between border-2 border-[#0CBB7D] bg-green-50 rounded-lg px-3 py-2 mb-2 shadow-sm w-full max-w-full gap-3 overflow-hidden">
+            <div className="flex items-center gap-3 flex-1 overflow-hidden">
+                <FiBell className="text-[#0CBB7D] text-[16px] sm:text-[18px] flex-shrink-0" />
+                <div ref={containerRef} className="flex-1 overflow-hidden whitespace-nowrap">
+                    <div 
+                        className={`inline-block ${isOverflowing ? 'marquee-content' : ''}`}
+                    >
+                        <span className="text-[10px] sm:text-[12px] text-gray-800 font-[600] marquee-item">
+                            <span ref={textRef}>{ann.message}</span>
+                        </span>
+                        {isOverflowing && (
+                            <span className="text-[10px] sm:text-[12px] text-gray-800 font-[600] marquee-item">
+                                {ann.message}
+                            </span>
+                        )}
+                    </div>
+                </div>
+            </div>
+            <button 
+                onClick={() => setAnnouncements(announcements.filter((_, i) => i !== idx))}
+                className="text-gray-400 hover:text-gray-600 transition-colors flex-shrink-0"
+            >
+                <FiX size={16} />
+            </button>
+        </div>
+    );
+};
 
 const Dashboard = () => {
     const [activeTab, setActiveTab] = useState("Overview");
@@ -25,9 +77,11 @@ const Dashboard = () => {
     const [isAdmin, setIsAdmin] = useState(false);
     const [adminTab, setAdminTab] = useState(false);
     const [selectedDateRange, setSelectedDateRange] = useState(null);
+    const [announcements, setAnnouncements] = useState([]);
     const tabs = ["Overview", "Orders", "RTO Initiated", "Couriers"];
     const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const [awbNumber, setAwbNumber] = useState("");
+    const token = Cookies.get("session");
     const navigate = useNavigate();
 
     const handleDateFilterChange = (range) => {
@@ -37,7 +91,6 @@ const Dashboard = () => {
     };
     const fetchUserData = async () => {
         try {
-            const token = Cookies.get("session");
             if (!token) return;
 
             const userResponse = await axios.get(
@@ -81,6 +134,28 @@ const Dashboard = () => {
     }, []);
 
     useEffect(() => {
+        const fetchAnnouncements = async () => {
+            try {
+                const response = await axios.get(`${REACT_APP_BACKEND_URL}/announcement/active`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+                if (response.data.success) {
+                    setAnnouncements(response.data.announcements);
+                }
+            } catch (error) {
+                console.error("Failed to fetch announcements:", error);
+            }
+        };
+
+        if (token) {
+            fetchAnnouncements();
+            // Refresh every 5 minutes to stay in sync with admin changes
+            const interval = setInterval(fetchAnnouncements, 5 * 60 * 1000);
+            return () => clearInterval(interval);
+        }
+    }, [token, REACT_APP_BACKEND_URL]);
+
+    useEffect(() => {
         const handleResize = () => {
             setOuterRadius(window.innerWidth >= 768 ? 80 : 60);
         };
@@ -104,6 +179,15 @@ const Dashboard = () => {
 
     return (
         <div className="sm:px-2">
+            {announcements.length > 0 && announcements.map((ann, idx) => (
+                <AnnouncementItem 
+                    key={idx} 
+                    ann={ann} 
+                    idx={idx} 
+                    announcements={announcements} 
+                    setAnnouncements={setAnnouncements} 
+                />
+            ))}
             {!kycCompleted && (
                 <div className="flex flex-col sm:flex-row items-center justify-between border-2 border-yellow-400 bg-yellow-50 rounded-lg px-3 py-2 mb-2 shadow-sm w-full max-w-full gap-3">
                     <div className="flex items-center gap-3">

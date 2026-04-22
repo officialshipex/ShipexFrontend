@@ -34,6 +34,10 @@ const MobileOrderCard = ({
     onTakeAction,
     handleScheduledPickup,
     handleUpdateOrder,
+    // AI Calling
+    onVerifyOrder,
+    aiVerifyEnabled = false,
+    verifyingOrders = new Set(),
 }) => {
     const [openPopup, setOpenPopup] = useState(null);
     const [popupPosition, setPopupPosition] = useState("right");
@@ -418,27 +422,32 @@ const MobileOrderCard = ({
 
             {
                 showActionColumn && (
-                    <OrderRowActions
-                        index={index}
-                        order={order}
-                        dropdownOpen={dropdownOpen}
-                        toggleDropdown={toggleDropdown}
-                        dropdownRefs={dropdownRefs}
-                        toggleButtonRefs={toggleButtonRefs}
-                        dropdownDirection={dropdownDirection}
-                        handleInvoice={handleInvoice}
-                        handleLabel={handleLabel}
-                        handleManifest={handleManifest}
-                        cancelOrder={cancelOrder}
-                        handleCancelOrder={handleCancelOrder}
-                        refresh={refresh}
-                        setRefresh={setRefresh}
-                        handleClone={handleClone}
-                        setDropdownOpen={() => { }}
-                        handleScheduledPickup={handleScheduledPickup}
-                        handleUpdateOrder={order.status === "new" ? handleUpdateOrder : undefined}
-                        renderOnly="action"
-                    />
+                    <div className="flex flex-col gap-1.5">
+                        <OrderRowActions
+                            index={index}
+                            order={order}
+                            dropdownOpen={dropdownOpen}
+                            toggleDropdown={toggleDropdown}
+                            dropdownRefs={dropdownRefs}
+                            toggleButtonRefs={toggleButtonRefs}
+                            dropdownDirection={dropdownDirection}
+                            handleInvoice={handleInvoice}
+                            handleLabel={handleLabel}
+                            handleManifest={handleManifest}
+                            cancelOrder={cancelOrder}
+                            handleCancelOrder={handleCancelOrder}
+                            refresh={refresh}
+                            setRefresh={setRefresh}
+                            handleClone={handleClone}
+                            setDropdownOpen={() => {}}
+                            handleScheduledPickup={handleScheduledPickup}
+                            handleUpdateOrder={order.status === "new" ? handleUpdateOrder : undefined}
+                            onVerifyOrder={onVerifyOrder}
+                            aiVerifyEnabled={aiVerifyEnabled}
+                            verifyingOrders={verifyingOrders}
+                            renderOnly="action"
+                        />
+                    </div>
                 )
             }
 

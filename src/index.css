@@ -131,4 +131,28 @@ p,td,a{
   .animate-slide-down-smooth {
     animation: slideDownSmooth 0.3s ease-out forwards;
   }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .marquee-content {
+    display: inline-block;
+    animation: marquee 50s linear infinite;
+  }
+
+  .marquee-content:hover {
+    animation-play-state: paused;
+  }
+
+  .marquee-item {
+    padding-right: 4rem;
+    display: inline-block;
+  }
 }
+
