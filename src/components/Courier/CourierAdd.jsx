@@ -12,7 +12,7 @@ const courierConfigs = {
     ],
   },
   Shiprocket: {
-    endpoint: "/shiprocket/getToken",
+    endpoint: "/Shiprocket/getAuthToken",
     fields: [
       { name: "username", label: "User/Email", placeholder: "Username", type: "text" },
       { name: "password", label: "Password", placeholder: "Password", type: "password" },
@@ -107,7 +107,7 @@ const courierConfigs = {
   },
 };
 
-const CourierAdd = ({ provider, onCourierSaved, canAction }) => {
+const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) => {
   const [courierName, setCourierName] = useState("");
   const [codDays, setCodDays] = useState("");
   const [status, setStatus] = useState("");
@@ -144,6 +144,36 @@ const CourierAdd = ({ provider, onCourierSaved, canAction }) => {
     if (missingField) {
       Notification(`Please enter ${missingField.label}`, "info");
       return;
+    }
+
+    // Check for existing courier with same email, username, API key, or name
+    if (existingCouriers && existingCouriers.length > 0) {
+      // 1. Global check for Name
+      const nameDuplicate = existingCouriers.find(c => c.courierName.toLowerCase() === courierName.toLowerCase());
+      if (nameDuplicate) {
+        Notification(`Courier with name "${courierName}" already exists. Please use a unique name.`, "error");
+        return;
+      }
+
+      // 2. Provider-specific check for Credentials
+      const credDuplicate = existingCouriers.find(c => {
+        const currentProvider = config.provider || provider;
+        if (c.courierProvider !== currentProvider) return false;
+        
+        const inputEmail = credentials.email || credentials.username;
+        if (inputEmail && c.email === inputEmail) return true;
+        
+        const inputApiKey = credentials.apiKey;
+        if (inputApiKey && c.apiKey === inputApiKey) return true;
+        
+        return false;
+      });
+
+      if (credDuplicate) {
+        const identifier = credentials.apiKey ? 'API Key' : 'Email/Username';
+        Notification(`${provider} with this ${identifier} already exists.`, "error");
+        return;
+      }
     }
 
     try {

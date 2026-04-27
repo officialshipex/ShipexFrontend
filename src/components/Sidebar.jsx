@@ -196,6 +196,7 @@ const sidebarItems = [
       { name: "Rate Calculator", path: "/dashboard/tools/Cost_Estimation/b2c" },
       { name: "Weight Discrepancy", path: "/dashboard/tools/Weight_Dependency" },
       { name: "Weight Discrepancy", path: "/adminDashboard/tools/Weight_Dependency" },
+      { name: "Notification", path: "/dashboard/settings/notification" },
       { name: "Notification", path: "/adminDashboard/tools/notification" },
       { name: "Important Announcement", path: "/adminDashboard/tools/announcement" },
     ],
@@ -403,6 +404,7 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
           if (item.extent && Array.isArray(item.list)) {
             // Filter subitems by view access
             const filteredList = item.list.filter((subItem) => {
+              if (subItem.name === "Important Announcement") return false;
               if (!section) return false;
               const subAccess = section[subItem.name];
               return subAccess && subAccess.view === true;
@@ -513,7 +515,9 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
 
             if (item.text === "Tools") {
               const filteredList = item.list.filter(
-                (subItem) => subItem.path !== "/adminDashboard/tools/Weight_Dependency"
+                (subItem) =>
+                  !subItem.path?.startsWith("/adminDashboard") &&
+                  subItem.name !== "Important Announcement"
               );
               return filteredList.length > 0 ? { ...item, list: filteredList } : null;
             }
@@ -571,7 +575,9 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
             // For Tools, remove admin-only tools
             if (item.text === "Tools") {
               filteredList = filteredList.filter(
-                (subItem) => subItem.path !== "/adminDashboard/tools/Weight_Dependency"
+                (subItem) =>
+                  !subItem.path?.startsWith("/adminDashboard") &&
+                  subItem.name !== "Important Announcement"
               );
             }
             if (item.text === "Finance") {

@@ -90,7 +90,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
     try {
       setLoading(true);
       await axios.post(`${REACT_APP_BACKEND_URL}/allCourier/updateStatus`, {
-        provider,
+        id: courier._id,
         status: newStatus
       });
 
@@ -194,10 +194,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  const existingCourierProviders = couriers.map((courier) => courier.courierProvider);
-  const availableOptions = courierOptions.filter(
-    (option) => !existingCourierProviders.includes(option.value)
-  );
+  const availableOptions = courierOptions;
 
   const getInputField = () => {
     return (
@@ -205,6 +202,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
         provider={selectedOption}
         onCourierSaved={handleCourierSaved}
         canAction={canAction}
+        existingCouriers={couriers}
       />
     );
   };

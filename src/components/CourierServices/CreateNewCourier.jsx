@@ -214,7 +214,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
               />
 
               {/* Courier */}
-              {selectedProvider === 'Dtdc' && (
+              {providerServices.length > 0 && (
                 <CustomDropdown
                   label={selectedProvider === "Dtdc" ? "Service Type" : "Courier"}
                   name="courier"

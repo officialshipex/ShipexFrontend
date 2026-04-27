@@ -34,7 +34,7 @@ const AnnouncementItem = ({ ann, idx, setAnnouncements, announcements }) => {
             clearTimeout(timer);
         };
     }, [ann.message]);
-
+ 
     return (
         <div className="flex items-center justify-between border-2 border-[#0CBB7D] bg-green-50 rounded-lg px-3 py-2 mb-2 shadow-sm w-full max-w-full gap-3 overflow-hidden">
             <div className="flex items-center gap-3 flex-1 overflow-hidden">
