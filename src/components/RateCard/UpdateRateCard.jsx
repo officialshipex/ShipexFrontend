@@ -15,6 +15,7 @@ const RateCardUpdateForm = () => {
     mode: "",
     status: "Active",
     shipmentType: "Forward",
+    isFlatRate: false,
     weightPriceBasic: {
       weight: "",
       zoneA: "",
@@ -56,18 +57,14 @@ const RateCardUpdateForm = () => {
         const data = response.data.rateCard;
         console.log("Raw API Response:", data);
 
-        const cleanWeightPriceBasic = { ...data.weightPriceBasic[0] };
-        const cleanWeightPriceAdditional = { ...data.weightPriceAdditional[0] };
+        const cleanWeightPriceBasic = { ...(data.weightPriceBasic[0] || {}) };
+        const cleanWeightPriceAdditional = { ...(data.weightPriceAdditional[0] || {}) };
 
         // Ensure ID is removed
         delete cleanWeightPriceBasic.id;
         delete cleanWeightPriceAdditional.id;
-
-        console.log(
-          "Processed Data:",
-          cleanWeightPriceBasic,
-          cleanWeightPriceAdditional
-        );
+        delete cleanWeightPriceBasic._id;
+        delete cleanWeightPriceAdditional._id;
 
         setFormData({
           ...data,
@@ -133,14 +130,30 @@ const RateCardUpdateForm = () => {
 
     if (name === "id") return; // Prevent updates to 'id'
 
-    setFormData((prev) => ({
-      ...prev,
+    let newFormData = {
+      ...formData,
       [type]: {
-        ...prev[type],
+        ...formData[type],
         [name]: value,
       },
-    }));
+    };
+
+    setFormData(newFormData);
   };
+
+  const handleFlatRateToggle = (e) => {
+    const checked = e.target.checked;
+    let newFormData = { ...formData, isFlatRate: checked };
+
+    if (checked) {
+      newFormData.codCharge = 0;
+      newFormData.codPercent = 0;
+    }
+
+    setFormData(newFormData);
+  };
+
+
 
   const handleCourierSelect = (e) => {
     const selectedProvider = e.target.value;
@@ -181,7 +194,7 @@ const RateCardUpdateForm = () => {
     return <p className="text-center text-red-500">Error loading rate card.</p>;
 
   return (
-    <div className="max-w-5xl mx-auto p-4 sm:bg-white sm:shadow-sm sm:rounded-lg mt-4 bg-white min-h-[calc(100vh-320px)]">
+    <div className="max-w-5xl mx-auto p-4 sm:bg-white sm:shadow-sm sm:rounded-lg bg-white min-h-[calc(100vh-320px)]">
       <div className="flex items-center gap-3 border-b border-gray-100 pb-4 mb-4">
         <button
           onClick={() => navigate(-1)}
@@ -355,45 +368,63 @@ const RateCardUpdateForm = () => {
         </div>
       </div>
 
-      {/* Weight Type Basic */}
-      <h3 className="font-[600] mt-2 text-gray-500 text-[12px] sm:text-[14px]">
-        Weight Type <span className="text-red-500">Basic *</span> (in gram)
-      </h3>
-      <div className="grid grid-cols-3 sm:flex gap-2 mt-2">
-        {["weight", "zoneA", "zoneB", "zoneC", "zoneD", "zoneE"].map((field) => (
-          <input
-            key={field}
-            name={field}
-            value={formData.weightPriceBasic[field] || ""}
-            onChange={(e) => handleWeightChange("weightPriceBasic", e)}
-            className="border border-gray-300 h-9 font-[600] text-gray-700 px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
-            placeholder={
-              field === "weight" ? "Weight (gm) *" : `Zone ${field.slice(-1)} * ₹`
-            }
-          />
-        ))}
+      {/* Flat Rate Toggle & Percentage */}
+      <div className="flex items-center gap-4 mt-6 mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
+        <label className="flex items-center gap-2 cursor-pointer group">
+          <div className="relative">
+            <input
+              type="checkbox"
+              className="sr-only peer"
+              checked={formData.isFlatRate}
+              onChange={handleFlatRateToggle}
+            />
+            <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#0CBB7D]"></div>
+          </div>
+          <span className="text-[12px] font-bold text-gray-700 group-hover:text-[#0CBB7D] transition-colors">Is Flat Rate?</span>
+        </label>
       </div>
 
-      {/* Weight Type Additional */}
-      <h3 className="font-[600] mt-2 text-gray-500 text-[12px] sm:text-[14px]">
-        Weight Type <span className="text-red-500">Additional *</span> (in gram)
-      </h3>
-      <div className="grid grid-cols-3 sm:flex gap-2 mt-2">
-        {["weight", "zoneA", "zoneB", "zoneC", "zoneD", "zoneE"].map((field) => (
-          <input
-            key={field}
-            name={field}
-            value={formData.weightPriceAdditional[field] || ""}
-            onChange={(e) => handleWeightChange("weightPriceAdditional", e)}
-            className="border border-gray-300 h-9 font-[600] text-gray-700 px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
-            placeholder={
-              field === "weight" ? "Weight (gm) *" : `Zone ${field.slice(-1)} * ₹`
-            }
-          />
-        ))}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Forward Charges Section */}
+        <div className="md:col-span-2">
+          <h2 className="text-[#0CBB7D] font-bold text-[14px] mb-4 border-b border-[#0CBB7D]/20 pb-2">Forward Charges</h2>
+          {/* Weight Type Basic (Forward) */}
+          <h3 className="font-[600] mt-2 text-gray-500 text-[12px] sm:text-[14px]">
+            Weight Type <span className="text-red-500">Basic *</span> (in gram)
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 mt-2">
+            {["weight", "zoneA", "zoneB", "zoneC", "zoneD", "zoneE"].map((field) => (
+              <input
+                key={field}
+                name={field}
+                value={formData.weightPriceBasic[field] || ""}
+                onChange={(e) => handleWeightChange("weightPriceBasic", e)}
+                className="border border-gray-300 h-9 font-[600] text-gray-700 px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                placeholder={field === "weight" ? "Weight (gm) *" : `Zone ${field.slice(-1)} * ₹`}
+              />
+            ))}
+          </div>
+
+          {/* Weight Type Additional (Forward) */}
+          <h3 className="font-[600] mt-4 text-gray-500 text-[12px] sm:text-[14px]">
+            Weight Type <span className="text-red-500">Additional *</span> (in gram)
+          </h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 mt-2">
+            {["weight", "zoneA", "zoneB", "zoneC", "zoneD", "zoneE"].map((field) => (
+              <input
+                key={field}
+                name={field}
+                value={formData.weightPriceAdditional[field] || ""}
+                onChange={(e) => handleWeightChange("weightPriceAdditional", e)}
+                className="border border-gray-300 h-9 font-[600] text-gray-700 px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                placeholder={field === "weight" ? "Weight (gm) *" : `Zone ${field.slice(-1)} * ₹`}
+              />
+            ))}
+          </div>
+        </div>
       </div>
 
-      {/* Overhead Charges */}
+  {/* Overhead Charges */}
       <h3 className="font-[600] text-[12px] sm:text-[14px] text-gray-500 mt-2">
         Over Head Charges:
       </h3>
@@ -416,21 +447,21 @@ const RateCardUpdateForm = () => {
         />
       </div>
 
-      {/* Submit Button */}
-      <div className="mt-4 flex justify-center gap-2 border-t border-gray-100 pt-6">
-        <button
-          className="bg-white border border-gray-300 text-gray-600 px-3 py-2 rounded-lg text-[10px] sm:text-[12px] font-bold hover:bg-gray-50 transition-all active:scale-95"
-          onClick={() => navigate(-1)}
-        >
-          Cancel
-        </button>
-        <button
-          className="bg-[#0CBB7D] text-white hover:bg-opacity-90 px-3 py-2 rounded-lg text-[10px] sm:text-[12px] font-bold transition-all"
-          onClick={handleSubmit}
-        >
-          Update Rate Card
-        </button>
-      </div>
+  {/* Submit Button */}
+  <div className="mt-4 flex justify-center gap-2 border-t border-gray-100 pt-6">
+    <button
+      className="bg-white border border-gray-300 text-gray-600 px-3 py-2 rounded-lg text-[10px] sm:text-[12px] font-bold hover:bg-gray-50 transition-all active:scale-95"
+      onClick={() => navigate(-1)}
+    >
+      Cancel
+    </button>
+    <button
+      className="bg-[#0CBB7D] text-white hover:bg-opacity-90 px-3 py-2 rounded-lg text-[10px] sm:text-[12px] font-bold transition-all"
+      onClick={handleSubmit}
+    >
+      Update Rate Card
+    </button>
+  </div>
     </div>
 
 

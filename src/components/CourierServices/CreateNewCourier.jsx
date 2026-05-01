@@ -25,6 +25,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
     courierType: "",
     name: "",
     status: "",
+    courier_id: "",
   });
 
   const [courierProviders, setCourierProviders] = useState([]);
@@ -46,7 +47,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
           break;
         case "Shiprocket":
           const shipRes = await axios.get(`${REACT_APP_BACKEND_URL}/Shiprocket/getAllActiveCourierServices`);
-          services = shipRes.data.map((item) => item.service);
+          services = shipRes.data; // Store full objects [{service, provider_courier_id}]
           break;
         case "Dtdc":
           services = ["B2C SMART EXPRESS", "B2C PRIORITY", "B2C GROUND ECONOMY"];
@@ -131,8 +132,15 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
 
     if (name === "provider") {
       setSelectedProvider(value);
-      setFormData((prev) => ({ ...prev, courier: "" }));
+      setFormData((prev) => ({ ...prev, courier: "", courier_id: "" }));
       fetchServicesForProvider(value);
+    }
+    
+    if (name === "courier" && selectedProvider === "Shiprocket") {
+      const selectedService = providerServices.find(s => s.service === value);
+      if (selectedService) {
+        setFormData(prev => ({ ...prev, courier_id: selectedService.courier_id }));
+      }
     }
   };
 
@@ -209,7 +217,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                 name="provider"
                 value={formData.provider}
                 onChange={handleChange}
-                options={[...new Set(courierProviders.map((c) => c.courierProvider))]}
+                options={[...new Set(courierProviders.map((c) => c.courierName))]}
                 placeholder="Select Provider"
               />
 
@@ -220,7 +228,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                   name="courier"
                   value={formData.courier}
                   onChange={handleChange}
-                  options={providerServices}
+                  options={providerServices.map(s => typeof s === 'string' ? s : s.service)}
                   placeholder={selectedProvider ? `Select ${selectedProvider === "Dtdc" ? "Service Type" : "Courier"}` : "Select Provider first"}
                 />
               )}

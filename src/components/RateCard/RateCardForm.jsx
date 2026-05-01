@@ -25,6 +25,7 @@ export default function RateCardForm() {
     mode: "", // Assign courierType to mode
     status: "Active",
     shipmentType: "Forward",
+    isFlatRate: false,
     weightPriceBasic: [
       { weight: "", zoneA: "", zoneB: "", zoneC: "", zoneD: "", zoneE: "" },
     ],
@@ -86,9 +87,26 @@ export default function RateCardForm() {
   const handleWeightChange = (index, type, field, value) => {
     const updatedWeights = [...formData[type]];
     updatedWeights[index][field] = value;
-    setFormData({ ...formData, [type]: updatedWeights });
+
+    let newFormData = { ...formData, [type]: updatedWeights };
+
+    setFormData(newFormData);
     setErrors({ ...errors, [type]: "" }); // Clear error on weight change
   };
+
+  const handleFlatRateToggle = (e) => {
+    const checked = e.target.checked;
+    let newFormData = { ...formData, isFlatRate: checked };
+
+    if (checked) {
+      newFormData.codCharge = 0;
+      newFormData.codPercent = 0;
+    }
+
+    setFormData(newFormData);
+  };
+
+
 
   const handleCourierSelect = (e) => {
     const selectedProvider = e.target.value;
@@ -200,7 +218,7 @@ export default function RateCardForm() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-4 sm:bg-white sm:shadow-sm sm:rounded-lg mt-4 bg-white min-h-[calc(100vh-320px)]">
+    <div className="max-w-5xl mx-auto p-4 sm:bg-white sm:shadow-sm sm:rounded-lg bg-white min-h-[calc(100vh-320px)]">
       <div className="flex items-center gap-3 border-b border-gray-100 pb-4 mb-4">
         <button
           onClick={() => navigate(-1)}
@@ -392,63 +410,81 @@ export default function RateCardForm() {
         </div>
       </div>
 
-      {/* Weight Price Basic */}
-      <h3 className="font-[600] mt-2 text-gray-500 text-[12px] sm:text-[14px]">
-        Weight Type <span className="text-red-500">Basic *</span> (in gram)
-      </h3>
 
-      {formData.weightPriceBasic.map((item, index) => (
-        <div key={index} className="grid grid-cols-3 sm:flex gap-2 mt-2">
-          <input
-            type="text"
-            placeholder="Weight (gm) *"
-            className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
-            onChange={(e) =>
-              handleWeightChange(index, "weightPriceBasic", "weight", e.target.value)
-            }
-          />
-          {["A", "B", "C", "D", "E"].map((zone) => (
+
+      {/* Flat Rate Toggle & Percentage */}
+      <div className="flex items-center gap-4 mt-6 mb-4 p-3 bg-gray-50 rounded-lg border border-gray-100">
+        <label className="flex items-center gap-2 cursor-pointer group">
+          <div className="relative">
             <input
-              key={zone}
-              type="text"
-              placeholder={`Zone ${zone} * ₹`}
-              className="border border-gray-300 text-gray-700 font-[600] px-3 h-9 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
-              onChange={(e) =>
-                handleWeightChange(index, "weightPriceBasic", `zone${zone}`, e.target.value)
-              }
+              type="checkbox"
+              className="sr-only peer"
+              checked={formData.isFlatRate}
+              onChange={handleFlatRateToggle}
             />
+            <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#0CBB7D]"></div>
+          </div>
+          <span className="text-[12px] font-bold text-gray-700 group-hover:text-[#0CBB7D] transition-colors">Is Flat Rate?</span>
+        </label>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {/* Forward Charges Section */}
+        <div className="md:col-span-2">
+          <h2 className="text-[#0CBB7D] font-bold text-[14px] mb-4 border-b border-[#0CBB7D]/20 pb-2">Forward Charges</h2>
+          {/* Weight Price Basic (Forward) */}
+          <h3 className="font-[600] text-gray-500 text-[12px] sm:text-[14px]">
+            Weight Type <span className="text-red-500">Basic *</span> (in gram)
+          </h3>
+          {formData.weightPriceBasic.map((item, index) => (
+            <div key={index} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 mt-2">
+              <input
+                type="text"
+                placeholder="Weight (gm) *"
+                value={item.weight}
+                className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                onChange={(e) => handleWeightChange(index, "weightPriceBasic", "weight", e.target.value)}
+              />
+              {["A", "B", "C", "D", "E"].map((zone) => (
+                <input
+                  key={zone}
+                  type="text"
+                  placeholder={`Zone ${zone} * ₹`}
+                  value={item[`zone${zone}`]}
+                  className="border border-gray-300 text-gray-700 font-[600] px-3 h-9 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                  onChange={(e) => handleWeightChange(index, "weightPriceBasic", `zone${zone}`, e.target.value)}
+                />
+              ))}
+            </div>
+          ))}
+
+          {/* Weight Price Additional (Forward) */}
+          <h3 className="font-[600] text-gray-500 text-[12px] sm:text-[14px] mt-4">
+            Weight Type <span className="text-red-500">Additional *</span> (in gram)
+          </h3>
+          {formData.weightPriceAdditional.map((item, index) => (
+            <div key={index} className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2 mt-2">
+              <input
+                type="text"
+                placeholder="Weight (gm) *"
+                value={item.weight}
+                className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                onChange={(e) => handleWeightChange(index, "weightPriceAdditional", "weight", e.target.value)}
+              />
+              {["A", "B", "C", "D", "E"].map((zone) => (
+                <input
+                  key={zone}
+                  type="text"
+                  placeholder={`Zone ${zone} * ₹`}
+                  value={item[`zone${zone}`]}
+                  className="border border-gray-300 text-gray-700 font-[600] px-3 h-9 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                  onChange={(e) => handleWeightChange(index, "weightPriceAdditional", `zone${zone}`, e.target.value)}
+                />
+              ))}
+            </div>
           ))}
         </div>
-      ))}
-
-      {/* Weight Price Additional */}
-      <h3 className="font-[600] text-gray-500 text-[12px] sm:text-[14px] mt-2">
-        Weight Type <span className="text-red-500">Additional *</span> (in gram)
-      </h3>
-
-      {formData.weightPriceAdditional.map((item, index) => (
-        <div key={index} className="grid grid-cols-3 sm:flex gap-2 mt-2">
-          <input
-            type="text"
-            placeholder="Weight (gm) *"
-            className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
-            onChange={(e) =>
-              handleWeightChange(index, "weightPriceAdditional", "weight", e.target.value)
-            }
-          />
-          {["A", "B", "C", "D", "E"].map((zone) => (
-            <input
-              key={zone}
-              type="text"
-              placeholder={`Zone ${zone} * ₹`}
-              className="border border-gray-300 text-gray-700 font-[600] px-3 h-9 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
-              onChange={(e) =>
-                handleWeightChange(index, "weightPriceAdditional", `zone${zone}`, e.target.value)
-              }
-            />
-          ))}
-        </div>
-      ))}
+      </div>
 
       {/* COD Charges */}
       <h3 className="font-[600] text-[12px] sm:text-[14px] text-gray-500 mt-2">

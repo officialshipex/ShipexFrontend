@@ -274,7 +274,16 @@ const RateCard = ({ isSidebarAdmin }) => {
                   <React.Fragment key={index}>
                     <tr className="border-b border-gray-100 text-center text-gray-700 text-[12px] transition-colors">
                       <td className="px-3 py-2 text-gray-700" rowSpan={2}>{card.courierProviderName}</td>
-                      <td className="px-3 py-2" rowSpan={2}>{card.courierServiceName}</td>
+                      <td className="px-3 py-2" rowSpan={2}>
+                        <div className="flex flex-col items-center gap-0.5">
+                          {card.isFlatRate && (
+                            <span className="bg-amber-100 text-amber-700 px-1 py-0.5 rounded text-[8px] font-bold uppercase leading-none">
+                              Flat
+                            </span>
+                          )}
+                          <span>{card.courierServiceName}</span>
+                        </div>
+                      </td>
                       <td className="px-3 py-2" rowSpan={2}>
                         <span className="bg-gray-100 px-2 py-0.5 rounded text-[10px] font-bold">{card.mode}</span>
                       </td>
@@ -362,7 +371,12 @@ const RateCard = ({ isSidebarAdmin }) => {
                       />
                     </div>
                     <div>
-                      <div className="font-bold text-[10px] text-gray-700 tracking-tight leading-4">
+                      <div className="font-bold text-[10px] text-gray-700 tracking-tight leading-4 flex items-center gap-1.5">
+                        {card.isFlatRate && (
+                          <span className="bg-amber-100 text-amber-700 px-1 py-0.5 rounded text-[8px] font-bold uppercase leading-none shrink-0">
+                            Flat
+                          </span>
+                        )}
                         {card.courierServiceName}
                       </div>
                       <div className="text-[10px] text-gray-500 font-medium">
