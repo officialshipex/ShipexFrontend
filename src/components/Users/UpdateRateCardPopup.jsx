@@ -107,7 +107,9 @@ const UpdateRateCardPopup = ({ id, userName, selectedRateCardValue, onClose, onS
                     planName: selectedRateCard,
                     rateCards: filteredRateCards,
                 };
-                response = await axios.put(`${REACT_APP_BACKEND_URL}/users/assignPlan`, data);
+                response = await axios.put(`${REACT_APP_BACKEND_URL}/users/assignPlan`, data, {
+                    headers: { Authorization: `Bearer ${Cookies.get("session")}` }
+                });
             } else {
                 const data = {
                     userId: id,
@@ -115,7 +117,9 @@ const UpdateRateCardPopup = ({ id, userName, selectedRateCardValue, onClose, onS
                     planName: selectedRateCard,
                     B2BRateCard: filteredB2BRateCards,
                 };
-                response = await axios.put(`${REACT_APP_BACKEND_URL}/users/assign/plan`, data);
+                response = await axios.put(`${REACT_APP_BACKEND_URL}/users/assign/plan`, data, {
+                    headers: { Authorization: `Bearer ${Cookies.get("session")}` }
+                });
             }
             if (response.status >= 200 && response.status < 300) {
                 Notification("Assigned Successfully", "success");

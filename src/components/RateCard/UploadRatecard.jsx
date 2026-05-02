@@ -7,7 +7,7 @@ import { FaUpload, FaTimes } from "react-icons/fa";
 import { FiUploadCloud, FiDownload, FiFileText } from "react-icons/fi";
 import { Notification } from "../../Notification"
 
-const UploadRatecard = ({ isOpen, onClose, setRefresh }) => {
+const UploadRatecard = ({ isOpen, onClose, setRefresh, defaultPlanName, replaceExisting, hidePlan, userId }) => {
 
     const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const [selectedFile, setSelectedFile] = useState(null);
@@ -24,6 +24,15 @@ const UploadRatecard = ({ isOpen, onClose, setRefresh }) => {
         try {
             const formData = new FormData();
             formData.append("file", selectedFile);
+            if (defaultPlanName) {
+                formData.append("plan", defaultPlanName);
+            }
+            if (replaceExisting) {
+                formData.append("replaceExisting", "true");
+            }
+            if (userId) {
+                formData.append("userId", userId);
+            }
             const token = Cookies.get("session");
             const response = await axios.post(
                 `${REACT_APP_BACKEND_URL}/saveRate/uploadRatecard`,
@@ -36,11 +45,21 @@ const UploadRatecard = ({ isOpen, onClose, setRefresh }) => {
                 }
             );
             console.log("Upload success:", response);
-            Notification(response.data.message, "success")
-            setRefresh(true)
+            const { message, errors } = response.data;
+            
+            if (errors && errors.length > 0) {
+                // Show first 3 errors to avoid overwhelming the UI
+                const errorSummary = errors.slice(0, 3).join("\n");
+                Notification(`${message}\nTop Errors:\n${errorSummary}`, "error");
+            } else {
+                Notification(message || "Upload successful", "success");
+            }
+            
+            setRefresh(true);
             onClose();
         } catch (err) {
-            Notification(err.response?.data?.error, "error")
+            const errorMsg = err.response?.data?.error || err.response?.data?.message || "Upload failed";
+            Notification(errorMsg, "error");
             console.log(err.response || "Upload failed");
         }
     };
@@ -51,7 +70,7 @@ const UploadRatecard = ({ isOpen, onClose, setRefresh }) => {
         try {
             const token = Cookies.get("session");
             const response = await axios.get(
-                `${REACT_APP_BACKEND_URL}/saveRate/download-excel`,
+                `${REACT_APP_BACKEND_URL}/saveRate/download-excel?hidePlan=${hidePlan ? "true" : "false"}`,
                 {
                     responseType: "blob",
                     headers: {

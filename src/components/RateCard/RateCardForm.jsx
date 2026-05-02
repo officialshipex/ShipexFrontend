@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { Notification } from "../../Notification";
 import { FiArrowLeft, FiChevronDown } from "react-icons/fi";
 
@@ -10,6 +11,8 @@ export default function RateCardForm() {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const courierType = queryParams.get("courierType"); // Extracting mode from URL
+  const initialPlan = queryParams.get("plan");
+  const userId = queryParams.get("userId");
   const navigate = useNavigate()
 
 
@@ -19,7 +22,7 @@ export default function RateCardForm() {
   const [selectedService, setSelectedService] = useState(null);
   const [plans, setPlans] = useState([]);
   const [formData, setFormData] = useState({
-    plan: "",
+    plan: initialPlan || "",
     courierProviderName: "",
     courierServiceName: "",
     mode: "", // Assign courierType to mode
@@ -39,7 +42,10 @@ export default function RateCardForm() {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
-        const response = await axios.get(`${REACT_APP_BACKEND_URL}/saveRate/getPlanNames`);
+        const token = Cookies.get("session");
+        const response = await axios.get(`${REACT_APP_BACKEND_URL}/saveRate/getPlanNames`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         setPlans(response.data.planNames || []);  // Assuming your controller sends { planNames: [] }
       } catch (error) {
         console.error("Failed to fetch plans:", error);
@@ -59,8 +65,10 @@ export default function RateCardForm() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const token = Cookies.get("session");
         const response = await axios.get(
-          `${REACT_APP_BACKEND_URL}/courierServices/couriers`
+          `${REACT_APP_BACKEND_URL}/courierServices/couriers`,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         setCouriers(response.data);
         console.log(response.data);
@@ -191,12 +199,37 @@ export default function RateCardForm() {
     // If no errors, submit the form
     if (Object.keys(newErrors).length === 0) {
       try {
-        console.log(formData);
+        // Helper to convert object values to numbers
+        const parseObjectToNumbers = (obj) => {
+          const result = { ...obj };
+          Object.keys(result).forEach((key) => {
+            if (key !== "weight" && key.startsWith("zone")) {
+              result[key] = parseFloat(result[key]) || 0;
+            } else if (key === "weight") {
+              result[key] = parseFloat(result[key]) || 0;
+            }
+          });
+          return result;
+        };
+
+        const formattedData = {
+          ...formData,
+          userId,
+          weightPriceBasic: formData.weightPriceBasic.map(parseObjectToNumbers),
+          weightPriceAdditional: formData.weightPriceAdditional.map(parseObjectToNumbers),
+          codPercent: parseFloat(formData.codPercent) || 0,
+          codCharge: parseFloat(formData.codCharge) || 0,
+        };
+
+        console.log(formattedData);
         const response = await axios.post(
           `${REACT_APP_BACKEND_URL}/saveRate/saveB2CRate`,
-          formData,
+          formattedData,
           {
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${Cookies.get("session")}`
+            },
           }
         );
 

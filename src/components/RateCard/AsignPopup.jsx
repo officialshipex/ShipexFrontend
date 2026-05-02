@@ -19,11 +19,11 @@ const ChevronDownIcon = ({ isOpen }) => (
   </svg>
 );
 
-const AsignPopup = ({ isOpen, onClose }) => {
+const AsignPopup = ({ isOpen, onClose, initialSellerId }) => {
   const [plans, setPlans] = useState([]);
   const [sellers, setSellers] = useState([]);
   const [selectedPlan, setSelectedPlan] = useState("");
-  const [selectedSeller, setSelectedSeller] = useState("");
+  const [selectedSeller, setSelectedSeller] = useState(initialSellerId || "");
   const [searchTerm, setSearchTerm] = useState("");
   const [planDropdownOpen, setPlanDropdownOpen] = useState(false);
   const [sellerDropdownOpen, setSellerDropdownOpen] = useState(false);

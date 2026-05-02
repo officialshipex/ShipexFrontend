@@ -35,7 +35,7 @@ const AddPlanModal = ({ isOpen, onClose, onSuccess, rateType, setPlanNameAdd }) 
             setPlanName("");
             setIsSubmitting(false);
             Notification("Plan created successfully!", "success");
-            setPlanNameAdd(true);
+            if (setPlanNameAdd) setPlanNameAdd(true);
             if (onSuccess) onSuccess(); // Optionally tell parent to refresh or show toast
             onClose(); // Close the modal after success
         } catch (error) {

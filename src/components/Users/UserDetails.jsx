@@ -1,22 +1,26 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { ChevronRight, Edit2, Eye, EyeOff, BadgeCheck } from "lucide-react";
 import avatar from "../../assets/avatar.png";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import ThreeDotLoader from "../../Loader";
-import { FiEdit, FiAlertCircle } from "react-icons/fi";
+
 import BankDetailsEditModal from "./BankDetailsEditModal";
 import AadharDetailsEditModal from "./AadharDetailsEditModal";
 import PanDetailsEditModal from "./PanDetailsEditModal";
 import GstDetailsEditModal from "./GstDetailsEditModal";
 import { Notification } from "../../Notification";
-import UpdateRateCardPopup from "./UpdateRateCardPopup"
+import UpdateRateCardPopup from "./UpdateRateCardPopup";
 import EarlyCODModal from "../Billings/EarlyCodPopup";
 import UpdateCreditLimitEditModal from "./UpdateCreditLimitModal";
 import { User, MapPin, ExternalLink, CheckCircleIcon, Clock, CreditCard, IdCard, FileText, Settings, Info, Wallet } from "lucide-react";
 import KamDetailsEditModal from "./KamDetailsEditModal";
+import { FaEdit, FaTrash } from "react-icons/fa";
+import { FiChevronDown, FiArrowLeft, FiSearch, FiEdit, FiAlertCircle } from "react-icons/fi";
+import UploadRatecard from "../RateCard/UploadRatecard";
 import UserServiceManagement from "./UserServiceManagement";
+import Loader from "../../Loader";
 
 
 // Referral Commission Edit Modal
@@ -163,6 +167,14 @@ export default function ProfileCard() {
   const [rateCardType, setRateCardType] = useState("");
   const [selectedService, setSelectedService] = useState(null);
   const [editedRates, setEditedRates] = useState({});
+  const [rates, setRates] = useState([]);
+  const [allPlans, setAllPlans] = useState([]);
+  const [isUploadRatecardModalOpen, setIsUploadRatecardModalOpen] = useState(false);
+  const [isAssignPopupOpen, setIsAssignPopupOpen] = useState(false);
+  const [rateSearch, setRateSearch] = useState("");
+  const [rateLoading, setRateLoading] = useState(false);
+  const [currentRatePlan, setCurrentRatePlan] = useState("");
+  const [isPlanDropdownOpen, setIsPlanDropdownOpen] = useState(false);
   useEffect(() => {
     const fetchAdmin = async () => {
       try {
@@ -179,10 +191,178 @@ export default function ProfileCard() {
     };
     fetchAdmin();
   }, []);
+  const navigate = useNavigate();
 
-  const fetchUsers = async () => {
+  const fetchPlans = async () => {
     try {
-      setLoading(true);
+      const response = await axios.get(`${REACT_APP_BACKEND_URL}/saveRate/getPlanNames`, {
+        headers: { Authorization: `Bearer ${Cookies.get("session")}` }
+      });
+      setAllPlans(response.data.planNames || []);
+    } catch (error) {
+      console.error("Failed to fetch plan names", error);
+    }
+  };
+
+  const refreshRates = async () => {
+    setRateLoading(true);
+    try {
+      const endpoint = rateCardType === "B2B" 
+        ? `${REACT_APP_BACKEND_URL}/b2b/saveRate/getRateCard` 
+        : `${REACT_APP_BACKEND_URL}/saveRate/getRateCard`;
+        
+      const response = await axios.get(endpoint, {
+        headers: { Authorization: `Bearer ${Cookies.get("session")}` },
+        params: { userId: id }
+      });
+      setRates(response.data.rateCards || response.data.B2BRateCard || []);
+    } catch (error) {
+      console.error("Failed to fetch rate cards", error);
+      setRates([]);
+    } finally {
+      setRateLoading(false);
+    }
+  };
+
+  const handleDeleteRateCard = async (rateId) => {
+    if (window.confirm("Are you sure you want to delete this rate card?")) {
+      try {
+        await axios.delete(`${REACT_APP_BACKEND_URL}/saveRate/deleteRateCard/${rateId}`, {
+          data: { userId: id }, 
+          headers: { Authorization: `Bearer ${Cookies.get("session")}` }
+        });
+        Notification("Rate card deleted successfully", "success");
+        refreshRates();
+      } catch (error) {
+        Notification("Failed to delete rate card", "error");
+      }
+    }
+  };
+
+  useEffect(() => {
+    fetchPlans();
+    refreshRates();
+  }, [id, rateCardType]);
+
+  useEffect(() => {
+    if (userData?.rateCard) {
+      setCurrentRatePlan(userData.rateCard);
+      setRateCardType("B2C");
+    } else if (userData?.b2bRateCard) {
+      setCurrentRatePlan(userData.b2bRateCard);
+      setRateCardType("B2B");
+    }
+  }, [userData]);
+
+  const filteredUserRates = rates;
+
+  const handleAutoCreateUserPlan = async () => {
+    const sharedPlans = ["Basic Plan", "Silver", "Gold", "Platinum", "Bronze"];
+    const currentPlan = String(userData?.rateCard || "");
+    const uId = String(userData?.userId || "");
+    const isShared = sharedPlans.includes(currentPlan) || (currentPlan !== "" && !currentPlan.includes(uId));
+
+    if (!isShared) return userData?.rateCard;
+
+    const desiredPlan = `${userData.fullname.replace(/\s+/g, '_')}_${userData.userId}`;
+    try {
+      const token = Cookies.get("session");
+      await axios.post(`${REACT_APP_BACKEND_URL}/saveRate/createPlanName`, { planName: desiredPlan }, { headers: { Authorization: `Bearer ${token}` } });
+
+      const assignData = {
+        userId: id,
+        userName: userData.fullname,
+        planName: desiredPlan,
+        rateCards: rates, 
+      };
+      await axios.put(`${REACT_APP_BACKEND_URL}/users/assignPlan`, assignData, { headers: { Authorization: `Bearer ${token}` } });
+
+      Notification(`Custom plan ${desiredPlan} created and assigned!`, "success");
+      fetchUsers(true);
+      fetchPlans();
+      setCurrentRatePlan(desiredPlan);
+      return desiredPlan;
+    } catch (error) {
+      setCurrentRatePlan(desiredPlan);
+      const token = Cookies.get("session");
+      const assignData = {
+        userId: id,
+        userName: userData.fullname,
+        planName: desiredPlan,
+        rateCards: rates,
+      };
+      await axios.put(`${REACT_APP_BACKEND_URL}/users/assignPlan`, assignData, { headers: { Authorization: `Bearer ${token}` } });
+      fetchUsers(true);
+      Notification("Switched to user-specific plan", "info");
+      return desiredPlan;
+    }
+  };
+
+
+
+  const renderRateTable = () => (
+    <div className="overflow-auto bg-white mt-2 max-h-[535px]">
+      <table className="w-full text-center border-collapse">
+        <thead className="sticky top-0 z-10 bg-[#0CBB7D] text-[10px] sm:text-[11px] text-white">
+          <tr>
+            <th className="px-2 py-2 font-bold">Provider</th>
+            <th className="px-2 py-2 font-bold">Service</th>
+            <th className="px-2 py-2 font-bold">Mode</th>
+            <th className="px-2 py-2 font-bold">Weight</th>
+            <th className="px-2 py-2 font-bold">Zone A</th>
+            <th className="px-2 py-2 font-bold">Zone B</th>
+            <th className="px-2 py-2 font-bold">Zone C</th>
+            <th className="px-2 py-2 font-bold">Zone D</th>
+            <th className="px-2 py-2 font-bold">Zone E</th>
+            <th className="px-2 py-2 font-bold">COD</th>
+            <th className="px-2 py-2 font-bold">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rateLoading ? (
+            <tr><td colSpan="11" className="py-10"><Loader /></td></tr>
+          ) : filteredUserRates.length > 0 ? (
+            filteredUserRates.map((card, index) => (
+              <React.Fragment key={index}>
+                <tr className="border-b border-gray-50 text-[10px] sm:text-[11px] text-gray-700">
+                  <td className="px-2 py-1.5" rowSpan={2}>{card.courierProviderName}</td>
+                  <td className="px-2 py-1.5" rowSpan={2}>{card.courierServiceName}</td>
+                  <td className="px-2 py-1.5" rowSpan={2}>{card.mode}</td>
+                  <td className="px-2 py-1.5 text-gray-400">Basic: {card.weightPriceBasic[0]?.weight}gm</td>
+                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic[0]?.zoneA}</td>
+                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic[0]?.zoneB}</td>
+                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic[0]?.zoneC}</td>
+                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic[0]?.zoneD}</td>
+                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic[0]?.zoneE}</td>
+                  <td className="px-2 py-1.5 font-medium" rowSpan={2}>₹{card.codCharge} / {card.codPercent}%</td>
+                  <td className="px-2 py-1.5" rowSpan={2}>
+                    <div className="flex justify-center gap-1.5">
+                      <button onClick={() => navigate(`/dashboard/ratecard/update/${card._id}?userId=${id}`)} className="text-[#0CBB7D]"><FaEdit size={12} /></button>
+                      <button onClick={() => handleDeleteRateCard(card._id)} className="text-red-500"><FaTrash size={12} /></button>
+                    </div>
+                  </td>
+                </tr>
+                <tr className="border-b border-gray-50 text-[10px] sm:text-[11px] text-gray-700">
+                  <td className="px-2 py-1.5 text-gray-400">Addl: {card.weightPriceAdditional[0]?.weight}gm</td>
+                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional[0]?.zoneA}</td>
+                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional[0]?.zoneB}</td>
+                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional[0]?.zoneC}</td>
+                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional[0]?.zoneD}</td>
+                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional[0]?.zoneE}</td>
+                </tr>
+              </React.Fragment>
+            ))
+          ) : (
+            <tr><td colSpan="11" className="py-10 text-gray-400">No rates found for this plan</td></tr>
+          )}
+        </tbody>
+      </table>
+    </div>
+  );
+
+  const fetchUsers = async (silent = false) => {
+    try {
+      if (!silent) setLoading(true);
       const token = Cookies.get("session");
       const response = await axios.get(
         `${REACT_APP_BACKEND_URL}/user/getUserById`,
@@ -193,7 +373,6 @@ export default function ProfileCard() {
       );
 
       const user = response.data.userDetails;
-      // console.log("user", user);
       setUserData(user);
       setIsEnabled(user.isBlocked);
       setApiAccess(user.adminApiAccess);
@@ -283,7 +462,7 @@ export default function ProfileCard() {
 
   useEffect(() => {
     fetchUsers();
-  }, [showAadharEditModal, showBankEditModal]);
+  }, [showAadharEditModal, showBankEditModal, id]);
 
   const handleReferralSave = async (newValue) => {
     try {
@@ -446,7 +625,7 @@ export default function ProfileCard() {
                   Contact Details
                 </h3>
 
-                {admin && (
+                {!!admin && (
                   <button className="p-1.5 sm:p-2 hover:bg-gray-200 rounded-lg transition-colors">
                     <FiEdit size={14} className="text-gray-600 sm:w-4 sm:h-4" />
                   </button>
@@ -488,7 +667,7 @@ export default function ProfileCard() {
                 <h3 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 flex items-center gap-2">
                   <MapPin size={16} className="text-gray-600" /> Address Details
                 </h3>
-                {admin && (
+                {!!admin && (
                   <button className="p-1.5 sm:p-2 hover:bg-gray-200 rounded-lg transition-colors">
                     <FiEdit size={14} className="text-gray-600 sm:w-4 sm:h-4" />
                   </button>
@@ -674,17 +853,76 @@ export default function ProfileCard() {
                 )}
               </div>
             </div>
-            <div className="hidden lg:block">
-              {admin && (
-                <UserServiceManagement 
-                  userId={id} 
-                  section="left" 
-                  selectedService={selectedService} 
-                  onServiceSelect={setSelectedService} 
-                  editedRates={editedRates}
-                  onRateEdit={setEditedRates}
-                />
-              )}
+            {/* Ratecard Management */}
+            <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm mt-2">
+              <div className="flex flex-col sm:flex-row items-center justify-between px-4 py-2 bg-gray-50 border-b border-gray-200 gap-2">
+                <h3 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 flex items-center gap-2">
+                  <CreditCard size={16} className="text-gray-600" />
+                  Ratecard Management
+                </h3>
+                <div className="flex flex-wrap justify-center gap-2">
+                  <button
+                    onClick={async () => {
+                      let planToUse = userData?.rateCard;
+                      try {
+                        const sharedPlans = ["Basic Plan", "Silver", "Gold", "Platinum", "Bronze"];
+                        const currentPlan = String(userData?.rateCard || "");
+                        const uId = String(userData?.userId || "");
+                        const isShared = sharedPlans.includes(currentPlan) || (currentPlan !== "" && !currentPlan.includes(uId));
+                        
+                        if (userData?.rateCard && isShared) {
+                          Notification("Preparing user-specific plan...", "info");
+                          const newPlan = await handleAutoCreateUserPlan();
+                          if (newPlan) planToUse = newPlan;
+                        }
+                      } catch (err) {
+                        console.error("Plan auto-creation failed:", err);
+                      } finally {
+                        navigate(`/dashboard/ratecard/rateCardform?plan=${planToUse || ""}&userId=${id}`);
+                      }
+                    }}
+                    className="bg-[#0CBB7D] text-white px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-600 transition-colors"
+                  >
+                    Add Rate Card
+                  </button>
+                  <button
+                    onClick={() => {
+                      setRateCardType("B2C");
+                      setShowRateCardModal(true);
+                    }}
+                    className="bg-[#0CBB7D] text-white px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-600 transition-colors"
+                  >
+                    Assign
+                  </button>
+                  <button
+                    onClick={async () => {
+                      try {
+                        const sharedPlans = ["Basic Plan", "Silver", "Gold", "Platinum", "Bronze"];
+                        const currentPlan = String(userData?.rateCard || "");
+                        const uId = String(userData?.userId || "");
+                        const isShared = sharedPlans.includes(currentPlan) || (currentPlan !== "" && !currentPlan.includes(uId));
+                        
+                        if (userData?.rateCard && isShared) {
+                          Notification("Preparing user-specific plan...", "info");
+                          await handleAutoCreateUserPlan();
+                        }
+                      } catch (err) {
+                        console.error("Plan auto-creation failed:", err);
+                      } finally {
+                        setTimeout(() => {
+                          setIsUploadRatecardModalOpen(true);
+                        }, 100);
+                      }
+                    }}
+                    className="bg-[#0CBB7D] text-white px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-600 transition-colors"
+                  >
+                    Upload
+                  </button>
+                </div>
+              </div>
+              <div className="p-4 space-y-3">
+                {renderRateTable()}
+              </div>
             </div>
           </div>
 
@@ -706,23 +944,23 @@ export default function ProfileCard() {
                     label: "Last Login",
                     value: userData?.lastLogin
                       ? new Date(userData.lastLogin).toLocaleString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                          hour12: true,
-                        })
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                      })
                       : "N/A",
                   },
                   {
                     label: "Registration Date",
                     value: userData?.createdAt
                       ? new Date(userData.createdAt).toLocaleDateString("en-GB", {
-                          day: "2-digit",
-                          month: "short",
-                          year: "numeric",
-                        })
+                        day: "2-digit",
+                        month: "short",
+                        year: "numeric",
+                      })
                       : "N/A",
                   },
                   {
@@ -742,7 +980,7 @@ export default function ProfileCard() {
                     value: (
                       <div className="flex items-center gap-2">
                         <span>{userData?.codPlan || "Standard"}</span>
-                        {admin && (
+                        {!!admin && (
                           <button
                             onClick={() => {
                               setSelectedUserId(userData?._id);
@@ -791,7 +1029,7 @@ export default function ProfileCard() {
                   { label: "Referral Code", value: userData?.referralCode || "N/A" },
                   {
                     label: "Change Password",
-                    value: admin && (
+                    value: admin ? (
                       <button
                         onClick={() => setShowChangePasswordModal(true)}
                         className="text-[#0CBB7D] hover:text-green-500 flex items-center gap-1 font-[600]"
@@ -799,7 +1037,7 @@ export default function ProfileCard() {
                         <Settings size={14} />
                         Change
                       </button>
-                    ),
+                    ) : null,
                   },
                 ].map((item, index) => (
                   <div key={index} className="flex justify-between items-center">
@@ -808,7 +1046,7 @@ export default function ProfileCard() {
                   </div>
                 ))}
 
-                {admin && userData?.referralCommissionPercentage && (
+                {!!admin && !!userData?.referralCommissionPercentage && (
                   <div className="flex justify-between items-center">
                     <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">Referral Commission</p>
                     <div className="flex items-center gap-2">
@@ -880,7 +1118,7 @@ export default function ProfileCard() {
                 <h3 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 flex items-center gap-2">
                   <BadgeCheck size={16} className="text-gray-600" /> KAM Details
                 </h3>
-                {admin && (
+                {!!admin && (
                   <button onClick={() => setShowKAMEditModal(true)} className="p-1.5 sm:p-2 hover:bg-gray-200 rounded-lg transition-colors">
                     <FiEdit size={14} className="text-gray-600 sm:w-4 sm:h-4" />
                   </button>
@@ -920,29 +1158,21 @@ export default function ProfileCard() {
                 </div>
               </div>
             </div>
-            {admin && (
-              <UserServiceManagement 
-                userId={id} 
-                section="right" 
-                selectedService={selectedService} 
-                onServiceSelect={setSelectedService} 
+            {!!admin && (
+              <UserServiceManagement
+                userId={id}
+                section="right"
+                selectedService={selectedService}
+                onServiceSelect={setSelectedService}
                 editedRates={editedRates}
                 onRateEdit={setEditedRates}
               />
             )}
+
           </div>
           {/* Mobile view only: section left moves to the end */}
           <div className="lg:hidden">
-            {admin && (
-              <UserServiceManagement 
-                userId={id} 
-                section="left" 
-                selectedService={selectedService} 
-                onServiceSelect={setSelectedService} 
-                editedRates={editedRates}
-                onRateEdit={setEditedRates}
-              />
-            )}
+
           </div>
         </div>
       );
@@ -1001,7 +1231,7 @@ export default function ProfileCard() {
                       </div>
                     </div>
 
-                    {admin && (
+                    {!!admin && (
                       <div className="flex items-center gap-2">
                         <span className="text-xs sm:text-sm text-gray-600">
                           {isEnabled ? "Blocked" : "Active"}
@@ -1065,7 +1295,7 @@ export default function ProfileCard() {
         userId={id}
       />
 
-      {showChangePasswordModal && (
+      {!!showChangePasswordModal && (
         <ChangePasswordModal
           isOpen={showChangePasswordModal}
           onClose={() => setShowChangePasswordModal(false)}
@@ -1096,6 +1326,16 @@ export default function ProfileCard() {
           rateCardType={rateCardType}
         />
       )}
+
+      <UploadRatecard
+        isOpen={isUploadRatecardModalOpen}
+        onClose={() => setIsUploadRatecardModalOpen(false)}
+        setRefresh={refreshRates}
+        defaultPlanName={userData?.rateCard}
+        replaceExisting={true}
+        hidePlan={true}
+        userId={id}
+      />
     </div>
   );
 }

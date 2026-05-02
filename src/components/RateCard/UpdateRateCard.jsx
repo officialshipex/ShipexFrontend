@@ -3,6 +3,7 @@ import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
 import { Notification } from "../../Notification";
 import { FiArrowLeft, FiChevronDown } from "react-icons/fi";
+import Cookies from "js-cookie";
 
 const RateCardUpdateForm = () => {
   const { id } = useParams();
@@ -51,14 +52,27 @@ const RateCardUpdateForm = () => {
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   useEffect(() => {
+    const token = Cookies.get("session");
+    const queryParams = new URLSearchParams(window.location.search);
+    const userId = queryParams.get("userId");
+
     axios
-      .get(`${REACT_APP_BACKEND_URL}/saveRate/getRateCard/${id}`)
+      .get(`${REACT_APP_BACKEND_URL}/saveRate/getRateCard/${id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+        params: { userId }
+      })
       .then((response) => {
         const data = response.data.rateCard;
         console.log("Raw API Response:", data);
 
-        const cleanWeightPriceBasic = { ...(data.weightPriceBasic[0] || {}) };
-        const cleanWeightPriceAdditional = { ...(data.weightPriceAdditional[0] || {}) };
+        const getFirstElement = (val) => {
+          if (Array.isArray(val)) return val[0] || {};
+          if (val && typeof val === "object") return val;
+          return {};
+        };
+
+        const cleanWeightPriceBasic = { ...getFirstElement(data.weightPriceBasic) };
+        const cleanWeightPriceAdditional = { ...getFirstElement(data.weightPriceAdditional) };
 
         // Ensure ID is removed
         delete cleanWeightPriceBasic.id;
@@ -86,8 +100,10 @@ const RateCardUpdateForm = () => {
   useEffect(() => {
     const fetchPlans = async () => {
       try {
+        const token = Cookies.get("session");
         const response = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}/saveRate/getPlanNames`
+          `${process.env.REACT_APP_BACKEND_URL}/saveRate/getPlanNames`,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         setPlans(response.data.planNames || []);
       } catch (error) {
@@ -100,8 +116,10 @@ const RateCardUpdateForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        const token = Cookies.get("session");
         const response = await axios.get(
-          `${REACT_APP_BACKEND_URL}/courierServices/couriers`
+          `${REACT_APP_BACKEND_URL}/courierServices/couriers`,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         setCouriers(response.data); // Set the couriers state with fetched data
         console.log(response.data); // Optional: Log to verify data
@@ -179,8 +197,37 @@ const RateCardUpdateForm = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const queryParams = new URLSearchParams(window.location.search);
+    const userId = queryParams.get("userId");
+
+    // Helper to convert object values to numbers
+    const parseObjectToNumbers = (obj) => {
+      const result = { ...obj };
+      Object.keys(result).forEach((key) => {
+        if (key !== "weight" && key.startsWith("zone")) {
+          result[key] = parseFloat(result[key]) || 0;
+        } else if (key === "weight") {
+          result[key] = parseFloat(result[key]) || 0;
+        }
+      });
+      return result;
+    };
+
+    const formattedData = {
+      ...formData,
+      userId,
+      weightPriceBasic: [parseObjectToNumbers(formData.weightPriceBasic)],
+      weightPriceAdditional: [parseObjectToNumbers(formData.weightPriceAdditional)],
+      codPercent: parseFloat(formData.codPercent) || 0,
+      codCharge: parseFloat(formData.codCharge) || 0,
+    };
+
+    const token = Cookies.get("session");
     axios
-      .put(`${REACT_APP_BACKEND_URL}/saveRate/updateRateCard/${id}`, formData)
+      .put(`${REACT_APP_BACKEND_URL}/saveRate/updateRateCard/${id}`, 
+        formattedData,
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
       .then(() => {
         Notification("Rate Card updated successfully!", "success");
         navigate("/dashboard/rateCard");
