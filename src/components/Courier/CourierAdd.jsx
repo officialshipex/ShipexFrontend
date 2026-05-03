@@ -74,6 +74,7 @@ const courierConfigs = {
     fields: [
       { name: "username", label: "User/Email", placeholder: "Username", type: "text" },
       { name: "password", label: "Password", placeholder: "Password", type: "password" },
+      { name: "clientId", label: "Client ID", placeholder: "Client ID", type: "text" },
     ],
   },
   Vamaship: {
@@ -103,6 +104,12 @@ const courierConfigs = {
     fields: [
       { name: "username", label: "User", placeholder: "Username", type: "text" },
       { name: "password", label: "Password", placeholder: "Password", type: "password" },
+    ],
+  },
+  Shadowfax: {
+    endpoint: "/Shadowfax/getAuthToken",
+    fields: [
+      { name: "apiKey", label: "API Token", placeholder: "Enter Shadowfax Production Token", type: "text" },
     ],
   },
 };
@@ -159,13 +166,13 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
       const credDuplicate = existingCouriers.find(c => {
         const currentProvider = config.provider || provider;
         if (c.courierProvider !== currentProvider) return false;
-        
+
         const inputEmail = credentials.email || credentials.username;
         if (inputEmail && c.email === inputEmail) return true;
-        
+
         const inputApiKey = credentials.apiKey;
         if (inputApiKey && c.apiKey === inputApiKey) return true;
-        
+
         return false;
       });
 
@@ -201,7 +208,7 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
       setCodDays("");
       setStatus("");
       setCredentials({});
-      
+
       onCourierSaved?.();
     } catch (error) {
       console.error(`${provider} Save Error:`, error);
@@ -272,11 +279,10 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
         <button
           onClick={handleSave}
           disabled={!canAction || loading}
-          className={`h-9 px-4 rounded-lg text-[11px] font-[700] transition-all flex items-center justify-center gap-2 whitespace-nowrap min-w-[100px] col-span-2 xl:col-span-1 ${
-            canAction && !loading
+          className={`h-9 px-4 rounded-lg text-[11px] font-[700] transition-all flex items-center justify-center gap-2 whitespace-nowrap min-w-[100px] col-span-2 xl:col-span-1 ${canAction && !loading
               ? "bg-[#0CBB7D] text-white hover:bg-[#0aa66e] active:scale-[0.98] shadow-sm"
               : "bg-gray-100 text-gray-400 cursor-not-allowed border border-gray-200"
-          }`}
+            }`}
         >
           {loading && (
             <div className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>

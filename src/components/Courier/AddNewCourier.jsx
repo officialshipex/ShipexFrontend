@@ -26,7 +26,8 @@ const courierOptions = [
   { value: "Vamaship", label: "Vamaship" },
   { value: "ZipyPost", label: "ZipyPost" },
   { value: "BoxdLogistics", label: "BoxdLogistics" },
-  {value:"Proship",label:"Proship"}
+  {value:"Proship",label:"Proship"},
+  { value: "Shadowfax", label: "Shadowfax" }
 ];
 
 const AddNewCourier = ({ isSidebarAdmin }) => {
