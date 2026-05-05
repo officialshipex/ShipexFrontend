@@ -121,7 +121,8 @@ const Dashboard = ({ selectedUserId, selectedDateRange }) => {
                 const params = {};
                 const startDate =
                     selectedDateRange?.[0]?.startDate ||
-                    new Date(today.setHours(0, 0, 0, 0)); // 00:00:00 of today
+                    new Date(new Date().setDate(new Date().getDate() - 29)); // 30 days ago
+                startDate.setHours(0, 0, 0, 0);
 
                 const endDate =
                     selectedDateRange?.[0]?.endDate ||

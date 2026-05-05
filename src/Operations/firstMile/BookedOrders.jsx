@@ -52,7 +52,7 @@ const BookedOrders = ({ userId: selectedUserId }) => {
   const [paymentType, setPaymentType] = useState("");
   const [dateRange, setDateRange] = useState([
     {
-      startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+      startDate: dayjs().subtract(29, "day").startOf("day").toDate(),
       endDate: dayjs().endOf("day").toDate(),
       key: "selection",
     },
@@ -174,7 +174,7 @@ const BookedOrders = ({ userId: selectedUserId }) => {
     setSelectedCourier([]);
     setDateRange([
       {
-        startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+        startDate: dayjs().subtract(29, "day").startOf("day").toDate(),
         endDate: dayjs().endOf("day").toDate(),
         key: "selection",
       },
@@ -400,3 +400,4 @@ const BookedOrders = ({ userId: selectedUserId }) => {
 };
 
 export default BookedOrders;
+

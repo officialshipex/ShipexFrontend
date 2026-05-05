@@ -49,7 +49,7 @@ const OutForDeliveryOrders = (filterOrder) => {
   const [paymentType, setPaymentType] = useState("");
   const [dateRange, setDateRange] = useState([
     {
-      startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+      startDate: dayjs().subtract(29, "day").startOf("day").toDate(),
       endDate: dayjs().endOf("day").toDate(),
       key: "selection",
     },
@@ -174,7 +174,7 @@ const OutForDeliveryOrders = (filterOrder) => {
     setSelectedUserId(null);
     setDateRange([
       {
-        startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+        startDate: dayjs().subtract(29, "day").startOf("day").toDate(),
         endDate: dayjs().endOf("day").toDate(),
         key: "selection",
       },
@@ -389,3 +389,4 @@ const OutForDeliveryOrders = (filterOrder) => {
 };
 
 export default OutForDeliveryOrders;
+

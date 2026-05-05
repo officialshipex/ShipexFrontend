@@ -224,7 +224,7 @@ const RateCardUpdateForm = () => {
 
     const token = Cookies.get("session");
     axios
-      .put(`${REACT_APP_BACKEND_URL}/saveRate/updateRateCard/${id}`, 
+      .put(`${REACT_APP_BACKEND_URL}/saveRate/updateRateCard/${id}`,
         formattedData,
         { headers: { Authorization: `Bearer ${token}` } }
       )
@@ -257,34 +257,36 @@ const RateCardUpdateForm = () => {
       {/* Plan, Provider, Service */}
       <div className="flex flex-col sm:flex-row gap-2 mb-2">
         <div className="flex gap-2 w-full sm:w-auto flex-1">
-          {/* Plan Dropdown */}
-          <div className="relative flex-1 sm:max-w-[180px]">
-            <div
-              onClick={() => setIsPlanOpen(!isPlanOpen)}
-              className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-[#0CBB7D] transition-all group"
-            >
-              <span className={`text-[10px] sm:text-[12px] truncate ${formData.plan ? "text-gray-700" : "text-gray-400"}`}>
-                {formData.plan || "Select Plans"}
-              </span>
-              <FiChevronDown className={`text-gray-400 group-hover:text-[#0CBB7D] transition-transform flex-shrink-0 ${isPlanOpen ? "rotate-180" : ""}`} />
-            </div>
-            {isPlanOpen && (
-              <div className="absolute font-[600] top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-sm z-[100] animate-in fade-in slide-in-from-top-2 max-h-48 overflow-y-auto">
-                {plans.map((plan, idx) => (
-                  <div
-                    key={idx}
-                    onClick={() => {
-                      setFormData({ ...formData, plan: plan });
-                      setIsPlanOpen(false);
-                    }}
-                    className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors"
-                  >
-                    {plan}
-                  </div>
-                ))}
+          {/* Plan Dropdown - Hidden for user-specific rates */}
+          {!new URLSearchParams(window.location.search).get("userId") && (
+            <div className="relative flex-1 sm:max-w-[180px]">
+              <div
+                onClick={() => setIsPlanOpen(!isPlanOpen)}
+                className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-[#0CBB7D] transition-all group"
+              >
+                <span className={`text-[10px] sm:text-[12px] truncate ${formData.plan ? "text-gray-700" : "text-gray-400"}`}>
+                  {formData.plan || "Select Plans"}
+                </span>
+                <FiChevronDown className={`text-gray-400 group-hover:text-[#0CBB7D] transition-transform flex-shrink-0 ${isPlanOpen ? "rotate-180" : ""}`} />
               </div>
-            )}
-          </div>
+              {isPlanOpen && (
+                <div className="absolute font-[600] top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-sm z-[100] animate-in fade-in slide-in-from-top-2 max-h-48 overflow-y-auto">
+                  {plans.map((plan, idx) => (
+                    <div
+                      key={idx}
+                      onClick={() => {
+                        setFormData({ ...formData, plan: plan });
+                        setIsPlanOpen(false);
+                      }}
+                      className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                    >
+                      {plan}
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Provider Dropdown */}
           <div className="relative flex-1 sm:w-[200px] sm:max-w-[200px]">
@@ -471,7 +473,7 @@ const RateCardUpdateForm = () => {
         </div>
       </div>
 
-  {/* Overhead Charges */}
+      {/* Overhead Charges */}
       <h3 className="font-[600] text-[12px] sm:text-[14px] text-gray-500 mt-2">
         Over Head Charges:
       </h3>
@@ -494,21 +496,21 @@ const RateCardUpdateForm = () => {
         />
       </div>
 
-  {/* Submit Button */}
-  <div className="mt-4 flex justify-center gap-2 border-t border-gray-100 pt-6">
-    <button
-      className="bg-white border border-gray-300 text-gray-600 px-3 py-2 rounded-lg text-[10px] sm:text-[12px] font-bold hover:bg-gray-50 transition-all active:scale-95"
-      onClick={() => navigate(-1)}
-    >
-      Cancel
-    </button>
-    <button
-      className="bg-[#0CBB7D] text-white hover:bg-opacity-90 px-3 py-2 rounded-lg text-[10px] sm:text-[12px] font-bold transition-all"
-      onClick={handleSubmit}
-    >
-      Update Rate Card
-    </button>
-  </div>
+      {/* Submit Button */}
+      <div className="mt-4 flex justify-center gap-2 border-t border-gray-100 pt-6">
+        <button
+          className="bg-white border border-gray-300 text-gray-600 px-3 py-2 rounded-lg text-[10px] sm:text-[12px] font-bold hover:bg-gray-50 transition-all active:scale-95"
+          onClick={() => navigate(-1)}
+        >
+          Cancel
+        </button>
+        <button
+          className="bg-[#0CBB7D] text-white hover:bg-opacity-90 px-3 py-2 rounded-lg text-[10px] sm:text-[12px] font-bold transition-all"
+          onClick={handleSubmit}
+        >
+          Update Rate Card
+        </button>
+      </div>
     </div>
 
 

@@ -32,6 +32,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
   const [providerServices, setProviderServices] = useState([]);
   const [selectedProvider, setSelectedProvider] = useState("");
   const [refresh, setRefresh] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const fetchServicesForProvider = async (providerName) => {
     try {
@@ -152,6 +153,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
     }
 
     try {
+      setLoading(true);
       if (formData._id) {
         await axios.put(`${REACT_APP_BACKEND_URL}/courierServices/couriers/${formData._id}`, formData);
       } else {
@@ -167,12 +169,17 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         courierType: "",
         name: "",
         status: "",
+        courier_id: "",
       });
       setProviderServices([]);
       setSelectedProvider("");
+      // Clear location state and go back to the list
+      navigate("/adminDashboard/setup/courierservices/add/b2c", { replace: true, state: {} });
     } catch (error) {
       Notification("Error saving courier", "error");
       console.error("Error saving courier:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -270,10 +277,10 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className={`bg-[#0CBB7D] font-[700] text-white py-2 px-3 text-[10px] sm:text-[12px] rounded-lg shadow-sm transition-all hover:bg-opacity-90 active:scale-95 ${!canSave ? "opacity-50 cursor-not-allowed" : ""}`}
-                disabled={!canSave}
+                className={`bg-[#0CBB7D] font-[700] text-white py-2 px-3 text-[10px] sm:text-[12px] rounded-lg shadow-sm transition-all hover:bg-opacity-90 active:scale-95 ${(!canSave || loading) ? "opacity-50 cursor-not-allowed" : ""}`}
+                disabled={!canSave || loading}
               >
-                {formData._id ? "Update Courier Service" : "Save Courier Service"}
+                {loading ? "Processing..." : (formData._id ? "Update Courier Service" : "Save Courier Service")}
               </button>
             </div>
           </form>

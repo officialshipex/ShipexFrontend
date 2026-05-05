@@ -267,34 +267,25 @@ export default function ProfileCard() {
     const desiredPlan = `${userData.fullname.replace(/\s+/g, '_')}_${userData.userId}`;
     try {
       const token = Cookies.get("session");
-      await axios.post(`${REACT_APP_BACKEND_URL}/saveRate/createPlanName`, { planName: desiredPlan }, { headers: { Authorization: `Bearer ${token}` } });
-
+      // Skip createPlanName as it's only for the global collection
+      
       const assignData = {
         userId: id,
         userName: userData.fullname,
         planName: desiredPlan,
-        rateCards: rates, 
+        rateCards: rates.length > 0 ? rates : [], // Ensure we pass current rates if any
       };
       await axios.put(`${REACT_APP_BACKEND_URL}/users/assignPlan`, assignData, { headers: { Authorization: `Bearer ${token}` } });
 
-      Notification(`Custom plan ${desiredPlan} created and assigned!`, "success");
+      Notification(`User-specific plan ${desiredPlan} is active!`, "success");
       fetchUsers(true);
       fetchPlans();
       setCurrentRatePlan(desiredPlan);
       return desiredPlan;
     } catch (error) {
-      setCurrentRatePlan(desiredPlan);
-      const token = Cookies.get("session");
-      const assignData = {
-        userId: id,
-        userName: userData.fullname,
-        planName: desiredPlan,
-        rateCards: rates,
-      };
-      await axios.put(`${REACT_APP_BACKEND_URL}/users/assignPlan`, assignData, { headers: { Authorization: `Bearer ${token}` } });
-      fetchUsers(true);
-      Notification("Switched to user-specific plan", "info");
-      return desiredPlan;
+      console.error("Plan assignment failed:", error);
+      Notification("Failed to assign user-specific plan", "error");
+      return null;
     }
   };
 
@@ -895,24 +886,9 @@ export default function ProfileCard() {
                     Assign
                   </button>
                   <button
-                    onClick={async () => {
-                      try {
-                        const sharedPlans = ["Basic Plan", "Silver", "Gold", "Platinum", "Bronze"];
-                        const currentPlan = String(userData?.rateCard || "");
-                        const uId = String(userData?.userId || "");
-                        const isShared = sharedPlans.includes(currentPlan) || (currentPlan !== "" && !currentPlan.includes(uId));
-                        
-                        if (userData?.rateCard && isShared) {
-                          Notification("Preparing user-specific plan...", "info");
-                          await handleAutoCreateUserPlan();
-                        }
-                      } catch (err) {
-                        console.error("Plan auto-creation failed:", err);
-                      } finally {
-                        setTimeout(() => {
-                          setIsUploadRatecardModalOpen(true);
-                        }, 100);
-                      }
+                    onClick={() => {
+                      const desiredPlan = `${userData.fullname.replace(/\s+/g, '_')}_${userData.userId}`;
+                      setIsUploadRatecardModalOpen(true);
                     }}
                     className="bg-[#0CBB7D] text-white px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-600 transition-colors"
                   >
@@ -1331,7 +1307,7 @@ export default function ProfileCard() {
         isOpen={isUploadRatecardModalOpen}
         onClose={() => setIsUploadRatecardModalOpen(false)}
         setRefresh={refreshRates}
-        defaultPlanName={userData?.rateCard}
+        defaultPlanName={`${userData?.fullname?.replace(/\s+/g, '_')}_${userData?.userId}`}
         replaceExisting={true}
         hidePlan={true}
         userId={id}

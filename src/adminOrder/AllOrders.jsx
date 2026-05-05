@@ -19,7 +19,9 @@ import {
   ExportExcel,
   handleManifest,
   handleBulkDownloadManifests,
-  handleClone
+  handleClone,
+  cancelOrder,
+  handleCancelOrderAtBooked
 } from "../Common/orderActions";
 import OrdersTable from "../Common/OrdersTable";
 import MobileOrderCard from "../Common/MobileOrderCard";
@@ -50,7 +52,7 @@ const AllOrders = (filterOrder) => {
   const [selectedStatus, setSelectedStatus] = useState("All");
   const [dateRange, setDateRange] = useState([
     {
-      startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+      startDate: dayjs().subtract(29, "day").startOf("day").toDate(),
       endDate: dayjs().endOf("day").toDate(),
       key: "selection",
     },
@@ -182,7 +184,7 @@ const AllOrders = (filterOrder) => {
     setSelectedUserId(null);
     setDateRange([
       {
-        startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+        startDate: dayjs().subtract(29, "day").startOf("day").toDate(),
         endDate: dayjs().endOf("day").toDate(),
         key: "selection",
       },
@@ -326,6 +328,8 @@ const AllOrders = (filterOrder) => {
             showShippingDetails={true}
             showUserDetails={true} // 👈 Admin view
             handleUpdateOrder={handleUpdateOrder}
+            cancelOrder={cancelOrder}
+            handleCancelOrder={handleCancelOrderAtBooked}
           />
         </div>
         <PaginationFooter page={page} totalPages={totalPages} setPage={setPage} limit={limit} setLimit={setLimit} />
@@ -390,6 +394,8 @@ const AllOrders = (filterOrder) => {
                 showShippingDetails={true}
                 showUserDetails={true} // 👈 Admin view
                 handleUpdateOrder={handleUpdateOrder}
+                cancelOrder={cancelOrder}
+                handleCancelOrder={handleCancelOrderAtBooked}
               />
             ))
           ) : (
@@ -435,3 +441,4 @@ const AllOrders = (filterOrder) => {
 };
 
 export default AllOrders;
+

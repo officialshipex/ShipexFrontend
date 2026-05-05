@@ -13,7 +13,7 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter }) => {
 
     const initialDateRange = [
         {
-            startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+            startDate: dayjs().subtract(29, "day").startOf("day").toDate(),
             endDate: dayjs().endOf("day").toDate(),
             key: "selection",
         },
@@ -62,7 +62,14 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter }) => {
         {
             label: "Last 7 Days",
             range: () => ({
-                startDate: dayjs().subtract(6, "day").startOf("day").toDate(),
+                startDate: dayjs().subtract(29, "day").startOf("day").toDate(),
+                endDate: dayjs().endOf("day").toDate(),
+            }),
+        },
+        {
+            label: "Last 30 Days",
+            range: () => ({
+                startDate: dayjs().subtract(29, "day").startOf("day").toDate(),
                 endDate: dayjs().endOf("day").toDate(),
             }),
         },
@@ -224,3 +231,4 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter }) => {
 };
 
 export default DateFilter;
+
