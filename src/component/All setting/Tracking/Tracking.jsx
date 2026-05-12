@@ -304,6 +304,9 @@ function TrackingCard({ trackingAwb, statusSteps, CopyableText }) {
             </div>
           </div>
           <CopyableText label="Order ID" text={trackingAwb.orderId} copyKey="orderId" />
+          {trackingAwb.channelId && (
+            <CopyableText label="Channel ID" text={trackingAwb.channelId} copyKey="channelId" />
+          )}
           <CopyableText label="AWB Number" text={trackingAwb.awb_number} copyKey="trackingId" />
           {(trackingAwb.status === "RTO" || trackingAwb.status === "RTO In-transit" || trackingAwb.status === "RTO Delivered") && (
             <CopyableText label="RTO AWB Number" text={trackingAwb.awb_number} copyKey="rtoTrackingId" />

@@ -70,6 +70,7 @@ import LabelCustomize from "./component/All setting/Label customization/LabelCus
 import Profile from "./components/Users/Profile.jsx"; // adjust path if needed
 
 import Tracking from "./component/All setting/Tracking/Tracking.jsx";
+import Webhook from "./component/All setting/Webhook/Webhook.jsx";
 // import Changepassword from "./component/Navbar/changepassword.js"
 import UpdateRateCardForm from "./components/RateCard/UpdateRateCard.jsx";
 import SupportPage from "./component/Support/SupportMain.jsx";
@@ -1177,6 +1178,7 @@ function App() {
                     <Route path="label" element={<LabelCustomize />} />
                     <Route path="change_password" element={<ForgotPassword />} />
                     <Route path="referral" element={<Referral />} />
+                    <Route path="webhook" element={<Webhook />} />
 
                     {/* ✅ Nested notification route */}
                     <Route path="notification" element={<Notification />}>
