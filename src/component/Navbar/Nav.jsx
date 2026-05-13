@@ -398,7 +398,7 @@ const Navbar = () => {
   };
 
   const handleCalculateRate = () => {
-    navigate("/dashboard/tools/Cost_Estimation")
+    navigate("/dashboard/tools/Cost_Estimation/b2c")
   }
   let isSidebarAdmin = false;
   const handleCreateTicket = () => {

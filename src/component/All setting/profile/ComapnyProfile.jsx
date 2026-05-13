@@ -13,7 +13,7 @@ import { FiEdit, FiAlertCircle } from "react-icons/fi";
 import { Notification } from "../../../Notification";
 // import UpdateRateCardPopup from "./UpdateRateCardPopup"
 // import EarlyCODModal from "../Billings/EarlyCodPopup";
-import { User, MapPin, ExternalLink, CheckCircleIcon, Clock, CreditCard, IdCard, FileText, Settings, Info, Wallet } from "lucide-react";
+import { User, MapPin, ExternalLink, CheckCircleIcon, Clock, CreditCard, IdCard, FileText, Settings, Info, Wallet, Download } from "lucide-react";
 
 // Referral Commission Edit Modal
 const ReferralCommissionEditModal = ({
@@ -671,6 +671,16 @@ export default function ProfileCard() {
                     className="hover:text-green-500 text-[#0CBB7D] transition-colors"
                   >
                     <ExternalLink size={16} />
+                  </button>
+                </div>
+
+                <div className="flex items-center gap-2 text-[10px] sm:text-[12px] font-[600]">
+                  <p>Download Postman Collection <span className="text-[#0CBB7D] text-[9px]">(Recommended)</span></p>
+                  <button
+                    onClick={() => window.open("https://documenter.getpostman.com/view/32361120/2sB3HetiH6", "_blank")}
+                    className="hover:text-green-500 text-[#0CBB7D] transition-colors"
+                  >
+                    <Download size={16} />
                   </button>
                 </div>
 

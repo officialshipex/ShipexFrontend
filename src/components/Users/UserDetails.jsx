@@ -14,7 +14,7 @@ import { Notification } from "../../Notification";
 import UpdateRateCardPopup from "./UpdateRateCardPopup";
 import EarlyCODModal from "../Billings/EarlyCodPopup";
 import UpdateCreditLimitEditModal from "./UpdateCreditLimitModal";
-import { User, MapPin, ExternalLink, CheckCircleIcon, Clock, CreditCard, IdCard, FileText, Settings, Info, Wallet } from "lucide-react";
+import { User, MapPin, ExternalLink, CheckCircleIcon, Clock, CreditCard, IdCard, FileText, Settings, Info, Wallet, Download } from "lucide-react";
 import KamDetailsEditModal from "./KamDetailsEditModal";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { FiChevronDown, FiArrowLeft, FiSearch, FiEdit, FiAlertCircle } from "react-icons/fi";
@@ -154,6 +154,7 @@ export default function ProfileCard() {
   const [showReferralModal, setShowReferralModal] = useState(false);
   const [showCreditLimitModal, setShowCreditLimitModal] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
+  const [isKycVerified, setIsKycVerified] = useState(false);
   const [showPrivateKey, setShowPrivateKey] = useState(false);
   const [showRateCardModal, setShowRateCardModal] = useState(false);
   const [hoveredAddress, setHoveredAddress] = useState(null);
@@ -366,6 +367,7 @@ export default function ProfileCard() {
       const user = response.data.userDetails;
       setUserData(user);
       setIsEnabled(user.isBlocked);
+      setIsKycVerified(user.kycStatus);
       setApiAccess(user.adminApiAccess);
 
       const dynamicTabs = {
@@ -491,6 +493,34 @@ export default function ProfileCard() {
   };
 
 
+
+  const handleKycToggle = async () => {
+    const newStatus = !isKycVerified;
+    setIsKycVerified(newStatus);
+    try {
+      const token = Cookies.get("session");
+      const response = await axios.post(
+        `${REACT_APP_BACKEND_URL}/user/updateKycStatus`,
+        { userId: id, kycStatus: newStatus },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      Notification(
+        response.data?.message ||
+        `KYC has been ${newStatus ? "verified" : "marked as pending"} successfully.`,
+        "success"
+      );
+      fetchUsers(true); // Refresh data to update other parts of UI
+    } catch (error) {
+      console.error("Error updating user KYC status:", error);
+      Notification(
+        error.response?.data?.message ||
+        "Failed to update KYC status. Please try again.",
+        "error"
+      );
+      setIsKycVerified(!newStatus);
+    }
+  };
 
   const handleToggle = async () => {
     const newStatus = !isEnabled;
@@ -1124,6 +1154,15 @@ export default function ProfileCard() {
                     <ExternalLink size={16} />
                   </button>
                 </div>
+                <div className="flex items-center gap-2 text-[10px] sm:text-[12px] font-[600]">
+                  <p>Download Postman Collection <span className="text-[#0CBB7D] text-[9px]">(Recommended)</span></p>
+                  <button
+                    onClick={() => window.open("https://documenter.getpostman.com/view/32361120/2sB3HetiH6", "_blank")}
+                    className="hover:text-green-500 text-[#0CBB7D] transition-colors"
+                  >
+                    <Download size={16} />
+                  </button>
+                </div>
                 <div className="flex items-center justify-between text-[10px] sm:text-[12px] font-[600]">
                   <p>API Access</p>
                   <label className="relative inline-flex items-center cursor-pointer">
@@ -1208,20 +1247,38 @@ export default function ProfileCard() {
                     </div>
 
                     {!!admin && (
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs sm:text-sm text-gray-600">
-                          {isEnabled ? "Blocked" : "Active"}
-                        </span>
-                        <label className="relative inline-flex items-center cursor-pointer">
-                          <input
-                            type="checkbox"
-                            checked={isEnabled}
-                            onChange={handleToggle}
-                            className="sr-only peer"
-                          />
-                          <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-red-500 transition-colors"></div>
-                          <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full peer-checked:translate-x-5 transition-transform shadow-md"></div>
-                        </label>
+                      <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] sm:text-xs font-semibold text-gray-600 min-w-[85px]">
+                            {isEnabled ? "User Blocked" : "User Active"}
+                          </span>
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={isEnabled}
+                              onChange={handleToggle}
+                              className="sr-only peer"
+                            />
+                            <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-red-500 transition-colors"></div>
+                            <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full peer-checked:translate-x-5 transition-transform shadow-md"></div>
+                          </label>
+                        </div>
+
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] sm:text-xs font-semibold text-gray-600 min-w-[85px]">
+                            {isKycVerified ? "KYC Verified" : "KYC Pending"}
+                          </span>
+                          <label className="relative inline-flex items-center cursor-pointer">
+                            <input
+                              type="checkbox"
+                              checked={isKycVerified}
+                              onChange={handleKycToggle}
+                              className="sr-only peer"
+                            />
+                            <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-[#0CBB7D] transition-colors"></div>
+                            <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full peer-checked:translate-x-5 transition-transform shadow-md"></div>
+                          </label>
+                        </div>
                       </div>
                     )}
                   </div>
