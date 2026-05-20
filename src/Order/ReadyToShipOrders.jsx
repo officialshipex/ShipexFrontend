@@ -189,7 +189,7 @@ const ReadyToShipOrders = (filterOrder) => {
   };
   const handleBulkCancel = async ({ selectedOrders, setRefresh }) => {
     try {
-      Notification("Processing bulk cancellation...", "success")
+      Notification("Processing bulk cancellation, please wait...", "info")
       const token = Cookies.get("session");
       const response = await axios.post(
         `${REACT_APP_BACKEND_URL}/order/bulkCancelOrder`,
@@ -204,22 +204,16 @@ const ReadyToShipOrders = (filterOrder) => {
       if (data.success) {
         // Show message with success/failed counts
         Notification(data?.message, "success")
-
+        if (setRefresh) setRefresh((prev) => !prev);
         console.log("Details:", data);
-        // Optionally, refresh order list or update UI here
-        // fetchOrders(); or setOrders(updatedOrders)
       } else {
-        // alert("Bulk cancellation failed: " + data.message);
+        Notification(data?.message || "Bulk cancellation failed", "error");
       }
     } catch (error) {
       console.error("Error during bulk cancellation:", error);
       Notification("Failed to cancel order", "error")
-      // alert(
-      //   "An error occurred while cancelling orders. Please try again later."
-      // );
     }
     finally {
-      // setBulkShipLoading(false); // hide loader
     }
   };
 
@@ -354,7 +348,7 @@ const ReadyToShipOrders = (filterOrder) => {
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Invoices</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadManifest(); setMobileDropdownOpen(false); }}>Download Manifests</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Labels</li>
-                  <li className="px-3 py-2 text-red-600 hover:bg-red-50 cursor-pointer" onClick={() => { BulkCancel({ selectedOrders, setRefresh }); setMobileDropdownOpen(false); }}>Bulk Cancel</li>
+                  <li className="px-3 py-2 text-red-600 hover:bg-red-50 cursor-pointer" onClick={() => { handleBulkCancel({ selectedOrders, setRefresh }); setMobileDropdownOpen(false); }}>Bulk Cancel</li>
                 </ul>
               </div>
             )}

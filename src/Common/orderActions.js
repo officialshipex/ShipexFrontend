@@ -366,21 +366,27 @@ export const SavePackageDetails = async ({
 };
 
 export const BulkCancel = async ({ selectedOrders, setRefresh }) => {
-  let allSuccess = true;
+  if (!selectedOrders || selectedOrders.length === 0) return;
 
-  for (let orderId of selectedOrders) {
-    try {
-      const token = Cookies.get("session");
-      await axios.post(
-        `${REACT_APP_BACKEND_URL}/order/cancelOrdersAtNotShipped`,
-        { orderId },
-        {
-          headers: { authorization: `Bearer ${token}` },
-        },
-      );
-    } catch (error) {
-      allSuccess = false;
-    }
+  Notification("Cancelling selected orders, please wait...", "info");
+
+  let allSuccess = true;
+  const token = Cookies.get("session");
+
+  try {
+    await Promise.all(
+      selectedOrders.map((orderId) =>
+        axios.post(
+          `${REACT_APP_BACKEND_URL}/order/cancelOrdersAtNotShipped`,
+          { orderId },
+          {
+            headers: { authorization: `Bearer ${token}` },
+          }
+        )
+      )
+    );
+  } catch (error) {
+    allSuccess = false;
   }
 
   setRefresh((prev) => !prev);
@@ -397,7 +403,7 @@ export const BulkCancel = async ({ selectedOrders, setRefresh }) => {
 
 export const cancelOrder = async ({ orderId, refresh, setRefresh }) => {
   try {
-    // setRefresh(!refresh)
+    Notification("Cancelling order, please wait...", "info");
     const token = Cookies.get("session");
     const response = await axios.post(
       `${REACT_APP_BACKEND_URL}/order/cancelOrdersAtNotShipped`,
@@ -409,13 +415,13 @@ export const cancelOrder = async ({ orderId, refresh, setRefresh }) => {
     Notification(response.data.message, "success");
     setRefresh(!refresh);
   } catch (error) {
-    // console.error("Error canceling order:", error);
     Notification("Failed to cancel order. Please try again.", "error");
   }
 };
 
 export const handleCancelOrderAtBooked = async (orderData, setRefresh) => {
   try {
+    Notification("Cancelling booked order, please wait...", "info");
     console.log("order", orderData)
     const token = Cookies.get("session");
     const response = await axios.post(
