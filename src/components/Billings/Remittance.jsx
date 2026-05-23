@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
@@ -39,7 +39,7 @@ const Remittance = ({
   const [totalPages, setTotalPages] = useState(1);
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [actionOpen, setActionOpen] = useState(false);
-  const actionRef = useRef(null);
+
   const [openRemittancePopup, setOpenRemittancePopup] = useState(false);
   const [selectedRemittanceId, setSelectedRemittanceId] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
@@ -64,7 +64,7 @@ const Remittance = ({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (actionRef.current && !actionRef.current.contains(event.target)) {
+      if (!event.target.closest('[data-actions-dropdown]')) {
         setActionOpen(false);
       }
     };
@@ -155,6 +155,8 @@ const Remittance = ({
 
       const exportData = response.data.orders;
       const flattenedData = exportData.map((order) => ({
+        "Remittance ID": order.remittanceId || "",
+        "Remittance Date": order.remittanceDate || "",
         "Order ID": order.orderId || "",
         "Courier Service": order.courierServiceName || "",
         "AWB Number": order.awb_number || "",
@@ -165,7 +167,7 @@ const Remittance = ({
 
       const worksheet = XLSX.utils.json_to_sheet(flattenedData);
       worksheet["!cols"] = [
-        { wch: 15 }, { wch: 25 }, { wch: 20 }, { wch: 15 }, { wch: 18 }, { wch: 25 },
+        { wch: 18 }, { wch: 18 }, { wch: 15 }, { wch: 25 }, { wch: 20 }, { wch: 15 }, { wch: 18 }, { wch: 25 },
       ];
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, worksheet, "Remittance Orders");
@@ -275,7 +277,7 @@ const Remittance = ({
           More Filters
         </button>
 
-        <div className="flex items-center gap-2 ml-auto" ref={actionRef}>
+        <div className="flex items-center gap-2 ml-auto" data-actions-dropdown="">
           {isAnyFilterApplied && (
             <button
               onClick={handleClearFilters}
@@ -428,7 +430,7 @@ const Remittance = ({
             <span className="text-[10px] font-[600] text-gray-700 tracking-wider text-right">Select All</span>
           </div>
 
-          <div className="relative" ref={actionRef}>
+          <div className="relative" data-actions-dropdown="">
             <button
               disabled={selectedRemittances.length === 0}
               onClick={() => setActionOpen(!actionOpen)}

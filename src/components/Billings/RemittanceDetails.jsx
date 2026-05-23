@@ -3,6 +3,7 @@ import { CheckCircle, Clock, XCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
+import * as XLSX from "xlsx";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -46,38 +47,35 @@ const RemittanceDetails = ({ remittanceId }) => {
   // Excel Export Function
   const exportToExcel = () => {
     if (!remittance) return;
+    try {
+      const tableData = remittance.orderDataInArray.map((item) => {
+        const lastTracking = item?.tracking?.at(-1);
+        const deliveryDateTime = lastTracking
+          ? new Date(lastTracking.StatusDateTime).toLocaleString("en-IN", {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+          })
+          : "N/A";
+        return {
+          "Remittance ID": remittanceId,
+          "Order ID": item.orderId,
+          "Courier Service Name": item.courierServiceName || "N/A",
+          "AWB Number": item.awb_number || "N/A",
+          "Order Value (₹)": item.paymentDetails?.amount || 0,
+          "Delivery Date & Time": deliveryDateTime,
+        };
+      });
 
-    const XLSX = require("xlsx");
-
-    const tableData = remittance.orderDataInArray.map((item) => {
-      const lastTracking = item?.tracking?.at(-1);
-
-      // Format date & time together
-      const deliveryDateTime = lastTracking
-        ? new Date(lastTracking.StatusDateTime).toLocaleString("en-IN", {
-          day: "2-digit",
-          month: "short",
-          year: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-        })
-        : "N/A";
-
-      return {
-        "Remittance ID": remittanceId,
-        "Order ID": item.orderId,
-        "Courier Service Name": item.courierServiceName || "N/A",
-        "AWB Number": item.awb_number || "N/A",
-        "Order Value (₹)": item.paymentDetails?.amount || 0,
-        "Delivery Date & Time": deliveryDateTime, // merged column
-      };
-    });
-
-    const worksheet = XLSX.utils.json_to_sheet(tableData);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Remittance Data");
-
-    XLSX.writeFile(workbook, `Remittance_${remittanceId}.xlsx`);
+      const worksheet = XLSX.utils.json_to_sheet(tableData);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Remittance Data");
+      XLSX.writeFile(workbook, `Remittance_${remittanceId}.xlsx`);
+    } catch (err) {
+      console.error("Export failed:", err);
+    }
   };
 
   const handleTrackingByAwb = (awb) => {

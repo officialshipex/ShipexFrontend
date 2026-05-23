@@ -1341,6 +1341,7 @@ export default function ProfileCard() {
         isOpen={showEarlyCODModal}
         onClose={() => setShowEarlyCODModal(false)}
         userId={selectedUserId}
+        isAdmin={admin}
       />
 
       {showRateCardModal && (
