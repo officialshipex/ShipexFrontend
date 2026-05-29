@@ -260,10 +260,7 @@ const Undelivered = ({ userId: initialUserId }) => {
                     onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setDesktopDropdownOpen(false); }}>
                     <FileText className="w-3 h-3" /> Download Labels
                   </li>
-                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
-                    onClick={() => { setIsBulkNdrModalOpen(true); setDesktopDropdownOpen(false); }}>
-                    <Play className="w-3 h-3" /> Bulk NDR Action
-                  </li>
+                  
                 </ul>
               </div>
             )}

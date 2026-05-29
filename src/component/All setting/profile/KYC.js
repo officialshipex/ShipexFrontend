@@ -259,7 +259,7 @@ const KYCDetails = () => {
               <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">
                 Company Name -{" "}
                 <span className="text-gray-700 font-[600]">
-                  {gst?.nameOfBusiness || "N/A"}
+                  {gst?.nameOfBusiness || gst?.legalNameOfBusiness || "N/A"}
                 </span>
               </p>
               <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">

@@ -661,7 +661,6 @@ const Passbooks = () => {
       </div>
 
       <PassbookFilterPanel
-        key={`${awbNumber}-${orderId}-${category}-${description}-${selectedUserId}`}
         isOpen={isFilterPanelOpen}
         onClose={() => setIsFilterPanelOpen(false)}
         selectedUserId={selectedUserId}

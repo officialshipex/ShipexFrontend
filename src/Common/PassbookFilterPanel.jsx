@@ -47,19 +47,17 @@ const PassbookFilterPanel = ({
         }
     }, [isOpen]);
 
-    // Sync localFilters with parent values whenever they change OR panel opens
+    // Sync localFilters with parent values only when panel opens, not on every prop change
     useEffect(() => {
-        if (isOpen) {
-            setLocalFilters({
-                selectedUserId: initialSelectedUserId || null,
-                searchUser: initialSelectedUserId ? "Selected User" : "",
-                awbNumber: initialAwbNumber || "",
-                orderId: initialOrderId || "",
-                category: initialCategory || "",
-                description: initialDescription || ""
-            });
-        }
-    }, [isOpen, initialSelectedUserId, initialAwbNumber, initialOrderId, initialCategory, initialDescription]);
+        setLocalFilters({
+            selectedUserId: initialSelectedUserId || null,
+            searchUser: initialSelectedUserId ? "Selected User" : "",
+            awbNumber: initialAwbNumber || "",
+            orderId: initialOrderId || "",
+            category: initialCategory || "",
+            description: initialDescription || ""
+        });
+    }, [isOpen]);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
