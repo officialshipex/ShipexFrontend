@@ -65,7 +65,7 @@ const EarlyCODModal = ({ isOpen, onClose, userId, isAdmin }) => {
   const [customPlan, setCustomPlan] = useState({
     planName: "D+1",
     codCharge: "",
-    remittanceDay: "Monday",
+    remittanceDay: ["Monday"],
   });
   const [customLoading, setCustomLoading] = useState(false);
   const { id } = useParams();
@@ -90,7 +90,7 @@ const EarlyCODModal = ({ isOpen, onClose, userId, isAdmin }) => {
     if (isOpen) {
       check();
       setShowCustomForm(false);
-      setCustomPlan({ planName: "D+1", codCharge: "", remittanceDay: "Monday" });
+      setCustomPlan({ planName: "D+1", codCharge: "", remittanceDay: ["Monday"] });
       document.body.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "unset";
@@ -121,6 +121,10 @@ const EarlyCODModal = ({ isOpen, onClose, userId, isAdmin }) => {
   const handleCustomSubmit = async () => {
     if (!customPlan.codCharge && customPlan.codCharge !== 0) {
       Notification("Please enter COD charge percentage", "error");
+      return;
+    }
+    if (!Array.isArray(customPlan.remittanceDay) || customPlan.remittanceDay.length === 0) {
+      Notification("Please select at least one remittance day", "error");
       return;
     }
     setCustomLoading(true);
@@ -223,14 +227,46 @@ const EarlyCODModal = ({ isOpen, onClose, userId, isAdmin }) => {
               </div>
 
               <div>
-                <label className="block text-[11px] font-[600] text-gray-500 mb-1.5 uppercase tracking-wide">
-                  Remittance Day
+                <label className="block text-[11px] font-[600] text-gray-500 mb-2 uppercase tracking-wide">
+                  Remittance Days
                 </label>
-                <CustomSelect
-                  value={customPlan.remittanceDay}
-                  onChange={(val) => setCustomPlan((p) => ({ ...p, remittanceDay: val }))}
-                  options={daysOfWeek}
-                />
+                <div className="grid grid-cols-2 gap-2 max-h-[160px] overflow-y-auto pr-1 custom-scrollbar">
+                  {daysOfWeek.map((day) => {
+                    const isSelected = Array.isArray(customPlan.remittanceDay)
+                      ? customPlan.remittanceDay.includes(day)
+                      : customPlan.remittanceDay === day;
+                    return (
+                      <label
+                        key={day}
+                        className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg cursor-pointer transition-all ${
+                          isSelected
+                            ? "border-[#0CBB7D] bg-[#0CBB7D]/10 text-gray-700"
+                            : "border-gray-200 hover:bg-gray-50 text-gray-600"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => {
+                            let currentDays = Array.isArray(customPlan.remittanceDay)
+                              ? [...customPlan.remittanceDay]
+                              : customPlan.remittanceDay
+                              ? [customPlan.remittanceDay]
+                              : [];
+                            if (currentDays.includes(day)) {
+                              currentDays = currentDays.filter((d) => d !== day);
+                            } else {
+                              currentDays.push(day);
+                            }
+                            setCustomPlan((p) => ({ ...p, remittanceDay: currentDays }));
+                          }}
+                          className="accent-[#0CBB7D] rounded h-3.5 w-3.5 cursor-pointer"
+                        />
+                        <span className="text-[12px] font-[600]">{day}</span>
+                      </label>
+                    );
+                  })}
+                </div>
               </div>
             </div>
 
@@ -266,10 +302,14 @@ const EarlyCODModal = ({ isOpen, onClose, userId, isAdmin }) => {
                 <button
                   onClick={() => {
                     if (existingPlanData?.isCustom) {
+                      let days = existingPlanData.remittanceDay;
+                      if (!Array.isArray(days)) {
+                        days = days ? [days] : ["Monday"];
+                      }
                       setCustomPlan({
                         planName: existingPlanData.codplaneName || "D+1",
                         codCharge: existingPlanData.planCharges ?? "",
-                        remittanceDay: existingPlanData.remittanceDay || "Monday",
+                        remittanceDay: days,
                       });
                     }
                     setShowCustomForm(true);

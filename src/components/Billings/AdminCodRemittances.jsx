@@ -277,10 +277,10 @@ const AdminCodRemittances = ({ isSidebarAdmin }) => {
               Clear All Filters
             </button>
           )}
-          <button onClick={() => setUpload(true)} className="h-9 px-3 rounded-lg text-[12px] font-bold bg-[#0CBB7D] text-white hover:bg-opacity-90 shadow-sm transition-all focus:scale-95 flex items-center justify-center gap-1">
+          {/* <button onClick={() => setUpload(true)} className="h-9 px-3 rounded-lg text-[12px] font-bold bg-[#0CBB7D] text-white hover:bg-opacity-90 shadow-sm transition-all focus:scale-95 flex items-center justify-center gap-1">
             <Upload className="w-4 h-4" />
             Upload
-          </button>
+          </button> */}
           <button
             onClick={handleExport}
             disabled={selectedIds.length === 0}
@@ -312,12 +312,12 @@ const AdminCodRemittances = ({ isSidebarAdmin }) => {
             {/* {isAnyFilterApplied && <span className="w-1.5 h-1.5 bg-red-500 rounded-full"></span>} */}
           </button>
 
-          <button
+          {/* <button
             onClick={() => setUpload(true)}
             className="p-2.5 bg-[#0CBB7D] text-white rounded-lg active:scale-95 transition-transform"
           >
             <FiUpload className="w-3 h-3 text-white" />
-          </button>
+          </button> */}
 
           {isAnyFilterApplied && (
             <button onClick={handleClearFilters} className="p-2.5 bg-red-50 text-red-500 rounded-lg border border-red-100">

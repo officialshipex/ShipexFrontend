@@ -9,6 +9,8 @@ import {Notification} from "../../Notification"
 const CourierCodPoopup = ({ onClose, setRefresh }) => {
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const [selectedFile, setSelectedFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const handleFileChange = async (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -18,7 +20,9 @@ const CourierCodPoopup = ({ onClose, setRefresh }) => {
   };
 
   const handleSubmit = async () => {
+    if (loading || !selectedFile) return;
     try {
+      setLoading(true);
       const formData = new FormData();
       formData.append("file", selectedFile);
       const token = Cookies.get("session");
@@ -33,12 +37,13 @@ const CourierCodPoopup = ({ onClose, setRefresh }) => {
         }
       );
       console.log("Upload success:", response);
-      Notification(response.data.message,"success")
-      setRefresh(true)
+      Notification(response.data.message,"success");
+      setRefresh(true);
       onClose();
     } catch (err) {
-      Notification(err.response?.data?.error,"error")
-      // console.log(err.response?.data?.error || "Upload failed");
+      Notification(err.response?.data?.error || "Upload failed","error");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -103,8 +108,14 @@ const CourierCodPoopup = ({ onClose, setRefresh }) => {
         {selectedFile && (
           <p className="text-sm text-gray-600">Selected: {selectedFile.name}</p>
         )}
-        <button onClick={handleSubmit} className="px-4 py-2 me-3 mt-3 bg-[#0CBB7D] text-white rounded-lg text-sm">
-          Submit
+        <button 
+          onClick={handleSubmit} 
+          disabled={loading || !selectedFile} 
+          className={`px-4 py-2 me-3 mt-3 text-white rounded-lg text-sm transition-all ${
+            loading || !selectedFile ? "bg-gray-400 cursor-not-allowed" : "bg-[#0CBB7D] hover:bg-[#0aa66e]"
+          }`}
+        >
+          {loading ? "Processing..." : "Submit"}
         </button>
 
         {/* Move Close Button inside modal */}
