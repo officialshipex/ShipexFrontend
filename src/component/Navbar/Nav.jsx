@@ -698,6 +698,24 @@ const Navbar = () => {
               )}
             </div>
 
+            <div className="relative flex items-center" ref={notificationRef}>
+              <button
+                onClick={() => setShowNotifications((p) => !p)}
+                className={`relative h-8 w-8 flex items-center justify-center rounded-full transition ${
+                  pendingAgreement
+                    ? "bg-red-50 text-red-500 animate-pulse"
+                    : "text-gray-400 hover:bg-gray-100"
+                }`}
+              >
+                <IoNotifications className="text-[14px]" />
+                {pendingAgreement && (
+                  <span className="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 bg-red-500 text-white text-[7px] font-bold rounded-full flex items-center justify-center">
+                    1
+                  </span>
+                )}
+              </button>
+            </div>
+
             <button
               className="profile-icon"
               onClick={() => {
@@ -831,52 +849,6 @@ const Navbar = () => {
                   Notification
                 </span>
               </button>
-
-              {/* Notification Dropdown */}
-              {showNotifications && (
-                <div className="absolute right-0 mt-3 w-80 bg-white rounded-xl shadow-lg border border-gray-200 z-50 animate-popup-in">
-                  <div className="absolute -top-2 right-4 w-3 h-3 bg-white rotate-45 border-l border-t border-gray-200"></div>
-                  <div className="p-3 border-b border-gray-100">
-                    <h3 className="text-[13px] font-bold text-gray-800">Notifications</h3>
-                  </div>
-                  <div className="max-h-80 overflow-y-auto">
-                    {pendingAgreement ? (
-                      <div
-                        onClick={() => {
-                          setShowNotifications(false);
-                          const userInfo = getUserInfoFromToken();
-                          navigate(userInfo?.type === "user" ? "/dashboard/agreement" : "/adminDashboard/agreement");
-                        }}
-                        className="p-3 border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition"
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
-                            <IoNotifications className="text-red-500 text-[14px]" />
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <p className="text-[12px] font-semibold text-gray-800">New Agreement</p>
-                            <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
-                              New version <strong>"{pendingAgreement.versionName}"</strong> published. Tap to review & accept.
-                            </p>
-                            <p className="text-[10px] text-gray-400 mt-1">
-                              {new Date(pendingAgreement.createdAt).toLocaleDateString("en-US", {
-                                day: "numeric",
-                                month: "short",
-                                year: "numeric",
-                              })}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="p-8 text-center text-gray-400">
-                        <IoNotifications className="text-[28px] mx-auto mb-2 opacity-50" />
-                        <p className="text-[12px] font-medium">No notifications</p>
-                      </div>
-                    )}
-                  </div>
-                </div>
-              )}
             </div>
 
             <hr className="w-0 h-6 border-l border-gray-500" />
@@ -977,6 +949,52 @@ const Navbar = () => {
           </div>
         </div>
       </div>
+
+      {/* Notification Dropdown (shared between mobile & desktop) */}
+      {showNotifications && (
+        <div className="fixed top-[55px] right-4 z-50 w-80 bg-white rounded-xl shadow-lg border border-gray-200 animate-popup-in">
+          <div className="absolute -top-2 right-6 w-3 h-3 bg-white rotate-45 border-l border-t border-gray-200"></div>
+          <div className="p-3 border-b border-gray-100">
+            <h3 className="text-[13px] font-bold text-gray-800">Notifications</h3>
+          </div>
+          <div className="max-h-80 overflow-y-auto">
+            {pendingAgreement ? (
+              <div
+                onClick={() => {
+                  setShowNotifications(false);
+                  const userInfo = getUserInfoFromToken();
+                  navigate(userInfo?.type === "user" ? "/dashboard/agreement" : "/adminDashboard/agreement");
+                }}
+                className="p-3 border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                    <IoNotifications className="text-red-500 text-[14px]" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-[12px] font-semibold text-gray-800">New Agreement</p>
+                    <p className="text-[11px] text-gray-500 mt-0.5 leading-relaxed">
+                      New version <strong>"{pendingAgreement.versionName}"</strong> published. Tap to review & accept.
+                    </p>
+                    <p className="text-[10px] text-gray-400 mt-1">
+                      {new Date(pendingAgreement.createdAt).toLocaleDateString("en-US", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                      })}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ) : (
+              <div className="p-8 text-center text-gray-400">
+                <IoNotifications className="text-[28px] mx-auto mb-2 opacity-50" />
+                <p className="text-[12px] font-medium">No notifications</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {isMobileMenuOpen && (
         <div ref={mobileMenuRef} className="fixed top-[50px] animate-popup-in right-2 z-50 bg-white shadow-lg rounded p-4 w-44">
