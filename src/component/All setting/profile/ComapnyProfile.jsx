@@ -798,7 +798,7 @@ export default function ProfileCard() {
 
                 {/* Profile Info */}
                 <div className="flex-1 w-full">
-                  <div className="flex flex-row sm:flex-row items-center sm:items-start justify-between gap-4 sm:gap-6 mt-12 sm:mt-24">
+                  <div className="flex flex-row sm:flex-row items-center sm:items-start justify-between gap-4 sm:gap-6 mt-4 sm:mt-24">
                     <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
                       <div className="flex items-center gap-2">
                         <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">

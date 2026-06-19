@@ -74,6 +74,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
   const isDelhivery = provider === "Delhivery";
   const isEkart = provider === "Ekart";
   const isShreeMaruti = provider === "Shree Maruti";
+  const isLosung360 = partner === "Losung360" || provider === "Losung360";
 
   const isChangeAddress = action === "CHANGE_ADDRESS";
   const isReattempt = action === "RE-ATTEMPT";
@@ -197,6 +198,18 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
         payload.updated_city = address.city;
         payload.updated_state = address.state;
         payload.new_pincode = address.pincode;
+        payload.customer_name = address.customerName;
+      }
+    } else if (isLosung360) {
+      payload.action = isChangeAddress ? "RE-ATTEMPT" : action;
+      payload.comments = remarks;
+      if (mobile) payload.phone = mobile;
+      if (isChangeAddress) {
+        payload.address1 = address.line1;
+        payload.address2 = address.line2;
+        payload.city = address.city;
+        payload.state = address.state;
+        payload.pincode = address.pincode;
         payload.customer_name = address.customerName;
       }
     } else {
@@ -342,7 +355,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
                   onChange={(e) => setAddress({ ...address, state: e.target.value })}
                   placeholder="State"
                 />
-                {(isEkart || isDelhivery || isZipyPost || isBoxdLogistics) && (
+                {(isEkart || isDelhivery || isZipyPost || isBoxdLogistics || isLosung360) && (
                   <div className="col-span-2">
                     <InputField
                       label="Pincode"
@@ -408,6 +421,13 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
           {isAmazon && isChangeAddress && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-[11px] text-amber-700 font-[500]">
               ⚠️ Amazon Shipping does not support address changes. This will be submitted as a Re-Attempt request.
+            </div>
+          )}
+
+          {/* Losung360 notice for Change Address */}
+          {isLosung360 && isChangeAddress && (
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-[11px] text-amber-700 font-[500]">
+              ⚠️ Losung360 does not support address changes. This will be submitted as a Re-Attempt request.
             </div>
           )}
 

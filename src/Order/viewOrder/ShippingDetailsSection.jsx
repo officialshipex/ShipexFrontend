@@ -70,9 +70,25 @@ const ShippingDetailsSection = ({ order }) => {
                     <span className="font-[600] text-gray-700">Delivered Date:</span>
                     {order.status === "Delivered" ? (
                         <p className="text-gray-500">
-                            {order.tracking
-                                ? dayjs(order.tracking[order.tracking.length - 1].StatusDateTime).format("DD MMM YYYY, hh:mm A")
-                                : "-"}
+                            {(() => {
+                                const lastTracking = order.tracking && order.tracking[order.tracking.length - 1];
+                                if (!lastTracking || !lastTracking.StatusDateTime) return "-";
+                                const date = new Date(lastTracking.StatusDateTime);
+
+                                const day = String(date.getUTCDate()).padStart(2, "0");
+                                const month = date.toLocaleString("en-US", {
+                                    month: "short",
+                                    timeZone: "UTC",
+                                });
+                                const year = date.getUTCFullYear();
+
+                                let hours = date.getUTCHours();
+                                const minutes = String(date.getUTCMinutes()).padStart(2, "0");
+                                const amPm = hours >= 12 ? "PM" : "AM";
+                                hours = hours % 12 || 12;
+
+                                return `${day} ${month} ${year}, ${hours}:${minutes} ${amPm}`;
+                            })()}
                         </p>
                     ) : (
                         <p className="text-gray-500">
