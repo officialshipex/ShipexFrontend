@@ -123,8 +123,9 @@ const ProductDetails = ({ Address, initialData, userId, updateId }) => {
     const totalPrice = products.reduce((total, product) => {
         const price = parseFloat(product.unitPrice) || 0;
         const discount = parseFloat(product.discount) || 0;
+        const tax = parseFloat(product.tax) || 0;
 
-        const finalPrice = price - discount;
+        const finalPrice = price - discount + tax;
 
         return total + finalPrice * product.quantity;
     }, 0);

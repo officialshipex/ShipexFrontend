@@ -89,7 +89,8 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
             const price = parseFloat(product.unitPrice) || 0;
             const quantity = parseInt(product.quantity) || 0;
             const discount = parseFloat(product.discount) || 0;
-            return total + (price * quantity - discount);
+            const tax = parseFloat(product.tax) || 0;
+            return total + ((price - discount + tax) * quantity);
         }, 0).toFixed(2);
     };
 
@@ -149,11 +150,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                 <div className="mt-3 pt-3 border-t flex justify-between items-center sm:text-[12px] text-[10px] font-[600]">
                     <span className="text-gray-700">Total Amount:</span>
                     <span className="text-[#0CBB7D]">
-                        ₹{order.productDetails?.reduce((total, product) => {
-                            const price = parseFloat(product.unitPrice) || 0;
-                            const quantity = parseInt(product.quantity) || 0;
-                            return total + (price * quantity);
-                        }, 0).toFixed(2) || "0.00"}
+                        ₹{parseFloat(order.paymentDetails?.amount || 0).toFixed(2)}
                     </span>
                 </div>
             </div>
