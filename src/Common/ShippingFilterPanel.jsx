@@ -239,7 +239,7 @@ const ShippingFilterPanel = ({
                         </div>
                     )} */}
 
-                    
+
                 </div>
 
                 {/* Footer Buttons */}

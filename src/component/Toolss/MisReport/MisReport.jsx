@@ -9,6 +9,18 @@ import ThreeDotLoader from "../../../Loader";
 import dayjs from "dayjs";
 import NotFound from "../../../assets/nodatafound.png";
 
+const PASSBOOK_DESCRIPTIONS = [
+  "Freight Charges Applied",
+  "Freight Charges Received",
+  "Auto-accepted Weight Dispute charge",
+  "Weight Dispute Charges Applied",
+  "COD Charges Received",
+  "RTO Freight Charges Applied",
+  "Cancellation Refund",
+  "Recharge From Gateway(Razorpay)",
+  "Referral Commission Received"
+];
+
 const MisReportPage = ({ isSidebarAdmin }) => {
   const [reportType, setReportType] = useState("All");
   const [dateFilterType, setDateFilterType] = useState("Pickup Date");
@@ -17,6 +29,10 @@ const MisReportPage = ({ isSidebarAdmin }) => {
   const [email, setEmail] = useState("");
   const [targetUserId, setTargetUserId] = useState(null);
   
+  const [selectedDescriptions, setSelectedDescriptions] = useState([]);
+  const [descDropdownOpen, setDescDropdownOpen] = useState(false);
+  const descDropdownRef = useRef(null);
+
   const [reports, setReports] = useState([]);
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -24,6 +40,18 @@ const MisReportPage = ({ isSidebarAdmin }) => {
   const [limit, setLimit] = useState(20);
   const [total, setTotal] = useState(0);
   const [clearTrigger, setClearTrigger] = useState(false);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (descDropdownRef.current && !descDropdownRef.current.contains(event.target)) {
+        setDescDropdownOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const [hoveredUser, setHoveredUser] = useState(null);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
@@ -89,11 +117,12 @@ const MisReportPage = ({ isSidebarAdmin }) => {
       const token = Cookies.get("session");
       const res = await axios.post(`${REACT_APP_BACKEND_URL}/mis-report/generate`, {
         reportType,
-        dateFilterType,
+        dateFilterType: reportType === "Passbook" ? "Transaction Date" : dateFilterType,
         fromDate,
         toDate,
         email,
-        userSearch: targetUserId
+        userSearch: targetUserId,
+        selectedDescriptions: reportType === "Passbook" ? selectedDescriptions : []
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -132,6 +161,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
     setToDate("");
     setEmail("");
     setTargetUserId(null);
+    setSelectedDescriptions([]);
     setClearTrigger(prev => !prev);
     setPage(1);
   };
@@ -164,20 +194,90 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                 <option value="RTO">RTO</option>
                 <option value="Canceled">Canceled</option>
                 <option value="Pending Order">Pending Order</option>
+                <option value="Passbook">Passbook</option>
               </select>
             </div>
 
-            <div className="col-span-1">
-              <label className="block text-gray-600 mb-1">Date Filter Type</label>
-              <select
-                className="w-full h-9 px-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-colors"
-                value={dateFilterType}
-                onChange={(e) => setDateFilterType(e.target.value)}
-              >
-                <option value="Pickup Date">Pickup Date</option>
-                <option value="AWB Assigned Date">AWB Assigned Date</option>
-              </select>
-            </div>
+            {reportType === "Passbook" ? (
+              <div className="col-span-1 relative" ref={descDropdownRef}>
+                <label className="block text-gray-600 mb-1">Descriptions</label>
+                <button
+                  type="button"
+                  className="w-full h-9 px-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-colors flex items-center justify-between bg-white text-[12px] font-normal"
+                  onClick={() => setDescDropdownOpen(!descDropdownOpen)}
+                >
+                  <span className="truncate">
+                    {selectedDescriptions.length === 0
+                      ? "Select Descriptions"
+                      : selectedDescriptions.length === PASSBOOK_DESCRIPTIONS.length
+                      ? "All Descriptions"
+                      : `${selectedDescriptions.length} Selected`}
+                  </span>
+                  <svg
+                    className={`w-4 h-4 text-gray-400 transition-transform ${descDropdownOpen ? "rotate-180" : ""}`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {descDropdownOpen && (
+                  <div className="absolute left-0 mt-1 w-full bg-white border border-gray-200 rounded-lg shadow-lg z-50 p-2 max-h-60 overflow-y-auto font-normal text-[12px]">
+                    <div className="flex items-center p-1.5 hover:bg-gray-50 rounded cursor-pointer border-b border-gray-100 pb-2 mb-1">
+                      <input
+                        type="checkbox"
+                        id="select-all-desc"
+                        className="mr-2 accent-[#0CBB7D] h-4 w-4 cursor-pointer"
+                        checked={selectedDescriptions.length === PASSBOOK_DESCRIPTIONS.length}
+                        onChange={(e) => {
+                          if (e.target.checked) {
+                            setSelectedDescriptions([...PASSBOOK_DESCRIPTIONS]);
+                          } else {
+                            setSelectedDescriptions([]);
+                          }
+                        }}
+                      />
+                      <label htmlFor="select-all-desc" className="cursor-pointer font-semibold text-gray-700 w-full">
+                        Select All
+                      </label>
+                    </div>
+                    {PASSBOOK_DESCRIPTIONS.map((desc) => (
+                      <div key={desc} className="flex items-center p-1.5 hover:bg-gray-50 rounded cursor-pointer">
+                        <input
+                          type="checkbox"
+                          id={`desc-${desc}`}
+                          className="mr-2 accent-[#0CBB7D] h-4 w-4 cursor-pointer"
+                          checked={selectedDescriptions.includes(desc)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSelectedDescriptions((prev) => [...prev, desc]);
+                            } else {
+                              setSelectedDescriptions((prev) => prev.filter((d) => d !== desc));
+                            }
+                          }}
+                        />
+                        <label htmlFor={`desc-${desc}`} className="cursor-pointer text-gray-600 w-full truncate" title={desc}>
+                          {desc}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ) : (
+              <div className="col-span-1">
+                <label className="block text-gray-600 mb-1">Date Filter Type</label>
+                <select
+                  className="w-full h-9 px-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-colors"
+                  value={dateFilterType}
+                  onChange={(e) => setDateFilterType(e.target.value)}
+                >
+                  <option value="Pickup Date">Pickup Date</option>
+                  <option value="AWB Assigned Date">AWB Assigned Date</option>
+                </select>
+              </div>
+            )}
 
             <div className="col-span-1 w-full">
               <label className="block text-gray-600 mb-1">Select Date Range</label>
