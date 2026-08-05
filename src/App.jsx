@@ -309,11 +309,11 @@ function App() {
                     path="/adminDashboard"
                     element={
                       employeeAuthenticated ||
-                        (isAuthenticated && (user?.isAdmin || user?.adminTab)) ? (
+                        (isAuthenticated && (user?.isAdmin && user?.adminTab)) ? (
                         <AdminDashboard
                           isSidebarAdmin={
                             employeeAuthenticated ||
-                            (isAuthenticated && (user?.isAdmin || user?.adminTab))
+                            (isAuthenticated && (user?.isAdmin && user?.adminTab))
                           }
                         />
                       ) : (
@@ -408,9 +408,9 @@ function App() {
                     path="/adminDashboard/b2c/order"
                     element={
                       employeeAuthenticated ||
-                        (isAuthenticated && user?.adminTab) ? (
+                        (isAuthenticated && user?.adminTab && user?.isAdmin) ? (
                         <AdminOrder
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -421,7 +421,7 @@ function App() {
                     path="/adminDashboard/order/pickup-manifest/:pickupId"
                     element={
                       employeeAuthenticated ||
-                        (isAuthenticated && user?.adminTab) ? (
+                        (isAuthenticated && user?.adminTab && user?.isAdmin) ? (
                         <AdminPickupManifestDetails />
                       ) : (
                         <Navigate to="/login" />
@@ -432,9 +432,9 @@ function App() {
                     path="/adminDashboard/b2b/order"
                     element={
                       employeeAuthenticated ||
-                        (isAuthenticated && user?.adminTab) ? (
+                        (isAuthenticated && user?.adminTab && user?.isAdmin) ? (
                         <B2BAdminOrder
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -467,7 +467,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <UpdateOrder
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -488,9 +488,9 @@ function App() {
                     path="/adminDashboard/ndr" // New route for NewOrder page
                     element={
                       employeeAuthenticated ||
-                        (isAuthenticated && user?.adminTab) ? (
+                        (isAuthenticated && user?.adminTab && user?.isAdmin) ? (
                         <NdrTab
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -501,9 +501,9 @@ function App() {
                     path="/adminDashboard/support" // New route for NewOrder page
                     element={
                       employeeAuthenticated ||
-                        (isAuthenticated && user?.adminTab) ? (
+                        (isAuthenticated && user?.adminTab && user?.isAdmin) ? (
                         <SupportPage
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -567,7 +567,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <AdminCodRemittances
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -579,7 +579,7 @@ function App() {
                     path="/finance/COD"
                     element={
                       isAuthenticated || employeeAuthenticated ? (
-                        <COD isSidebarAdmin={isAuthenticated && user?.adminTab} />
+                        <COD isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin} />
                       ) : (
                         <Navigate to="/login" />
                       )
@@ -595,7 +595,7 @@ function App() {
                       path="sellerCodRemittance"
                       element={
                         <CODRemittanceOrder
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -603,7 +603,7 @@ function App() {
                       path="CODRemittance"
                       element={
                         <AdminCodRemittances
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -611,7 +611,7 @@ function App() {
                       path="courierCodRemittance"
                       element={
                         <CourierCODRemittance
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -622,7 +622,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <Billings
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -636,7 +636,7 @@ function App() {
                       path="shipping"
                       element={
                         <Shippings
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -644,7 +644,7 @@ function App() {
                       path="CODRemitance"
                       element={
                         <CodRemmitances
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -652,7 +652,7 @@ function App() {
                       path="passbook"
                       element={
                         <Passbooks
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -660,7 +660,7 @@ function App() {
                       path="walletHistory"
                       element={
                         <WalletHistorys
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -668,7 +668,7 @@ function App() {
                       path="invoice"
                       element={
                         <Invoices
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -711,7 +711,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <WeightDiscrepancy
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -723,7 +723,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <AdminWeightDiscrepancy
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -746,7 +746,7 @@ function App() {
                     path="/adminDashboard/mis-report"
                     element={
                       employeeAuthenticated ||
-                        (isAuthenticated && (user?.isAdmin || user?.adminTab)) ? (
+                        (isAuthenticated && (user?.isAdmin && user?.adminTab)) ? (
                         <MisReportPage
                           isSidebarAdmin={true}
                         />
@@ -881,7 +881,7 @@ function App() {
                     path="/adminDashboard/Setup&Manage/Pickup_address"
                     element={
                       employeeAuthenticated ||
-                      (isAuthenticated && user?.adminTab) ? (
+                      (isAuthenticated && user?.adminTab && user?.isAdmin) ? (
                         <PickupAddress isAdminView={true} />
                       ) : (
                         <Navigate to="/login" />
@@ -894,7 +894,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <CourierTab
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -911,7 +911,7 @@ function App() {
                       path="courier_selection"
                       element={
                         <CourierSelection
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -919,7 +919,7 @@ function App() {
                       path="courier_priority"
                       element={
                         <CourierPriority
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -927,7 +927,7 @@ function App() {
                       path="courier_rules"
                       element={
                         <CourierRules
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -949,7 +949,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <RoleList
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -984,7 +984,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <StatusMaping
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -996,7 +996,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <EDDMapping
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -1008,7 +1008,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <EPDMapping
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -1021,7 +1021,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <PincodeInformation
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -1034,7 +1034,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <FirstMile
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -1046,7 +1046,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <MidMile
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -1058,7 +1058,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <LastMile
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -1071,7 +1071,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <Couriers
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -1085,7 +1085,7 @@ function App() {
                       path="b2c"
                       element={
                         <AddNewCourier
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -1093,7 +1093,7 @@ function App() {
                       path="b2b"
                       element={
                         <AddNewCourierB2B
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -1104,7 +1104,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <CourierServices
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -1118,7 +1118,7 @@ function App() {
                       path="b2c"
                       element={
                         <CreateNewCourier
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -1126,7 +1126,7 @@ function App() {
                       path="b2b"
                       element={
                         <CreateNewCourierB2B
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       }
                     />
@@ -1136,7 +1136,7 @@ function App() {
                     path="/dashboard/user"
                     element={
                       isAuthenticated || employeeAuthenticated ? (
-                        <Users isSidebarAdmin={isAuthenticated && user?.adminTab} />
+                        <Users isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin} />
                       ) : (
                         <Navigate to="/login" />
                       )
@@ -1155,7 +1155,7 @@ function App() {
                     path="/adminDashboard/b2c/ratecard"
                     element={
                       <AllRateCards
-                        isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                       />
                     }
                   />
@@ -1163,7 +1163,7 @@ function App() {
                     path="/adminDashboard/costingRateCard"
                     element={
                       employeeAuthenticated ||
-                        (isAuthenticated && (user?.isAdmin || user?.adminTab)) ? (
+                        (isAuthenticated && (user?.isAdmin && user?.adminTab)) ? (
                         <CostingRateCard />
                       ) : (
                         <Navigate to="/login" />
@@ -1174,7 +1174,7 @@ function App() {
                     path="/adminDashboard/b2b/ratecard"
                     element={
                       <RateCard
-                        isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                       />
                     }
                   />
@@ -1182,7 +1182,7 @@ function App() {
                     path="/adminDashboard/b2b/zonematrix"
                     element={
                       <ZoneMatrix
-                        isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                       />
                     }
                   />
@@ -1190,7 +1190,7 @@ function App() {
                     path="/adminDashboard/referral"
                     element={
                       <AdminReferral
-                        isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                       />
                     }
                   />
@@ -1198,7 +1198,7 @@ function App() {
                     path="/dashboard/ratecard/rateCardform"
                     element={
                       <RateCardForm
-                        isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                       />
                     }
                   />
@@ -1207,7 +1207,7 @@ function App() {
                     path="/dashboard/ratecard/update/:id"
                     element={
                       <UpdateRateCardForm
-                        isSidebarAdmin={isAuthenticated && user?.adminTab}
+                        isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                       />
                     }
                   />
@@ -1236,7 +1236,7 @@ function App() {
                     path="/adminDashboard/agreement"
                     element={
                       employeeAuthenticated ||
-                        (isAuthenticated && (user?.isAdmin || user?.adminTab)) ? (
+                        (isAuthenticated && (user?.isAdmin && user?.adminTab)) ? (
                         <AdminAgreement />
                       ) : (
                         <Navigate to="/login" />
@@ -1264,7 +1264,7 @@ function App() {
                     path="*"
                     element={
                       employeeAuthenticated ||
-                        (isAuthenticated && (user?.isAdmin || user?.adminTab)) ? (
+                        (isAuthenticated && (user?.isAdmin && user?.adminTab)) ? (
                         <Navigate to="/adminDashboard" />
                       ) : isAuthenticated ? (
                         <Navigate to="/dashboard" />
@@ -1298,7 +1298,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <SupportPage
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -1310,7 +1310,7 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <ManageTickets
-                          isSidebarAdmin={isAuthenticated && user?.adminTab}
+                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
                         />
                       ) : (
                         <Navigate to="/login" />

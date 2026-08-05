@@ -39,6 +39,9 @@ const courierConfigs = {
     fields: [
       { name: "username", label: "User", placeholder: "Username", type: "text" },
       { name: "password", label: "Password", placeholder: "Password", type: "password" },
+      { name: "tenantId", label: "Tenant ID", placeholder: "Optional — overrides default", type: "text", optional: true },
+      { name: "carrierId", label: "Carrier ID", placeholder: "Optional — overrides default", type: "text", optional: true },
+      { name: "carrierName", label: "Carrier Name", placeholder: "Optional — overrides default", type: "text", optional: true },
     ],
   },
   Xpressbees: {
@@ -153,8 +156,8 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
       return;
     }
 
-    // Dynamic credentials validation
-    const missingField = config.fields?.find(field => !credentials[field.name]);
+    // Dynamic credentials validation (skip fields explicitly marked optional)
+    const missingField = config.fields?.find(field => !field.optional && !credentials[field.name]);
     if (missingField) {
       Notification(`Please enter ${missingField.label}`, "info");
       return;
