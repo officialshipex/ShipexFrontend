@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { useOutletContext } from "react-router-dom";
 import { Notification } from "../../../../Notification";
 import EditTemplateModal from "../EditTemplateModal";
+import TestMessageModal from "../TestMessageModal";
 
 const Whatsapp = () => {
   const { targetUserId, isAdmin } = useOutletContext();
@@ -16,6 +17,8 @@ const Whatsapp = () => {
   const [editingStatus, setEditingStatus] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [adminBlocked, setAdminBlocked] = useState(false);
+  const [testOpen, setTestOpen] = useState(false);
+  const [testMessageCount, setTestMessageCount] = useState(0);
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const token = Cookies.get("session");
@@ -59,6 +62,7 @@ const Whatsapp = () => {
         const data = res.data || {};
         setMainEnabled(data.isUserWhatsAppEnable ?? true);
         setAdminBlocked(data.isAdminWhatsAppEnable === false);
+        setTestMessageCount(data.testMessageCount || 0);
 
         const toggles = {};
         const updates = {};
@@ -180,6 +184,12 @@ const Whatsapp = () => {
             )}
           </div>
           <div className="flex items-center gap-2">
+            <button
+              onClick={() => setTestOpen(true)}
+              className="text-[10px] text-[#0CBB7D] font-bold hover:bg-green-50 px-3 py-1.5 border border-green-100 rounded-lg transition-all"
+            >
+              Send Test
+            </button>
             <span className="text-[12px] font-bold text-gray-600">WhatsApp Notifications</span>
             <Switch
               checked={mainEnabled}
@@ -312,6 +322,17 @@ const Whatsapp = () => {
          type="WhatsApp"
          currentTemplate={editingStatus ? statusTemplates[editingStatus.key] : ""}
       />
+
+      {testOpen && (
+        <TestMessageModal
+          onClose={() => setTestOpen(false)}
+          channel="whatsapp"
+          channelLabel="WhatsApp"
+          targetUserId={targetUserId}
+          initialCount={testMessageCount}
+          onSent={(newCount) => setTestMessageCount(newCount)}
+        />
+      )}
       </div>
     </div>
   );
