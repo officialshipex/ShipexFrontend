@@ -255,6 +255,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                 <th className="py-2 px-3 text-center">Sr.</th>
                 <th className="py-2 px-3 text-left">Courier Name</th>
                 <th className="py-2 px-3 text-left">Provider</th>
+                <th className="py-2 px-3 text-center">Courier ID</th>
                 <th className="py-2 px-3 text-center">COD Contract</th>
                 <th className="py-2 px-3 text-center">Status</th>
                 <th className="py-2 px-3 text-center">Actions</th>
@@ -274,6 +275,15 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                         <img src={getCarrierLogo(courier.courierProvider)} alt="" className="w-6 h-6 object-contain" />
                         <span className="text-[#0CBB7D] font-[600]">{courier.courierProvider}</span>
                       </div>
+                    </td>
+                    <td className="py-2.5 px-3 text-center">
+                      {courier.courierId != null ? (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-[#0CBB7D]/10 text-[#0CBB7D] font-[700] text-[11px] border border-[#0CBB7D]/20">
+                          #{String(courier.courierId).padStart(2, '0')}
+                        </span>
+                      ) : (
+                        <span className="text-gray-400 text-[11px]">—</span>
+                      )}
                     </td>
                     <td className="py-2.5 px-3 text-center">{courier.CODDays} Days</td>
                     <td className="py-2.5 px-3 text-center">
@@ -415,22 +425,32 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                     <span className="text-gray-700 font-[600]">{courier.CODDays} Days</span>
                   </div>
                   <div className="flex flex-col items-end gap-1">
-                    <span className="text-gray-700">Status</span>
-                    <div className="flex items-center gap-2">
-                      <span className={`font-[600] ${courier.status === "Enable" ? "text-[#0CBB7D]" : "text-gray-400"}`}>
-                        {courier.status}
+                    <span className="text-gray-700">Courier ID</span>
+                    {courier.courierId != null ? (
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-[#0CBB7D]/10 text-[#0CBB7D] font-[700] text-[11px] border border-[#0CBB7D]/20">
+                        #{String(courier.courierId).padStart(2, '0')}
                       </span>
-                      <label className="relative inline-flex items-center cursor-pointer">
-                        <input
-                          type="checkbox"
-                          className="sr-only peer"
-                          checked={courier.status === "Enable"}
-                          onChange={() => toggleStatus(index)}
-                          disabled={!canAction}
-                        />
-                        <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-[#0CBB7D]"></div>
-                      </label>
-                    </div>
+                    ) : (
+                      <span className="text-gray-400 text-[11px]">—</span>
+                    )}
+                  </div>
+                </div>
+                <div className="flex items-center justify-between text-[10px]">
+                  <span className="text-gray-700">Status</span>
+                  <div className="flex items-center gap-2">
+                    <span className={`font-[600] ${courier.status === "Enable" ? "text-[#0CBB7D]" : "text-gray-400"}`}>
+                      {courier.status}
+                    </span>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input
+                        type="checkbox"
+                        className="sr-only peer"
+                        checked={courier.status === "Enable"}
+                        onChange={() => toggleStatus(index)}
+                        disabled={!canAction}
+                      />
+                      <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-[#0CBB7D]"></div>
+                    </label>
                   </div>
                 </div>
               </div>
