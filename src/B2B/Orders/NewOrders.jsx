@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { ChevronDown, Filter } from "lucide-react";
 import NotFound from "../../assets/nodatafound.png";
 import { Notification } from "../../Notification"
+import { refreshNotifications } from "../../utils/NotificationListProvider";
 import SelectPickupPopup from "../../Order/SelectPickupPopup";
 import { FaBars } from "react-icons/fa";
 import UpdatePackageDetails from "../../Order/UpdatePackageDetails";
@@ -207,6 +208,7 @@ const NewOrders = (filterOrder) => {
         } else {
           Notification(shipResponse.data.message || "Failed to create bulk shipment.", "error");
         }
+        refreshNotifications();
         fetchOrders();
         return;
       }

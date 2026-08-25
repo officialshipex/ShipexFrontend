@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { ChevronDown, Filter, Package, Trash2, MapPin, Truck } from "lucide-react";
 import Cookies from "js-cookie";
 import { Notification } from "../../Notification";
+import { refreshNotifications } from "../../utils/NotificationListProvider";
 import { FaBars } from "react-icons/fa";
 import ThreeDotLoader from "../../Loader";
 import DateFilter from "../../filter/DateFilter";
@@ -238,6 +239,7 @@ const NewOrder = ({ userId: initialUserId }) => {
           Notification(message || "Failed to create bulk shipment.", "error");
         }
 
+        refreshNotifications();
         setRefresh(prev => !prev);
         return;
       }

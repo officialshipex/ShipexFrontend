@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { ChevronDown, Filter } from "lucide-react";
 import NotFound from "../assets/nodatafound.png";
 import { Notification } from "../Notification"
+import { refreshNotifications } from "../utils/NotificationListProvider";
 import SelectPickupPopup from "./SelectPickupPopup";
 import { FaFilter, FaBars } from "react-icons/fa";
 import { HiDotsHorizontal } from "react-icons/hi";
@@ -252,6 +253,7 @@ const Orders = (filterOrder) => {
         } else {
           Notification(shipResponse.data.message || "Failed to create bulk shipment.", "error");
         }
+        refreshNotifications();
         fetchOrders();
         return;
       }
@@ -510,6 +512,7 @@ const Orders = (filterOrder) => {
               });
               if (shipResponse.data.success) Notification(shipResponse.data.message || `${shipResponse.data.successCount} orders shipped.`, "success");
               else Notification(shipResponse.data.message || "Failed to create bulk shipment.", "error");
+              refreshNotifications();
               fetchOrders();
             } catch (error) {
               Notification("Something went wrong while processing bulk shipment.", "error");

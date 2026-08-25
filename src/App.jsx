@@ -12,6 +12,7 @@ import { getUserInfoFromToken } from "./utils/session.js";
 // import { Toaster } from "react-hot-toast";
 import { ToastProvider } from "./utils/ToastProvider";
 import { ToastRegister } from "./Notification";
+import { NotificationListProvider } from "./utils/NotificationListProvider";
 // Components
 import ForgotPassword from "./components/Authentication/ForgetPassword.jsx";
 import Navbar from "./component/Navbar/Nav.jsx";
@@ -246,7 +247,11 @@ function App() {
       <ToastProvider>
         <ToastRegister />
         {/* Render Navbar only if user is authenticated */}
-        {(isAuthenticated || employeeAuthenticated) && <Navbar />}
+        {(isAuthenticated || employeeAuthenticated) && (
+          <NotificationListProvider>
+            <Navbar />
+          </NotificationListProvider>
+        )}
 
         <div className="flex">
           {/* Render Sidebar only if user is authenticated */}

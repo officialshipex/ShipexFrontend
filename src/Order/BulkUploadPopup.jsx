@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { FaUpload, FaArrowLeft, FaTimes } from "react-icons/fa";
 import { FiUploadCloud, FiDownload, FiFileText } from "react-icons/fi";
 import { Notification } from "../Notification"
+import { refreshNotifications } from "../utils/NotificationListProvider"
 
 const BulkUploadPopup = ({ onClose, setRefresh, selectedOrderType, onBack, }) => {
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -66,16 +67,10 @@ const BulkUploadPopup = ({ onClose, setRefresh, selectedOrderType, onBack, }) =>
         );
 
         console.warn("Partial upload errors:", errors);
-
-        errors.forEach((err) => {
-          Notification(
-            `Row ${err.row}: ${err.message}`,
-            "error"
-          );
-        });
       }
 
       setRefresh(true);
+      refreshNotifications();
       onClose();
     } catch (err) {
       /* ===============================

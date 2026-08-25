@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import ThreeDotLoader from "../Loader";
 import { Notification } from "../Notification";
+import { refreshNotifications } from "../utils/NotificationListProvider";
 import Cookies from "js-cookie";
 import { FaPlane, FaTruck } from "react-icons/fa";
 import Bluedart from "../assets/bluedart.png";
@@ -71,10 +72,12 @@ const BulkSelection = () => {
                 .then((res) => {
                     const message = res.data?.message || "Bulk order processed successfully!";
                     Notification(message, "success");
+                    refreshNotifications();
                 })
                 .catch((err) => {
                     const message = err.response?.data?.message || "Bulk order processing failed!";
                     Notification(message, "error");
+                    refreshNotifications();
                 });
 
             navigate("/dashboard/order");
