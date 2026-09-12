@@ -128,6 +128,8 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
   const [courierName, setCourierName] = useState("");
   const [codDays, setCodDays] = useState("");
   const [status, setStatus] = useState("");
+  const [liabilityCharge, setLiabilityCharge] = useState("");
+  const [liabilityPercent, setLiabilityPercent] = useState("");
   const [credentials, setCredentials] = useState({});
   const [loading, setLoading] = useState(false);
 
@@ -139,6 +141,8 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
     setCourierName("");
     setCodDays("");
     setStatus("");
+    setLiabilityCharge("");
+    setLiabilityPercent("");
     setCredentials({});
   }, [provider]);
 
@@ -200,6 +204,8 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
         courierProvider: config.provider || provider,
         CODDays: codDays,
         status: status,
+        liabilityCharge: liabilityCharge ? parseFloat(liabilityCharge) : 0,
+        liabilityPercent: liabilityPercent ? parseFloat(liabilityPercent) : 0,
         credentials: { ...credentials },
       };
 
@@ -217,6 +223,8 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
       setCourierName("");
       setCodDays("");
       setStatus("");
+      setLiabilityCharge("");
+      setLiabilityPercent("");
       setCredentials({});
 
       onCourierSaved?.();
@@ -267,6 +275,34 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
         {/* Status Dropdown */}
         <div className="w-full xl:w-28">
           <StatusDropdown Status={status} setStatus={setStatus} />
+        </div>
+
+        {/* Liability Amount Field */}
+        <div className="w-full xl:w-32 flex flex-col gap-1">
+          <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700 tracking-tight">
+            Liability ₹
+          </label>
+          <input
+            type="number"
+            placeholder="e.g. 2000"
+            className="w-full px-2 h-9 text-[10px] sm:text-[12px] text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] focus:ring-1 focus:ring-[#0CBB7D]/20 transition-all placeholder:text-gray-300"
+            value={liabilityCharge}
+            onChange={(e) => setLiabilityCharge(e.target.value)}
+          />
+        </div>
+
+        {/* Liability Percent Field */}
+        <div className="w-full xl:w-24 flex flex-col gap-1">
+          <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700 tracking-tight">
+            Liability %
+          </label>
+          <input
+            type="number"
+            placeholder="e.g. 70"
+            className="w-full px-2 h-9 text-[10px] sm:text-[12px] text-gray-700 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] focus:ring-1 focus:ring-[#0CBB7D]/20 transition-all placeholder:text-gray-300"
+            value={liabilityPercent}
+            onChange={(e) => setLiabilityPercent(e.target.value)}
+          />
         </div>
 
         {/* Dynamic Credentials Fields */}

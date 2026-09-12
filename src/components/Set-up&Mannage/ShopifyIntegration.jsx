@@ -154,20 +154,6 @@ const ShopifyIntegration = () => {
             </div>
             <div>
               <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">
-                Access Token
-              </label>
-              <input
-                type="text"
-                name="storeAccessToken"
-                value={storeDetails.storeAccessToken}
-                onChange={handleChange}
-                className="w-full px-3 py-2 h-9 border rounded-lg text-[12px] focus:outline-none"
-                placeholder="Provide your Access Token"
-              />
-            </div>
-
-            <div>
-              <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">
                 Order Sync Frequency
               </label>
               <CustomDropdown
@@ -266,13 +252,11 @@ const ShopifyIntegration = () => {
             disabled={
               !storeDetails.storeName ||
               !storeDetails.storeURL ||
-              !storeDetails.storeAccessToken ||
               !storeDetails.storeClientId ||
               !storeDetails.storeClientSecret
             }
             className={`mt-4 w-full text-[12px] sm:text-[12px] font-[600] sm:px-3 sm:w-32 py-2 rounded-lg transition ${!storeDetails.storeName ||
               !storeDetails.storeURL ||
-              !storeDetails.storeAccessToken ||
               !storeDetails.storeClientId ||
               !storeDetails.storeClientSecret
               ? "bg-gray-400 cursor-not-allowed text-gray-700"

@@ -31,6 +31,7 @@ const FreightDeductionSection = ({ order }) => {
                             {order.paymentDetails?.method === "COD" && <th className="py-2 px-3">COD</th>}
                             <th className="py-2 px-3">Freight</th>
                             <th className="py-2 px-3">GST</th>
+                            {priceBreakup.liability > 0 && <th className="py-2 px-3">Liability</th>}
                             <th className="py-2 px-3">Total</th>
                         </tr>
                     </thead>
@@ -45,6 +46,9 @@ const FreightDeductionSection = ({ order }) => {
                             )}
                             <td className="py-2 px-3">₹{priceBreakup.freight || 0}</td>
                             <td className="py-2 px-3">₹{priceBreakup.gst || 0}</td>
+                            {priceBreakup.liability > 0 && (
+                                <td className="py-2 px-3 text-[#0CBB7D]">₹{priceBreakup.liability}</td>
+                            )}
                             <td className="py-2 px-3 text-[#0CBB7D]">₹{priceBreakup.total || 0}</td>
                         </tr>
                     </tbody>

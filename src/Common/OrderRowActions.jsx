@@ -146,7 +146,7 @@ const OrderRowActions = ({
                             >
                                 <ul className="text-[10px] font-[600]">
                                     {/* Verify Order logic */}
-                                    {onVerifyOrder && order.status === "Booked" && (
+                                    {onVerifyOrder && ["Booked", "Not Picked", "Ready To Ship"].includes(order.status) && (
                                         <li
                                             onClick={(e) => {
                                                 e.stopPropagation();
