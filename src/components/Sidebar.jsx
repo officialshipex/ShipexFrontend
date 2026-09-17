@@ -27,7 +27,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { LuBoxes } from "react-icons/lu";
 
-import ShipexLogo from "../assets/Shipex.jpg";
+import { Logo } from "./Logo";
 import grouplogo from "../assets/Group.png";
 
 import axios from "axios";
@@ -740,10 +740,8 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
           />
 
           {/* Main Logo (Visible only when expanded) */}
-          <img
-            src={ShipexLogo}
-            alt="Logo"
-            className={`transition-all duration-300 
+          <Logo
+            className={`transition-all duration-300
       ${expanded ? "w-20 opacity-100" : "w-0 opacity-0"}
     `}
           />

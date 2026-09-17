@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { createSession, getSession } from "../../utils/session";
-import ShipexLogo from '../../assets/Shipex.jpg'; // adjust path as needed
+import { Logo } from '../Logo';
 import illustrationimage from '../../assets/Login.png'; // adjust path as needed
 import { Notification } from "../../Notification"
 
@@ -177,7 +177,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
           <div className="w-full max-w-sm md:max-w-md p-4 md:p-6 rounded-lg shadow-sm bg-white">
             {/* Logo */}
             <div className="flex justify-start mb-4 md:mb-4">
-              <img src={ShipexLogo} alt="Logo" className="h-10 md:h-12" />
+              <Logo className="h-10 md:h-12" />
             </div>
 
             {/* Heading */}

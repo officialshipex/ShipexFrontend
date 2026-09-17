@@ -5,7 +5,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import logo from "../../assets/LOGO.svg";
 import Sidebar from "../../components/Sidebar";
-import ShipexLogo from "../../assets/Shipex.jpg"; // adjust path as needed
+import { Logo } from "../../components/Logo";
 import grouplogo from "../../assets/Group.png"; // adjust path as needed
 import BulkUploadPopup from "../../Order/BulkUploadPopup"
 import SelectOrderTypePopup from "../../Order/SelectOrderTypePopup"
@@ -627,7 +627,7 @@ const Navbar = () => {
 
           {/* Logo - Centered in Mobile, Default in Laptop */}
           <div className="sm:flex hidden sm:flex-1 justify-start lg:justify-start sm:ml-4 ml-2">
-            <img src={ShipexLogo} alt="Logo" className="h-9" />
+            <Logo className="h-9" />
           </div>
 
           <div className="sm:hidden">

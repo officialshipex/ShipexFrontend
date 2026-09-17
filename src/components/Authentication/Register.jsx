@@ -3,7 +3,7 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createSession, getSession } from "../../utils/session";
-import ShipexLogo from "../../assets/Shipex.jpg";
+import { Logo } from "../Logo";
 import illustrationimage from "../../assets/Login.png";
 import { Notification } from "../../Notification";
 
@@ -148,7 +148,7 @@ export default function Signup({ setIsAuthenticated }) {
       <div className="w-full flex flex-row px-2 py-6 md:p-6 justify-center items-center">
         <div className="w-full max-w-sm md:max-w-md lg:max-w-xl p-4 md:p-6 rounded-lg shadow-sm bg-white">
           <div className="flex justify-between items-center mb-2">
-            <img src={ShipexLogo} alt="Logo" className="h-10 md:h-12" />
+            <Logo className="h-10 md:h-12" />
             <Link to="/login" className="text-[12px] font-[600] text-[#0CBB7D]">
               &lt; <strong>Back</strong>
             </Link>
