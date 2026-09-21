@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 // import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { IoChevronDown } from "react-icons/io5";
@@ -81,7 +82,8 @@ const WalletUpdateForm = ({ onClose }) => {
             if (formData.awbNumber.trim().length < 3) return setAwbSuggestions([]);
             try {
                 const res = await axios.get(
-                    `${REACT_APP_BACKEND_URL}/adminBilling/searchAwb?query=${formData.awbNumber}`
+                    `${REACT_APP_BACKEND_URL}/adminBilling/searchAwb?query=${formData.awbNumber}`,
+                    { headers: { Authorization: `Bearer ${Cookies.get("session")}` } }
                 );
                 if (res.data && res.data.awbs && Array.isArray(res.data.awbs)) {
                     setAwbSuggestions(res.data.awbs);
@@ -119,7 +121,8 @@ const WalletUpdateForm = ({ onClose }) => {
                 {
                     ...formData,
                     userId: selectedUserId,
-                }
+                },
+                { headers: { Authorization: `Bearer ${Cookies.get("session")}` } }
             );
             Notification("Wallet transaction updated successfully.", "success");
             navigate("/finance/billing/passbook");

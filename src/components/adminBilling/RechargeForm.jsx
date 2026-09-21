@@ -1,6 +1,7 @@
 // WalletHistoryForm.jsx
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 // import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import HistoryAdd from "../../assets/historyAdd.png"
@@ -38,6 +39,8 @@ const RechargeForm = ({ onClose }) => {
             await axios.post(`${REACT_APP_BACKEND_URL}/adminBilling/add-history`, {
                 ...formData,
                 userId: selectedUserId,
+            }, {
+                headers: { Authorization: `Bearer ${Cookies.get("session")}` },
             });
             Notification("History added successfully","success");
             navigate("/finance/billing/passbook");

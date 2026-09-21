@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 import { useNavigate } from "react-router-dom";
 import { IoChevronDown } from "react-icons/io5";
 import { Notification } from "../../Notification";
@@ -83,7 +84,8 @@ const DirectWalletUpdateForm = ({ onClose }) => {
                     amount: parseFloat(formData.amount),
                     transactionType: formData.category,
                     description: formData.description,
-                }
+                },
+                { headers: { Authorization: `Bearer ${Cookies.get("session")}` } }
             );
             Notification("Wallet updated successfully.", "success");
             navigate("/finance/billing/passbook");

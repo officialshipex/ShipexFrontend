@@ -189,9 +189,11 @@ const Passbooks = () => {
       )
     ) {
       try {
+        const token = Cookies.get("session");
         const res = await axios.post(
           `${REACT_APP_BACKEND_URL}/adminBilling/reverseTransaction`,
-          { transaction }
+          { transaction },
+          { headers: { Authorization: `Bearer ${token}` } }
         );
 
         if (res.data.success) {
