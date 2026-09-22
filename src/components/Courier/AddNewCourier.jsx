@@ -40,6 +40,9 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
   const [employeeAccess, setEmployeeAccess] = useState({ canView: false, canAction: false });
   const [menuOpen, setMenuOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  // Which providers this company is currently allowed to add (Companies screen > Courier Credentials, per-courier
+  // toggle); null = not loaded yet, show everything rather than flash an empty/wrong list.
+  const [availableProviders, setAvailableProviders] = useState(null);
 
   const handleCourierSaved = () => {
     setRefresh(true);
@@ -66,6 +69,10 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
             return;
           }
         }
+
+        axios.get(`${REACT_APP_BACKEND_URL}/allCourier/enabled-providers`)
+          .then(r => setAvailableProviders(r.data.providers))
+          .catch(() => setAvailableProviders(null)); // fails open: show every provider rather than block adding one
 
         const response = await axios.get(`${REACT_APP_BACKEND_URL}/allCourier/couriers`);
         const updatedCouriers = response.data.map((courier) => ({
@@ -196,7 +203,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  const availableOptions = courierOptions;
+  const availableOptions = availableProviders ? courierOptions.filter(o => availableProviders.includes(o.value)) : courierOptions;
 
   const getInputField = () => {
     return (
