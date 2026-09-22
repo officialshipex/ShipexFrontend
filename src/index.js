@@ -8,11 +8,13 @@ import "./index.css";
 // import Main from "./main"
 
 import { setupAxiosInterceptors } from "./utils/axiosInterceptor";
+import { BrandingProvider } from "./context/BrandingContext";
 setupAxiosInterceptors();
 
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
+  <BrandingProvider>
   <BrowserRouter>
     <App />
     {/* <Main/> */}
@@ -30,4 +32,5 @@ root.render(
       bodyClassName="toastBody"
     /> */}
   </BrowserRouter>
+  </BrandingProvider>
 );
