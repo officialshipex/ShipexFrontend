@@ -14,28 +14,28 @@ const RTOSummary = ({ filters = {}, selectedUserId, refresh, selectedDateRange }
       label: "Total RTO",
       value: 0,
       icon: <FiList />,
-      color: "bg-[#0CBB7D] text-white",
+      color: "bg-brand-primary text-white",
     },
     {
       label: "RTO Initiated",
       value: 0,
       percent: "0.00%",
       icon: <FiClock />,
-      color: "bg-[#0CBB7D] text-white",
+      color: "bg-brand-primary text-white",
     },
     {
       label: "RTO In-transit",
       value: 0,
       percent: "0.00%",
       icon: <FiPackage />,
-      color: "bg-[#0CBB7D] text-white",
+      color: "bg-brand-primary text-white",
     },
     {
       label: "RTO Delivered",
       value: 0,
       percent: "0.00%",
       icon: <FiTruck />,
-      color: "bg-[#0CBB7D] text-white",
+      color: "bg-brand-primary text-white",
     },
   ]);
 
@@ -75,28 +75,28 @@ const RTOSummary = ({ filters = {}, selectedUserId, refresh, selectedDateRange }
             label: "Total RTO",
             value: total,
             icon: <FiList />,
-            color: "bg-[#0CBB7D] text-white",
+            color: "bg-brand-primary text-white",
           },
           {
             label: "RTO Initiated",
             value: initiated.count,
             percent: initiated.percent,
             icon: <FiClock />,
-            color: "bg-[#0CBB7D] text-white",
+            color: "bg-brand-primary text-white",
           },
           {
             label: "RTO In-transit",
             value: inTransit.count,
             percent: inTransit.percent,
             icon: <FiPackage />,
-            color: "bg-[#0CBB7D] text-white",
+            color: "bg-brand-primary text-white",
           },
           {
             label: "RTO Delivered",
             value: delivered.count,
             percent: delivered.percent,
             icon: <FiTruck />,
-            color: "bg-[#0CBB7D] text-white",
+            color: "bg-brand-primary text-white",
           },
         ]);
       }
@@ -118,7 +118,7 @@ const RTOSummary = ({ filters = {}, selectedUserId, refresh, selectedDateRange }
         {summaryData.map((item, index) => (
           <div
             key={index}
-            className="flex flex-col justify-between rounded-lg border p-4 shadow-sm hover:border-[#0CBB7D] transition-all duration-700"
+            className="flex flex-col justify-between rounded-lg border p-4 shadow-sm hover:border-brand-primary transition-all duration-700"
           >
             <div className="flex items-center gap-3">
               <div

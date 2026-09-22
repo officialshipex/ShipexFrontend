@@ -96,7 +96,7 @@ const AdminAgreement = () => {
         <h1 className="text-[12px] md:text-[14px] font-[600] text-gray-700">Agreements</h1>
         <button
           onClick={() => setShowUploadModal(true)}
-          className="bg-[#0CBB7D] text-white px-3 py-1.5 rounded-lg text-[10px] font-[600] hover:bg-opacity-90 transition-all shadow-sm"
+          className="bg-brand-primary text-white px-3 py-1.5 rounded-lg text-[10px] font-[600] hover:bg-opacity-90 transition-all shadow-sm"
         >
           + Upload Agreement
         </button>
@@ -107,11 +107,11 @@ const AdminAgreement = () => {
         <table className="min-w-full bg-white">
           <thead className="sticky top-0 z-20">
             <tr className="text-[12px]">
-              <th className="bg-[#0CBB7D] text-white font-bold px-3 py-2 border-b border-gray-300 text-left">S.No</th>
-              <th className="bg-[#0CBB7D] text-white font-bold px-3 py-2 border-b border-gray-300 text-left">Version Name</th>
-              <th className="bg-[#0CBB7D] text-white font-bold px-3 py-2 border-b border-gray-300 text-left">File Name</th>
-              <th className="bg-[#0CBB7D] text-white font-bold px-3 py-2 border-b border-gray-300 text-left">Created At</th>
-              <th className="bg-[#0CBB7D] text-white font-bold px-3 py-2 border-b border-gray-300 text-center">Download</th>
+              <th className="bg-brand-primary text-white font-bold px-3 py-2 border-b border-gray-300 text-left">S.No</th>
+              <th className="bg-brand-primary text-white font-bold px-3 py-2 border-b border-gray-300 text-left">Version Name</th>
+              <th className="bg-brand-primary text-white font-bold px-3 py-2 border-b border-gray-300 text-left">File Name</th>
+              <th className="bg-brand-primary text-white font-bold px-3 py-2 border-b border-gray-300 text-left">Created At</th>
+              <th className="bg-brand-primary text-white font-bold px-3 py-2 border-b border-gray-300 text-center">Download</th>
             </tr>
           </thead>
           <tbody className="text-[12px] text-gray-700">
@@ -135,7 +135,7 @@ const AdminAgreement = () => {
                       href={ag.fileUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-[#0CBB7D] text-[10px] font-bold hover:underline"
+                      className="text-brand-primary text-[10px] font-bold hover:underline"
                     >
                       Download
                     </a>
@@ -158,13 +158,13 @@ const AdminAgreement = () => {
         ) : (
           agreements.map((ag, index) => (
             <div key={ag._id} className="bg-white border rounded-lg shadow-sm overflow-visible animate-popup-in">
-              <div className="bg-[#0CBB7D] px-3 py-1.5 flex justify-between items-center rounded-t-lg">
+              <div className="bg-brand-primary px-3 py-1.5 flex justify-between items-center rounded-t-lg">
                 <span className="text-white font-bold text-[10px]">#{index + 1} - {ag.versionName}</span>
                 <a
                   href={ag.fileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white text-[#0CBB7D]"
+                  className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white text-brand-primary"
                 >
                   Download
                 </a>
@@ -222,7 +222,7 @@ const AdminAgreement = () => {
                   value={versionName}
                   onChange={(e) => setVersionName(e.target.value)}
                   placeholder="e.g. v1.0, June 2026"
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] focus:outline-none focus:ring-1 focus:ring-[#0CBB7D] focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-transparent"
                 />
               </div>
 
@@ -232,14 +232,14 @@ const AdminAgreement = () => {
                   type="file"
                   accept=".doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                   onChange={handleFileChange}
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] focus:outline-none focus:ring-1 focus:ring-[#0CBB7D] file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-[#0CBB7D] file:text-white file:text-[10px] file:font-[600]"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] focus:outline-none focus:ring-1 focus:ring-brand-primary file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-brand-primary file:text-white file:text-[10px] file:font-[600]"
                 />
               </div>
 
               <button
                 onClick={handleUpload}
                 disabled={uploading}
-                className="w-full bg-[#0CBB7D] text-white py-2 rounded-lg font-[600] text-[12px] hover:bg-opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-brand-primary text-white py-2 rounded-lg font-[600] text-[12px] hover:bg-opacity-90 transition disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {uploading ? "Uploading..." : "Upload"}
               </button>

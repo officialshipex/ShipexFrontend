@@ -133,7 +133,7 @@ const Invoices = () => {
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case "paid":
-        return "bg-green-100 text-[#0CBB7D] border-[#0CBB7D]/20";
+        return "bg-green-100 text-brand-primary border-brand-primary/20";
       case "pending":
         return "bg-red-100 text-red-600 border-red-200";
       case "partially_paid":
@@ -153,7 +153,7 @@ const Invoices = () => {
 
     return (
       <div className="flex flex-col">
-        <span className="text-[#0CBB7D] font-medium leading-tight">{user.userId || ""}</span>
+        <span className="text-brand-primary font-medium leading-tight">{user.userId || ""}</span>
         <span className="text-[12px] font-medium text-gray-700 leading-tight">
           {user.fullname || "-"}
         </span>
@@ -181,7 +181,7 @@ const Invoices = () => {
             value={invoiceNumber}
             onChange={(e) => { setInvoiceNumber(e.target.value); setPage(1); }}
             placeholder="Search Invoice No."
-            className="w-full h-9 pl-8 pr-3 font-[600] text-[12px] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] bg-white text-gray-700 placeholder-gray-400 transition-all shadow-sm"
+            className="w-full h-9 pl-8 pr-3 font-[600] text-[12px] border border-gray-300 rounded-lg focus:outline-none focus:border-brand-primary bg-white text-gray-700 placeholder-gray-400 transition-all shadow-sm"
           />
         </div>
 
@@ -189,7 +189,7 @@ const Invoices = () => {
           onClick={() => setIsFilterPanelOpen(true)}
           className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-9"
         >
-          <Filter className="w-4 h-4 text-[#0CBB7D]" />
+          <Filter className="w-4 h-4 text-brand-primary" />
           More Filters
         </button>
 
@@ -207,7 +207,7 @@ const Invoices = () => {
             <button
               disabled={selectedInvoices.length === 0}
               onClick={() => setActionOpen(!actionOpen)}
-              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedInvoices.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedInvoices.length > 0 ? "border-brand-primary text-brand-primary hover:bg-green-50" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
               Actions
@@ -243,14 +243,14 @@ const Invoices = () => {
               value={invoiceNumber}
               onChange={(e) => { setInvoiceNumber(e.target.value); setPage(1); }}
               placeholder="Search Invoice No."
-              className="w-full h-[32px] pl-7 pr-2 text-[10px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] bg-white text-gray-700 placeholder-gray-400 transition-all shadow-sm"
+              className="w-full h-[32px] pl-7 pr-2 text-[10px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-brand-primary bg-white text-gray-700 placeholder-gray-400 transition-all shadow-sm"
             />
           </div>
           <button
             onClick={() => setIsFilterPanelOpen(true)}
             className="flex-shrink-0 flex items-center justify-center gap-1.5 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm h-[32px] whitespace-nowrap"
           >
-            <Filter className="w-3.5 h-3.5 text-[#0CBB7D]" />
+            <Filter className="w-3.5 h-3.5 text-brand-primary" />
             More Filters
           </button>
         </div>
@@ -271,26 +271,26 @@ const Invoices = () => {
       <div className="hidden md:block relative">
         <div className="h-[calc(100vh-235px)] overflow-y-auto bg-white overflow-hidden">
           <table className="w-full text-left border-collapse text-[12px] relative">
-            <thead className="sticky top-0 z-40 bg-[#0CBB7D] text-white font-[600]">
+            <thead className="sticky top-0 z-40 bg-brand-primary text-white font-[600]">
               <tr>
-                <th className="py-2 px-3 w-10 shadow-[0_1px_0_0_#0CBB7D]">
+                <th className="py-2 px-3 w-10 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">
                   <div className="flex items-center justify-center">
                     <input
                       type="checkbox"
                       checked={invoices.length > 0 && selectedInvoices.length === invoices.length}
                       onChange={handleSelectAll}
-                      className="cursor-pointer accent-[#0CBB7D] w-4"
+                      className="cursor-pointer accent-brand-primary w-4"
                     />
                   </div>
                 </th>
-                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">User Details</th>
-                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">Invoice No</th>
-                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">Shipments</th>
-                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">Amount Details</th>
-                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">Created On</th>
-                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">Invoice Period</th>
-                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">Status</th>
-                <th className="px-3 py-2 shadow-[0_1px_0_0_#0CBB7D]">Action</th>
+                <th className="px-3 py-2 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">User Details</th>
+                <th className="px-3 py-2 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">Invoice No</th>
+                <th className="px-3 py-2 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">Shipments</th>
+                <th className="px-3 py-2 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">Amount Details</th>
+                <th className="px-3 py-2 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">Created On</th>
+                <th className="px-3 py-2 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">Invoice Period</th>
+                <th className="px-3 py-2 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">Status</th>
+                <th className="px-3 py-2 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -317,16 +317,16 @@ const Invoices = () => {
                         type="checkbox"
                         checked={selectedInvoices.includes(inv._id)}
                         onChange={() => handleCheckboxChange(inv._id)}
-                        className="cursor-pointer accent-[#0CBB7D] w-4"
+                        className="cursor-pointer accent-brand-primary w-4"
                       />
                     </td>
                     <td className="px-3 py-2">{renderUserDetails(inv)}</td>
                     <td className="px-3 py-2">
                       <div className="flex items-center gap-1 group">
-                        <span className="font-medium text-[#0CBB7D]">{inv.invoiceNumber}</span>
+                        <span className="font-medium text-brand-primary">{inv.invoiceNumber}</span>
                         <button onClick={() => handleCopy(inv.invoiceNumber, inv._id + '_inv')}>
                           {copiedId === inv._id + '_inv' ? (
-                            <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                            <FiCheck className="w-3 h-3 text-brand-primary" />
                           ) : (
                             <FiCopy className="w-3 h-3 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
                           )}
@@ -362,7 +362,7 @@ const Invoices = () => {
                             href={`${inv.invoiceUrl}${inv.invoiceUrl.includes("?") ? "&" : "?"}t=${Date.now()}`}
                             target="_blank"
                             rel="noreferrer"
-                            className="inline-flex items-center justify-center bg-[#0CBB7D] text-white w-8 h-8 rounded-lg hover:shadow-md hover:bg-opacity-90 transition-all shadow-sm"
+                            className="inline-flex items-center justify-center bg-brand-primary text-white w-8 h-8 rounded-lg hover:shadow-md hover:bg-opacity-90 transition-all shadow-sm"
                             title="Download Invoice PDF"
                           >
                             <HiOutlineDownload className="w-4 h-4" />
@@ -373,7 +373,7 @@ const Invoices = () => {
                             const url = `${REACT_APP_BACKEND_URL}/invoice/export-excel?invoiceNumber=${inv.invoiceNumber}`;
                             window.open(url, "_blank");
                           }}
-                          className="inline-flex items-center justify-center bg-[#0CBB7D] text-white w-8 h-8 rounded-lg hover:shadow-md hover:bg-opacity-90 transition-all shadow-sm"
+                          className="inline-flex items-center justify-center bg-brand-primary text-white w-8 h-8 rounded-lg hover:shadow-md hover:bg-opacity-90 transition-all shadow-sm"
                           title="Download Invoice Excel"
                         >
                           <FaFileExcel className="w-3.5 h-3.5" />
@@ -396,7 +396,7 @@ const Invoices = () => {
               type="checkbox"
               checked={invoices.length > 0 && selectedInvoices.length === invoices.length}
               onChange={handleSelectAll}
-              className="cursor-pointer accent-[#0CBB7D] w-4"
+              className="cursor-pointer accent-brand-primary w-4"
             />
             <span className="text-[10px] font-[600] text-gray-700 tracking-wider">Select All</span>
           </div>
@@ -405,7 +405,7 @@ const Invoices = () => {
             <button
               disabled={selectedInvoices.length === 0}
               onClick={() => setActionOpen(!actionOpen)}
-              className={`h-[30px] px-3 rounded-lg flex items-center justify-center border transition-all ${selectedInvoices.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] bg-white shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+              className={`h-[30px] px-3 rounded-lg flex items-center justify-center border transition-all ${selectedInvoices.length > 0 ? "border-brand-primary text-brand-primary bg-white shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
               <FaBars className="w-3 h-3" />
@@ -452,11 +452,11 @@ const Invoices = () => {
                         type="checkbox"
                         checked={selectedInvoices.includes(inv._id)}
                         onChange={() => handleCheckboxChange(inv._id)}
-                        className="cursor-pointer accent-[#0CBB7D] w-4"
+                        className="cursor-pointer accent-brand-primary w-4"
                       />
                       <div className="flex flex-col">
                         <div className="flex items-center gap-1">
-                          <span className="font-medium text-[#0CBB7D] text-[10px]">{inv.invoiceNumber}</span>
+                          <span className="font-medium text-brand-primary text-[10px]">{inv.invoiceNumber}</span>
                           <button onClick={() => handleCopy(inv.invoiceNumber, inv._id + '_inv_mob')}>
                             {copiedId === inv._id + '_inv_mob' ? <FiCheck className="w-2.5 h-2.5 text-green-500" /> : <FiCopy className="w-3 h-3 text-gray-400" />}
                           </button>
@@ -467,7 +467,7 @@ const Invoices = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="font-bold text-[#0CBB7D] text-[11px]">₹{inv.amount}</div>
+                      <div className="font-bold text-brand-primary text-[11px]">₹{inv.amount}</div>
                       <span className={`px-2 py-0.5 rounded text-[10px] inline-block mt-0.5 ${getStatusColor(inv.status)}`}>
                         {inv.status}
                       </span>
@@ -487,7 +487,7 @@ const Invoices = () => {
 
                   <div className="flex items-center justify-between mt-2 pt-2 border-t border-gray-50">
                     <div className="flex items-center gap-2 w-full">
-                      <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center font-bold text-[#0CBB7D] text-[12px] shrink-0 border border-gray-300">
+                      <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center font-bold text-brand-primary text-[12px] shrink-0 border border-gray-300">
                         {user.fullname?.charAt(0)}
                       </div>
                       <div className="min-w-0 leading-tight flex justify-between items-center w-full">
@@ -495,7 +495,7 @@ const Invoices = () => {
                           <p className="font-bold text-gray-700 text-[10px] truncate">{user.fullname}</p>
                           <p className="text-gray-500 text-[10px] truncate">{user.email}</p>
                         </div>
-                        <p className="text-[#0CBB7D] font-medium text-[10px] truncate">{user.userId}</p>
+                        <p className="text-brand-primary font-medium text-[10px] truncate">{user.userId}</p>
                       </div>
                     </div>
 
@@ -505,7 +505,7 @@ const Invoices = () => {
                           href={`${inv.invoiceUrl}${inv.invoiceUrl.includes("?") ? "&" : "?"}t=${Date.now()}`}
                           target="_blank"
                           rel="noreferrer"
-                          className="p-1.5 bg-[#0CBB7D] text-white rounded-lg flex items-center justify-center shadow active:scale-95 transition-transform"
+                          className="p-1.5 bg-brand-primary text-white rounded-lg flex items-center justify-center shadow active:scale-95 transition-transform"
                           title="Download Invoice PDF"
                         >
                           <HiOutlineDownload className="w-4 h-4" />
@@ -516,7 +516,7 @@ const Invoices = () => {
                           const url = `${REACT_APP_BACKEND_URL}/invoice/export-excel?invoiceNumber=${inv.invoiceNumber}`;
                           window.open(url, "_blank");
                         }}
-                        className="p-1.5 bg-[#0CBB7D] text-white rounded-lg flex items-center justify-center shadow active:scale-95 transition-transform"
+                        className="p-1.5 bg-brand-primary text-white rounded-lg flex items-center justify-center shadow active:scale-95 transition-transform"
                         title="Download Invoice Excel"
                       >
                         <FaFileExcel className="w-4 h-4" />

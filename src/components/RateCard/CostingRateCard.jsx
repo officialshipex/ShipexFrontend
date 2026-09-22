@@ -256,12 +256,12 @@ export default function CostingRateCard() {
     <div className="relative flex-1 sm:max-w-[200px]">
       <div
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-[#0CBB7D] transition-all group"
+        className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-brand-primary transition-all group"
       >
         <span className={`text-[10px] sm:text-[12px] truncate ${value ? "text-gray-700" : "text-gray-400"}`}>
           {value || label}
         </span>
-        <FiChevronDown className={`text-gray-400 group-hover:text-[#0CBB7D] transition-transform flex-shrink-0 ${open ? "rotate-180" : ""}`} />
+        <FiChevronDown className={`text-gray-400 group-hover:text-brand-primary transition-transform flex-shrink-0 ${open ? "rotate-180" : ""}`} />
       </div>
       {open && (
         <div className="absolute font-[600] top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[100] max-h-48 overflow-y-auto">
@@ -269,7 +269,7 @@ export default function CostingRateCard() {
             <div
               key={i}
               onClick={() => onSelect(opt)}
-              className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+              className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors"
             >
               {opt}
             </div>
@@ -291,7 +291,7 @@ export default function CostingRateCard() {
             type="number"
             placeholder="Weight (gm) *"
             value={row.weight}
-            className={`border h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all ${errors[`${type === "weightPriceBasic" ? "basic" : "add"}Weight-${i}`] ? "border-red-400" : "border-gray-300"}`}
+            className={`border h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-brand-primary focus:outline-none transition-all ${errors[`${type === "weightPriceBasic" ? "basic" : "add"}Weight-${i}`] ? "border-red-400" : "border-gray-300"}`}
             onChange={(e) => handleWeightChange(type, i, "weight", e.target.value)}
           />
           {ZONES.map((z) => (
@@ -300,7 +300,7 @@ export default function CostingRateCard() {
               type="number"
               placeholder={`Zone ${z} * ₹`}
               value={row[`zone${z}`]}
-              className={`border text-gray-700 font-[600] px-3 h-9 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all ${errors[`${type === "weightPriceBasic" ? "basic" : "add"}Zone${z}-${i}`] ? "border-red-400" : "border-gray-300"}`}
+              className={`border text-gray-700 font-[600] px-3 h-9 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-brand-primary focus:outline-none transition-all ${errors[`${type === "weightPriceBasic" ? "basic" : "add"}Zone${z}-${i}`] ? "border-red-400" : "border-gray-300"}`}
               onChange={(e) => handleWeightChange(type, i, `zone${z}`, e.target.value)}
             />
           ))}
@@ -318,7 +318,7 @@ export default function CostingRateCard() {
           <h2 className="text-[12px] sm:text-[14px] font-bold text-gray-700">
             Costing Rate Card{" "}
             <span className="text-gray-400 font-medium mx-1">|</span>{" "}
-            <span className="text-[#0CBB7D]">{editingId ? "Edit" : "Add"}</span>
+            <span className="text-brand-primary">{editingId ? "Edit" : "Add"}</span>
           </h2>
           {editingId && (
             <span className="text-[10px] bg-amber-100 text-amber-700 font-bold px-2 py-0.5 rounded-full">
@@ -333,12 +333,12 @@ export default function CostingRateCard() {
           <div className="relative flex-1 sm:max-w-[240px]">
             <div
               onClick={() => !editingId && setIsServiceOpen(!isServiceOpen)}
-              className={`flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg transition-all group ${editingId ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-[#0CBB7D]"}`}
+              className={`flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg transition-all group ${editingId ? "cursor-not-allowed opacity-60" : "cursor-pointer hover:border-brand-primary"}`}
             >
               <span className={`text-[10px] sm:text-[12px] truncate ${formData.courierServiceName ? "text-gray-700" : "text-gray-400"}`}>
                 {formData.courierServiceName || "Select Courier Service"}
               </span>
-              <FiChevronDown className={`text-gray-400 group-hover:text-[#0CBB7D] transition-transform flex-shrink-0 ${isServiceOpen ? "rotate-180" : ""}`} />
+              <FiChevronDown className={`text-gray-400 group-hover:text-brand-primary transition-transform flex-shrink-0 ${isServiceOpen ? "rotate-180" : ""}`} />
             </div>
             {isServiceOpen && !editingId && (
               <div className="absolute font-[600] top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-[100] max-h-48 overflow-y-auto">
@@ -347,7 +347,7 @@ export default function CostingRateCard() {
                     <div
                       key={i}
                       onClick={() => handleServiceSelect(s)}
-                      className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                      className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors"
                     >
                       {s}
                     </div>
@@ -404,7 +404,7 @@ export default function CostingRateCard() {
               placeholder="COD Charge ₹"
               value={formData.codCharge}
               onChange={(e) => setFormData((p) => ({ ...p, codCharge: e.target.value }))}
-              className={`border h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full sm:w-auto focus:border-[#0CBB7D] focus:outline-none transition-all ${errors.cod ? "border-red-400" : "border-gray-300"}`}
+              className={`border h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full sm:w-auto focus:border-brand-primary focus:outline-none transition-all ${errors.cod ? "border-red-400" : "border-gray-300"}`}
             />
             <input
               type="number"
@@ -412,7 +412,7 @@ export default function CostingRateCard() {
               placeholder="COD Percentage %"
               value={formData.codPercent}
               onChange={(e) => setFormData((p) => ({ ...p, codPercent: e.target.value }))}
-              className={`border h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full sm:w-auto focus:border-[#0CBB7D] focus:outline-none transition-all ${errors.cod ? "border-red-400" : "border-gray-300"}`}
+              className={`border h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full sm:w-auto focus:border-brand-primary focus:outline-none transition-all ${errors.cod ? "border-red-400" : "border-gray-300"}`}
             />
           </div>
           {errors.cod && <div className="text-red-500 text-[9px] mt-0.5">{errors.cod}</div>}
@@ -431,7 +431,7 @@ export default function CostingRateCard() {
             type="button"
             onClick={handleSave}
             disabled={saving}
-            className="bg-[#0CBB7D] text-white hover:bg-opacity-90 px-4 py-2 rounded-lg text-[10px] sm:text-[12px] font-bold transition-all active:scale-95 disabled:opacity-60"
+            className="bg-brand-primary text-white hover:bg-opacity-90 px-4 py-2 rounded-lg text-[10px] sm:text-[12px] font-bold transition-all active:scale-95 disabled:opacity-60"
           >
             {saving ? "Saving…" : editingId ? "Update & Apply Delta" : "Save Costing Rate"}
           </button>
@@ -455,7 +455,7 @@ export default function CostingRateCard() {
               placeholder="Search service..."
               value={serviceSearch}
               onChange={(e) => setServiceSearch(e.target.value)}
-              className="w-full border border-gray-300 pl-8 pr-3 py-1.5 h-8 rounded-lg text-[10px] sm:text-[12px] bg-white focus:border-[#0CBB7D] focus:ring-1 focus:ring-[#0CBB7D]/20 outline-none transition-all placeholder:text-gray-400"
+              className="w-full border border-gray-300 pl-8 pr-3 py-1.5 h-8 rounded-lg text-[10px] sm:text-[12px] bg-white focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 outline-none transition-all placeholder:text-gray-400"
             />
           </div>
         </div>
@@ -463,7 +463,7 @@ export default function CostingRateCard() {
         {/* Desktop table */}
         <div className="hidden sm:block overflow-auto" style={{ height: tableHeight, minHeight: "200px" }}>
           <table className="w-full text-center border-collapse">
-            <thead className="sticky top-0 z-20 bg-[#0CBB7D] text-[12px] text-white">
+            <thead className="sticky top-0 z-20 bg-brand-primary text-[12px] text-white">
               <tr>
                 <th className="px-3 py-2 font-bold">Courier Service</th>
                 <th className="px-3 py-2 font-bold">Mode</th>
@@ -514,7 +514,7 @@ export default function CostingRateCard() {
                         <div className="flex justify-center items-center gap-2">
                           <button
                             onClick={() => handleEdit(card)}
-                            className="text-[#0CBB7D] hover:scale-110 transition-transform"
+                            className="text-brand-primary hover:scale-110 transition-transform"
                             title="Edit"
                           >
                             <FaEdit size={12} />
@@ -569,18 +569,18 @@ export default function CostingRateCard() {
                     <div className="text-gray-400 mt-0.5">{card.mode} • {card.shipmentType}</div>
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={() => handleEdit(card)} className="text-[#0CBB7D]"><FaEdit size={12} /></button>
+                    <button onClick={() => handleEdit(card)} className="text-brand-primary"><FaEdit size={12} /></button>
                     <button onClick={() => handleDelete(card._id)} className="text-red-500"><FaTrash size={12} /></button>
                   </div>
                 </div>
                 <div className="grid grid-cols-2 gap-2 bg-gray-50 rounded p-2">
                   <div>
                     <span className="text-gray-500 block">Basic (Zone A)</span>
-                    <span className="font-bold text-[#0CBB7D]">₹{card.weightPriceBasic?.[0]?.zoneA ?? "—"}</span>
+                    <span className="font-bold text-brand-primary">₹{card.weightPriceBasic?.[0]?.zoneA ?? "—"}</span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Addl (Zone A)</span>
-                    <span className="font-bold text-[#0CBB7D]">₹{card.weightPriceAdditional?.[0]?.zoneA ?? "—"}</span>
+                    <span className="font-bold text-brand-primary">₹{card.weightPriceAdditional?.[0]?.zoneA ?? "—"}</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center">

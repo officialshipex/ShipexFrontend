@@ -193,7 +193,7 @@ export default function AadharDetailsEditModal({ isOpen, onClose }) {
             disabled={isSubmitting}
             className={`w-full py-2 rounded-lg text-white text-[10px] sm:text-[12px] font-[600] ${isSubmitting
               ? "bg-gray-400 cursor-not-allowed"
-              : "bg-[#0CBB7D] hover:bg-green-500"
+              : "bg-brand-primary hover:bg-green-500"
               }`}
           >
             {isSubmitting ? "Submitting..." : "Submit"}

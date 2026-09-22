@@ -392,7 +392,7 @@ export default function AddRole() {
                 checked={isActive}
                 onChange={() => setIsActive(!isActive)}
               />
-              <div className="sm:w-12 sm:h-6 w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-[#0CBB7D] relative transition duration-300">
+              <div className="sm:w-12 sm:h-6 w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-brand-primary relative transition duration-300">
                 <div
                   className={`absolute left-1 top-1 sm:w-4 sm:h-4 w-3 h-3 bg-white rounded-full transition-transform duration-300 ${isActive ? "translate-x-6" : "translate-x-0"
                     }`}
@@ -520,7 +520,7 @@ export default function AddRole() {
                       setState(updatedPermissions);
                     }}
                   />
-                  <div className="sm:w-12 sm:h-6 w-10 h-5 bg-gray-300 peer-checked:bg-[#0CBB7D] rounded-full transition-colors"></div>
+                  <div className="sm:w-12 sm:h-6 w-10 h-5 bg-gray-300 peer-checked:bg-brand-primary rounded-full transition-colors"></div>
                   <div className="absolute left-1 top-1 sm:w-4 sm:h-4 w-3 h-3 bg-white rounded-full transition-transform peer-checked:translate-x-6"></div>
                 </label>
               </div>
@@ -544,7 +544,7 @@ export default function AddRole() {
                         <td key={key} className="w-[20%] px-3 py-2 text-center">
                           <input
                             type="checkbox"
-                            className="accent-[#0CBB7D]"
+                            className="accent-brand-primary"
                             checked={!!(state[item] && state[item][key])}
                             onChange={() => handlePermissionChange(title, item, key)}
                           />
@@ -561,7 +561,7 @@ export default function AddRole() {
         <div className="mt-2 text-right">
           <button
             onClick={handleSubmit}
-            className="bg-[#0CBB7D] text-[10px] sm:text-[12px] font-[600] text-white px-3 py-2 rounded-lg hover:bg-green-500 transition"
+            className="bg-brand-primary text-[10px] sm:text-[12px] font-[600] text-white px-3 py-2 rounded-lg hover:bg-green-500 transition"
           >
             Submit
           </button>

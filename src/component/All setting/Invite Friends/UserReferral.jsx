@@ -207,19 +207,19 @@ const Referral = () => {
       {/* Header & Description */}
       <div className="bg-white border border-gray-100 rounded-lg p-3 shadow-sm relative overflow-hidden">
         {/* <div className="absolute top-0 right-0 p-3 opacity-10 pointer-events-none">
-          <ExternalLink className="w-12 h-12 text-[#0CBB7D]" />
+          <ExternalLink className="w-12 h-12 text-brand-primary" />
         </div> */}
         <h1 className="text-[14px] font-[700] text-gray-700 mb-1">Referral Dashboard</h1>
         <p className="text-gray-500 text-[11px] max-w-2xl">
           Get commission from referral revenue at the end of every month. You can withdraw this commission directly to your wallet.
           {commissionPercentage !== null && (
-            <span className="block mt-1 font-bold text-[#0CBB7D]">You currently earn {commissionPercentage}% commission on your referral revenue.</span>
+            <span className="block mt-1 font-bold text-brand-primary">You currently earn {commissionPercentage}% commission on your referral revenue.</span>
           )}
         </p>
       </div>
 
       {/* Stats Cards - Mobile View */}
-      <div className="sm:hidden bg-white border border-[#0CBB7D] rounded-lg p-3 shadow-sm space-y-2">
+      <div className="sm:hidden bg-white border border-brand-primary rounded-lg p-3 shadow-sm space-y-2">
         {statsArray.map((card, i) => (
           <div key={i} className="flex justify-between items-center last:border-0 last:pb-0">
             <span className="text-[10px] font-bold text-gray-500">{card.title}</span>
@@ -231,8 +231,8 @@ const Referral = () => {
       {/* Stats Cards - Desktop View */}
       <div className="hidden sm:grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-2">
         {statsArray.map((card, i) => (
-          <div key={i} className="bg-white border border-[#0CBB7D] rounded-lg p-3 flex items-center gap-3 shadow-sm hover:shadow-md transition-all">
-            <div className="p-2 rounded-full flex justify-center items-center bg-[#0CBB7D] text-white">
+          <div key={i} className="bg-white border border-brand-primary rounded-lg p-3 flex items-center gap-3 shadow-sm hover:shadow-md transition-all">
+            <div className="p-2 rounded-full flex justify-center items-center bg-brand-primary text-white">
               {card.icon}
             </div>
             <div className="flex flex-col font-[600] leading-tight overflow-hidden">
@@ -257,7 +257,7 @@ const Referral = () => {
           </div>
           <button
             onClick={handleCopy}
-            className={`p-2 rounded-lg transition-all flex-shrink-0 ${copied ? "bg-[#0CBB7D] text-white" : "bg-gray-100 text-[#0CBB7D] hover:bg-green-100"}`}
+            className={`p-2 rounded-lg transition-all flex-shrink-0 ${copied ? "bg-brand-primary text-white" : "bg-gray-100 text-brand-primary hover:bg-green-100"}`}
           >
             {copied ? <FiCheck className="w-4 h-4" /> : <FiCopy className="w-4 h-4" />}
           </button>
@@ -270,7 +270,7 @@ const Referral = () => {
               onClick={() => setIsActionDropdownOpen(!isActionDropdownOpen)}
               className={`h-9 px-4 bg-white rounded-lg text-[12px] font-bold flex items-center gap-1 border transition-all ${
                 selectedRows.length > 0 || isAnyFilterApplied 
-                ? "border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50 shadow-sm" 
+                ? "border-brand-primary text-brand-primary hover:bg-green-50 shadow-sm" 
                 : "border-gray-300 text-gray-600 hover:bg-gray-50"
               }`}
             >
@@ -288,7 +288,7 @@ const Referral = () => {
                   disabled={Number(stats.remaining || 0) <= 0}
                   className="w-full text-left px-4 py-2 text-[12px] text-gray-700 hover:bg-gray-50 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <Wallet className="w-4 h-4 text-[#0CBB7D]" />
+                  <Wallet className="w-4 h-4 text-brand-primary" />
                   Transfer to Wallet
                 </button>
                 <button
@@ -307,7 +307,7 @@ const Referral = () => {
             onClick={() => setIsFilterPanelOpen(true)}
             className="flex-shrink-0 flex items-center justify-center gap-2 px-4 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm h-full"
           >
-            <Filter className="w-4 h-4 text-[#0CBB7D]" />
+            <Filter className="w-4 h-4 text-brand-primary" />
             More Filter
           </button>
           
@@ -333,7 +333,7 @@ const Referral = () => {
           <div className="hidden md:block overflow-hidden bg-white shadow-sm">
             <div className="h-[calc(100vh-340px)] overflow-y-auto">
               <table className="w-full border-collapse">
-                <thead className="bg-[#0CBB7D] text-white font-[600] sticky top-0 z-10 text-[12px]">
+                <thead className="bg-brand-primary text-white font-[600] sticky top-0 z-10 text-[12px]">
                   <tr className="text-left">
                     <th className="py-2 px-3 text-center">
                       <input 
@@ -343,7 +343,7 @@ const Referral = () => {
                           if (e.target.checked) setSelectedRows(monthlyData);
                           else setSelectedRows([]);
                         }}
-                        className="rounded w-3 h-3 border-gray-300 accent-[#0CBB7D]"
+                        className="rounded w-3 h-3 border-gray-300 accent-brand-primary"
                       />
                     </th>
                     <th className="py-2 px-3">Period</th>
@@ -362,13 +362,13 @@ const Referral = () => {
                             type="checkbox" 
                             checked={!!selectedRows.find(r => r._id === row._id)}
                             onChange={() => handleSelectRow(row)}
-                            className="rounded w-3 h-3 border-gray-300 accent-[#0CBB7D]"
+                            className="rounded w-3 h-3 border-gray-300 accent-brand-primary"
                           />
                         </td>
                         <td className="py-3 px-3 font-bold text-gray-900">{row.month}</td>
                         <td className="py-3 px-3 font-bold">{row.referralOrders}</td>
-                        <td className="py-3 px-3 font-bold text-[#0CBB7D]">₹{Number(row.shippingCharges || 0).toFixed(2)}</td>
-                        <td className="py-3 px-3 font-bold text-[#0CBB7D]">₹{Number(row.commission || 0).toFixed(2)}</td>
+                        <td className="py-3 px-3 font-bold text-brand-primary">₹{Number(row.shippingCharges || 0).toFixed(2)}</td>
+                        <td className="py-3 px-3 font-bold text-brand-primary">₹{Number(row.commission || 0).toFixed(2)}</td>
                         <td className="py-3 px-3">
                           <span className="text-gray-500 rounded text-[12px]">
                             {dayjs(row.fromDate).format("DD MMM YYYY")} - {dayjs(row.toDate).format("DD MMM YYYY")}
@@ -398,7 +398,7 @@ const Referral = () => {
                 <div key={i} className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm animate-popup-in">
                   <div className="flex justify-between items-center mb-2 border-b border-gray-50 pb-2">
                     <h3 className="font-bold text-gray-800 text-[13px] leading-tight">{row.month}</h3>
-                    <span className="text-[9px] bg-green-50 text-[#0CBB7D] px-2 py-0.5 rounded font-bold uppercase tracking-tight border border-green-100/50">Active Period</span>
+                    <span className="text-[9px] bg-green-50 text-brand-primary px-2 py-0.5 rounded font-bold uppercase tracking-tight border border-green-100/50">Active Period</span>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 mb-2">
@@ -412,7 +412,7 @@ const Referral = () => {
                     </div>
                     <div className="bg-green-50/30 p-1.5 rounded border border-green-100/20">
                       <p className="text-[9px] text-gray-400 font-bold uppercase tracking-tight">Reward</p>
-                      <p className="text-[11px] font-bold text-[#0CBB7D]">₹{Math.round(row.commission || 0)}</p>
+                      <p className="text-[11px] font-bold text-brand-primary">₹{Math.round(row.commission || 0)}</p>
                     </div>
                   </div>
 
@@ -472,7 +472,7 @@ const Referral = () => {
             <div className="p-6 space-y-4">
               <div className="text-center">
                 <p className="text-[12px] text-gray-500 mb-1">Available for Withdrawal</p>
-                <p className="text-[24px] font-bold text-[#0CBB7D]">₹{Number(stats.remaining || 0).toFixed(2)}</p>
+                <p className="text-[24px] font-bold text-brand-primary">₹{Number(stats.remaining || 0).toFixed(2)}</p>
               </div>
 
               <div className="space-y-2">
@@ -482,7 +482,7 @@ const Referral = () => {
                   placeholder="Enter amount to transfer"
                   value={withdrawAmount}
                   onChange={(e) => setWithdrawAmount(e.target.value)}
-                  className="w-full px-4 py-2 border rounded-lg text-[13px] focus:outline-none focus:ring-2 focus:ring-[#0CBB7D]/20 focus:border-[#0CBB7D]"
+                  className="w-full px-4 py-2 border rounded-lg text-[13px] focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                 />
                 <p className="text-[10px] text-gray-400 italic">This amount will be instantly added to your Shipex wallet balance.</p>
               </div>
@@ -498,7 +498,7 @@ const Referral = () => {
               <button
                 onClick={handleWithdraw}
                 disabled={withdrawing || !withdrawAmount || Number(withdrawAmount) <= 0 || Number(withdrawAmount) > Number(stats.remaining)}
-                className="flex-1 px-4 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-bold hover:bg-green-600 disabled:opacity-50 transition-all shadow-sm"
+                className="flex-1 px-4 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-bold hover:bg-green-600 disabled:opacity-50 transition-all shadow-sm"
               >
                 {withdrawing ? "Processing..." : "Transfer Now"}
               </button>

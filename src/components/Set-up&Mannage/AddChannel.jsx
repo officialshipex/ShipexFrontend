@@ -52,12 +52,12 @@ const AddChannel = () => {
               <img
                 src={channel.logo}
                 alt={channel.name}
-                className="sm:w-16 sm:h-16 w-10 h-10 border-2 border-[#0CBB7D] sm:border-none rounded-full sm:mb-3 p-2"
+                className="sm:w-16 sm:h-16 w-10 h-10 border-2 border-brand-primary sm:border-none rounded-full sm:mb-3 p-2"
               />
               {/* Channel Name */}
               <h3 className="text-[12px] font-[600] text-gray-500">{channel.name}</h3>
               {/* Add Button */}
-              <button onClick={() => { navigate(`/channel/addchannel/${channel.name}`) }} className="bg-[#0CBB7D] text-white font-[600] rounded-lg px-3 py-1 text-[12px] hover:opacity-90 transition-all sm:mt-4">
+              <button onClick={() => { navigate(`/channel/addchannel/${channel.name}`) }} className="bg-brand-primary text-white font-[600] rounded-lg px-3 py-1 text-[12px] hover:opacity-90 transition-all sm:mt-4">
                 Add
               </button>
             </div>

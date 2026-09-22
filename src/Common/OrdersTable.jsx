@@ -70,14 +70,14 @@ const OrdersTable = ({
     return (
         <table className="min-w-full table-auto">
             <thead className="sticky top-0 z-20">
-                <tr className="bg-[#0CBB7D] text-white text-[12px] font-[600]">
+                <tr className="bg-brand-primary text-white text-[12px] font-[600]">
                     <th className="py-2 px-3">
                         <div className="flex items-center justify-center">
                             <input
                                 type="checkbox"
                                 checked={selectedOrders.length === orders.length && orders.length > 0}
                                 onChange={handleSelectAll}
-                                className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
+                                className="cursor-pointer accent-brand-primary w-3 h-3"
                             />
                         </div>
                     </th>
@@ -129,14 +129,14 @@ const OrdersTable = ({
                                     type="checkbox"
                                     checked={selectedOrders.includes(order._id)}
                                     onChange={() => handleCheckboxChange(order._id)}
-                                    className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
+                                    className="cursor-pointer accent-brand-primary w-3 h-3"
                                 />
                             </td>
 
                             {/* USER DETAILS */}
                             {showUserDetails && (
                                 <td className="py-2 text-gray-700 px-3 whitespace-nowrap" style={{ maxWidth: "120px", width: "110px" }}>
-                                    <p className="text-[#0CBB7D]">{order.userId?.userId}</p>
+                                    <p className="text-brand-primary">{order.userId?.userId}</p>
                                     <p className="">{order.userId?.fullname}</p>
                                     <p className="text-gray-500 max-w-[160px] truncate sm:max-w-[200px]" title={order.userId?.email}>
                                         {order.userId?.email}
@@ -154,7 +154,7 @@ const OrdersTable = ({
                                 <div className="relative cursor-pointer inline-flex items-center group">
                                     <Link
                                         to={`/dashboard/order/neworder/updateOrder/${order._id}`}
-                                        className="text-[#0CBB7D] pr-5"
+                                        className="text-brand-primary pr-5"
                                     >
                                         {order.orderId}
                                     </Link>
@@ -168,10 +168,10 @@ const OrdersTable = ({
                                                 setTimeout(() => setCopiedOrderId(null), 1500);
                                             }}
                                             className="relative flex items-center justify-center
-                               text-gray-500 hover:text-[#0CBB7D]"
+                               text-gray-500 hover:text-brand-primary"
                                         >
                                             {copiedOrderId === order._id ? (
-                                                <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                                                <FiCheck className="w-3 h-3 text-brand-primary" />
                                             ) : (
                                                 <FiCopy className="w-3 h-3" />
                                             )}
@@ -201,7 +201,7 @@ const OrdersTable = ({
 
                                 <div className="flex gap-2 items-center justify-start">
                                     {/* CHANNEL BADGE */}
-                                    <p className="uppercase text-[10px] leading-none text-[#0CBB7D] bg-green-100 py-0.5 px-2 rounded w-fit">
+                                    <p className="uppercase text-[10px] leading-none text-brand-primary bg-green-100 py-0.5 px-2 rounded w-fit">
                                         {order?.channel === "WooCommerce" ? "Woo" : (order?.channel || "CUSTOM")}
                                     </p>
                                     {/* CHANNEL ID (Show for all channels if exists) */}
@@ -332,7 +332,7 @@ const OrdersTable = ({
                             {/* PAYMENT */}
                             <td className="py-2 px-3">
                                 <p>₹ {order.paymentDetails?.amount}</p>
-                                <span className="text-[10px] bg-green-100 text-[#0CBB7D] px-2 py-0.5 rounded">
+                                <span className="text-[10px] bg-green-100 text-brand-primary px-2 py-0.5 rounded">
                                     {order.paymentDetails?.method}
                                 </span>
                             </td>
@@ -493,7 +493,7 @@ const OrdersTable = ({
                                     {order.awb_number && (
                                         <div className="relative inline-flex items-center group">
                                             <p
-                                                className="text-[12px] text-[#0CBB7D] cursor-pointer pr-5"
+                                                className="text-[12px] text-brand-primary cursor-pointer pr-5"
                                                 onClick={() =>
                                                     handleTrackingByAwb(order.awb_number, navigate)
                                                 }
@@ -511,10 +511,10 @@ const OrdersTable = ({
                                                         setTimeout(() => setCopiedOrderId(null), 1500);
                                                     }}
                                                     className="relative flex items-center justify-center
-                     text-gray-500 hover:text-[#0CBB7D]"
+                     text-gray-500 hover:text-brand-primary"
                                                 >
                                                     {copiedOrderId === order._id + "_awb" ? (
-                                                        <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                                                        <FiCheck className="w-3 h-3 text-brand-primary" />
                                                     ) : (
                                                         <FiCopy className="w-3 h-3" />
                                                     )}
@@ -540,7 +540,7 @@ const OrdersTable = ({
 
                             )}
                             <td className="py-2 px-3 whitespace-nowrap">
-                                <span className={`px-2 py-0.5 rounded text-[10px] ${order.status === "Cancelled" ? "bg-red-100 text-red-600" : "bg-green-100 text-[#0CBB7D]"}`}>{order.status}</span>
+                                <span className={`px-2 py-0.5 rounded text-[10px] ${order.status === "Cancelled" ? "bg-red-100 text-red-600" : "bg-green-100 text-brand-primary"}`}>{order.status}</span>
                             </td>
 
                             {/* NDR DETAILS */}
@@ -554,8 +554,8 @@ const OrdersTable = ({
                                             <div className="relative inline-block group">
                                                 {/* Trigger */}
                                                 <span
-                                                    className="text-[10px] border-b border-dashed border-[#0CBB7D] 
-               text-[#0CBB7D] cursor-pointer"
+                                                    className="text-[10px] border-b border-dashed border-brand-primary 
+               text-brand-primary cursor-pointer"
                                                 >
                                                     {order.ndrHistory?.length || 0} Attempted
                                                 </span>
@@ -582,7 +582,7 @@ const OrdersTable = ({
 
                                             <button
                                                 onClick={() => onViewNdrHistory && onViewNdrHistory(order)}
-                                                className="text-[10px] bg-[#0CBB7D] text-white px-2 py-0.5 rounded hover:bg-opacity-90 transition-all font-[600]"
+                                                className="text-[10px] bg-brand-primary text-white px-2 py-0.5 rounded hover:bg-opacity-90 transition-all font-[600]"
                                             >
                                                 History
                                             </button>
@@ -596,7 +596,7 @@ const OrdersTable = ({
                                 <td className="py-2 px-3 text-center">
                                     <button
                                         onClick={() => onTakeAction && onTakeAction(order)}
-                                        className="bg-[#0CBB7D] text-white px-3 py-1.5 rounded-lg text-[10px] font-[600] hover:bg-opacity-90 transition-all shadow-sm w-full"
+                                        className="bg-brand-primary text-white px-3 py-1.5 rounded-lg text-[10px] font-[600] hover:bg-opacity-90 transition-all shadow-sm w-full"
                                     >
                                         Take Action
                                     </button>

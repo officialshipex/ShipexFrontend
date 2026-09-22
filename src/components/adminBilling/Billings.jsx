@@ -51,7 +51,7 @@ const Billings = () => {
                         key={tab.path}
                         to={tab.path}
                         className={`px-3 py-2 rounded-lg border text-[12px] font-[600] transition-all duration-200 ${location.pathname === tab.path
-                            ? 'bg-[#0CBB7D] text-white'
+                            ? 'bg-brand-primary text-white'
                             : 'text-gray-700 hover:bg-green-200 bg-white'
                             }`}
                     >

@@ -127,11 +127,11 @@ const PackageDetails = ({
   // --------------------------
 
   return (
-    <div className="border mt-2 border-[#0CBB7D] rounded-lg p-4 bg-white">
+    <div className="border mt-2 border-brand-primary rounded-lg p-4 bg-white">
 
       {/* HEADER */}
       <h2 className="text-[14px] font-[600] flex items-center gap-2 text-gray-700 mb-2">
-        <span className="bg-[#0CBB7D] text-white rounded-lg p-2">
+        <span className="bg-brand-primary text-white rounded-lg p-2">
           <FiBox className="text-[14px]" />
         </span>
         Package Details
@@ -237,7 +237,7 @@ const PackageDetails = ({
                   className="w-full h-8 px-2 text-[12px] border-none outline-none rounded-l-lg"
                   placeholder="0.00"
                 />
-                <span className="w-12 h-8 flex justify-center items-center text-[12px] text-white rounded-r-lg bg-[#0CBB7D]">
+                <span className="w-12 h-8 flex justify-center items-center text-[12px] text-white rounded-r-lg bg-brand-primary">
                   kg
                 </span>
               </div>
@@ -256,7 +256,7 @@ const PackageDetails = ({
                       placeholder={dim}
                       className="w-full h-8 px-2 text-[12px] font-[600] border-none outline-none rounded-l-lg"
                     />
-                    <span className="w-12 h-8 flex font-[600] justify-center items-center text-[12px] text-white rounded-r-lg bg-[#0CBB7D]">
+                    <span className="w-12 h-8 flex font-[600] justify-center items-center text-[12px] text-white rounded-r-lg bg-brand-primary">
                       cm
                     </span>
                   </div>
@@ -315,10 +315,10 @@ const PackageDetails = ({
           {B2BPackageDetails.map((pkg, index) => (
             <div
               key={pkg.id}
-              className="border border-dashed border-[#0CBB7D] rounded-lg p-4 my-4 relative bg-white"
+              className="border border-dashed border-brand-primary rounded-lg p-4 my-4 relative bg-white"
             >
               {/* Badge */}
-              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#0CBB7D] text-white w-8 h-8 flex justify-center items-center rounded-full text-[12px] font-[600] shadow">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white w-8 h-8 flex justify-center items-center rounded-full text-[12px] font-[600] shadow">
                 {index + 1}
               </div>
 
@@ -347,7 +347,7 @@ const PackageDetails = ({
                     type="text"
                     value={pkg.noOfBox}
                     onChange={(e) => updateB2BField(pkg.id, "noOfBox", e.target.value)}
-                    className="border rounded-lg focus:outline-[#0CBB7D] px-3 py-2 text-[12px] w-full"
+                    className="border rounded-lg focus:outline-brand-primary px-3 py-2 text-[12px] w-full"
                     placeholder="Box Count"
                   />
                 </div>
@@ -360,7 +360,7 @@ const PackageDetails = ({
                     onChange={(e) =>
                       updateB2BField(pkg.id, "weightPerBox", e.target.value)
                     }
-                    className="border rounded-lg px-3 focus:outline-[#0CBB7D] py-2 text-[12px] w-full"
+                    className="border rounded-lg px-3 focus:outline-brand-primary py-2 text-[12px] w-full"
                     placeholder="Weight"
                   />
                 </div>
@@ -372,7 +372,7 @@ const PackageDetails = ({
                       type="text"
                       value={pkg[dim]}
                       onChange={(e) => updateB2BField(pkg.id, dim, e.target.value)}
-                      className="border rounded-lg focus:outline-[#0CBB7D] px-3 py-2 font-[600] text-[12px] w-full"
+                      className="border rounded-lg focus:outline-brand-primary px-3 py-2 font-[600] text-[12px] w-full"
                       placeholder={dim}
                     />
                   </div>
@@ -384,7 +384,7 @@ const PackageDetails = ({
           {/* Add B2B package button */}
           <button
             onClick={addB2BPackage}
-            className="flex items-center justify-center w-8 h-8 bg-[#0CBB7D] text-white rounded-full mx-auto text-[12px]"
+            className="flex items-center justify-center w-8 h-8 bg-brand-primary text-white rounded-full mx-auto text-[12px]"
           >
             +
           </button>

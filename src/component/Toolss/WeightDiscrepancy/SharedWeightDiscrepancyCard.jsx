@@ -44,21 +44,21 @@ const SharedWeightDiscrepancyCard = ({
                                         type="checkbox"
                                         checked={selectedOrders.includes(order._id)}
                                         onChange={() => handleCheckboxChange(order._id)}
-                                        className="accent-[#0CBB7D] w-3 h-3"
+                                        className="accent-brand-primary w-3 h-3"
                                     />
                                     <div className="flex items-center gap-1">
                                         <span className="font-[600] text-gray-700 text-[10px]">
-                                            Order Id : <span className="font-[600] text-[#0CBB7D]">{order.channelOrderId || order.orderId || order._id?.slice(-6)}</span>
+                                            Order Id : <span className="font-[600] text-brand-primary">{order.channelOrderId || order.orderId || order._id?.slice(-6)}</span>
                                         </span>
                                         <button onClick={() => handleCopyAwb(order.channelOrderId || order.orderId || order._id?.slice(-6), `order-${index}`)}>
                                             {copiedAwb === `order-${index}` ? (
-                                                <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                                                <FiCheck className="w-3 h-3 text-brand-primary" />
                                             ) : (
                                                 <FiCopy className="w-3 h-3 text-gray-400" />
                                             )}
                                         </button>
                                     </div>
-                                    <span className="px-2 py-0.5 rounded text-[10px] bg-green-100 text-[#0CBB7D]">
+                                    <span className="px-2 py-0.5 rounded text-[10px] bg-green-100 text-brand-primary">
                                         {order.adminStatus || order.status}
                                     </span>
                                 </div>
@@ -75,7 +75,7 @@ const SharedWeightDiscrepancyCard = ({
                             {isAdmin && (
                                 <div className="my-1 px-3 flex items-center justify-between px-0.5">
                                     <div className="flex items-center gap-2 min-w-0">
-                                        <div className="w-6 h-6 rounded-full bg-white border border-[#0CBB7D]/20 flex items-center justify-center font-bold text-[#0CBB7D] text-[10px] shrink-0 shadow-sm">
+                                        <div className="w-6 h-6 rounded-full bg-white border border-brand-primary/20 flex items-center justify-center font-bold text-brand-primary text-[10px] shrink-0 shadow-sm">
                                             {order.user?.name?.charAt(0)}
                                         </div>
                                         <div className="min-w-0">
@@ -83,7 +83,7 @@ const SharedWeightDiscrepancyCard = ({
                                             <p className="text-gray-400 text-[10px] leading-none truncate">{order.user?.email}</p>
                                         </div>
                                     </div>
-                                    <p className="text-[#0CBB7D] font-bold text-[10px] tracking-widest shrink-0">
+                                    <p className="text-brand-primary font-bold text-[10px] tracking-widest shrink-0">
                                         {order.user?.userId}
                                     </p>
                                 </div>
@@ -127,12 +127,12 @@ const SharedWeightDiscrepancyCard = ({
                                     <div className="flex flex-col text-[10px]">
                                         <span className="font-[600] text-gray-700">{order.courierServiceName}</span>
                                         <div className="flex items-center gap-1">
-                                            <span onClick={() => handleTrackingByAwb(order.awbNumber)} className="text-[#0CBB7D] font-[600] cursor-pointer">
+                                            <span onClick={() => handleTrackingByAwb(order.awbNumber)} className="text-brand-primary font-[600] cursor-pointer">
                                                 {order.awbNumber}
                                             </span>
                                             <button onClick={() => handleCopyAwb(order.awbNumber, `awb-${index}`)}>
                                                 {copiedAwb === `awb-${index}` ? (
-                                                    <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                                                    <FiCheck className="w-3 h-3 text-brand-primary" />
                                                 ) : (
                                                     <FiCopy className="w-3 h-3 text-gray-400" />
                                                 )}
@@ -142,7 +142,7 @@ const SharedWeightDiscrepancyCard = ({
                                 </div>
 
                                 {/* Right Side Amount */}
-                                <div className="text-[#0CBB7D] font-[600] text-[10px]">
+                                <div className="text-brand-primary font-[600] text-[10px]">
                                     ₹{Number(order?.excessWeightCharges?.pendingAmount || 0).toFixed(2)}
                                 </div>
                             </div>

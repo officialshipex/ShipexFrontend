@@ -194,12 +194,12 @@ const WalletUpdateForm = ({ onClose }) => {
                                 }}
                             >
                                 <div className="w-1/4 flex items-center justify-center p-2">
-                                    <p className="text-[12px] text-gray-400 group-hover:text-[#0CBB7D] font-medium truncate text-center">
+                                    <p className="text-[12px] text-gray-400 group-hover:text-brand-primary font-medium truncate text-center">
                                         {user.userId}
                                     </p>
                                 </div>
                                 <div className="w-3/4 flex flex-col justify-center py-[7px] pr-2 leading-tight">
-                                    <p className="text-[13px] text-gray-500 group-hover:text-[#0CBB7D] font-medium truncate">
+                                    <p className="text-[13px] text-gray-500 group-hover:text-brand-primary font-medium truncate">
                                         {user.fullname}
                                     </p>
                                     <p className="text-[11px] text-gray-400 truncate">{user.email}</p>
@@ -359,7 +359,7 @@ const WalletUpdateForm = ({ onClose }) => {
                 <button
                     type="submit"
                     disabled={!isFormValid}
-                    className={`flex font-[600] text-[10px] sm:text-[12px] text-white py-2 px-3 rounded-lg transition-colors ${isFormValid ? "bg-[#0CBB7D] hover:bg-[#0aa76f]" : "bg-gray-400 cursor-not-allowed"
+                    className={`flex font-[600] text-[10px] sm:text-[12px] text-white py-2 px-3 rounded-lg transition-colors ${isFormValid ? "bg-brand-primary hover:bg-[#0aa76f]" : "bg-gray-400 cursor-not-allowed"
                         }`}
                 >
                     Submit

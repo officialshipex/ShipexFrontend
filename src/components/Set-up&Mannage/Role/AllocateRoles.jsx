@@ -242,7 +242,7 @@ function AllocateRoles() {
 
         <div className="w-full md:w-auto">
           <button
-            className="w-full md:w-auto border-2 bg-[#0CBB7D] text-white font-[600] py-2 px-3 rounded-lg shadow-sm hover:bg-[#0CBB7D] focus:outline-none focus:ring-2 focus:ring-[#0CBB7D] focus:ring-opacity-50 text-[10px] md:text-[12px]"
+            className="w-full md:w-auto border-2 bg-brand-primary text-white font-[600] py-2 px-3 rounded-lg shadow-sm hover:bg-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-opacity-50 text-[10px] md:text-[12px]"
             onClick={handleSave}
           >
             Save
@@ -254,7 +254,7 @@ function AllocateRoles() {
       <div className="my-2">
         <input
           type="text"
-          className="block w-full sm:w-[300px] px-3 py-2 border-2 border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-0 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] text-[10px] md:text-[12px]"
+          className="block w-full sm:w-[300px] px-3 py-2 border-2 border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-0 focus:ring-brand-primary focus:border-brand-primary text-[10px] md:text-[12px]"
           placeholder="Search by SellerID, Seller Name, EmployeeID, Employee Name"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
@@ -266,7 +266,7 @@ function AllocateRoles() {
       <div className="hidden md:block overflow-x-auto">
         <table className="min-w-full divide-y divide-gray-200 bg-white shadow-sm text-[12px]">
           <thead>
-            <tr className="bg-[#0CBB7D] text-white border border-[#0CBB7D]">
+            <tr className="bg-brand-primary text-white border border-brand-primary">
               <th className="px-3 py-2 text-left uppercase">
                 SL No.
               </th>
@@ -295,7 +295,7 @@ function AllocateRoles() {
                 </td>
                 <td className="px-3 py-2 relative flex justify-center items-center">
                   <button
-                    className="p-2 rounded-full bg-[#0CBB7D] hover:bg-gray-250 allocation-action-btn"
+                    className="p-2 rounded-full bg-brand-primary hover:bg-gray-250 allocation-action-btn"
                     onClick={(e) => {
                       e.stopPropagation();
                       handleActionDropdown(item._id, e);

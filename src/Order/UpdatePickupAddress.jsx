@@ -153,7 +153,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                             value={formData.contactName}
                             onChange={handleChange}
                             placeholder="Enter Contact Name"
-                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-brand-primary"
                         />
                     </div>
                     <div className="flex flex-col gap-1">
@@ -166,7 +166,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="buyer.contact@shipex.in"
-                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-brand-primary"
                         />
                     </div>
                     <div className="flex flex-col gap-1">
@@ -179,7 +179,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                             value={formData.phoneNumber}
                             onChange={handleChange}
                             placeholder="Enter Phone Number"
-                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-brand-primary"
                         />
                     </div>
                     <div className="flex flex-col gap-1">
@@ -192,7 +192,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                             value={formData.address}
                             onChange={handleChange}
                             placeholder="Enter Address"
-                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-brand-primary"
                         />
                     </div>
                     <div className="flex flex-col gap-1">
@@ -205,7 +205,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                             value={pincode}
                             onChange={handlePincodeChange}
                             placeholder="Enter Pincode"
-                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-brand-primary"
                         />
                     </div>
                     <div className="flex flex-col gap-1">
@@ -217,7 +217,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                             name="city"
                             value={formData.city}
                             readOnly
-                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-brand-primary"
                         />
                     </div>
                     <div className="flex flex-col gap-1">
@@ -229,7 +229,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                             name="state"
                             value={formData.state}
                             readOnly
-                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                            className="w-full px-3 py-2 rounded-lg border outline-none focus:ring-1 focus:ring-brand-primary"
                         />
                     </div>
                     <div className="col-span-2 text-right flex gap-2 justify-end">
@@ -243,7 +243,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
                         <button
                             type="button"
                             onClick={handleSubmit}
-                            className="bg-[#0CBB7D] text-white px-3 py-2 rounded-lg hover:opacity-90 transition text-[12px]"
+                            className="bg-brand-primary text-white px-3 py-2 rounded-lg hover:opacity-90 transition text-[12px]"
                         >
                             Save
                         </button>

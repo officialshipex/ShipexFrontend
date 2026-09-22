@@ -113,7 +113,7 @@ const CreditHistory = () => {
                     onClick={() => setIsFilterPanelOpen(true)}
                     className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap min-w-[120px] h-9"
                 >
-                    <Filter className="w-4 h-4 text-[#0CBB7D]" />
+                    <Filter className="w-4 h-4 text-brand-primary" />
                     More Filters
                 </button>
 
@@ -146,7 +146,7 @@ const CreditHistory = () => {
                         onClick={() => setIsFilterPanelOpen(true)}
                         className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-[32px] min-w-[100px]"
                     >
-                        <Filter className="w-3 h-3 text-[#0CBB7D]" />
+                        <Filter className="w-3 h-3 text-brand-primary" />
                         More Filters
                     </button>
                 </div>
@@ -166,7 +166,7 @@ const CreditHistory = () => {
             <div className="bg-white overflow-hidden mb-2">
                 <div className="h-[calc(100vh-240px)] overflow-y-auto custom-scrollbar">
                     <table className="min-w-full border-collapse text-[12px] text-left relative">
-                        <thead className="sticky top-0 z-40 bg-[#0CBB7D] text-white font-[600]">
+                        <thead className="sticky top-0 z-40 bg-brand-primary text-white font-[600]">
                             <tr>
                                 <th className="py-2 px-3 text-left">Date</th>
                                 <th className="py-2 px-3 text-left">Transaction ID / Order ID</th>

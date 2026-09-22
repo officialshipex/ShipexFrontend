@@ -8,7 +8,7 @@ const TrackingDetailsSection = ({ tracking, orderStatus }) => {
         <div className="bg-white p-4 rounded-lg shadow-sm sticky top-34 h-[calc(100vh-8rem)] flex flex-col">
             <div className="flex items-center gap-2 mb-2 border-b pb-2">
                 <p className={`p-2 hidden sm:block rounded-full ${isCancelled ? 'bg-red-100' : 'bg-green-100'}`}>
-                    <Activity className={`w-4 h-4 ${isCancelled ? 'text-red-500' : 'text-[#0CBB7D]'}`} />
+                    <Activity className={`w-4 h-4 ${isCancelled ? 'text-red-500' : 'text-brand-primary'}`} />
                 </p>
 
                 <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">

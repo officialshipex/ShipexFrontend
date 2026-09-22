@@ -237,7 +237,7 @@ function App() {
         />
 
         {/* Expanding ripple effect */}
-        <div className="absolute w-40 h-40 rounded-full bg-[#0CBB7D] opacity-30 animate-ping" />
+        <div className="absolute w-40 h-40 rounded-full bg-brand-primary opacity-30 animate-ping" />
       </div>
     );
   }

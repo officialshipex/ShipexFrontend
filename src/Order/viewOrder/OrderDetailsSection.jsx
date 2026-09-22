@@ -7,7 +7,7 @@ const OrderDetailsSection = ({ order }) => {
     return (
         <div className="bg-white p-4 rounded-lg shadow-sm">
             <div className="flex items-center gap-2 mb-2 border-b pb-2">
-                <p className="p-2 bg-green-100 hidden sm:block rounded-full"><FileText className="w-4 h-4 text-[#0CBB7D]" /></p>
+                <p className="p-2 bg-green-100 hidden sm:block rounded-full"><FileText className="w-4 h-4 text-brand-primary" /></p>
                 <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
                     Order Details
                 </h2>
@@ -27,7 +27,7 @@ const OrderDetailsSection = ({ order }) => {
 
                     <div className="flex items-center gap-1">
                         {/* Channel badge */}
-                        <span className="inline-flex items-center px-2 rounded bg-green-100 text-[#0CBB7D] text-[10px] uppercase">
+                        <span className="inline-flex items-center px-2 rounded bg-green-100 text-brand-primary text-[10px] uppercase">
                             {order.channel || "CUSTOM"}
                         </span>
 

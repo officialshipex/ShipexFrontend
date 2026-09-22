@@ -86,14 +86,14 @@ const SchedulePickupModal = ({ orderId, awb, pickupAddress, onClose }) => {
                     </div>
                     <p className="text-[12px] leading-relaxed">
                         Your package has been booked successfully. The AWB number is{" "}
-                        <span className="font-[600] text-[#0CBB7D]">{awb}</span>.
+                        <span className="font-[600] text-brand-primary">{awb}</span>.
                     </p>
                 </div>
 
                 {/* Pickup Address */}
                 <div className="bg-gray-50 border rounded-lg px-3 py-2 mb-2">
                     <p className="font-[600] mb-1 text-[10px] sm:text-[12px] text-gray-700 flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-[#0CBB7D]" /> Pick Up Address
+                        <MapPin className="w-3.5 h-3.5 text-brand-primary" /> Pick Up Address
                     </p>
                     <p className="text-[10px] sm:text-[12px] text-gray-500">{pickupAddress}</p>
                 </div>
@@ -101,7 +101,7 @@ const SchedulePickupModal = ({ orderId, awb, pickupAddress, onClose }) => {
                 {/* Date Selection */}
                 <div className="bg-green-50 border border-green-100 rounded-lg px-3 py-2 mb-2">
                     <p className="font-[600] mb-2 text-[10px] sm:text-[12px] text-gray-700 flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-[#0CBB7D]" /> Please select a suitable date for your order to be picked up
+                        <Calendar className="w-3.5 h-3.5 text-brand-primary" /> Please select a suitable date for your order to be picked up
                     </p>
 
                     <div className="flex flex-wrap gap-2">
@@ -111,10 +111,10 @@ const SchedulePickupModal = ({ orderId, awb, pickupAddress, onClose }) => {
                                 disabled={d.disabled}
                                 onClick={() => setSelectedDate(d.value)}
                                 className={`px-3 py-2 rounded-full text-[10px] border transition font-[600] ${selectedDate === d.value
-                                    ? "bg-[#0CBB7D] border-[#0CBB7D] text-white shadow-sm"
+                                    ? "bg-brand-primary border-brand-primary text-white shadow-sm"
                                     : d.disabled
                                         ? "bg-gray-100 border-gray-200 text-gray-400 cursor-not-allowed"
-                                        : "bg-white border-gray-300 text-gray-600 hover:border-[#0CBB7D] hover:text-[#0CBB7D]"
+                                        : "bg-white border-gray-300 text-gray-600 hover:border-brand-primary hover:text-brand-primary"
                                     }`}
                             >
                                 {d.label}
@@ -123,7 +123,7 @@ const SchedulePickupModal = ({ orderId, awb, pickupAddress, onClose }) => {
                     </div>
 
 
-                    <p className="text-[10px] text-[#0CBB7D] mt-2 italic">
+                    <p className="text-[10px] text-brand-primary mt-2 italic">
                         In case you schedule the pickup for Today, you will not be able to
                         reschedule this pick up.
                     </p>
@@ -147,7 +147,7 @@ const SchedulePickupModal = ({ orderId, awb, pickupAddress, onClose }) => {
                     <button
                         onClick={handleSchedulePickup}
                         disabled={loading || !selectedDate}
-                        className="bg-[#0CBB7D] text-white px-3 py-2 rounded-lg font-[600] text-[10px] hover:opacity-90 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="bg-brand-primary text-white px-3 py-2 rounded-lg font-[600] text-[10px] hover:opacity-90 transition shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         {loading ? "Scheduling..." : "Schedule Pick Up"}
                     </button>

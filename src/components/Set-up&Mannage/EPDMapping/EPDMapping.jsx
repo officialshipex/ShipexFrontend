@@ -37,8 +37,8 @@ const EPDMapping = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-2">
         <h1 className="text-[12px] sm:text-[14px] text-gray-700 font-[600]">Estimate Pickup Date</h1>
         <div className="flex items-center gap-2 w-full sm:w-auto">
-          <div className="flex items-center gap-2 px-3 py-1.5 flex-1 sm:w-64 border border-gray-300 rounded-lg focus-within:border-[#0CBB7D] group shadow-sm bg-white transition-all h-9">
-            <Search className="w-3.5 h-3.5 text-gray-400 group-focus-within:text-[#0CBB7D] transition-colors" />
+          <div className="flex items-center gap-2 px-3 py-1.5 flex-1 sm:w-64 border border-gray-300 rounded-lg focus-within:border-brand-primary group shadow-sm bg-white transition-all h-9">
+            <Search className="w-3.5 h-3.5 text-gray-400 group-focus-within:text-brand-primary transition-colors" />
             <input
               type="text"
               placeholder="Search Courier Service..."
@@ -49,7 +49,7 @@ const EPDMapping = () => {
           </div>
           <button
             onClick={() => setShowAdd(true)}
-            className="px-3 py-2 text-[10px] sm:text-[12px] font-[600] bg-[#0CBB7D] text-white rounded-lg hover:bg-opacity-90 transition shadow-sm whitespace-nowrap h-9"
+            className="px-3 py-2 text-[10px] sm:text-[12px] font-[600] bg-brand-primary text-white rounded-lg hover:bg-opacity-90 transition shadow-sm whitespace-nowrap h-9"
           >
             Add Cutoff Time
           </button>
@@ -60,7 +60,7 @@ const EPDMapping = () => {
       <div className="hidden sm:block bg-white">
         <div className="h-[calc(100vh-130px)] overflow-y-auto">
           <table className="min-w-full bg-white divide-y text-[12px] divide-gray-200">
-            <thead className="bg-[#0CBB7D] text-white font-[600] sticky top-0 z-10">
+            <thead className="bg-brand-primary text-white font-[600] sticky top-0 z-10">
               <tr>
                 {["Courier", "Courier Service", "Cutoff Time (IST)", "Actions"].map(header => (
                   <th
@@ -85,11 +85,11 @@ const EPDMapping = () => {
                     {item?.courier}
                   </td>
                   <td className="px-3 py-2 whitespace-nowrap">{item?.serviceName}</td>
-                  <td className="px-3 py-2 whitespace-nowrap font-medium text-[#0CBB7D]">{formatTo12H(item?.cutoffTime)}</td>
+                  <td className="px-3 py-2 whitespace-nowrap font-medium text-brand-primary">{formatTo12H(item?.cutoffTime)}</td>
                   <td className="px-3 py-2 whitespace-nowrap flex space-x-2">
                     <button
                       onClick={() => setEditItem(item)}
-                      className="p-1 text-white hover:text-gray-100 hover:bg-green-500 rounded-full bg-[#0CBB7D] transition"
+                      className="p-1 text-white hover:text-gray-100 hover:bg-green-500 rounded-full bg-brand-primary transition"
                       aria-label="Edit"
                       title="Edit"
                     >
@@ -148,7 +148,7 @@ const EPDMapping = () => {
                 <div className="flex space-x-2">
                   <button
                     onClick={() => setEditItem(item)}
-                    className="p-1 rounded-full bg-[#0CBB7D] text-white hover:bg-green-500 transition"
+                    className="p-1 rounded-full bg-brand-primary text-white hover:bg-green-500 transition"
                     aria-label="Edit"
                     title="Edit"
                   >
@@ -166,7 +166,7 @@ const EPDMapping = () => {
               </div>
               <div className="mt-2 flex items-center justify-between">
                 <div className="text-[12px] text-gray-500 font-[600]">Cutoff Time:</div>
-                <div className="font-[600] text-[#0CBB7D] text-[12px]">{formatTo12H(item.cutoffTime)}</div>
+                <div className="font-[600] text-brand-primary text-[12px]">{formatTo12H(item.cutoffTime)}</div>
               </div>
             </div>
           ))}

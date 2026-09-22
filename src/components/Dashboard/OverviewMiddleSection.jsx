@@ -80,8 +80,8 @@ const Dashboard = ({ selectedUserId, selectedDateRange }) => {
     }, [])
 
     const Card = ({ title, value, subtitle, bgColor = "bg-white" }) => (
-        <div className={`flex items-center gap-2 p-4 rounded-lg shadow-sm border hover:border-[#0CBB7D] transition-all duration-700 ${bgColor} w-full`}>
-            <div className="bg-[#0CBB7D] p-2 rounded-full">
+        <div className={`flex items-center gap-2 p-4 rounded-lg shadow-sm border hover:border-brand-primary transition-all duration-700 ${bgColor} w-full`}>
+            <div className="bg-brand-primary p-2 rounded-full">
                 <FaClipboardList className="text-white text-[14px]" />
             </div>
             <div className="flex flex-col justify-center">
@@ -96,9 +96,9 @@ const Dashboard = ({ selectedUserId, selectedDateRange }) => {
     );
 
     const StatBox = ({ label, value, icon: Icon, onClick }) => (
-        <div className="flex items-center border border-gray-200 cursor-pointer bg-white rounded-lg p-3 shadow-sm hover:border-[#0CBB7D] transition-all duration-700 w-full" onClick={onClick}>
+        <div className="flex items-center border border-gray-200 cursor-pointer bg-white rounded-lg p-3 shadow-sm hover:border-brand-primary transition-all duration-700 w-full" onClick={onClick}>
             {Icon && (
-                <div className="bg-[#0CBB7D] p-2 rounded-full mr-3">
+                <div className="bg-brand-primary p-2 rounded-full mr-3">
                     <Icon className="text-white text-[14px]" />
                 </div>
             )}

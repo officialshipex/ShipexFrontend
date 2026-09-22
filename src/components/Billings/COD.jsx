@@ -45,7 +45,7 @@ const COD = () => {
                 <div>
                     <button
                         onClick={() => setIsModalOpen(true)}
-                        className="bg-[#0CBB7D] text-white font-[600] px-3 py-2 rounded-lg text-[10px]"
+                        className="bg-brand-primary text-white font-[600] px-3 py-2 rounded-lg text-[10px]"
                     >
                         Early COD
                     </button>
@@ -63,7 +63,7 @@ const COD = () => {
                         key={tab.path}
                         onClick={() => navigate(tab.path)}
                         className={`px-3 py-2 text-[12px] border rounded-lg font-[600] transition-all duration-200 ${location.pathname === tab.path
-                            ? 'bg-[#0CBB7D] text-white'
+                            ? 'bg-brand-primary text-white'
                             : 'bg-white text-gray-700 hover:bg-green-200'
                             }`}
                     >
@@ -91,7 +91,7 @@ const COD = () => {
                                 key={tab.path}
                                 onClick={() => handleSelect(tab.path)}
                                 className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${location.pathname === tab.path
-                                    ? 'bg-green-50 text-[#0CBB7D]'
+                                    ? 'bg-green-50 text-brand-primary'
                                     : 'text-gray-700 hover:bg-gray-50'
                                     }`}
                             >

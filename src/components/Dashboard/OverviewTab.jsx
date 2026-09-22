@@ -96,7 +96,7 @@ const OverviewTab = ({ refresh, selectedUserId, selectedDateRange }) => {
                         <Card title="Business Insights" subtitle="Last 30 days">
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-2">
-                                    <div className="bg-[#0CBB7D] p-2 rounded-lg text-white text-[14px]">
+                                    <div className="bg-brand-primary p-2 rounded-lg text-white text-[14px]">
                                         <FiPackage />
                                     </div>
                                     <div>
@@ -113,7 +113,7 @@ const OverviewTab = ({ refresh, selectedUserId, selectedDateRange }) => {
 
                             <div className="flex justify-between items-center mt-4">
                                 <div className="flex items-center gap-2">
-                                    <div className="bg-[#0CBB7D] p-2 rounded-lg text-white text-[14px]">
+                                    <div className="bg-brand-primary p-2 rounded-lg text-white text-[14px]">
                                         <RiMoneyRupeeCircleLine />
                                     </div>
                                     <div>
@@ -133,7 +133,7 @@ const OverviewTab = ({ refresh, selectedUserId, selectedDateRange }) => {
                         <Card title="Today's Orders">
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-2">
-                                    <div className="bg-[#0CBB7D] p-2 rounded-lg text-white text-[14px]">
+                                    <div className="bg-brand-primary p-2 rounded-lg text-white text-[14px]">
                                         <FiPackage />
                                     </div>
                                     <p className="text-[14px] font-[600] text-gray-700">
@@ -149,7 +149,7 @@ const OverviewTab = ({ refresh, selectedUserId, selectedDateRange }) => {
                         <Card title="Today's Order Value">
                             <div className="flex justify-between items-center">
                                 <div className="flex items-center gap-2">
-                                    <div className="bg-[#0CBB7D] p-2 rounded-lg text-white text-[14px]">
+                                    <div className="bg-brand-primary p-2 rounded-lg text-white text-[14px]">
                                         <RiMoneyRupeeCircleLine />
                                     </div>
                                     <p className="text-[14px] font-[600] text-gray-700">

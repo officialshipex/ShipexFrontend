@@ -44,7 +44,7 @@ const OrderRowActions = ({
     const getStatusAction = (order) => ({
         new: {
             label: "Ship Now",
-            className: "sm:bg-[#0CBB7D] bg-white text-[#0CBB7D] sm:text-white sm:border-0 border border-[#0CBB7D]",
+            className: "sm:bg-brand-primary bg-white text-brand-primary sm:text-white sm:border-0 border border-brand-primary",
             onClick: () =>
                 navigate(order.orderType === "B2B"
                     ? `/dashboard/order/b2b/courierSelection/${order._id}`
@@ -53,19 +53,19 @@ const OrderRowActions = ({
         },
         // Booked: {
         //     label: "Schedule Pickup",
-        //     className: "sm:bg-[#0CBB7D] bg-white text-[#0CBB7D] sm:text-white sm:border-0 border border-[#0CBB7D]",
+        //     className: "sm:bg-brand-primary bg-white text-brand-primary sm:text-white sm:border-0 border border-brand-primary",
         //     onClick: () =>
         //         handleScheduledPickup(order),
         // },
         // "Ready To Ship": {
         //     label: "Download Manifest",
-        //     className: "sm:bg-[#0CBB7D] bg-white text-[#0CBB7D] sm:text-white sm:border-0 border border-[#0CBB7D]",
+        //     className: "sm:bg-brand-primary bg-white text-brand-primary sm:text-white sm:border-0 border border-brand-primary",
         //     onClick: () =>
         //         handleManifest(order._id),
         // },
         Cancelled: {
             label: "Clone Order",
-            className: "sm:bg-[#0CBB7D] bg-white text-[#0CBB7D] sm:text-white sm:border-0 border border-[#0CBB7D]",
+            className: "sm:bg-brand-primary bg-white text-brand-primary sm:text-white sm:border-0 border border-brand-primary",
             onClick: () =>
                 handleClone ? handleClone(order._id, navigate) : null
         },
@@ -120,13 +120,13 @@ const OrderRowActions = ({
                 <div className="relative inline-block" ref={el => { if (dropdownRefs.current) dropdownRefs.current[index] = el }}>
                     <button
                         ref={el => { if (toggleButtonRefs.current) toggleButtonRefs.current[index] = el }}
-                        className={`text-gray-700 rounded-lg text-[10px] p-2 bg-gray-100 transition-colors ${isOpen ? 'bg-green-100 text-[#0CBB7D]' : ''}`}
+                        className={`text-gray-700 rounded-lg text-[10px] p-2 bg-gray-100 transition-colors ${isOpen ? 'bg-green-100 text-brand-primary' : ''}`}
                         onClick={(e) => {
                             e.stopPropagation();
                             toggleDropdown(index);
                         }}
                     >
-                        <FiMoreHorizontal size={16} className={isOpen ? "text-[#0CBB7D]" : "text-gray-700"} />
+                        <FiMoreHorizontal size={16} className={isOpen ? "text-brand-primary" : "text-gray-700"} />
                     </button>
 
                     {isOpen && position && createPortal(
@@ -155,7 +155,7 @@ const OrderRowActions = ({
                                             }}
                                             className={`px-3 py-2 transition-colors ${
                                                 aiVerifyEnabled 
-                                                    ? "text-[#0CBB7D] hover:bg-green-50 cursor-pointer" 
+                                                    ? "text-brand-primary hover:bg-green-50 cursor-pointer" 
                                                     : "text-gray-400 cursor-not-allowed"
                                             }`}
                                         >

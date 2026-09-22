@@ -82,10 +82,10 @@ const Settings = () => {
                   <Link
                     key={idx}
                     to={item.link}
-                    className="group flex flex-row sm:flex-col items-center sm:items-center justify-start sm:justify-center gap-3 sm:gap-2 text-gray-700 font-[400] h-auto sm:h-24 p-3 border-2 border-[#0CBB7D] rounded-md bg-white hover:bg-[#0CBB7D] hover:text-white shadow-sm hover:shadow-md transition-all duration-200"
+                    className="group flex flex-row sm:flex-col items-center sm:items-center justify-start sm:justify-center gap-3 sm:gap-2 text-gray-700 font-[400] h-auto sm:h-24 p-3 border-2 border-brand-primary rounded-md bg-white hover:bg-brand-primary hover:text-white shadow-sm hover:shadow-md transition-all duration-200"
                   >
-                    <div className="w-8 h-8 flex-shrink-0 rounded bg-[#0CBB7D] flex items-center justify-center transition-all group-hover:bg-white">
-                      <Icon className="text-white group-hover:text-[#0CBB7D] text-[16px] transition-all" />
+                    <div className="w-8 h-8 flex-shrink-0 rounded bg-brand-primary flex items-center justify-center transition-all group-hover:bg-white">
+                      <Icon className="text-white group-hover:text-brand-primary text-[16px] transition-all" />
                     </div>
                     <div className="flex flex-col sm:items-center sm:text-center">
                       <span className="text-[14px] text-gray-500 font-[600] group-hover:text-white transition-all">

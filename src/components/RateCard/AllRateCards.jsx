@@ -145,18 +145,18 @@ const RateCard = ({ isSidebarAdmin }) => {
               <div className="relative w-full sm:min-w-[180px]">
                 <div
                   onClick={() => setIsPlanOpen(!isPlanOpen)}
-                  className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-[#0CBB7D] transition-all group"
+                  className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-brand-primary transition-all group"
                 >
                   <span className={`text-[10px] sm:text-[12px] truncate ${packageType ? "text-gray-700" : "text-gray-400"}`}>
                     {packageType || "Select Plan"}
                   </span>
-                  <FiChevronDown className={`text-gray-400 group-hover:text-[#0CBB7D] transition-transform flex-shrink-0 ${isPlanOpen ? "rotate-180" : ""}`} />
+                  <FiChevronDown className={`text-gray-400 group-hover:text-brand-primary transition-transform flex-shrink-0 ${isPlanOpen ? "rotate-180" : ""}`} />
                 </div>
                 {isPlanOpen && (
                   <div className="absolute font-[600] top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-sm z-[100] animate-in fade-in slide-in-from-top-2 max-h-48 overflow-y-auto">
                     <div
                       onClick={() => { setPackageType(""); setIsPlanOpen(false); }}
-                      className="px-3 py-2 text-[10px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                      className="px-3 py-2 text-[10px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors"
                     >
                       All Plans
                     </div>
@@ -164,7 +164,7 @@ const RateCard = ({ isSidebarAdmin }) => {
                       <div
                         key={index}
                         onClick={() => { setPackageType(plan); setIsPlanOpen(false); }}
-                        className="px-3 py-2 text-[10px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                        className="px-3 py-2 text-[10px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors"
                       >
                         {plan}
                       </div>
@@ -177,18 +177,18 @@ const RateCard = ({ isSidebarAdmin }) => {
               <div className="relative w-full sm:min-w-[120px] font-[600] sm:order-last">
                 <div
                   onClick={() => setIsStatusOpen(!isStatusOpen)}
-                  className="flex items-center justify-between border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-[#0CBB7D] transition-all group"
+                  className="flex items-center justify-between border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-brand-primary transition-all group"
                 >
                   <span className={`text-[10px] sm:text-[12px] truncate ${statusFilter ? "text-gray-700" : "text-gray-400"}`}>
                     {statusFilter || "Status"}
                   </span>
-                  <FiChevronDown className={`text-gray-400 group-hover:text-[#0CBB7D] transition-transform flex-shrink-0 ${isStatusOpen ? "rotate-180" : ""}`} />
+                  <FiChevronDown className={`text-gray-400 group-hover:text-brand-primary transition-transform flex-shrink-0 ${isStatusOpen ? "rotate-180" : ""}`} />
                 </div>
                 {isStatusOpen && (
                   <div className="absolute top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-xl z-[100] animate-in fade-in slide-in-from-top-2">
-                    <div onClick={() => { setStatusFilter(""); setIsStatusOpen(false); }} className="px-3 py-2 text-[10px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors">All Status</div>
-                    <div onClick={() => { setStatusFilter("Active"); setIsStatusOpen(false); }} className="px-3 py-2 text-[10px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors">Active</div>
-                    <div onClick={() => { setStatusFilter("Inactive"); setIsStatusOpen(false); }} className="px-3 py-2 text-[10px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors">Inactive</div>
+                    <div onClick={() => { setStatusFilter(""); setIsStatusOpen(false); }} className="px-3 py-2 text-[10px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors">All Status</div>
+                    <div onClick={() => { setStatusFilter("Active"); setIsStatusOpen(false); }} className="px-3 py-2 text-[10px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors">Active</div>
+                    <div onClick={() => { setStatusFilter("Inactive"); setIsStatusOpen(false); }} className="px-3 py-2 text-[10px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors">Inactive</div>
                   </div>
                 )}
               </div>
@@ -204,7 +204,7 @@ const RateCard = ({ isSidebarAdmin }) => {
                 placeholder="Search courier service..."
                 value={courierSearch}
                 onChange={(e) => setCourierSearch(e.target.value)}
-                className="w-full border border-gray-300 pl-9 pr-3 py-1.5 h-9 rounded-lg text-[10px] sm:text-[12px] bg-white focus:border-[#0CBB7D] focus:ring-1 focus:ring-[#0CBB7D]/20 outline-none transition-all placeholder:text-gray-400"
+                className="w-full border border-gray-300 pl-9 pr-3 py-1.5 h-9 rounded-lg text-[10px] sm:text-[12px] bg-white focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 outline-none transition-all placeholder:text-gray-400"
               />
             </div>
           </div>
@@ -212,28 +212,28 @@ const RateCard = ({ isSidebarAdmin }) => {
           {/* Action Buttons */}
           <div className="flex gap-2 w-full sm:w-auto">
             <button
-              className={`bg-[#0CBB7D] sm:text-[12px] text-[10px] font-bold hover:bg-opacity-90 text-white px-3 h-9 rounded-lg transition-all ${canAction ? "" : "opacity-50 cursor-not-allowed"}`}
+              className={`bg-brand-primary sm:text-[12px] text-[10px] font-bold hover:bg-opacity-90 text-white px-3 h-9 rounded-lg transition-all ${canAction ? "" : "opacity-50 cursor-not-allowed"}`}
               onClick={openRateCardForm}
               disabled={!canAction}
             >
               Add Rate Card
             </button>
             <button
-              className={`bg-[#0CBB7D] sm:text-[12px] text-[10px] font-bold hover:bg-opacity-90 text-white px-3 h-9 rounded-lg transition-all ${canAction ? "" : "opacity-50 cursor-not-allowed"}`}
+              className={`bg-brand-primary sm:text-[12px] text-[10px] font-bold hover:bg-opacity-90 text-white px-3 h-9 rounded-lg transition-all ${canAction ? "" : "opacity-50 cursor-not-allowed"}`}
               onClick={openPlanForm}
               disabled={!canAction}
             >
               Add Plan
             </button>
             <button
-              className={`bg-[#0CBB7D] sm:text-[12px] text-[10px] font-bold hover:bg-opacity-90 text-white px-3 h-9 rounded-lg transition-all ${canAction ? "" : "opacity-50 cursor-not-allowed"}`}
+              className={`bg-brand-primary sm:text-[12px] text-[10px] font-bold hover:bg-opacity-90 text-white px-3 h-9 rounded-lg transition-all ${canAction ? "" : "opacity-50 cursor-not-allowed"}`}
               onClick={() => canAction && setIsPopupOpen(true)}
               disabled={!canAction}
             >
               Assign
             </button>
             <button
-              className={`bg-[#0CBB7D] sm:text-[12px] text-[10px] font-bold hover:bg-opacity-90 text-white px-3 h-9 rounded-lg transition-all ${canAction ? "" : "opacity-50 cursor-not-allowed"}`}
+              className={`bg-brand-primary sm:text-[12px] text-[10px] font-bold hover:bg-opacity-90 text-white px-3 h-9 rounded-lg transition-all ${canAction ? "" : "opacity-50 cursor-not-allowed"}`}
               onClick={() => setIsUploadRatecardModalOpen(true)}
               disabled={!canAction}
             >
@@ -243,7 +243,7 @@ const RateCard = ({ isSidebarAdmin }) => {
         </div>
         <div className="hidden sm:block overflow-auto border border-gray-200 bg-white" style={{ height: tableHeight }}>
           <table className="w-full text-center border-collapse">
-            <thead className="sticky top-0 z-20 bg-[#0CBB7D] text-[12px] text-white">
+            <thead className="sticky top-0 z-20 bg-brand-primary text-[12px] text-white">
               <tr className="">
                 <th className="px-3 py-2 font-bold">Provider</th>
                 <th className="px-3 py-2 font-bold">Courier Service</th>
@@ -303,7 +303,7 @@ const RateCard = ({ isSidebarAdmin }) => {
                       <td rowSpan={2} className="px-3 py-2">
                         <div className="flex justify-center items-center gap-1.5">
                           <button
-                            className={`text-[#0CBB7D] transition-all ${canUpdate ? "" : "opacity-30 cursor-not-allowed"}`}
+                            className={`text-brand-primary transition-all ${canUpdate ? "" : "opacity-30 cursor-not-allowed"}`}
                             onClick={() => canUpdate && navigate(`/dashboard/ratecard/update/${card._id}`)}
                             disabled={!canUpdate}
                             title="Edit"
@@ -385,7 +385,7 @@ const RateCard = ({ isSidebarAdmin }) => {
                     </div>
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={() => canUpdate && navigate(`/dashboard/ratecard/update/${card._id}`)} className="text-[#0CBB7D] transition-transform active:scale-90"><FaEdit size={12} /></button>
+                    <button onClick={() => canUpdate && navigate(`/dashboard/ratecard/update/${card._id}`)} className="text-brand-primary transition-transform active:scale-90"><FaEdit size={12} /></button>
                     <button onClick={() => canUpdate && handleDelete(card._id)} className="text-red-500 transition-transform active:scale-90"><FaTrash size={12} /></button>
                   </div>
                 </div>
@@ -397,7 +397,7 @@ const RateCard = ({ isSidebarAdmin }) => {
                   </div>
                   <div className="text-right">
                     <span className="text-gray-700 text-[10px] tracking-wider block">Price (Zone A)</span>
-                    <span className="text-[#0CBB7D] font-bold text-[10px]">₹{card.weightPriceBasic[0]?.zoneA || "-"}</span>
+                    <span className="text-brand-primary font-bold text-[10px]">₹{card.weightPriceBasic[0]?.zoneA || "-"}</span>
                   </div>
                 </div>
 

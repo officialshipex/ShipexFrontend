@@ -28,7 +28,8 @@ import {
 import { LuBoxes } from "react-icons/lu";
 
 import { Logo } from "./Logo";
-import grouplogo from "../assets/Group.png";
+import { useBranding } from "../context/BrandingContext";
+import grouplogo from "../assets/Group.png"; // falls back to this until the company's own favicon loads (or if it never uploaded one)
 
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -250,6 +251,7 @@ const sidebarItems = [
 ];
 
 const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
+  const { faviconUrl } = useBranding();
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminTab, setIsAdminTab] = useState();
   const [searchParams] = useSearchParams();
@@ -734,7 +736,7 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
 
           {/* Small Logo (Visible always in collapsed mode) */}
           <img
-            src={grouplogo}
+            src={faviconUrl || grouplogo}
             alt="description"
             className="h-5 w-5"
           />

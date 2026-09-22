@@ -24,14 +24,14 @@ const SelectOrderTypePopup = ({ isOpen, onClose, onSelect }) => {
 
         <div className="flex gap-4 justify-center mt-4">
           <button
-            className="px-3 py-2 text-[10px] sm:text-[12px] bg-[#0CBB7D] text-white rounded-lg hover:opacity-90 font-[600]"
+            className="px-3 py-2 text-[10px] sm:text-[12px] bg-brand-primary text-white rounded-lg hover:opacity-90 font-[600]"
             onClick={() => onSelect("B2C")}
           >
             B2C Order
           </button>
 
           <button
-            className="px-3 py-2 bg-[#0CBB7D] text-white text-[10px] sm:text-[12px] rounded-lg hover:opacity-90 font-[600]"
+            className="px-3 py-2 bg-brand-primary text-white text-[10px] sm:text-[12px] rounded-lg hover:opacity-90 font-[600]"
             onClick={() => onSelect("B2B")}
           >
             B2B Order

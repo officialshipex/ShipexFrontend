@@ -99,17 +99,17 @@ const UploadDiscrepancyPopup = ({ onClose, setRefresh }) => {
         <p className="text-[10px] sm:text-[12px] text-gray-600">
           Download Sample File{" "}
           <span
-            className={`text-[#0CBB7D] hover:underline cursor-pointer ${isDownloading ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`text-brand-primary hover:underline cursor-pointer ${isDownloading ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={!isDownloading ? handleDownload : null}
           >
             {isDownloading ? "Downloading..." : "click here"}
           </span>
         </p>
 
-        <label className="cursor-pointer flex text-[12px] sm:text-[14px] items-center gap-2 text-[#0CBB7D] bg-white px-4 py-2 mt-4 rounded-lg border border-[#0CBB7D] transition">
+        <label className="cursor-pointer flex text-[12px] sm:text-[14px] items-center gap-2 text-brand-primary bg-white px-4 py-2 mt-4 rounded-lg border border-brand-primary transition">
           <div className="flex justify-between items-center w-full">
             <span>Upload File</span>
-            <FaUpload className="text-[#0CBB7D]" />
+            <FaUpload className="text-brand-primary" />
           </div>
           <input type="file" className="hidden" onChange={handleFileChange} />
         </label>
@@ -124,7 +124,7 @@ const UploadDiscrepancyPopup = ({ onClose, setRefresh }) => {
           disabled={isUploading}
           className={`px-4 py-2 mt-2 rounded-lg text-[10px] sm:text-[12px] font-[600] transition-all ${isUploading
               ? "bg-gray-400 cursor-not-allowed"
-              : "bg-[#0CBB7D] text-white hover:bg-green-500"
+              : "bg-brand-primary text-white hover:bg-green-500"
             }`}
         >
           {isUploading ? "Uploading..." : "Submit"}

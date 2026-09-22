@@ -132,12 +132,12 @@ const UserAgreement = () => {
         <table className="min-w-full bg-white">
           <thead className="sticky top-0 z-20">
             <tr className="text-[12px]">
-              <th className="bg-[#0CBB7D] text-white font-bold px-3 py-2 border-b border-gray-300 text-left">S.No</th>
-              <th className="bg-[#0CBB7D] text-white font-bold px-3 py-2 border-b border-gray-300 text-left">Version Name</th>
-              <th className="bg-[#0CBB7D] text-white font-bold px-3 py-2 border-b border-gray-300 text-left">Created At</th>
-              <th className="bg-[#0CBB7D] text-white font-bold px-3 py-2 border-b border-gray-300 text-center">Read</th>
-              <th className="bg-[#0CBB7D] text-white font-bold px-3 py-2 border-b border-gray-300 text-center">Accept</th>
-              <th className="bg-[#0CBB7D] text-white font-bold px-3 py-2 border-b border-gray-300 text-center">Download</th>
+              <th className="bg-brand-primary text-white font-bold px-3 py-2 border-b border-gray-300 text-left">S.No</th>
+              <th className="bg-brand-primary text-white font-bold px-3 py-2 border-b border-gray-300 text-left">Version Name</th>
+              <th className="bg-brand-primary text-white font-bold px-3 py-2 border-b border-gray-300 text-left">Created At</th>
+              <th className="bg-brand-primary text-white font-bold px-3 py-2 border-b border-gray-300 text-center">Read</th>
+              <th className="bg-brand-primary text-white font-bold px-3 py-2 border-b border-gray-300 text-center">Accept</th>
+              <th className="bg-brand-primary text-white font-bold px-3 py-2 border-b border-gray-300 text-center">Download</th>
             </tr>
           </thead>
           <tbody className="text-[12px] text-gray-700">
@@ -157,13 +157,13 @@ const UserAgreement = () => {
                   <td className="border-b border-gray-300 px-3 py-2 text-left text-gray-500">{formatDate(ag.createdAt)}</td>
                   <td className="border-b border-gray-300 px-3 py-2 text-center">
                     {ag.isRead ? (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-[#0CBB7D]">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-brand-primary">
                         Read
                       </span>
                     ) : (
                       <button
                         onClick={() => handleMarkAsRead(ag)}
-                        className="bg-[#0CBB7D] text-white px-3 py-1 rounded-lg text-[10px] font-bold hover:bg-opacity-90 transition-all shadow-sm"
+                        className="bg-brand-primary text-white px-3 py-1 rounded-lg text-[10px] font-bold hover:bg-opacity-90 transition-all shadow-sm"
                       >
                         Click to Read
                       </button>
@@ -171,7 +171,7 @@ const UserAgreement = () => {
                   </td>
                   <td className="border-b border-gray-300 px-3 py-2 text-center">
                     {ag.isAccepted ? (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-[#0CBB7D]">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-brand-primary">
                         Accepted
                       </span>
                     ) : (
@@ -180,7 +180,7 @@ const UserAgreement = () => {
                         disabled={!ag.isRead}
                         className={`px-3 py-1 rounded-lg text-[10px] font-bold transition-all shadow-sm ${
                           ag.isRead
-                            ? "bg-[#0CBB7D] text-white hover:bg-opacity-90"
+                            ? "bg-brand-primary text-white hover:bg-opacity-90"
                             : "bg-gray-200 text-gray-400 cursor-not-allowed"
                         }`}
                       >
@@ -192,7 +192,7 @@ const UserAgreement = () => {
                     {ag.isAccepted ? (
                       <button
                         onClick={() => handleDownload(ag)}
-                        className="text-[#0CBB7D] text-[10px] font-bold hover:underline"
+                        className="text-brand-primary text-[10px] font-bold hover:underline"
                       >
                         Download
                       </button>
@@ -220,12 +220,12 @@ const UserAgreement = () => {
         ) : (
           agreements.map((ag, index) => (
             <div key={ag._id} className="bg-white border rounded-lg shadow-sm overflow-visible animate-popup-in">
-              <div className="bg-[#0CBB7D] px-3 py-1.5 flex justify-between items-center rounded-t-lg">
+              <div className="bg-brand-primary px-3 py-1.5 flex justify-between items-center rounded-t-lg">
                 <span className="text-white font-bold text-[10px]">#{index + 1} - {ag.versionName}</span>
                 {ag.isAccepted ? (
                   <button
                     onClick={() => handleDownload(ag)}
-                    className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white text-[#0CBB7D]"
+                    className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white text-brand-primary"
                   >
                     Download
                   </button>
@@ -240,19 +240,19 @@ const UserAgreement = () => {
                 </div>
                 <div className="flex gap-2">
                   {ag.isRead ? (
-                    <span className="flex-1 text-center px-2 py-1 rounded-full text-[10px] font-bold bg-green-100 text-[#0CBB7D]">
+                    <span className="flex-1 text-center px-2 py-1 rounded-full text-[10px] font-bold bg-green-100 text-brand-primary">
                       Read
                     </span>
                   ) : (
                     <button
                       onClick={() => handleMarkAsRead(ag)}
-                      className="flex-1 bg-[#0CBB7D] text-white py-1 rounded-lg text-[10px] font-bold hover:bg-opacity-90 transition-all shadow-sm"
+                      className="flex-1 bg-brand-primary text-white py-1 rounded-lg text-[10px] font-bold hover:bg-opacity-90 transition-all shadow-sm"
                     >
                       Click to Read
                     </button>
                   )}
                   {ag.isAccepted ? (
-                    <span className="flex-1 text-center px-2 py-1 rounded-full text-[10px] font-bold bg-green-100 text-[#0CBB7D]">
+                    <span className="flex-1 text-center px-2 py-1 rounded-full text-[10px] font-bold bg-green-100 text-brand-primary">
                       Accepted
                     </span>
                   ) : (
@@ -261,7 +261,7 @@ const UserAgreement = () => {
                       disabled={!ag.isRead}
                       className={`flex-1 py-1 rounded-lg text-[10px] font-bold transition-all shadow-sm ${
                         ag.isRead
-                          ? "bg-[#0CBB7D] text-white hover:bg-opacity-90"
+                          ? "bg-brand-primary text-white hover:bg-opacity-90"
                           : "bg-gray-200 text-gray-400 cursor-not-allowed"
                       }`}
                     >

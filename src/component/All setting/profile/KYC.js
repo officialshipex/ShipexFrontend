@@ -80,13 +80,13 @@ const KYCDetails = () => {
         {/* <div className="b w-full"> */}
         <div className="mt-2 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-2">
           {/* Aadhar Details */}
-          <div className={`px-3 py-2 border border-[#0CBB7D] bg-white rounded-lg shadow-sm`}>
+          <div className={`px-3 py-2 border border-brand-primary bg-white rounded-lg shadow-sm`}>
             <div className="flex items-center justify-between">
               <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
                 Aadhaar Details
               </h2>
               {isVerified_A ? (
-                <div className="flex items-center text-[#0CBB7D]">
+                <div className="flex items-center text-brand-primary">
                   <CheckCircleIcon className="sm:w-5 sm:h-5 w-4 h-4 mr-1" />
                   <span className="text-[10px] sm:text-[12px] font-[600]">Verified</span>
                 </div>
@@ -132,13 +132,13 @@ const KYCDetails = () => {
             </div>
           </div>
           {/* PAN Details */}
-          <div className="px-3 py-2 border border-[#0CBB7D] bg-white rounded-lg shadow-sm">
+          <div className="px-3 py-2 border border-brand-primary bg-white rounded-lg shadow-sm">
             <div className="flex items-center justify-between">
               <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
                 PAN Details
               </h2>
               {isVerified_P ? (
-                <div className="flex items-center text-[#0CBB7D]">
+                <div className="flex items-center text-brand-primary">
                   <CheckCircleIcon className="sm:w-5 sm:h-5 w-4 h-4 mr-1" />
                   <span className="text-[10px] sm:text-[12px] font-[600]">Verified</span>
                 </div>
@@ -179,13 +179,13 @@ const KYCDetails = () => {
           </div>
 
           {/* Bank Details */}
-          <div className="px-3 py-2 border border-[#0CBB7D] rounded-lg bg-white shadow-sm">
+          <div className="px-3 py-2 border border-brand-primary rounded-lg bg-white shadow-sm">
             <div className="flex items-center justify-between">
               <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
                 Bank Details
               </h2>
               {isVerified_b ? (
-                <div className="flex items-center text-[#0CBB7D]">
+                <div className="flex items-center text-brand-primary">
                   <CheckCircleIcon className="sm:w-5 sm:h-5 w-4 h-4 mr-1" />
                   <span className="text-[10px] sm:text-[12px] font-[600]">Verified</span>
                 </div>
@@ -231,13 +231,13 @@ const KYCDetails = () => {
             </div>
           </div>
           {/* GST Details */}
-          <div className="px-3 py-2 border border-[#0CBB7D] rounded-lg shadow-sm bg-white">
+          <div className="px-3 py-2 border border-brand-primary rounded-lg shadow-sm bg-white">
             <div className="flex items-center justify-between">
               <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
                 GST Details
               </h2>
               {isVerified_g ? (
-                <div className="flex items-center text-[#0CBB7D]">
+                <div className="flex items-center text-brand-primary">
                   <CheckCircleIcon className="sm:w-5 sm:h-5 w-4 h-4 mr-1" />
                   <span className="text-[10px] sm:text-[12px] font-[600]">Verified</span>
                 </div>

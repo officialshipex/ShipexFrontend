@@ -224,15 +224,15 @@ const CourierPriority = () => {
           <button
             key={opt.label}
             onClick={() => handleSelect(opt.label)}
-            className={`flex items-center justify-between w-full p-3 rounded-lg border transition-all duration-300 ${selected === opt.label ? "border-[#0CBB7D] bg-green-50" : "border-gray-200 hover:border-gray-300"
+            className={`flex items-center justify-between w-full p-3 rounded-lg border transition-all duration-300 ${selected === opt.label ? "border-brand-primary bg-green-50" : "border-gray-200 hover:border-gray-300"
               }`}
           >
             <div className="flex items-center gap-3">
-              <div className="p-2 rounded-full bg-[#0CBB7D]">{opt.icon}</div>
+              <div className="p-2 rounded-full bg-brand-primary">{opt.icon}</div>
               <span className="text-sm font-semibold text-gray-700">{opt.label}</span>
             </div>
             {selected === opt.label && (
-              <div className="w-5 h-5 rounded-full bg-[#0CBB7D] flex items-center justify-center text-white text-xs">
+              <div className="w-5 h-5 rounded-full bg-brand-primary flex items-center justify-center text-white text-xs">
                 <FaCheck />
               </div>
             )}
@@ -249,7 +249,7 @@ const CourierPriority = () => {
                 <h3 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">Edit to customize and reorder the courier ranking.</h3>
                 <button
                   onClick={handleEdit}
-                  className="px-4 py-1.5 text-sm border border-[#0CBB7D] text-[#0CBB7D] rounded-lg hover:bg-[#0CBB7D] hover:text-white transition"
+                  className="px-4 py-1.5 text-sm border border-brand-primary text-brand-primary rounded-lg hover:bg-brand-primary hover:text-white transition"
                 >
                   Edit
                 </button>
@@ -263,7 +263,7 @@ const CourierPriority = () => {
                       className="relative flex items-center gap-3 border border-gray-200 rounded-lg px-5 py-3 bg-white hover:shadow-sm transition"
                     >
                       {/* {priorityIndex !== -1 && ( */}
-                      <span className="absolute top-0 left-0 bg-[#0CBB7D] text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-tl-lg rounded-br-md">
+                      <span className="absolute top-0 left-0 bg-brand-primary text-white text-[10px] font-semibold px-1.5 py-0.5 rounded-tl-lg rounded-br-md">
                         {i + 1}ᵗʰ
                       </span>
                       {/* )} */}
@@ -373,7 +373,7 @@ const CourierPriority = () => {
                 </button>
                 <button
                   onClick={handleSave}
-                  className="bg-[#0CBB7D] text-[12px] hover:opacity-90 transition-all text-white px-3 py-2 rounded-lg font-[600]"
+                  className="bg-brand-primary text-[12px] hover:opacity-90 transition-all text-white px-3 py-2 rounded-lg font-[600]"
                 >
                   Save
                 </button>
@@ -387,7 +387,7 @@ const CourierPriority = () => {
         <div className="flex justify-end gap-2 mt-2">
           <button
             onClick={handleSave}
-            className="bg-[#0CBB7D] text-[12px] hover:opacity-90 transition-all text-white px-3 py-2 rounded-lg font-[600]"
+            className="bg-brand-primary text-[12px] hover:opacity-90 transition-all text-white px-3 py-2 rounded-lg font-[600]"
           >
             Save
           </button>

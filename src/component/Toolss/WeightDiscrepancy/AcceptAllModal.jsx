@@ -61,7 +61,7 @@ const AcceptAllModal = ({ isOpen, onClose, onConfirm, price, selectedOrders,setR
                         Cancel
                     </button>
                     <button
-                        className={`px-3 py-2 rounded-lg font-[600] text-[10px] sm:text-[12px] text-white ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#0CBB7D]"
+                        className={`px-3 py-2 rounded-lg font-[600] text-[10px] sm:text-[12px] text-white ${loading ? "bg-gray-400 cursor-not-allowed" : "bg-brand-primary"
                             }`}
                         onClick={handleDiscrepancy}
                         disabled={loading} // Disable button when loading

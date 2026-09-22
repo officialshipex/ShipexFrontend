@@ -229,7 +229,7 @@ const ViewOrder = ({ isSidebarAdmin }) => {
           <p className="text-sm">No Order Found</p>
           <button
             onClick={() => window.history.back()}
-            className="mt-4 px-4 py-2 bg-[#0CBB7D] text-white rounded-lg hover:opacity-90"
+            className="mt-4 px-4 py-2 bg-brand-primary text-white rounded-lg hover:opacity-90"
           >
             Go Back
           </button>

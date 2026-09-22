@@ -143,7 +143,7 @@ const BulkUploadPopup = ({ onClose, setRefresh, selectedOrderType, onBack, }) =>
         {/* Header */}
         <div className="mb-4">
           <h2 className="text-[12px] sm:text-[14px] font-bold text-gray-700 flex items-center gap-2">
-            <div className="bg-green-100 p-2 rounded-lg text-[#0CBB7D]">
+            <div className="bg-green-100 p-2 rounded-lg text-brand-primary">
               <FiUploadCloud size={18} />
             </div>
             Bulk {selectedOrderType} Upload
@@ -157,7 +157,7 @@ const BulkUploadPopup = ({ onClose, setRefresh, selectedOrderType, onBack, }) =>
             <span className="text-[10px] sm:text-[12px] font-semibold text-gray-600">Need the template?</span>
             <button
               onClick={handleDownload}
-              className="text-[#0CBB7D] hover:underline flex items-center gap-1.5 text-[10px] sm:text-[12px] font-bold transition-all"
+              className="text-brand-primary hover:underline flex items-center gap-1.5 text-[10px] sm:text-[12px] font-bold transition-all"
             >
               <FiDownload /> Download Sample
             </button>
@@ -169,9 +169,9 @@ const BulkUploadPopup = ({ onClose, setRefresh, selectedOrderType, onBack, }) =>
           <label className="group cursor-pointer block relative">
             <div className={`
               border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center transition-all duration-300
-              ${selectedFile ? 'border-[#0CBB7D] bg-green-50/30' : 'border-gray-200 hover:border-[#0CBB7D] hover:bg-gray-50'}
+              ${selectedFile ? 'border-brand-primary bg-green-50/30' : 'border-gray-200 hover:border-brand-primary hover:bg-gray-50'}
             `}>
-              <div className={`p-4 rounded-full mb-3 transition-colors ${selectedFile ? 'bg-[#0CBB7D] text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-green-100 group-hover:text-[#0CBB7D]'}`}>
+              <div className={`p-4 rounded-full mb-3 transition-colors ${selectedFile ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-green-100 group-hover:text-brand-primary'}`}>
                 <FaUpload size={16} />
               </div>
               <span className="text-[10px] sm:text-[12px] font-bold text-gray-700 tracking-tight">
@@ -185,7 +185,7 @@ const BulkUploadPopup = ({ onClose, setRefresh, selectedOrderType, onBack, }) =>
           {/* Selected File Card */}
           {selectedFile && (
             <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-200 shadow-sm animate-in slide-in-from-top-2">
-              <div className="bg-green-100 p-2 rounded-lg text-[#0CBB7D]">
+              <div className="bg-green-100 p-2 rounded-lg text-brand-primary">
                 <FiFileText size={18} />
               </div>
               <div className="flex-1 min-w-0">
@@ -206,7 +206,7 @@ const BulkUploadPopup = ({ onClose, setRefresh, selectedOrderType, onBack, }) =>
         <div className="flex justify-between items-center mt-8 gap-3">
           <button
             onClick={onBack}
-            className="flex items-center justify-center bg-gray-50 border border-gray-200 px-3 py-2 rounded-lg gap-2 text-[10px] sm:text-[12px] font-bold text-gray-600 hover:text-[#0CBB7D] hover:border-[#0CBB7D] hover:bg-green-50 transition-all"
+            className="flex items-center justify-center bg-gray-50 border border-gray-200 px-3 py-2 rounded-lg gap-2 text-[10px] sm:text-[12px] font-bold text-gray-600 hover:text-brand-primary hover:border-brand-primary hover:bg-green-50 transition-all"
           >
             <FaArrowLeft size={12} />
             Back
@@ -214,7 +214,7 @@ const BulkUploadPopup = ({ onClose, setRefresh, selectedOrderType, onBack, }) =>
 
           <button
             onClick={handleSubmit}
-            className="flex py-2 px-3 bg-[#0CBB7D] text-white rounded-lg text-[10px] sm:text-[12px] font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2"
+            className="flex py-2 px-3 bg-brand-primary text-white rounded-lg text-[10px] sm:text-[12px] font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2"
           >
             Confirm & Upload
           </button>

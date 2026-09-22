@@ -109,7 +109,7 @@ const OverviewCardSection = ({ selectedUserId, selectedDateRange }) => {
 
                 <ul className="space-y-2">
                     {weightSplitData.map((item, idx) => {
-                        const colors = ["bg-[#0CBB7D]", "bg-blue-500", "bg-yellow-500", "bg-red-400", "bg-indigo-500", "bg-pink-500"];
+                        const colors = ["bg-brand-primary", "bg-blue-500", "bg-yellow-500", "bg-red-400", "bg-indigo-500", "bg-pink-500"];
                         const color = colors[idx % colors.length];
 
                         return (

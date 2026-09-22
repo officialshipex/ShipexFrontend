@@ -81,9 +81,9 @@ const NotificationHistoryModal = ({ open, onClose }) => {
     const typeLabel = (refModel) => (refModel === "BulkShipJob" ? "Bulk Ship" : "Bulk Upload");
     const typeIcon = (refModel) =>
         refModel === "BulkShipJob" ? (
-            <Package className="w-3.5 h-3.5 text-[#0CBB7D]" />
+            <Package className="w-3.5 h-3.5 text-brand-primary" />
         ) : (
-            <UploadCloud className="w-3.5 h-3.5 text-[#0CBB7D]" />
+            <UploadCloud className="w-3.5 h-3.5 text-brand-primary" />
         );
 
     return (
@@ -105,7 +105,7 @@ const NotificationHistoryModal = ({ open, onClose }) => {
                         <select
                             value={typeFilter}
                             onChange={(e) => setTypeFilter(e.target.value)}
-                            className="w-full appearance-none bg-white py-2 pl-3 pr-8 text-[12px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] text-gray-600"
+                            className="w-full appearance-none bg-white py-2 pl-3 pr-8 text-[12px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-brand-primary text-gray-600"
                         >
                             {TYPE_OPTIONS.map((opt) => (
                                 <option key={opt.value} value={opt.value}>{opt.label}</option>

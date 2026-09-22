@@ -10,9 +10,9 @@ const OtherDetails = ({ amount, otherDetails, setOtherDetails }) => {
     };
 
     return (
-        <div className="border border-[#0CBB7D] flex flex-col mt-4 rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
+        <div className="border border-brand-primary flex flex-col mt-4 rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
             <h2 className="text-[14px] font-[600] text-gray-700 mb-2 text-center md:text-left flex items-center gap-2">
-                <span className="bg-[#0CBB7D] text-white rounded-lg p-2">
+                <span className="bg-brand-primary text-white rounded-lg p-2">
                     <FiFileText className="text-[14px]" />
                 </span>
                 Other Details
@@ -26,7 +26,7 @@ const OtherDetails = ({ amount, otherDetails, setOtherDetails }) => {
                         name="resellerName"
                         value={otherDetails.resellerName || ""}
                         onChange={handleChange}
-                        className="w-full border rounded-lg px-3 py-2 text-[12px] outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                        className="w-full border rounded-lg px-3 py-2 text-[12px] outline-none focus:ring-1 focus:ring-brand-primary"
                         placeholder="Enter Reseller Name"
                     />
                 </div>
@@ -39,7 +39,7 @@ const OtherDetails = ({ amount, otherDetails, setOtherDetails }) => {
                         name="gstin"
                         value={otherDetails.gstin || ""}
                         onChange={handleChange}
-                        className="w-full border rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                        className="w-full border rounded-lg px-3 py-2 outline-none focus:ring-1 focus:ring-brand-primary"
                         placeholder="Enter GSTIN"
                     />
                 </div>
@@ -57,7 +57,7 @@ const OtherDetails = ({ amount, otherDetails, setOtherDetails }) => {
                         name="ewaybill"
                         value={otherDetails.ewaybill || ""}
                         onChange={handleChange}
-                        className={`w-full border rounded-lg px-3 py-2 text-[12px] outline-none focus:ring-1 focus:ring-[#0CBB7D] ${isEwaybillRequired ? "border-red-500" : ""
+                        className={`w-full border rounded-lg px-3 py-2 text-[12px] outline-none focus:ring-1 focus:ring-brand-primary ${isEwaybillRequired ? "border-red-500" : ""
                             }`}
                         placeholder="Enter GST E-Waybill number"
                         required={isEwaybillRequired}

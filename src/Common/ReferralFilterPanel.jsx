@@ -109,7 +109,7 @@ const ReferralFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-                                className={`${fieldStyle} border bg-white ${showMonthDropdown ? "border-[#0CBB7D]" : "border-gray-300"}`}
+                                className={`${fieldStyle} border bg-white ${showMonthDropdown ? "border-brand-primary" : "border-gray-300"}`}
                             >
                                 <span className={localFilters.selectedMonth ? "text-gray-700" : "text-gray-400"}>
                                     {localFilters.selectedMonth ? months.find(m => m.value == localFilters.selectedMonth)?.label : "All Months"}
@@ -120,7 +120,7 @@ const ReferralFilterPanel = ({
                                 <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-20 py-1 animate-popup-in max-h-48 overflow-y-auto">
                                     <div
                                         onClick={() => { setLocalFilters({ ...localFilters, selectedMonth: "" }); setShowMonthDropdown(false); }}
-                                        className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer"
+                                        className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer"
                                     >
                                         All Months
                                     </div>
@@ -128,7 +128,7 @@ const ReferralFilterPanel = ({
                                         <div
                                             key={m.value}
                                             onClick={() => { setLocalFilters({ ...localFilters, selectedMonth: m.value }); setShowMonthDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer"
                                         >
                                             {m.label}
                                         </div>
@@ -144,7 +144,7 @@ const ReferralFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowYearDropdown(!showYearDropdown)}
-                                className={`${fieldStyle} border bg-white ${showYearDropdown ? "border-[#0CBB7D]" : "border-gray-300"}`}
+                                className={`${fieldStyle} border bg-white ${showYearDropdown ? "border-brand-primary" : "border-gray-300"}`}
                             >
                                 <span className={localFilters.selectedYear ? "text-gray-700" : "text-gray-400"}>
                                     {localFilters.selectedYear || "All Years"}
@@ -155,7 +155,7 @@ const ReferralFilterPanel = ({
                                 <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-20 py-1 animate-popup-in max-h-48 overflow-y-auto">
                                     <div
                                         onClick={() => { setLocalFilters({ ...localFilters, selectedYear: "" }); setShowYearDropdown(false); }}
-                                        className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer"
+                                        className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer"
                                     >
                                         All Years
                                     </div>
@@ -163,7 +163,7 @@ const ReferralFilterPanel = ({
                                         <div
                                             key={y}
                                             onClick={() => { setLocalFilters({ ...localFilters, selectedYear: y }); setShowYearDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer"
                                         >
                                             {y}
                                         </div>
@@ -184,7 +184,7 @@ const ReferralFilterPanel = ({
                     </button>
                     <button
                         onClick={handleApply}
-                        className="flex-1 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
+                        className="flex-1 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
                     >
                         Apply Filters
                     </button>

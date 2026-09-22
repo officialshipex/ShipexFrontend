@@ -6,8 +6,13 @@ import Modal from "react-modal";
 import { deleteSession } from '../utils/session';
 import { Notification } from "../Notification";
 import { FiCreditCard, FiArrowLeft, FiActivity } from "react-icons/fi";
+import { useBranding } from "../context/BrandingContext";
 
 const RechargeWallet = () => {
+  // Razorpay's checkout renders in its own overlay/iframe and reads this as a real color
+  // value at call time -- it does not see our page's CSS, so a CSS var string would not
+  // resolve there the way it does in our own DOM. Use the actual resolved hex instead.
+  const { colors: brandColors, companyDisplayName } = useBranding();
   const [amount, setAmount] = useState("1000");
   const [user, setUser] = useState(null);
   const [balance, setBalance] = useState(null);
@@ -60,10 +65,10 @@ const RechargeWallet = () => {
         key: process.env.RAZORPAY_KEY_ID,
         amount: orderAmount,
         currency: currency,
-        name: "Shipex India",
+        name: companyDisplayName || "Shipex India",
         description: "Live Transaction",
         order_id: order_id,
-        theme: { color: "#0CBB7D" },
+        theme: { color: brandColors?.primary || "#0CBB7D" },
       };
 
       const razorpay = new window.Razorpay(options);
@@ -122,7 +127,7 @@ const RechargeWallet = () => {
       overlayClassName="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999]"
     >
       {/* Header */}
-      <div className="bg-[#0CBB7D] p-6 text-center relative">
+      <div className="bg-brand-primary p-6 text-center relative">
         <button
           onClick={() => navigate(-1)}
           className="absolute left-6 top-6 text-white hover:text-green-100 transition-colors"
@@ -139,7 +144,7 @@ const RechargeWallet = () => {
             <h3 className="sm:text-[14px] text-[12px] font-bold text-gray-800">₹ {(balance || 0).toFixed(2)}</h3>
           </div>
           <div className="bg-green-50 p-3 rounded-full">
-            <FiCreditCard className="text-[#0CBB7D] sm:text-[14px] text-[12px]" />
+            <FiCreditCard className="text-brand-primary sm:text-[14px] text-[12px]" />
           </div>
         </div>
       </div>
@@ -157,7 +162,7 @@ const RechargeWallet = () => {
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 font-bold sm:text-[14px] text-[12px]">₹</span>
               <input
                 type="number"
-                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg sm:text-[14px] text-[12px] font-bold text-gray-700 focus:outline-none focus:border-[#0CBB7D] focus:ring-1 focus:ring-green-50 transition-all placeholder-gray-300"
+                className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg sm:text-[14px] text-[12px] font-bold text-gray-700 focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-green-50 transition-all placeholder-gray-300"
                 min={1000}
                 value={amount}
                 onChange={(e) => handleAmountChange(e.target.value)}
@@ -176,8 +181,8 @@ const RechargeWallet = () => {
                 key={val}
                 onClick={() => handleAmountChange(val)}
                 className={`py-2 px-1 rounded-lg sm:text-[12px] text-[10px] font-semibold transition-all duration-200 border ${Number(amount) === val
-                  ? "bg-[#0CBB7D] text-white border-[#0CBB7D] shadow-md transform scale-105"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-[#0CBB7D] hover:bg-green-50"
+                  ? "bg-brand-primary text-white border-brand-primary shadow-md transform scale-105"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-brand-primary hover:bg-green-50"
                   }`}
               >
                 ₹ {val}
@@ -192,7 +197,7 @@ const RechargeWallet = () => {
               disabled={Number(amount) < 1000}
               className={`w-full py-2 rounded-lg font-bold sm:text-[12px] text-[10px] text-white shadow-sm transition-all duration-300 transform active:scale-95 ${Number(amount) < 1000
                 ? "bg-gray-300 cursor-not-allowed shadow-none"
-                : "bg-[#0CBB7D] hover:bg-[#0aa66d] hover:shadow-xl shadow-green-200"
+                : "bg-brand-primary hover:bg-[#0aa66d] hover:shadow-xl shadow-green-200"
                 }`}
             >
               Proceed to Pay ₹ {amount || 0}

@@ -158,7 +158,7 @@ export default function BankDetailsEditModal({ isOpen, onClose }) {
               }
               className={`px-4 py-2 w-full sm:w-auto rounded-lg text-[12px] font-[500] text-white ${!bankDetails.accountNumber || !bankDetails.ifsc
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-[#0CBB7D] hover:bg-green-700"
+                  : "bg-brand-primary hover:bg-green-700"
                 }`}
             >
               {isVerifying ? "Verifying..." : "Verify"}

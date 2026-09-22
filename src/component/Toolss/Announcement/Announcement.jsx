@@ -182,7 +182,7 @@ const Announcement = () => {
           </div>
           <button
             onClick={() => setShowModal(true)}
-            className="bg-[#0CBB7D] text-white px-3 py-2 rounded-lg text-[12px] font-[600] flex items-center gap-2 hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
+            className="bg-brand-primary text-white px-3 py-2 rounded-lg text-[12px] font-[600] flex items-center gap-2 hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
           >
             <Plus size={16} /> Create Announcement
           </button>
@@ -192,7 +192,7 @@ const Announcement = () => {
         <div className="bg-white overflow-hidden flex-1 flex flex-col hidden sm:block">
           <div className="overflow-auto flex-1 h-[calc(100vh-160px)]">
             <table className="min-w-full text-left border-collapse">
-              <thead className="bg-[#0CBB7D] text-white font-[600] sticky top-0 z-10">
+              <thead className="bg-brand-primary text-white font-[600] sticky top-0 z-10">
                 <tr className="text-[12px]">
                   <th className="px-3 py-2 font-[600]">Created At</th>
                   <th className="px-3 py-2 font-[600] w-1/3">Announcement Message</th>
@@ -256,7 +256,7 @@ const Announcement = () => {
                             checked={ann.enabled}
                             onChange={() => toggleEnable(ann)}
                           />
-                          <div className="w-9 h-5 bg-gray-300 rounded-full peer peer-checked:bg-[#0CBB7D] transition-all"></div>
+                          <div className="w-9 h-5 bg-gray-300 rounded-full peer peer-checked:bg-brand-primary transition-all"></div>
                           <div className="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform peer-checked:translate-x-4 shadow-sm"></div>
                         </label>
                       </td>
@@ -264,7 +264,7 @@ const Announcement = () => {
                         <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={() => handleEdit(ann)}
-                            className="p-1 text-white hover:text-gray-100 hover:bg-green-600 rounded-full bg-[#0CBB7D] transition shadow-sm"
+                            className="p-1 text-white hover:text-gray-100 hover:bg-green-600 rounded-full bg-brand-primary transition shadow-sm"
                             title="Edit"
                           >
                             <AiOutlineEdit size={16} />
@@ -310,11 +310,11 @@ const Announcement = () => {
                         checked={ann.enabled}
                         onChange={() => toggleEnable(ann)}
                       />
-                      <div className="w-8 h-4 bg-gray-300 rounded-full peer peer-checked:bg-[#0CBB7D] transition-all"></div>
+                      <div className="w-8 h-4 bg-gray-300 rounded-full peer peer-checked:bg-brand-primary transition-all"></div>
                       <div className="absolute left-0.5 top-0.5 bg-white w-3 h-3 rounded-full transition-transform peer-checked:translate-x-4 shadow-sm"></div>
                     </label>
                     <div className="flex items-center gap-1.5 border-l pl-2">
-                       <button onClick={() => handleEdit(ann)} className="p-1.5 text-[#0CBB7D] hover:bg-green-50 rounded-full transition-all">
+                       <button onClick={() => handleEdit(ann)} className="p-1.5 text-brand-primary hover:bg-green-50 rounded-full transition-all">
                          <AiOutlineEdit size={16} />
                        </button>
                        <button onClick={() => handleDelete(ann._id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-full transition-all">
@@ -378,7 +378,7 @@ const Announcement = () => {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Enter announcement message..."
-                    className="w-full border border-gray-300 rounded-lg p-3 text-[12px] font-[600] text-gray-700 focus:outline-none focus:border-[#0CBB7D] transition-all h-28 resize-none shadow-sm"
+                    className="w-full border border-gray-300 rounded-lg p-3 text-[12px] font-[600] text-gray-700 focus:outline-none focus:border-brand-primary transition-all h-28 resize-none shadow-sm"
                   />
                 </div>
 
@@ -395,7 +395,7 @@ const Announcement = () => {
                       checked={enabled}
                       onChange={() => setEnabled(!enabled)}
                     />
-                    <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-[#0CBB7D] transition-all"></div>
+                    <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-brand-primary transition-all"></div>
                     <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform peer-checked:translate-x-5 shadow-sm"></div>
                   </label>
                 </div>
@@ -413,8 +413,8 @@ const Announcement = () => {
                           onChange={() => setTargetAudience("all")}
                           className="sr-only"
                         />
-                        <div className={`w-4 h-4 rounded-full border-2 transition-all ${targetAudience === "all" ? "border-[#0CBB7D]" : "border-gray-300 group-hover:border-gray-400"}`}>
-                          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#0CBB7D] transition-transform ${targetAudience === "all" ? "scale-100" : "scale-0"}`}></div>
+                        <div className={`w-4 h-4 rounded-full border-2 transition-all ${targetAudience === "all" ? "border-brand-primary" : "border-gray-300 group-hover:border-gray-400"}`}>
+                          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-brand-primary transition-transform ${targetAudience === "all" ? "scale-100" : "scale-0"}`}></div>
                         </div>
                       </div>
                       <span className={`text-[12px] font-[600] transition-colors ${targetAudience === "all" ? "text-gray-900" : "text-gray-500"}`}>All Users</span>
@@ -428,8 +428,8 @@ const Announcement = () => {
                           onChange={() => setTargetAudience("selected")}
                           className="sr-only"
                         />
-                        <div className={`w-4 h-4 rounded-full border-2 transition-all ${targetAudience === "selected" ? "border-[#0CBB7D]" : "border-gray-300 group-hover:border-gray-400"}`}>
-                          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#0CBB7D] transition-transform ${targetAudience === "selected" ? "scale-100" : "scale-0"}`}></div>
+                        <div className={`w-4 h-4 rounded-full border-2 transition-all ${targetAudience === "selected" ? "border-brand-primary" : "border-gray-300 group-hover:border-gray-400"}`}>
+                          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-brand-primary transition-transform ${targetAudience === "selected" ? "scale-100" : "scale-0"}`}></div>
                         </div>
                       </div>
                       <span className={`text-[12px] font-[600] transition-colors ${targetAudience === "selected" ? "text-gray-900" : "text-gray-500"}`}>Selected Users</span>
@@ -449,7 +449,7 @@ const Announcement = () => {
                       <div className="space-y-2 max-h-40 overflow-y-auto custom-scrollbar pr-1">
                         {selectedUsers.length > 0 ? (
                           selectedUsers.map(user => (
-                            <div key={user._id} className="flex items-center justify-between p-2 bg-white border border-gray-200 rounded-lg text-[11px] hover:border-[#0CBB7D] transition-colors">
+                            <div key={user._id} className="flex items-center justify-between p-2 bg-white border border-gray-200 rounded-lg text-[11px] hover:border-brand-primary transition-colors">
                               <div className="flex flex-col min-w-0">
                                 <span className="font-bold text-gray-700 truncate">{user.fullname}</span>
                                 <span className="text-gray-400 truncate">{user.email}</span>
@@ -483,8 +483,8 @@ const Announcement = () => {
                           onChange={() => setDisableType("manual")}
                           className="sr-only"
                         />
-                        <div className={`w-4 h-4 rounded-full border-2 transition-all ${disableType === "manual" ? "border-[#0CBB7D]" : "border-gray-300 group-hover:border-gray-400"}`}>
-                          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#0CBB7D] transition-transform ${disableType === "manual" ? "scale-100" : "scale-0"}`}></div>
+                        <div className={`w-4 h-4 rounded-full border-2 transition-all ${disableType === "manual" ? "border-brand-primary" : "border-gray-300 group-hover:border-gray-400"}`}>
+                          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-brand-primary transition-transform ${disableType === "manual" ? "scale-100" : "scale-0"}`}></div>
                         </div>
                       </div>
                       <span className={`text-[12px] font-[600] transition-colors ${disableType === "manual" ? "text-gray-900" : "text-gray-500"}`}>Manual Disable</span>
@@ -498,8 +498,8 @@ const Announcement = () => {
                           onChange={() => setDisableType("automated")}
                           className="sr-only"
                         />
-                        <div className={`w-4 h-4 rounded-full border-2 transition-all ${disableType === "automated" ? "border-[#0CBB7D]" : "border-gray-300 group-hover:border-gray-400"}`}>
-                          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-[#0CBB7D] transition-transform ${disableType === "automated" ? "scale-100" : "scale-0"}`}></div>
+                        <div className={`w-4 h-4 rounded-full border-2 transition-all ${disableType === "automated" ? "border-brand-primary" : "border-gray-300 group-hover:border-gray-400"}`}>
+                          <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-2 h-2 rounded-full bg-brand-primary transition-transform ${disableType === "automated" ? "scale-100" : "scale-0"}`}></div>
                         </div>
                       </div>
                       <span className={`text-[12px] font-[600] transition-colors ${disableType === "automated" ? "text-gray-900" : "text-gray-500"}`}>Automated Disable</span>
@@ -514,7 +514,7 @@ const Announcement = () => {
                           <select
                             value={automatedDuration}
                             onChange={(e) => setAutomatedDuration(e.target.value)}
-                            className="w-full bg-white border border-gray-300 rounded-lg p-2 text-[12px] font-[600] text-gray-700 focus:outline-none focus:border-[#0CBB7D] appearance-none shadow-sm"
+                            className="w-full bg-white border border-gray-300 rounded-lg p-2 text-[12px] font-[600] text-gray-700 focus:outline-none focus:border-brand-primary appearance-none shadow-sm"
                           >
                             <option value="1h">1 Hour</option>
                             <option value="1d">1 Day</option>
@@ -532,7 +532,7 @@ const Announcement = () => {
                             type="datetime-local"
                             value={customDate}
                             onChange={(e) => setCustomDate(e.target.value)}
-                            className="w-full bg-white border border-gray-300 rounded-lg p-2 text-[12px] font-[600] text-gray-700 focus:outline-none focus:border-[#0CBB7D] shadow-sm"
+                            className="w-full bg-white border border-gray-300 rounded-lg p-2 text-[12px] font-[600] text-gray-700 focus:outline-none focus:border-brand-primary shadow-sm"
                           />
                         </div>
                       )}
@@ -551,7 +551,7 @@ const Announcement = () => {
                 </button>
                 <button
                   onClick={handleCreateOrUpdate}
-                  className="flex-1 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98] flex items-center justify-center gap-2"
+                  className="flex-1 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98] flex items-center justify-center gap-2"
                 >
                   <Check size={16} /> {editingId ? "Update" : "Save"} Announcement
                 </button>

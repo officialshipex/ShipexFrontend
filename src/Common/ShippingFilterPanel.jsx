@@ -128,7 +128,7 @@ const ShippingFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowSearchTypeDropdown(!showSearchTypeDropdown)}
-                                className={`${fieldStyle} border bg-white ${showSearchTypeDropdown ? "border-[#0CBB7D]" : "border-gray-300"}`}
+                                className={`${fieldStyle} border bg-white ${showSearchTypeDropdown ? "border-brand-primary" : "border-gray-300"}`}
                             >
                                 <span className="text-gray-400">{localFilters.searchType === "awbNumber" ? "AWB Number" : "Order ID"}</span>
                                 <ChevronDown className={`w-4 h-4 transition-transform ${showSearchTypeDropdown ? "rotate-180" : ""}`} />
@@ -142,7 +142,7 @@ const ShippingFilterPanel = ({
                                         <div
                                             key={opt.value}
                                             onClick={() => { setLocalFilters({ ...localFilters, searchType: opt.value }); setShowSearchTypeDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {opt.label}
                                         </div>
@@ -158,7 +158,7 @@ const ShippingFilterPanel = ({
                         <input
                             type="text"
                             placeholder={`Enter ${localFilters.searchType === "awbNumber" ? "AWB" : "Order ID"}`}
-                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D]`}
+                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-brand-primary`}
                             value={localFilters.searchInput}
                             onChange={(e) => setLocalFilters({ ...localFilters, searchInput: e.target.value })}
                         />
@@ -185,7 +185,7 @@ const ShippingFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowStatusDropdown(!showStatusDropdown)}
-                                className={`border ${fieldStyle} ${showStatusDropdown ? "border-[#0CBB7D]" : "border-gray-300"} bg-white`}
+                                className={`border ${fieldStyle} ${showStatusDropdown ? "border-brand-primary" : "border-gray-300"} bg-white`}
                             >
                                 <span className={localFilters.status ? "text-gray-700 font-[600]" : "text-gray-400"}>
                                     {localFilters.status || "Select Status"}
@@ -198,7 +198,7 @@ const ShippingFilterPanel = ({
                                         <div
                                             key={s}
                                             onClick={() => { setLocalFilters({ ...localFilters, status: s }); setShowStatusDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {s}
                                         </div>
@@ -228,7 +228,7 @@ const ShippingFilterPanel = ({
                                             <div
                                                 key={opt}
                                                 onClick={() => { setLocalFilters({ ...localFilters, paymentType: opt }); setShowPaymentDropdown(false); }}
-                                                className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                                className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                             >
                                                 {opt}
                                             </div>
@@ -252,7 +252,7 @@ const ShippingFilterPanel = ({
                     </button>
                     <button
                         onClick={handleApply}
-                        className="flex-1 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
+                        className="flex-1 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
                     >
                         Apply Filters
                     </button>

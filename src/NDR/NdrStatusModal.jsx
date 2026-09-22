@@ -8,7 +8,7 @@ const TimelineMarker = ({ isLast }) => (
   <div className="relative flex justify-center items-start z-10 w-full h-full">
     {/* Dot */}
     <div className="w-5 h-5 bg-white rounded-full flex items-center justify-center relative z-10 mt-2 shadow-sm border border-gray-100">
-      <span className="block w-2.5 h-2.5 rounded-full bg-[#0CBB7D] ring-2 ring-[#0CBB7D]/20 transition-transform group-hover:scale-110" />
+      <span className="block w-2.5 h-2.5 rounded-full bg-brand-primary ring-2 ring-brand-primary/20 transition-transform group-hover:scale-110" />
     </div>
 
     {/* Line - Connector bar */}
@@ -98,8 +98,8 @@ const NdrStatusModal = ({ isOpen, setIsOpen, ndrHistory }) => {
         {/* Modal Header */}
         <div className="flex justify-between items-center px-4 py-2 border-b border-gray-100 bg-gray-50/50">
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-[#0CBB7D]/10 rounded-lg">
-              <FaHistory className="text-[#0CBB7D] w-4 h-4" />
+            <div className="p-2 bg-brand-primary/10 rounded-lg">
+              <FaHistory className="text-brand-primary w-4 h-4" />
             </div>
             <div>
               <h2 className="text-[12px] sm:text-[14px] text-gray-700 font-[600] tracking-tight">NDR Status History</h2>
@@ -123,7 +123,7 @@ const NdrStatusModal = ({ isOpen, setIsOpen, ndrHistory }) => {
                 key={tab}
                 onClick={() => setActiveTab(tab)}
                 className={`px-3 py-2 rounded-lg text-[12px] font-[600] transition-all duration-200 border shadow-sm ${activeTab === tab
-                  ? "bg-[#0CBB7D] text-white border-[#0CBB7D]"
+                  ? "bg-brand-primary text-white border-brand-primary"
                   : "bg-white text-gray-700 border-gray-200 hover:bg-green-50"
                   }`}
                 role="tab"
@@ -154,7 +154,7 @@ const NdrStatusModal = ({ isOpen, setIsOpen, ndrHistory }) => {
                 {["ndr1", "ndr2", "ndr3", "all"].map((tab) => (
                   <button
                     key={tab}
-                    className={`w-full text-left px-4 py-2.5 text-[12px] font-[600] transition-colors ${activeTab === tab ? "bg-green-50 text-[#0CBB7D]" : "text-gray-700 hover:bg-gray-50"
+                    className={`w-full text-left px-4 py-2.5 text-[12px] font-[600] transition-colors ${activeTab === tab ? "bg-green-50 text-brand-primary" : "text-gray-700 hover:bg-gray-50"
                       }`}
                     onClick={() => {
                       setActiveTab(tab);
@@ -175,11 +175,11 @@ const NdrStatusModal = ({ isOpen, setIsOpen, ndrHistory }) => {
               <div className="hidden sm:grid grid-cols-[50px_1fr] items-center sticky top-0 z-20 bg-white pb-2 mb-1">
                 <div></div>
                 <div className="grid grid-cols-5 gap-4 px-4 py-2 text-[11px] font-bold text-gray-500 tracking-tight border-b border-gray-50">
-                  <div className="flex items-center gap-2"><FaCalendarAlt className="text-[10px] text-[#0CBB7D]" /> Date & Time</div>
-                  <div className="flex items-center gap-2"><FaInfoCircle className="text-[10px] text-[#0CBB7D]" /> Action</div>
-                  <div className="flex items-center gap-2"><FaUser className="text-[10px] text-[#0CBB7D]" /> Action By</div>
-                  <div className="flex items-center gap-2"><FaHistory className="text-[10px] text-[#0CBB7D]" /> Remarks</div>
-                  <div className="flex items-center justify-center gap-2"><FaLink className="text-[10px] text-[#0CBB7D]" /> Source</div>
+                  <div className="flex items-center gap-2"><FaCalendarAlt className="text-[10px] text-brand-primary" /> Date & Time</div>
+                  <div className="flex items-center gap-2"><FaInfoCircle className="text-[10px] text-brand-primary" /> Action</div>
+                  <div className="flex items-center gap-2"><FaUser className="text-[10px] text-brand-primary" /> Action By</div>
+                  <div className="flex items-center gap-2"><FaHistory className="text-[10px] text-brand-primary" /> Remarks</div>
+                  <div className="flex items-center justify-center gap-2"><FaLink className="text-[10px] text-brand-primary" /> Source</div>
                 </div>
               </div>
 
@@ -197,7 +197,7 @@ const NdrStatusModal = ({ isOpen, setIsOpen, ndrHistory }) => {
                             <TimelineMarker isLast={actionIdx === actions.length - 1} />
 
                             {/* Content container */}
-                            <div className="bg-white rounded-xl shadow-sm py-3 px-4 border border-gray-100 w-full hover:border-[#0CBB7D]/30 transition-all group">
+                            <div className="bg-white rounded-xl shadow-sm py-3 px-4 border border-gray-100 w-full hover:border-brand-primary/30 transition-all group">
                               {/* Desktop grid */}
                               <div className="hidden sm:grid grid-cols-5 gap-4 text-[12px] font-[500] text-gray-700">
                                 <div className="flex items-center whitespace-nowrap text-gray-700">{formatDate(item.date, item.source)}</div>

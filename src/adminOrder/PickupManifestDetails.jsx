@@ -274,22 +274,22 @@ const PickupManifestDetails = () => {
                         </button>
                         <div className="flex items-center gap-2 group">
                             <h1 className="sm:text-[14px] text-[12px] font-[600] text-gray-700">
-                                Pickup ID# <span className="text-[#0CBB7D]">{manifest?.pickupId || pickupId}</span>
+                                Pickup ID# <span className="text-brand-primary">{manifest?.pickupId || pickupId}</span>
                             </h1>
                             <div
                                 onClick={handleCopyPickupId}
                                 className="md:opacity-0 md:group-hover:opacity-100 cursor-pointer transition-opacity"
                             >
-                                <div className="relative flex items-center justify-center text-gray-500 hover:text-[#0CBB7D]">
+                                <div className="relative flex items-center justify-center text-gray-500 hover:text-brand-primary">
                                     {copiedPickupId ? (
-                                        <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                                        <FiCheck className="w-3 h-3 text-brand-primary" />
                                     ) : (
                                         <FiCopy className="w-3 h-3" />
                                     )}
                                 </div>
                             </div>
                         </div>
-                        <span className="px-2 font-[600] py-1 rounded text-[10px] bg-green-100 text-[#0CBB7D] uppercase">
+                        <span className="px-2 font-[600] py-1 rounded text-[10px] bg-green-100 text-brand-primary uppercase">
                             {manifest?.status?.replace(/_/g, " ") || "Scheduled"}
                         </span>
                     </div>
@@ -297,7 +297,7 @@ const PickupManifestDetails = () => {
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => handleManifest(allOrders.map(o => o._id).join(","))}
-                            className="flex items-center gap-1 px-3 py-2 bg-[#0CBB7D] text-white text-[10px] font-[600] rounded-lg shadow-sm hover:bg-opacity-90"
+                            className="flex items-center gap-1 px-3 py-2 bg-brand-primary text-white text-[10px] font-[600] rounded-lg shadow-sm hover:bg-opacity-90"
                         >
                             Download Manifest
                         </button>
@@ -315,7 +315,7 @@ const PickupManifestDetails = () => {
                         onClick={() => setIsFilterPanelOpen(true)}
                         className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap min-w-[120px]"
                     >
-                        <Filter className="w-4 h-4 text-[#0CBB7D]" />
+                        <Filter className="w-4 h-4 text-brand-primary" />
                         More Filters
                     </button>
                     <div className="hidden md:block">
@@ -333,7 +333,7 @@ const PickupManifestDetails = () => {
                             disabled={selectedOrders.length === 0}
                             className={`py-2 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-2 border ${selectedOrders.length === 0
                                 ? "border-gray-200 text-gray-400 cursor-not-allowed bg-gray-50"
-                                : "border-[#0CBB7D] text-[#0CBB7D] bg-white hover:bg-green-50 shadow-sm"
+                                : "border-brand-primary text-brand-primary bg-white hover:bg-green-50 shadow-sm"
                                 }`}
                             onClick={() => setDesktopDropdownOpen(!desktopDropdownOpen)}
                         >

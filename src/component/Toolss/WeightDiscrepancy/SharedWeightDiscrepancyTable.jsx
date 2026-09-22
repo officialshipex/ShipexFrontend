@@ -25,7 +25,7 @@ const SharedWeightDiscrepancyTable = ({
             <div className="relative overflow-x-auto bg-white overflow-y-auto h-[calc(100vh-295px)] border-gray-300">
                 <table className="w-full text-left border-collapse">
                     {/* Table Head */}
-                    <thead className="sticky top-0 z-20 bg-[#0CBB7D]">
+                    <thead className="sticky top-0 z-20 bg-brand-primary">
                         <tr className="text-white text-[12px] font-[600]">
                             <th className="py-2 px-3">
                                 <div className="flex justify-center items-center">
@@ -33,7 +33,7 @@ const SharedWeightDiscrepancyTable = ({
                                         type="checkbox"
                                         checked={selectedOrders.length === orders.length && orders.length > 0}
                                         onChange={handleSelectAll}
-                                        className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
+                                        className="cursor-pointer accent-brand-primary w-3 h-3"
                                     />
                                 </div>
                             </th>
@@ -91,7 +91,7 @@ const SharedWeightDiscrepancyTable = ({
                                                     type="checkbox"
                                                     checked={selectedOrders.includes(order._id)}
                                                     onChange={() => handleCheckboxChange(order._id)}
-                                                    className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
+                                                    className="cursor-pointer accent-brand-primary w-3 h-3"
                                                 />
                                             </div>
                                         </td>
@@ -99,7 +99,7 @@ const SharedWeightDiscrepancyTable = ({
                                         {/* Admin User Details */}
                                         {isAdmin && (
                                             <td className="py-2 px-3 whitespace-nowrap">
-                                                <p className="text-[#0CBB7D]">{order.user?.userId}</p>
+                                                <p className="text-brand-primary">{order.user?.userId}</p>
                                                 <p>{order.user?.fullname || order.user?.name}</p>
                                                 <p className="text-gray-500 truncate max-w-[120px]" title={order.user?.email}>
                                                     {order.user?.email}
@@ -170,7 +170,7 @@ const SharedWeightDiscrepancyTable = ({
                                             <div className="flex items-center gap-1 group">
                                                 <span
                                                     onClick={() => handleTrackingByAwb(order.awbNumber)}
-                                                    className="text-[#0CBB7D] font-[600] cursor-pointer hover:underline text-[12px]"
+                                                    className="text-brand-primary font-[600] cursor-pointer hover:underline text-[12px]"
                                                 >
                                                     {order.awbNumber}
                                                 </span>
@@ -179,7 +179,7 @@ const SharedWeightDiscrepancyTable = ({
                                                     className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-green-50 rounded"
                                                 >
                                                     {copiedAwb === `awbdesk-${index}` ? (
-                                                        <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                                                        <FiCheck className="w-3 h-3 text-brand-primary" />
                                                     ) : (
                                                         <FiCopy className="w-3 h-3 text-gray-400" />
                                                     )}

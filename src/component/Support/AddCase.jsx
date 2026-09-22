@@ -33,9 +33,9 @@ function CustomDropdown({
       <button
         type="button"
         className={`w-full flex justify-between items-center border rounded px-2 py-2 text-[12px] bg-white transition-all duration-200
-          ${open ? "ring-2 ring-[#0CBB7D] bg-green-50" : ""}
+          ${open ? "ring-2 ring-brand-primary bg-green-50" : ""}
           ${disabled ? "bg-gray-100 cursor-not-allowed" : "hover:bg-green-50"}
-          focus:outline-none focus:ring-2 focus:ring-[#0CBB7D]
+          focus:outline-none focus:ring-2 focus:ring-brand-primary
         `}
         onClick={() => !disabled && setOpen((o) => !o)}
         disabled={disabled}
@@ -71,7 +71,7 @@ function CustomDropdown({
             key={opt}
             className={`px-3 py-2 text-[12px] cursor-pointer hover:bg-green-50 transition-colors
               ${
-                opt === value ? "bg-green-100 font-semibold text-[#0CBB7D]" : ""
+                opt === value ? "bg-green-100 font-semibold text-brand-primary" : ""
               }
             `}
             onClick={() => {
@@ -247,7 +247,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-400 hover:text-[#0CBB7D] bg-gray-100 hover:bg-green-50 rounded-full p-1 transition z-10"
+          className="absolute top-2 right-2 text-gray-400 hover:text-brand-primary bg-gray-100 hover:bg-green-50 rounded-full p-1 transition z-10"
           aria-label="Close"
         >
           <svg
@@ -318,7 +318,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
       value="single"
       checked={awbType === "single"}
       onChange={() => { setAwbType("single"); setAwbInputType(""); setAwbNumbers([]); }}
-      className="accent-[#0CBB7D] mr-1 focus:ring-0 focus:outline-none"
+      className="accent-brand-primary mr-1 focus:ring-0 focus:outline-none"
       style={{ boxShadow: "none" }}
     /> <span className="ml-1 text-gray-700">Single</span>
   </label>
@@ -329,7 +329,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
       value="multiple"
       checked={awbType === "multiple"}
       onChange={() => { setAwbType("multiple"); setAwbInputType(""); setAwbNumbers([]); }}
-      className="accent-[#0CBB7D] mr-1 focus:ring-0 focus:outline-none"
+      className="accent-brand-primary mr-1 focus:ring-0 focus:outline-none"
       style={{ boxShadow: "none" }}
     /> <span className="ml-1 text-gray-700">Multiple</span>
   </label>
@@ -344,7 +344,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
             </label>
             <input
               type="text"
-              className="w-full border rounded px-2 py-2 text-[12px] focus:ring-2 focus:ring-[#0CBB7D] transition bg-white focus:outline-none"
+              className="w-full border rounded px-2 py-2 text-[12px] focus:ring-2 focus:ring-brand-primary transition bg-white focus:outline-none"
               value={awbNumbers[0] || ""}
               onChange={(e) => setAwbNumbers([e.target.value])}
               placeholder="Enter AWB number"
@@ -368,7 +368,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
                     setAwbInputType("manual");
                     setAwbNumbers([]);
                   }}
-                  className="accent-[#0CBB7D] mr-1 focus:ring-0 focus:outline-none"
+                  className="accent-brand-primary mr-1 focus:ring-0 focus:outline-none"
                   style={{ boxShadow: "none" }}
                 />{" "}
                 <span className="ml-1">Enter Manually</span>
@@ -383,7 +383,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
                     setAwbInputType("upload");
                     setAwbNumbers([]);
                   }}
-                  className="accent-[#0CBB7D] mr-1 focus:ring-0 focus:outline-none"
+                  className="accent-brand-primary mr-1 focus:ring-0 focus:outline-none"
                   style={{ boxShadow: "none" }}
                 />{" "}
                 <span className="ml-1">Upload File</span>
@@ -391,7 +391,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
             </div>
             {awbInputType === "manual" && (
               <textarea
-                className="w-full border rounded px-2 py-1 mt-2 text-[12px] focus:ring-2 focus:ring-[#0CBB7D] transition bg-white focus:outline-none"
+                className="w-full border rounded px-2 py-1 mt-2 text-[12px] focus:ring-2 focus:ring-brand-primary transition bg-white focus:outline-none"
                 rows={2}
                 value={awbNumbers.join(", ")}
                 onChange={(e) =>
@@ -422,7 +422,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
                       setAwbNumbers(awbs);
                     }}
                   />
-                  <div className="flex items-center gap-2 border border-dashed border-[#0CBB7D] rounded px-3 py-2 bg-green-50 text-[#0CBB7D] text-[12px] cursor-pointer hover:bg-green-100 transition">
+                  <div className="flex items-center gap-2 border border-dashed border-brand-primary rounded px-3 py-2 bg-green-50 text-brand-primary text-[12px] cursor-pointer hover:bg-green-100 transition">
                     <svg
                       className="w-4 h-4 mr-1"
                       fill="none"
@@ -445,7 +445,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
             Tell us about your issue<span className="text-red-500">*</span>
           </label>
           <textarea
-            className="w-full border rounded px-2 py-1 text-[12px] focus:ring-2 focus:ring-[#0CBB7D] transition bg-white focus:outline-none"
+            className="w-full border rounded px-2 py-1 text-[12px] focus:ring-2 focus:ring-brand-primary transition bg-white focus:outline-none"
             rows={3}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
@@ -471,7 +471,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
                 className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
                 onChange={handleFileChange}
               />
-              <div className="flex items-center gap-2 border border-dashed border-[#0CBB7D] rounded px-3 py-2 bg-green-50 text-[#0CBB7D] text-[12px] cursor-pointer hover:bg-green-100 transition">
+              <div className="flex items-center gap-2 border border-dashed border-brand-primary rounded px-3 py-2 bg-green-50 text-brand-primary text-[12px] cursor-pointer hover:bg-green-100 transition">
                 <svg
                   className="w-4 h-4 mr-1"
                   fill="none"
@@ -489,7 +489,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
                 {attachments.map((file, idx) => (
                   <span
                     key={idx}
-                    className="bg-green-100 text-[#0CBB7D] px-2 py-0.5 rounded text-[11px]"
+                    className="bg-green-100 text-brand-primary px-2 py-0.5 rounded text-[11px]"
                   >
                     {file.name}
                   </span>
@@ -511,7 +511,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
           </button>
           <button
             type="submit"
-            className="bg-[#0CBB7D] text-white px-4 py-2 rounded-lg font-semibold text-[12px] hover:bg-green-600 transition w-1/2 md:w-auto"
+            className="bg-brand-primary text-white px-4 py-2 rounded-lg font-semibold text-[12px] hover:bg-green-600 transition w-1/2 md:w-auto"
           >
             Submit
           </button>

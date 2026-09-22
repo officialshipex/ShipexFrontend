@@ -30,8 +30,8 @@ const Toggle = ({ enabled, onChange, disabled = false, id }) => (
     aria-checked={enabled}
     disabled={disabled}
     onClick={() => !disabled && onChange(!enabled)}
-    className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-[#0CBB7D] focus:ring-offset-1
-      ${enabled ? "bg-[#0CBB7D]" : "bg-gray-300"}
+    className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:ring-offset-1
+      ${enabled ? "bg-brand-primary" : "bg-gray-300"}
       ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
   >
     <span
@@ -44,12 +44,12 @@ const Toggle = ({ enabled, onChange, disabled = false, id }) => (
 // ─── Feature Info Card ──────────────────────────────────────
 const FeatureCard = ({ icon, title, description, enabled, onToggle, adminEnabled, stats, activeLabel }) => (
   <div className={`relative bg-white border rounded-lg px-3 py-2 transition-all duration-300
-    ${enabled && adminEnabled ? "border-[#0CBB7D]" : "border-gray-200"}`}>
+    ${enabled && adminEnabled ? "border-brand-primary" : "border-gray-200"}`}>
     {/* Header */}
     <div className="flex items-start justify-between gap-2">
       <div className="flex items-center gap-3">
         <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0
-          ${enabled && adminEnabled ? "bg-green-100 text-[#0CBB7D]" : "bg-gray-100 text-gray-400"}`}>
+          ${enabled && adminEnabled ? "bg-green-100 text-brand-primary" : "bg-gray-100 text-gray-400"}`}>
           {icon}
         </div>
         <div>
@@ -69,7 +69,7 @@ const FeatureCard = ({ icon, title, description, enabled, onToggle, adminEnabled
           <span className="text-[10px] text-red-500 font-[600]">Disabled by Admin</span>
         )}
         {enabled && adminEnabled && (
-          <span className="text-[10px] text-[#0CBB7D] font-[600]">{activeLabel}</span>
+          <span className="text-[10px] text-brand-primary font-[600]">{activeLabel}</span>
         )}
       </div>
     </div>
@@ -246,7 +246,7 @@ const AIOrderUpdation = () => {
       <div className="flex items-center justify-between bg-white border border-gray-200 rounded-lg px-3 py-2 shadow-sm">
         <div className="flex items-center gap-3">
           <div className="w-9 h-9 bg-green-100 rounded-xl flex items-center justify-center">
-            <BiSolidPhoneCall className="text-[#0CBB7D] w-5 h-5" />
+            <BiSolidPhoneCall className="text-brand-primary w-5 h-5" />
           </div>
           <div>
             <h2 className="text-[13px] font-[700] text-gray-800">Smart Calling</h2>
@@ -256,7 +256,7 @@ const AIOrderUpdation = () => {
         {/* <div className="flex items-center gap-2">
           <div className="text-right">
             <p className="text-[10px] text-gray-500">Available Credits</p>
-            <p className="text-[14px] font-[700] text-[#0CBB7D]">{creditBalance}</p>
+            <p className="text-[14px] font-[700] text-brand-primary">{creditBalance}</p>
           </div>
           <button
             onClick={() => { fetchSettings(); fetchCreditBalance(); fetchLogs(); }}
@@ -326,7 +326,7 @@ const AIOrderUpdation = () => {
         {/* Table Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 gap-2 flex-wrap">
           <div className="flex items-center gap-2">
-            <FiMic className="w-4 h-4 text-[#0CBB7D]" />
+            <FiMic className="w-4 h-4 text-brand-primary" />
             <h3 className="text-[12px] font-[700] text-gray-800">Call Logs</h3>
             <span className="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-[600]">{total} total</span>
           </div>
@@ -336,7 +336,7 @@ const AIOrderUpdation = () => {
             <select
               value={filterService}
               onChange={e => { setFilterService(e.target.value); setPage(1); }}
-              className="text-[11px] border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#0CBB7D] bg-white"
+              className="text-[11px] border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-primary bg-white"
             >
               <option value="">All Services</option>
               <option value="order_verification">Order Verification</option>
@@ -346,7 +346,7 @@ const AIOrderUpdation = () => {
             <select
               value={filterStatus}
               onChange={e => { setFilterStatus(e.target.value); setPage(1); }}
-              className="text-[11px] border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-[#0CBB7D] bg-white"
+              className="text-[11px] border border-gray-200 rounded-lg px-2 py-1.5 focus:outline-none focus:ring-1 focus:ring-brand-primary bg-white"
             >
               <option value="">All Status</option>
               <option value="pending">Pending</option>
@@ -369,7 +369,7 @@ const AIOrderUpdation = () => {
         <div className="overflow-x-auto">
           <table className="min-w-full">
             <thead>
-              <tr className="bg-[#0CBB7D] text-white text-[11px] font-[600]">
+              <tr className="bg-brand-primary text-white text-[11px] font-[600]">
                 <th className="py-2 px-3 text-left whitespace-nowrap">Date & Time</th>
                 <th className="py-2 px-3 text-left whitespace-nowrap">Order / AWB</th>
                 <th className="py-2 px-3 text-left whitespace-nowrap">Service</th>
@@ -418,7 +418,7 @@ const AIOrderUpdation = () => {
 
                       {/* Order / AWB */}
                       <td className="py-2 px-3 whitespace-nowrap">
-                        <p className="text-[#0CBB7D] font-[600]">#{log.orderDisplayId || "—"}</p>
+                        <p className="text-brand-primary font-[600]">#{log.orderDisplayId || "—"}</p>
                         <p className="text-gray-500 text-[10px]">{log.awb_number || "—"}</p>
                       </td>
 
@@ -470,7 +470,7 @@ const AIOrderUpdation = () => {
                             href={log.recordingUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="inline-flex items-center gap-1 text-[10px] text-[#0CBB7D] font-[600] hover:underline"
+                            className="inline-flex items-center gap-1 text-[10px] text-brand-primary font-[600] hover:underline"
                           >
                             <FiMic className="w-3 h-3" /> Play
                           </a>

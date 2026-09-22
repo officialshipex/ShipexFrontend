@@ -46,7 +46,7 @@ const CourierFilter = ({
         type="button"
         onClick={() => setShowDropdown((prev) => !prev)}
         className={`w-full bg-white py-2 px-3 text-[12px] font-[600]
-          border rounded-lg flex items-center justify-between text-gray-400 ${showDropdown || selectedCourier.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D]" : "border-gray-300"}`}
+          border rounded-lg flex items-center justify-between text-gray-400 ${showDropdown || selectedCourier.length > 0 ? "border-brand-primary text-brand-primary" : "border-gray-300"}`}
       >
         <span className="truncate mr-2">{displayText()}</span>
         <ChevronDown
@@ -62,7 +62,7 @@ const CourierFilter = ({
             <input
               type="text"
               placeholder="Search courier service ..."
-              className="w-full px-2 py-1 text-[11px] border rounded focus:outline-none focus:border-[#0CBB7D]"
+              className="w-full px-2 py-1 text-[11px] border rounded focus:outline-none focus:border-brand-primary"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               onClick={(e) => e.stopPropagation()}
@@ -75,10 +75,10 @@ const CourierFilter = ({
                 <div
                   key={idx}
                   className={`px-3 py-2.5 text-[12px] font-[600] flex items-center gap-2
-                             cursor-pointer transition-colors ${isSelected ? "text-[#0CBB7D] bg-green-50" : "text-gray-500 hover:bg-gray-50"}`}
+                             cursor-pointer transition-colors ${isSelected ? "text-brand-primary bg-green-50" : "text-gray-500 hover:bg-gray-50"}`}
                   onClick={() => handleToggle(courier)}
                 >
-                  <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${isSelected ? "bg-[#0CBB7D] border-[#0CBB7D]" : "border-gray-300 bg-white"}`}>
+                  <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${isSelected ? "bg-brand-primary border-brand-primary" : "border-gray-300 bg-white"}`}>
                     {isSelected && <Check className="w-3 h-3 text-white" />}
                   </div>
                   <span className="truncate">{courier}</span>

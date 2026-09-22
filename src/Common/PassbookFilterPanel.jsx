@@ -122,7 +122,7 @@ const PassbookFilterPanel = ({
                         <input
                             type="text"
                             placeholder="Enter Order ID"
-                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D]`}
+                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-brand-primary`}
                             value={localFilters.orderId}
                             onChange={(e) => setLocalFilters({ ...localFilters, orderId: e.target.value })}
                         />
@@ -135,7 +135,7 @@ const PassbookFilterPanel = ({
                             <input
                                 type="text"
                                 placeholder="Enter AWB Number"
-                                className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D]`}
+                                className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-brand-primary`}
                                 value={localFilters.awbNumber}
                                 onChange={(e) => setLocalFilters({ ...localFilters, awbNumber: e.target.value })}
                             />
@@ -148,7 +148,7 @@ const PassbookFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowCategoryDropdown(!showCategoryDropdown)}
-                                className={`${fieldStyle} ${showCategoryDropdown ? "border-[#0CBB7D]" : "border-gray-300"} bg-white`}
+                                className={`${fieldStyle} ${showCategoryDropdown ? "border-brand-primary" : "border-gray-300"} bg-white`}
                             >
                                 <span className={localFilters.category ? "text-gray-700 font-[600]" : "text-gray-400"}>
                                     {localFilters.category ? localFilters.category.charAt(0).toUpperCase() + localFilters.category.slice(1) : "Select Category"}
@@ -161,7 +161,7 @@ const PassbookFilterPanel = ({
                                         <div
                                             key={cat}
                                             onClick={() => { setLocalFilters({ ...localFilters, category: cat }); setShowCategoryDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {cat.charAt(0).toUpperCase() + cat.slice(1)}
                                         </div>
@@ -177,7 +177,7 @@ const PassbookFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowDescriptionDropdown(!showDescriptionDropdown)}
-                                className={`${fieldStyle} ${showDescriptionDropdown ? "border-[#0CBB7D]" : "border-gray-300"} bg-white`}
+                                className={`${fieldStyle} ${showDescriptionDropdown ? "border-brand-primary" : "border-gray-300"} bg-white`}
                             >
                                 <span className={`truncate ${localFilters.description ? "text-gray-700 font-[600]" : "text-gray-400"}`}>
                                     {localFilters.description || "Select Description"}
@@ -190,7 +190,7 @@ const PassbookFilterPanel = ({
                                         <div
                                             key={desc}
                                             onClick={() => { setLocalFilters({ ...localFilters, description: desc }); setShowDescriptionDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {desc}
                                         </div>
@@ -211,7 +211,7 @@ const PassbookFilterPanel = ({
                     </button>
                     <button
                         onClick={handleApply}
-                        className="flex-1 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
+                        className="flex-1 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
                     >
                         Apply Filters
                     </button>

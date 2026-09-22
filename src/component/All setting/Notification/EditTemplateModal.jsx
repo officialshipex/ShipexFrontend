@@ -93,7 +93,7 @@ const EditTemplateModal = ({
                 onChange={(e) => setSubject(e.target.value)}
                 maxLength={100}
                 placeholder="Enter email subject"
-                className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl text-[13px] font-medium focus:outline-none focus:ring-2 focus:ring-[#0CBB7D]/20 focus:border-[#0CBB7D] transition-all"
+                className="w-full px-4 py-2.5 bg-white border border-gray-300 rounded-xl text-[13px] font-medium focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
               />
             </div>
           )}
@@ -113,13 +113,13 @@ const EditTemplateModal = ({
               onChange={(e) => setTemplate(e.target.value)}
               rows={12}
               placeholder="Type your message here..."
-              className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-[13px] font-medium focus:outline-none focus:ring-2 focus:ring-[#0CBB7D]/20 focus:border-[#0CBB7D] transition-all resize-none leading-relaxed"
+              className="w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-[13px] font-medium focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all resize-none leading-relaxed"
             />
           </div>
 
           {/* Variables Helper */}
           <div className="space-y-3 p-4 bg-green-50/50 rounded-2xl border border-green-100">
-            <div className="flex items-center gap-2 text-[#0CBB7D]">
+            <div className="flex items-center gap-2 text-brand-primary">
               <Info className="w-4 h-4" />
               <span className="text-[12px] font-bold">Dynamic Variables</span>
             </div>
@@ -132,7 +132,7 @@ const EditTemplateModal = ({
                 <button
                   key={v.key}
                   onClick={() => insertVariable(v.key)}
-                  className="px-2.5 py-1.5 bg-white border border-green-200 text-[#0CBB7D] text-[11px] font-bold rounded-lg hover:bg-[#0CBB7D] hover:text-white hover:border-[#0CBB7D] transition-all shadow-sm"
+                  className="px-2.5 py-1.5 bg-white border border-green-200 text-brand-primary text-[11px] font-bold rounded-lg hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all shadow-sm"
                   title={`Insert ${v.label}`}
                 >
                   {v.key}
@@ -152,7 +152,7 @@ const EditTemplateModal = ({
           </button>
           <button
             onClick={handleUpdate}
-            className="flex-1 py-2.5 bg-[#0CBB7D] text-white rounded-xl text-[13px] font-bold hover:bg-[#0aa36d] transition-all shadow-lg shadow-[#0CBB7D]/20 active:scale-[0.98]"
+            className="flex-1 py-2.5 bg-brand-primary text-white rounded-xl text-[13px] font-bold hover:bg-[#0aa36d] transition-all shadow-lg shadow-brand-primary/20 active:scale-[0.98]"
           >
             Save Changes
           </button>

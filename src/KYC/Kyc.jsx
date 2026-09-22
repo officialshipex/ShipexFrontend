@@ -800,9 +800,9 @@ const BusinessTypeSelection = () => {
               <div
                 className={`w-8 h-8 flex items-center justify-center rounded-full border-2 font-semibold transition-colors duration-500 ease-in-out z-10
             ${index === currentStep
-                    ? "bg-[#0CBB7D] text-white border-[#0CBB7D]"
+                    ? "bg-brand-primary text-white border-brand-primary"
                     : index < currentStep
-                      ? "bg-[#0CBB7D] border-[#0CBB7D] text-white"
+                      ? "bg-brand-primary border-brand-primary text-white"
                       : "bg-white border-gray-300 text-gray-400"}
           `}
               >
@@ -811,18 +811,18 @@ const BusinessTypeSelection = () => {
 
               {/* Line for desktop (circle to circle only) */}
               {index !== steps.length - 1 && (
-                <div className="hidden sm:block absolute left-[150px] top-1/2 transform -translate-y-1/2 w-24 h-0.5 bg-[#0CBB7D]"></div>
+                <div className="hidden sm:block absolute left-[150px] top-1/2 transform -translate-y-1/2 w-24 h-0.5 bg-brand-primary"></div>
               )}
 
               {/* Line for mobile (circle to circle only) */}
               {index !== steps.length - 1 && (
-                <div className="sm:hidden absolute top-full left-4 transform -translate-x-1/2 w-0.5 h-6 bg-[#0CBB7D]"></div>
+                <div className="sm:hidden absolute top-full left-4 transform -translate-x-1/2 w-0.5 h-6 bg-brand-primary"></div>
               )}
 
               {/* Label for mobile (to the right of circle) */}
               <span
                 className={`ml-3 sm:ml-0 sm:mt-3 text-[12px] sm:text-[14px] font-semibold transition-colors duration-500 ease-in-out text-left sm:text-center
-            ${index === currentStep ? "text-[#0CBB7D]" : "text-gray-500"}
+            ${index === currentStep ? "text-brand-primary" : "text-gray-500"}
           `}
               >
                 {step}
@@ -864,8 +864,8 @@ const BusinessTypeSelection = () => {
                     <label
                       key={option.value}
                       className={`flex items-center gap-3 border-2 rounded-lg px-4 py-2 w-full sm:w-60 cursor-pointer transition duration-150 ${selectedType === option.value
-                        ? "border-[#0CBB7D] bg-green-50"
-                        : "border-gray-300 hover:border-[#0CBB7D]"
+                        ? "border-brand-primary bg-green-50"
+                        : "border-gray-300 hover:border-brand-primary"
                         }`}
                       onClick={() => setSelectedType(option.value)}
                     >
@@ -875,11 +875,11 @@ const BusinessTypeSelection = () => {
                         value={option.value}
                         checked={selectedType === option.value}
                         onChange={() => setSelectedType(option.value)}
-                        className="accent-[#0CBB7D] cursor-pointer outline-none ring-0 appearance-none w-3 h-3 border-2 border-gray-300 checked:border-[#0CBB7D] checked:bg-[#0CBB7D] rounded-full"
+                        className="accent-brand-primary cursor-pointer outline-none ring-0 appearance-none w-3 h-3 border-2 border-gray-300 checked:border-brand-primary checked:bg-brand-primary rounded-full"
                       />
 
                       <div className="flex items-center gap-2 text-gray-700 font-[600] sm:text-[14px] text-[12px]">
-                        <span className="text-[#0CBB7D]">{option.icon}</span>
+                        <span className="text-brand-primary">{option.icon}</span>
                         {option.label}
                       </div>
                     </label>
@@ -893,7 +893,7 @@ const BusinessTypeSelection = () => {
               {/* Billing Info - Individual */}
               {(selectedType === "individual" && !isGstinVerified) && (
                 <div className="lg:w-full max-w-full bg-white p-4 sm:p-6 rounded-lg shadow-md">
-                  <h2 className="sm:text-[14px] text-[12px] text-[#0CBB7D] font-[600] sm:mb-2">Billing Information</h2>
+                  <h2 className="sm:text-[14px] text-[12px] text-brand-primary font-[600] sm:mb-2">Billing Information</h2>
                   <div className="grid grid-cols-2 md:grid-cols-6 sm:gap-2 gap-2 sm:px-4 md:px-0 items-end">
                     {/* Address */}
                     <div className="flex flex-col col-span-2 gap-1">
@@ -905,7 +905,7 @@ const BusinessTypeSelection = () => {
                         onChange={(e) => setBillingInfo({ ...billingInfo, address: e.target.value })}
                         readOnly={isBillingVerified}
                         disabled={isBillingVerified}
-                        className={`w-full px-3 py-2 text-[12px] border border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-[#0CBB7D] text-gray-500 ${isBillingVerified ? "cursor-not-allowed" : ""
+                        className={`w-full px-3 py-2 text-[12px] border border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-brand-primary text-gray-500 ${isBillingVerified ? "cursor-not-allowed" : ""
                           }`}
                       />
                       {errors.address && <span className="text-red-500 text-[12px] mt-1">{errors.address}</span>}
@@ -923,7 +923,7 @@ const BusinessTypeSelection = () => {
                         readOnly={isBillingVerified}
                         disabled={isBillingVerified}
                         className={`w-full px-3 py-2 text-[12px] border border-gray-300 rounded-lg outline-none 
-    focus:ring-1 focus:ring-[#0CBB7D] text-gray-500 
+    focus:ring-1 focus:ring-brand-primary text-gray-500 
     ${isBillingVerified ? "cursor-not-allowed" : ""}`}
                       />
 
@@ -940,7 +940,7 @@ const BusinessTypeSelection = () => {
                         onChange={(e) => setBillingInfo({ ...billingInfo, city: e.target.value })}
                         readOnly={isBillingVerified}
                         disabled={isBillingVerified}
-                        className={`w-full px-3 py-2 text-[12px] border border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-[#0CBB7D] text-gray-500 ${isBillingVerified ? "cursor-not-allowed" : ""
+                        className={`w-full px-3 py-2 text-[12px] border border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-brand-primary text-gray-500 ${isBillingVerified ? "cursor-not-allowed" : ""
                           }`}
                       />
                       {errors.city && <span className="text-red-500 text-[12px] mt-1">{errors.city}</span>}
@@ -956,7 +956,7 @@ const BusinessTypeSelection = () => {
                         onChange={(e) => setBillingInfo({ ...billingInfo, state: e.target.value })}
                         readOnly={isBillingVerified}
                         disabled={isBillingVerified}
-                        className={`w-full px-3 py-2 text-[12px] border border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-[#0CBB7D] text-gray-500 ${isBillingVerified ? "cursor-not-allowed" : ""
+                        className={`w-full px-3 py-2 text-[12px] border border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-brand-primary text-gray-500 ${isBillingVerified ? "cursor-not-allowed" : ""
                           }`}
                       />
                       {errors.state && <span className="text-red-500 text-[12px] mt-1">{errors.state}</span>}
@@ -967,7 +967,7 @@ const BusinessTypeSelection = () => {
                     {/* Submit button in last column */}
                     <div className="flex justify-start">
                       {isBillingVerified ? (
-                        <div className="flex items-center gap-2 mb-1.5 text-[#0CBB7D]">
+                        <div className="flex items-center gap-2 mb-1.5 text-brand-primary">
                           <CheckCircleIcon />
                           <span className="font-[600] text-[12px]">Submitted</span>
                         </div>
@@ -975,7 +975,7 @@ const BusinessTypeSelection = () => {
                         <button
                           onClick={handleBiling}
                           disabled={isBillingVerified}
-                          className="text-white mb-0.5 sm:text-[12px] text-[10px] py-2 px-3 rounded-lg bg-[#0CBB7D] hover:bg-[#0aa66c] transition-all duration-200"
+                          className="text-white mb-0.5 sm:text-[12px] text-[10px] py-2 px-3 rounded-lg bg-brand-primary hover:bg-[#0aa66c] transition-all duration-200"
                         >
                           Submit
                         </button>
@@ -999,7 +999,7 @@ const BusinessTypeSelection = () => {
                           </div>
                         )} */}
 
-                        <h3 className="sm:text-[14px] text-[12px] text-[#0CBB7D] font-[600] sm:mb-3 mb-2">
+                        <h3 className="sm:text-[14px] text-[12px] text-brand-primary font-[600] sm:mb-3 mb-2">
                           GSTIN Verification
                         </h3>
 
@@ -1015,7 +1015,7 @@ const BusinessTypeSelection = () => {
                               type="text"
                               placeholder="GSTIN"
                               className="w-full px-3 py-2 text-gray-600 text-[12px] font-[600] border border-gray-300 rounded-lg outline-none 
-      focus:ring-2 focus:ring-[#0CBB7D] focus:border-[#0CBB7D]"
+      focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                               value={gstNumber}
                               onChange={(e) => setGstNumber(e.target.value)}
                               readOnly={isGstinVerified}
@@ -1026,7 +1026,7 @@ const BusinessTypeSelection = () => {
                           {/* Verify Button */}
                           <div className="flex flex-col justify-end w-auto">
                             {isGstinVerified ? (
-                              <div className="flex items-center gap-1 mb-2 text-[#0CBB7D] font-semibold text-[12px]">
+                              <div className="flex items-center gap-1 mb-2 text-brand-primary font-semibold text-[12px]">
                                 <CheckCircleIcon className="w-6 h-6" />
                                 Verified
                               </div>
@@ -1034,7 +1034,7 @@ const BusinessTypeSelection = () => {
                               <button
                                 onClick={() => handleVerify("gst")}
                                 disabled={isGstinVerified}
-                                className="bg-[#0CBB7D] text-white text-[12px] px-3 py-2 rounded-lg 
+                                className="bg-brand-primary text-white text-[12px] px-3 py-2 rounded-lg 
       hover:bg-[#0aa66c] transition focus:outline-none w-auto"
                               >
                                 Verify
@@ -1052,7 +1052,7 @@ const BusinessTypeSelection = () => {
                               type="text"
                               placeholder="Company address"
                               className="w-full px-3 py-2 text-gray-600 text-[12px] border border-gray-300 rounded-lg outline-none 
-      focus:ring-2 focus:ring-[#0CBB7D] focus:border-[#0CBB7D]"
+      focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                               value={companyAddress}
                               readOnly
                               disabled
@@ -1068,7 +1068,7 @@ const BusinessTypeSelection = () => {
                               type="text"
                               placeholder="City"
                               className="w-full px-3 py-2 text-gray-600 text-[12px] border border-gray-300 rounded-lg outline-none 
-      focus:ring-2 focus:ring-[#0CBB7D] focus:border-[#0CBB7D]"
+      focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                               value={city}
                               readOnly
                               disabled
@@ -1084,7 +1084,7 @@ const BusinessTypeSelection = () => {
                               type="text"
                               placeholder="State"
                               className="w-full px-3 py-2 text-gray-600 text-[12px] border border-gray-300 rounded-lg outline-none 
-      focus:ring-2 focus:ring-[#0CBB7D] focus:border-[#0CBB7D]"
+      focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                               value={state}
                               readOnly
                               disabled
@@ -1100,7 +1100,7 @@ const BusinessTypeSelection = () => {
                               type="text"
                               placeholder="Pincode"
                               className="w-full px-3 py-2 text-gray-600 text-[12px] border border-gray-300 rounded-lg outline-none 
-      focus:ring-2 focus:ring-[#0CBB7D] focus:border-[#0CBB7D]"
+      focus:ring-2 focus:ring-brand-primary focus:border-brand-primary"
                               value={pincode}
                               readOnly
                               disabled
@@ -1125,7 +1125,7 @@ const BusinessTypeSelection = () => {
               {/* Aadhaar Details Row */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-4 w-full">
                 <div className="p-6 rounded-lg shadow-md bg-white w-full">
-                  <h3 className="font-[600] text-[#0CBB7D] text-[14px] mb-2">Aadhaar Verification</h3>
+                  <h3 className="font-[600] text-brand-primary text-[14px] mb-2">Aadhaar Verification</h3>
 
                   {/* 🔹 Row 1: Aadhaar + Send OTP */}
                   <div className="grid sm:grid-cols-5 grid-cols-2 gap-2 w-full items-end">
@@ -1134,7 +1134,7 @@ const BusinessTypeSelection = () => {
                       <input
                         type="text"
                         placeholder="Aadhaar Number"
-                        className="w-full px-3 py-2 text-gray-500 text-[12px] font-[600] border border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                        className="w-full px-3 py-2 text-gray-500 text-[12px] font-[600] border border-gray-300 rounded-lg outline-none focus:ring-1 focus:ring-brand-primary"
                         value={documentDetails.aadharNo}
                         onChange={(e) =>
                           setDocumentDetails({ ...documentDetails, aadharNo: e.target.value })
@@ -1152,13 +1152,13 @@ const BusinessTypeSelection = () => {
                             setOtpError("");
                             setOtpDigits(new Array(6).fill(""));
                           }}
-                          className="bg-[#0CBB7D] text-white px-3 py-2 text-[12px] rounded-lg w-auto"
+                          className="bg-brand-primary text-white px-3 py-2 text-[12px] rounded-lg w-auto"
                           disabled={isAadharVerified || isLoading || timerActive}
                         >
                           {isOtpSent ? "OTP Sent" : "Send OTP"}
                         </button>
                       ) : (
-                        <div className="flex items-center gap-1 mb-1.5 text-[#0CBB7D] font-semibold text-[12px]">
+                        <div className="flex items-center gap-1 mb-1.5 text-brand-primary font-semibold text-[12px]">
                           <p className="w-6 h-6 flex items-center justify-center">
                             <CheckCircleIcon />
                           </p>
@@ -1249,7 +1249,7 @@ const BusinessTypeSelection = () => {
                       >
                         <FaTimes size={16} />
                       </button>
-                      <h2 className="text-[14px] font-[600] mb-3 text-[#0CBB7D] text-center">Verify Aadhaar OTP</h2>
+                      <h2 className="text-[14px] font-[600] mb-3 text-brand-primary text-center">Verify Aadhaar OTP</h2>
                       <div className="flex justify-center gap-2 mb-2">
                         {otpDigits.map((digit, idx) => (
                           <input
@@ -1270,7 +1270,7 @@ const BusinessTypeSelection = () => {
                             }}
                             ref={(el) => (otpRefs.current[idx] = el)}
                             className="w-10 h-10 text-center text-[14px] border text-gray-700 border-gray-300 rounded 
-      focus:border-[#0CBB7D] focus:ring-1 focus:ring-[#0CBB7D] outline-none"
+      focus:border-brand-primary focus:ring-1 focus:ring-brand-primary outline-none"
                             autoFocus={idx === 0}
                           />
                         ))}
@@ -1293,7 +1293,7 @@ const BusinessTypeSelection = () => {
               {/* PAN Details Row */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-4">
                 <div className="p-6 rounded-lg shadow-md bg-white">
-                  <h3 className="font-[600] text-[#0CBB7D] text-[14px] mb-2">PAN Verification</h3>
+                  <h3 className="font-[600] text-brand-primary text-[14px] mb-2">PAN Verification</h3>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
                     {/* PAN Number + Verify Button together */}
                     <div className="flex flex-row md:flex-row gap-2 col-span-1">
@@ -1314,13 +1314,13 @@ const BusinessTypeSelection = () => {
                       <div className="flex items-center gap-2">
                         {isPanVerified ? (
                           <>
-                            <CheckCircleIcon className="text-[#0CBB7D] mt-5" />
-                            <span className="text-[#0CBB7D] font-semibold mt-5 text-[12px]">Verified</span>
+                            <CheckCircleIcon className="text-brand-primary mt-5" />
+                            <span className="text-brand-primary font-semibold mt-5 text-[12px]">Verified</span>
                           </>
                         ) : (
                           <button
                             onClick={() => handleVerify("pan")}
-                            className="px-3 py-2 text-[12px] mt-6 rounded-lg text-white bg-[#0CBB7D] hover:bg-[#0aa66c]"
+                            className="px-3 py-2 text-[12px] mt-6 rounded-lg text-white bg-brand-primary hover:bg-[#0aa66c]"
                             disabled={false /* or your condition */}
                           >
                             Verify
@@ -1364,7 +1364,7 @@ const BusinessTypeSelection = () => {
               {/* Bank Details Row */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-4">
                 <div className="p-6 rounded-lg shadow-md bg-white">
-                  <h3 className="font-[600] text-[#0CBB7D] text-[14px] mb-2">Bank Details</h3>
+                  <h3 className="font-[600] text-brand-primary text-[14px] mb-2">Bank Details</h3>
                   <div className="grid grid-cols-2 md:grid-cols-6 gap-x-2 gap-y-2 mt-2 items-end">
                     {/* Account Number */}
                     <div className="flex flex-col">
@@ -1393,14 +1393,14 @@ const BusinessTypeSelection = () => {
                           disabled={isBankVerified}
                         />
                         {isBankVerified ? (
-                          <div className="flex items-center gap-1 text-[#0CBB7D] font-semibold text-[12px]">
+                          <div className="flex items-center gap-1 text-brand-primary font-semibold text-[12px]">
                             <CheckCircleIcon />
                             <span>Verified</span>
                           </div>
                         ) : (
                           <button
                             onClick={() => handleVerify("bank")}
-                            className="text-white text-[12px] px-3 py-2 rounded-lg bg-[#0CBB7D] hover:bg-[#0aa66c]"
+                            className="text-white text-[12px] px-3 py-2 rounded-lg bg-brand-primary hover:bg-[#0aa66c]"
                             disabled={false}
                           >
                             Verify
@@ -1440,13 +1440,13 @@ const BusinessTypeSelection = () => {
                 <input
                   type="checkbox"
                   id="agree"
-                  className="h-4 w-4 accent-[#0CBB7D] border-[#0CBB7D] rounded focus:ring-[#0CBB7D]"
+                  className="h-4 w-4 accent-brand-primary border-brand-primary rounded focus:ring-brand-primary"
                   checked={checked}
                   onChange={handleChecked}
                 />
                 <label htmlFor="agree" className="text-[12px] text-gray-600 font-normal leading-snug">
                   By submitting this form, you agree to Shipex&apos;s User Privacy Statement. <span
-                    className="text-[#0CBB7D] underline font-[600] cursor-pointer text-[12px]"
+                    className="text-brand-primary underline font-[600] cursor-pointer text-[12px]"
                     onClick={() => setShowAgreement((prev) => !prev)}
                   >
                     View
@@ -1507,7 +1507,7 @@ const BusinessTypeSelection = () => {
     ${(currentStep === 0 && (!(isBillingVerified || isGstinVerified) || !isPhoneVerified || !isEmailVerified)) ||
                   (currentStep === 1 && !canSubmitKyc)
                   ? "bg-gray-400 cursor-not-allowed"
-                  : "bg-[#0CBB7D] hover:bg-[#09946A] text-white"
+                  : "bg-brand-primary hover:bg-[#09946A] text-white"
                 }`}
             >
               {currentStep < steps.length - 1 ? (

@@ -202,7 +202,7 @@ const DiscrepancyFilter = ({
                             <button
                                 className={`px-3 h-9 border rounded-lg font-[600] flex items-center gap-1 transition-all ${selectedDispute.length === 0
                                     ? "border-gray-200 text-gray-400 cursor-not-allowed"
-                                    : "text-[#0CBB7D] border-[#0CBB7D]"
+                                    : "text-brand-primary border-brand-primary"
                                     } text-[12px]`}
                                 onClick={(e) => {
                                     e.stopPropagation();
@@ -243,7 +243,7 @@ const DiscrepancyFilter = ({
                         </div>
                         <button
                             onClick={handleClearFilters}
-                            className="py-2 px-4 border rounded-lg bg-[#0CBB7D] text-[12px] font-[600] text-white hover:opacity-90 transition"
+                            className="py-2 px-4 border rounded-lg bg-brand-primary text-[12px] font-[600] text-white hover:opacity-90 transition"
                         >
                             Clear
                         </button>
@@ -276,7 +276,7 @@ const DiscrepancyFilter = ({
                     />
 
                     <button
-                        className="px-3 flex items-center justify-center text-white bg-[#0CBB7D] h-9 rounded-lg transition text-[12px] font-[600]"
+                        className="px-3 flex items-center justify-center text-white bg-brand-primary h-9 rounded-lg transition text-[12px] font-[600]"
                         onClick={() => setShowMobileFilters((prev) => !prev)}
                     >
                         <FaFilter className="text-white" size={14} />
@@ -286,7 +286,7 @@ const DiscrepancyFilter = ({
                         <button
                             className={`px-3 h-9 border rounded-lg font-[600] flex items-center gap-1 ${selectedDispute.length === 0
                                 ? "border-gray-300 text-[12px] cursor-not-allowed text-gray-400"
-                                : "text-[#0CBB7D] border-[#0CBB7D] text-[12px]"
+                                : "text-brand-primary border-brand-primary text-[12px]"
                                 }`}
                             onClick={() =>
                                 selectedDispute.length > 0 &&
@@ -294,7 +294,7 @@ const DiscrepancyFilter = ({
                             }
                             disabled={selectedDispute.length === 0}
                         >
-                            <FaBars className={selectedDispute.length === 0 ? "text-gray-400" : "text-[#0CBB7D]"} />
+                            <FaBars className={selectedDispute.length === 0 ? "text-gray-400" : "text-brand-primary"} />
                         </button>
                         {actionDropdownOpen && (
                             <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-[60]">
@@ -349,7 +349,7 @@ const DiscrepancyFilter = ({
                             {showStatus && <StatusFilter status={status} setStatus={setStatus} />}
                         </div>
                         <button
-                            className="w-full bg-[#0CBB7D] py-2 text-[12px] font-[600] rounded-lg text-white border hover:opacity-90 transition"
+                            className="w-full bg-brand-primary py-2 text-[12px] font-[600] rounded-lg text-white border hover:opacity-90 transition"
                             onClick={handleClearFilters}
                         >
                             Clear

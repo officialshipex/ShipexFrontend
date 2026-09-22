@@ -59,7 +59,7 @@ const BuyCreditModal = ({ onClose, onSuccess, targetUserId }) => {
                     placeholder="Enter amount"
                     value={amount}
                     onChange={(e) => setAmount(e.target.value)}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] mt-1 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] mt-1 outline-none focus:ring-1 focus:ring-brand-primary"
                 />
 
                 {/* Note */}
@@ -74,7 +74,7 @@ const BuyCreditModal = ({ onClose, onSuccess, targetUserId }) => {
                         disabled={!amount || loading}
                         className={`rounded-lg px-5 py-2 text-[10px] sm:text-[12px] font-[600] transition-all ${!amount || loading
                             ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                            : "bg-[#0CBB7D] text-white hover:bg-green-500"
+                            : "bg-brand-primary text-white hover:bg-green-500"
                             }`}
                     >
                         {loading ? "Processing..." : "Buy"}

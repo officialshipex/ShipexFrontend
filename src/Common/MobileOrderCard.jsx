@@ -110,14 +110,14 @@ const MobileOrderCard = ({
                         type="checkbox"
                         checked={selectedOrders.includes(order._id)}
                         onChange={() => handleCheckboxChange(order._id)}
-                        className="accent-[#0CBB7D] w-3 h-3"
+                        className="accent-brand-primary w-3 h-3"
                     />
                     <div className="flex items-center gap-1 text-[10px]">
                         <span>Order ID:</span>
 
                         <Link
                             to={`/dashboard/order/neworder/updateOrder/${order._id}`}
-                            className="text-[#0CBB7D]"
+                            className="text-brand-primary"
                         >
                             {order.orderId}
                         </Link>
@@ -130,7 +130,7 @@ const MobileOrderCard = ({
                                 setTimeout(() => setCopiedOrderId(null), 1500);
                             }}
                             className="flex items-center justify-center
-      text-[#0CBB7D] cursor-pointer"
+      text-brand-primary cursor-pointer"
                         >
                             {copiedOrderId === order._id ? (
                                 <FiCheck className="w-3 h-3 text-green-600" />
@@ -140,7 +140,7 @@ const MobileOrderCard = ({
                         </span>
                     </div>
 
-                    <p className={`text-[10px] px-2 rounded ${order.status === "Cancelled" ? "bg-red-100 text-red-600" : "bg-green-200 text-[#0CBB7D]"}`}>{order.status}</p>
+                    <p className={`text-[10px] px-2 rounded ${order.status === "Cancelled" ? "bg-red-100 text-red-600" : "bg-green-200 text-brand-primary"}`}>{order.status}</p>
                 </div>
 
                 {showActionColumn && (
@@ -172,7 +172,7 @@ const MobileOrderCard = ({
             {showUserDetails && (
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 min-w-0">
-                        <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center font-bold text-[#0CBB7D] text-[10px] shrink-0 border border-gray-300">
+                        <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center font-bold text-brand-primary text-[10px] shrink-0 border border-gray-300">
                             {order.userId?.fullname?.charAt(0)}
                         </div>
                         <div className="min-w-0 leading-tight">
@@ -181,7 +181,7 @@ const MobileOrderCard = ({
                             {/* <p className="text-gray-400 text-[9px] truncate">{row.user.userId}</p> */}
                         </div>
                     </div>
-                    <p className="text-[#0CBB7D] font-medium text-[10px] tracking-widest shrink-0">
+                    <p className="text-brand-primary font-medium text-[10px] tracking-widest shrink-0">
                         {order.userId.userId}
                     </p>
                 </div>
@@ -196,7 +196,7 @@ const MobileOrderCard = ({
                 </p>
                 <div className="flex justify-center items-center gap-2">
                     <p>{order.channelId}</p>
-                    <span className="uppercase text-[#0CBB7D] bg-green-200 px-2 rounded">
+                    <span className="uppercase text-brand-primary bg-green-200 px-2 rounded">
                         {order.channel || "CUSTOM"}
                     </span>
                 </div>
@@ -219,7 +219,7 @@ const MobileOrderCard = ({
                             </p>
                             <div className="flex items-center gap-1 text-[10px] text-gray-700">
                                 <span
-                                    className="text-[#0CBB7D] cursor-pointer"
+                                    className="text-brand-primary cursor-pointer"
                                     onClick={() =>
                                         handleTrackingByAwb(order.awb_number, navigate)
                                     }
@@ -235,7 +235,7 @@ const MobileOrderCard = ({
                                         setTimeout(() => setCopiedOrderId(null), 1500);
                                     }}
                                     className="flex items-center justify-center
-      text-[#0CBB7D] cursor-pointer"
+      text-brand-primary cursor-pointer"
                                 >
                                     {copiedOrderId === order._id + "_awb" ? (
                                         <FiCheck className="w-3 h-3 text-green-600" />
@@ -461,7 +461,7 @@ const MobileOrderCard = ({
                         </div>
                         <button
                             onClick={() => onViewNdrHistory && onViewNdrHistory(order)}
-                            className="bg-[#0CBB7D] text-white px-2 py-0.5 rounded hover:bg-opacity-90 transition-all font-[600]"
+                            className="bg-brand-primary text-white px-2 py-0.5 rounded hover:bg-opacity-90 transition-all font-[600]"
                         >
                             History ({order.ndrHistory?.length || 0})
                         </button>
@@ -474,7 +474,7 @@ const MobileOrderCard = ({
                     {showNdrAction && (
                         <button
                             onClick={() => onTakeAction && onTakeAction(order)}
-                            className="w-full text-[#0CBB7D] bg-white border border-[#0CBB7D] py-2 rounded-lg text-[10px] font-[600] hover:bg-opacity-90 transition-all shadow-sm"
+                            className="w-full text-brand-primary bg-white border border-brand-primary py-2 rounded-lg text-[10px] font-[600] hover:bg-opacity-90 transition-all shadow-sm"
                         >
                             Take Action
                         </button>

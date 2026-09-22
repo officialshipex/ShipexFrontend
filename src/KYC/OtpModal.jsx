@@ -50,7 +50,7 @@ const OtpModal = ({
                 </button>
 
                 {/* Label */}
-                <div className="text-[#0CBB7D] text-base font-bold mb-2">{label}</div>
+                <div className="text-brand-primary text-base font-bold mb-2">{label}</div>
 
                 {/* OTP Inputs */}
                 <div className="flex gap-2 mb-1">
@@ -88,7 +88,7 @@ const OtpModal = ({
                                 handleKeyDown(i, e, type);
                             }}
                             className={`w-10 h-10 text-center text-[16px] rounded border border-gray-300 outline-none
-        focus:ring-2 focus:ring-[#0CBB7D] transition-all ${errorShake ? "animate-shake border-red-500" : ""
+        focus:ring-2 focus:ring-brand-primary transition-all ${errorShake ? "animate-shake border-red-500" : ""
                                 }`}
                         />
                     ))}
@@ -99,7 +99,7 @@ const OtpModal = ({
                     type="button"
                     className={`w-full my-1 py-2 ${loading
                         ? "bg-gray-400 cursor-not-allowed"
-                        : "bg-[#0CBB7D] hover:bg-[#09946A]"
+                        : "bg-brand-primary hover:bg-[#09946A]"
                         } transition-colors text-white font-semibold text-[12px] rounded`}
                     onClick={onVerify}
                     disabled={otp.some((digit) => digit === "") || loading}
@@ -116,7 +116,7 @@ const OtpModal = ({
                     ) : (
                         <button
                             type="button"
-                            className="text-[#0CBB7D] underline text-xs mt-1"
+                            className="text-brand-primary underline text-xs mt-1"
                             onClick={onResend}
                             disabled={loading}
                         >

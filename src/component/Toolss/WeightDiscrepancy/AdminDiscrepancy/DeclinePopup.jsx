@@ -101,7 +101,7 @@ const DeclinePopup = ({ isOpen, onClose, awbNumber, setRefresh }) => {
         </h2>
 
         <textarea
-          className="w-full border text-[12px] sm:text-[14px] text-gray-500 rounded p-2 focus:outline-none focus:ring focus:ring-[#0CBB7D]"
+          className="w-full border text-[12px] sm:text-[14px] text-gray-500 rounded p-2 focus:outline-none focus:ring focus:ring-brand-primary"
           placeholder="Enter text..."
           rows="4"
           value={text}
@@ -117,7 +117,7 @@ const DeclinePopup = ({ isOpen, onClose, awbNumber, setRefresh }) => {
           </button>
           <button
             className={`px-3 py-2 rounded-lg text-[10px] sm:text-[12px] font-[600] text-white ${
-              loading ? "bg-gray-400 cursor-not-allowed" : "bg-[#0CBB7D]"
+              loading ? "bg-gray-400 cursor-not-allowed" : "bg-brand-primary"
             }`}
             onClick={isBulk ? handleBulkDecline : handleConfirm}
             disabled={loading}

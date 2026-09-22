@@ -63,7 +63,7 @@ const UpdateOrderDetails = ({
             name="paymentMethod"
             value={formData.paymentMethod}
             onChange={handleChange}
-            className="w-full h-9 px-3 rounded-lg border focus:outline-[#0CBB7D]"
+            className="w-full h-9 px-3 rounded-lg border focus:outline-brand-primary"
           >
             <option value="Prepaid">Prepaid</option>
             <option value="COD">Cash on Delivery</option>
@@ -79,7 +79,7 @@ const UpdateOrderDetails = ({
               name="weight"
               value={formData.weight}
               onChange={handleChange}
-              className="w-full py-2 px-3 rounded-lg border-2 focus:outline-[#0CBB7D]"
+              className="w-full py-2 px-3 rounded-lg border-2 focus:outline-brand-primary"
               step="0.01"
             />
           </div>
@@ -93,7 +93,7 @@ const UpdateOrderDetails = ({
             name="codAmount"
             value={formData.codAmount}
             onChange={handleChange}
-            className="w-full py-2 px-3 font-[600] rounded-lg border focus:outline-[#0CBB7D]"
+            className="w-full py-2 px-3 font-[600] rounded-lg border focus:outline-brand-primary"
             step="0.01"
           />
         </div>
@@ -120,7 +120,7 @@ const UpdateOrderDetails = ({
                 name="breadth"
                 value={formData.breadth}
                 onChange={handleChange}
-                className="w-full py-2 px-3 font-[600] rounded-lg border focus:outline-[#0CBB7D]"
+                className="w-full py-2 px-3 font-[600] rounded-lg border focus:outline-brand-primary"
                 step="0.1"
               />
             </div>
@@ -132,7 +132,7 @@ const UpdateOrderDetails = ({
                 name="height"
                 value={formData.height}
                 onChange={handleChange}
-                className="w-full py-2 px-3 font-[600] rounded-lg border focus:outline-[#0CBB7D]"
+                className="w-full py-2 px-3 font-[600] rounded-lg border focus:outline-brand-primary"
                 step="0.1"
               />
             </div>
@@ -147,7 +147,7 @@ const UpdateOrderDetails = ({
             name="gstin"
             value={formData.gstin}
             onChange={handleChange}
-            className="w-full h-9 px-3 rounded-lg border focus:outline-[#0CBB7D]"
+            className="w-full h-9 px-3 rounded-lg border focus:outline-brand-primary"
           />
         </div>
 
@@ -155,7 +155,7 @@ const UpdateOrderDetails = ({
         <div className="col-span-1 sm:col-span-2 md:col-span-3 text-right mt-2">
           <button
             type="submit"
-            className="bg-[#0CBB7D] text-white px-3 py-2 rounded-lg hover:opacity-90 transition"
+            className="bg-brand-primary text-white px-3 py-2 rounded-lg hover:opacity-90 transition"
           >
             Save
           </button>

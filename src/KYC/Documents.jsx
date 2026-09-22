@@ -159,7 +159,7 @@ function Documents(props) {
                             Select your company category
                         </label>
                         <select
-                            className="mt-1 block w-full text-sm p-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-[#0CBB7D] focus:border-[#0CBB7D] bg-white"
+                            className="mt-1 block w-full text-sm p-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-brand-primary focus:border-brand-primary bg-white"
                             value={companyCategory}
                             onChange={(e) => setCompanyCategory(e.target.value)}
                         >
@@ -200,7 +200,7 @@ function Documents(props) {
                         <div className="flex items-center min-w-[120px]">
                             <button
                                 type="button"
-                                className={`w-full h-9 sm:w-40 md:mt-5 px-2 py-1 text-sm text-white bg-[#0CBB7D] hover:bg-[#0CBB7D] rounded-lg`}
+                                className={`w-full h-9 sm:w-40 md:mt-5 px-2 py-1 text-sm text-white bg-brand-primary hover:bg-brand-primary rounded-lg`}
                                 onClick={verifyPAN}
                                 disabled={loadingState.panVerifying || verificationState.isPanVerified}
                             >
@@ -239,7 +239,7 @@ function Documents(props) {
                         <div className="flex items-center min-w-[120px]">
                             <button
                                 type="button"
-                                className="w-full h-9 sm:w-40 md:mt-5 px-2 py-1 text-sm text-white bg-[#0CBB7D] hover:bg-[#0CBB7D] rounded-lg"
+                                className="w-full h-9 sm:w-40 md:mt-5 px-2 py-1 text-sm text-white bg-brand-primary hover:bg-brand-primary rounded-lg"
                                 onClick={verifyGST}
                                 disabled={loadingState.gstVerifying || verificationState.isGstVerified}
                             >
@@ -257,7 +257,7 @@ function Documents(props) {
                             <input
                                 type="text"
                                 id="aadhaarNumber"
-                                className="mt-1 md:w-1/2 block w-full text-sm p-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-[#0CBB7D] focus:border-[#0CBB7D] bg-gray-200"
+                                className="mt-1 md:w-1/2 block w-full text-sm p-1 border border-gray-300 rounded-lg focus:outline-none focus:ring-brand-primary focus:border-brand-primary bg-gray-200"
                                 onChange={(e) => setAadhaarNumber(e.target.value)}
                                 value={aadhaarNumber}
                                 disabled={loadingState.aadhaarOtpSending || verificationState.isAadhaarVerified}
@@ -281,7 +281,7 @@ function Documents(props) {
                         <div className="flex items-center min-w-[120px]">
                             <button
                                 type="button"
-                                className="w-full h-9 sm:w-40 md:mt-5 px-2 py-1 text-sm text-white bg-[#0CBB7D] hover:bg-[#0CBB7D] rounded-lg"
+                                className="w-full h-9 sm:w-40 md:mt-5 px-2 py-1 text-sm text-white bg-brand-primary hover:bg-brand-primary rounded-lg"
                                 onClick={verificationState.isAadhaarOtpSent ? verifyAadhaarOtp : sendAadhaarOtp}
                                 disabled={
                                     (verificationState.isAadhaarOtpSent && loadingState.aadhaarVerifying) ||
@@ -313,7 +313,7 @@ function Documents(props) {
 
                         <button
                             type="submit"
-                            className="px-6 py-2 text-white bg-[#0CBB7D] hover:bg-[#0CBB7D] rounded-lg shadow-sm transition focus:outline-none focus:ring-[#0CBB7D] focus:border-[#0CBB7D] w-full sm:w-auto"
+                            className="px-6 py-2 text-white bg-brand-primary hover:bg-brand-primary rounded-lg shadow-sm transition focus:outline-none focus:ring-brand-primary focus:border-brand-primary w-full sm:w-auto"
                             onClick={handleNext}
                         >
                             Save & Next →

@@ -40,7 +40,7 @@ const ChangeProviderModal = ({ isOpen, onClose, selectedServices, onApply }) => 
         {/* Header */}
         <div className="p-4 border-b border-gray-100">
           <h2 className="text-[14px] font-bold text-gray-700 flex items-center gap-2">
-            <div className="bg-green-100 p-2 rounded-lg text-[#0CBB7D]">
+            <div className="bg-green-100 p-2 rounded-lg text-brand-primary">
               <FaTruck size={18} />
             </div>
             Change Provider
@@ -51,7 +51,7 @@ const ChangeProviderModal = ({ isOpen, onClose, selectedServices, onApply }) => 
         <div className="p-6 space-y-4">
           <div className="space-y-1.5">
             <label className="text-[12px] font-bold text-gray-700">Current Provider</label>
-            <div className="bg-gray-50 border border-gray-200 px-3 py-2 rounded-lg text-[12px] font-semibold text-[#0CBB7D]">
+            <div className="bg-gray-50 border border-gray-200 px-3 py-2 rounded-lg text-[12px] font-semibold text-brand-primary">
               {firstProvider}
             </div>
           </div>
@@ -81,7 +81,7 @@ const ChangeProviderModal = ({ isOpen, onClose, selectedServices, onApply }) => 
             }}
             disabled={!targetProvider || loading}
             className={`px-4 py-2 rounded-lg text-[12px] font-bold text-white transition-all 
-              ${(!targetProvider || loading) ? "bg-gray-300 cursor-not-allowed" : "bg-[#0CBB7D] hover:bg-[#0aa66e] active:scale-95 shadow-sm"}`}
+              ${(!targetProvider || loading) ? "bg-gray-300 cursor-not-allowed" : "bg-brand-primary hover:bg-[#0aa66e] active:scale-95 shadow-sm"}`}
           >
             {loading ? "Processing..." : "Apply Changes"}
           </button>
@@ -245,7 +245,7 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
               placeholder="Search Courier Service..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-[#0CBB7D] shadow-sm font-[600] text-gray-700 transition-all"
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-brand-primary shadow-sm font-[600] text-gray-700 transition-all"
             />
           </div>
           <div className="w-full sm:w-48">
@@ -265,7 +265,7 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[11px] font-bold transition-all shadow-sm border
               ${selectedIds.length === 0 
                 ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed" 
-                : "bg-[#0CBB7D] text-white border-[#0CBB7D] hover:bg-green-600 active:scale-95"}`}
+                : "bg-brand-primary text-white border-brand-primary hover:bg-green-600 active:scale-95"}`}
           >
             <span>Actions</span>
             <FaChevronDown className={`transition-transform duration-200 ${isActionMenuOpen ? "rotate-180" : ""}`} size={10} />
@@ -275,9 +275,9 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
             <div className="absolute top-full right-0 mt-1 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-[100] py-1 animate-popup-in">
               <button
                 onClick={handleChangeProviderAction}
-                className="w-full text-left px-4 py-2 text-[11px] font-bold text-gray-600 hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] flex items-center gap-2"
+                className="w-full text-left px-4 py-2 text-[11px] font-bold text-gray-600 hover:bg-brand-primary/10 hover:text-brand-primary flex items-center gap-2"
               >
-                <div className="w-6 h-6 rounded-lg bg-[#0CBB7D]/10 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-lg bg-brand-primary/10 flex items-center justify-center">
                   <FaTruck size={12} />
                 </div>
                 Change Provider
@@ -292,11 +292,11 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
         <div className="max-h-[calc(100vh-350px)] overflow-y-auto overflow-x-auto">
           <table className="min-w-full">
             <thead className="sticky top-0 z-10">
-              <tr className="text-white bg-[#0CBB7D] font-[600] text-[12px]">
+              <tr className="text-white bg-brand-primary font-[600] text-[12px]">
                 <th className="py-2 px-3 text-center">
                   <input
                     type="checkbox"
-                    className="rounded border-white/30 bg-white/20 checked:bg-white text-[#0CBB7D] accent-[#0CBB7D] focus:ring-0 cursor-pointer w-3 h-3"
+                    className="rounded border-white/30 bg-white/20 checked:bg-white text-brand-primary accent-brand-primary focus:ring-0 cursor-pointer w-3 h-3"
                     checked={filteredCouriers.length > 0 && selectedIds.length === filteredCouriers.length}
                     onChange={handleSelectAll}
                   />
@@ -317,7 +317,7 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
                     <td className="py-2 px-3 text-center">
                       <input
                         type="checkbox"
-                        className="rounded border-gray-300 text-[#0CBB7D] accent-[#0CBB7D] focus:ring-[#0CBB7D]/20 cursor-pointer w-3 h-3"
+                        className="rounded border-gray-300 text-brand-primary accent-brand-primary focus:ring-brand-primary/20 cursor-pointer w-3 h-3"
                         checked={selectedIds.includes(courier._id)}
                         onChange={() => handleSelectRow(courier._id)}
                       />
@@ -334,7 +334,7 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
                       </div>
                     </td>
                     <td className="py-2 px-3">
-                      <span className="text-[#0CBB7D] font-[700] bg-[#0CBB7D]/5 px-2 py-0.5 rounded-md border border-[#0CBB7D]/10">
+                      <span className="text-brand-primary font-[700] bg-brand-primary/5 px-2 py-0.5 rounded-md border border-brand-primary/10">
                         {courier.provider}
                       </span>
                     </td>
@@ -349,13 +349,13 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
                           checked={courier.status === "Enable"}
                           onChange={() => toggleStatus(index, courier._id, courier.status)}
                         />
-                        <div className="w-10 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#0CBB7D]"></div>
+                        <div className="w-10 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-primary"></div>
                       </label>
                     </td>
                     <td className="py-2 px-3">
                       <div className="flex items-center gap-2">
                         <button
-                          className={`p-1.5 rounded-lg text-[#0CBB7D] bg-[#0CBB7D]/5 hover:bg-[#0CBB7D]/20 transition-all ${canUpdate ? "active:scale-90" : "opacity-50 cursor-not-allowed"}`}
+                          className={`p-1.5 rounded-lg text-brand-primary bg-brand-primary/5 hover:bg-brand-primary/20 transition-all ${canUpdate ? "active:scale-90" : "opacity-50 cursor-not-allowed"}`}
                           onClick={() => canUpdate && editHandler(courier)}
                           disabled={!canUpdate}
                           title="Edit Service"
@@ -422,7 +422,7 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
                   </div>
                 </div>
                 <button
-                  className={`p-2 rounded-full transition-all ${canUpdate ? "text-[#0CBB7D] active:scale-90" : "text-gray-300 cursor-not-allowed"}`}
+                  className={`p-2 rounded-full transition-all ${canUpdate ? "text-brand-primary active:scale-90" : "text-gray-300 cursor-not-allowed"}`}
                   onClick={() => canUpdate && editHandler(courier)}
                   disabled={!canUpdate}
                 >
@@ -433,7 +433,7 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
               <div className="grid grid-cols-2 text-[10px]">
                 <div className="flex flex-col">
                   <span className="text-gray-700">Provider</span>
-                  <span className="text-[#0CBB7D] font-[600]">{courier.provider}</span>
+                  <span className="text-brand-primary font-[600]">{courier.provider}</span>
                 </div>
                 <div className="flex flex-col items-end">
                   <span className="text-gray-700">Status</span>
@@ -448,7 +448,7 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
                         checked={courier.status === "Enable"}
                         onChange={() => toggleStatus(index, courier._id, courier.status)}
                       />
-                      <div className="w-7 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[#0CBB7D]"></div>
+                      <div className="w-7 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-primary"></div>
                     </label>
                   </div>
                 </div>

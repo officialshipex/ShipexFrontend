@@ -166,7 +166,7 @@ const ManageWebhooks = () => {
               setFormData({ url: "", secret: "", topics: ["track_update"], alertEmail: "" });
               setIsModalOpen(true);
             }}
-            className="bg-[#0CBB7D] text-white text-[10px] sm:text-[12px] font-[600] rounded-lg px-2.5 py-1.5 sm:px-4 sm:py-2 hover:bg-opacity-90 transition flex items-center gap-1 sm:gap-2 shadow-sm"
+            className="bg-brand-primary text-white text-[10px] sm:text-[12px] font-[600] rounded-lg px-2.5 py-1.5 sm:px-4 sm:py-2 hover:bg-opacity-90 transition flex items-center gap-1 sm:gap-2 shadow-sm"
           >
             <FiPlus size={12} /> Add Webhook
           </button>
@@ -177,7 +177,7 @@ const ManageWebhooks = () => {
       <div ref={tableRef} style={{ height: tableHeight }} className="hidden md:block overflow-auto relative bg-white">
         <table className="min-w-full table-auto">
           <thead className="sticky top-0 z-10">
-            <tr className="bg-[#0CBB7D] text-white text-[12px] font-[600]">
+            <tr className="bg-brand-primary text-white text-[12px] font-[600]">
               <th className="py-2 px-3 text-left">Webhook ID</th>
               <th className="py-2 px-3 text-left">Updated On</th>
               <th className="py-2 px-3 text-left">URL</th>
@@ -205,11 +205,11 @@ const ManageWebhooks = () => {
                       minute: "2-digit",
                     })}
                   </td>
-                  <td className="py-2 px-3 max-w-xs truncate text-[#0CBB7D]" title={wh.url}>{wh.url}</td>
+                  <td className="py-2 px-3 max-w-xs truncate text-brand-primary" title={wh.url}>{wh.url}</td>
                   <td className="py-2 px-3">
                     <div className="flex flex-wrap gap-1">
                       {wh.topics.map((t) => (
-                        <span key={t} className="bg-green-100 text-[#0CBB7D] text-[10px] px-2 py-0.5 rounded border border-green-200">
+                        <span key={t} className="bg-green-100 text-brand-primary text-[10px] px-2 py-0.5 rounded border border-green-200">
                           {t}
                         </span>
                       ))}
@@ -227,8 +227,8 @@ const ManageWebhooks = () => {
                       >
                         {showSecretId === wh._id ? <FiEyeOff size={14} /> : <FiEye size={14} />}
                       </button>
-                      <button onClick={() => copyToClipboard(wh.secret, wh._id + "_secret")} className="text-gray-400 hover:text-[#0CBB7D]">
-                        {copiedId === wh._id + "_secret" ? <FiCheck size={14} className="text-[#0CBB7D]" /> : <FiCopy size={14} />}
+                      <button onClick={() => copyToClipboard(wh.secret, wh._id + "_secret")} className="text-gray-400 hover:text-brand-primary">
+                        {copiedId === wh._id + "_secret" ? <FiCheck size={14} className="text-brand-primary" /> : <FiCopy size={14} />}
                       </button>
                     </div>
                   </td>
@@ -249,7 +249,7 @@ const ManageWebhooks = () => {
                             } catch (e) { toast.error("Update failed"); }
                           }}
                         />
-                        <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[#0CBB7D]"></div>
+                        <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-primary"></div>
                       </label>
                       <button
                         onClick={() => handleTest(wh._id)}
@@ -270,7 +270,7 @@ const ManageWebhooks = () => {
                           });
                           setIsModalOpen(true);
                         }}
-                        className="text-gray-400 hover:text-[#0CBB7D]"
+                        className="text-gray-400 hover:text-brand-primary"
                       >
                         <FiEdit2 size={14} />
                       </button>
@@ -324,9 +324,9 @@ const ManageWebhooks = () => {
                           } catch (e) { toast.error("Update failed"); }
                         }}
                       />
-                      <div className="w-7 h-3.5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-2.5 after:w-2.5 after:transition-all peer-checked:bg-[#0CBB7D]"></div>
+                      <div className="w-7 h-3.5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-2.5 after:w-2.5 after:transition-all peer-checked:bg-brand-primary"></div>
                     </label>
-                    <span className={`text-[9px] font-[600] ${wh.isActive ? "text-[#0CBB7D]" : "text-gray-400"}`}>
+                    <span className={`text-[9px] font-[600] ${wh.isActive ? "text-brand-primary" : "text-gray-400"}`}>
                       {wh.isActive ? "Active" : "Inactive"}
                     </span>
                   </div>
@@ -334,14 +334,14 @@ const ManageWebhooks = () => {
 
                 {/* Compact Row 2: URL */}
                 <div className="mb-1.5">
-                  <p className="text-[11px] font-medium text-gray-800 break-all select-all hover:text-[#0CBB7D] transition-colors">{wh.url}</p>
+                  <p className="text-[11px] font-medium text-gray-800 break-all select-all hover:text-brand-primary transition-colors">{wh.url}</p>
                 </div>
 
                 {/* Compact Row 3: Topics & Email & Secret */}
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2 text-[10px] text-gray-600">
                   <div className="flex items-center gap-1">
                     <span className="text-gray-400">Topic:</span>
-                    <span className="bg-green-50 text-[#0CBB7D] font-[600] px-1.5 py-0.2 rounded border border-green-100">
+                    <span className="bg-green-50 text-brand-primary font-[600] px-1.5 py-0.2 rounded border border-green-100">
                       {wh.topics[0] || "track_update"}
                     </span>
                   </div>
@@ -364,9 +364,9 @@ const ManageWebhooks = () => {
                     </button>
                     <button 
                       onClick={() => copyToClipboard(wh.secret, wh._id + "_secret")} 
-                      className="text-gray-400 hover:text-[#0CBB7D]"
+                      className="text-gray-400 hover:text-brand-primary"
                     >
-                      {copiedId === wh._id + "_secret" ? <FiCheck size={10} className="text-[#0CBB7D]" /> : <FiCopy size={10} />}
+                      {copiedId === wh._id + "_secret" ? <FiCheck size={10} className="text-brand-primary" /> : <FiCopy size={10} />}
                     </button>
                   </div>
                 </div>
@@ -394,7 +394,7 @@ const ManageWebhooks = () => {
                       });
                       setIsModalOpen(true);
                     }}
-                    className="flex items-center gap-1 px-2.5 py-1 border border-green-100 text-[#0CBB7D] rounded-md text-[10px] font-[600] hover:bg-green-50 transition shadow-sm"
+                    className="flex items-center gap-1 px-2.5 py-1 border border-green-100 text-brand-primary rounded-md text-[10px] font-[600] hover:bg-green-50 transition shadow-sm"
                   >
                     <FiEdit2 size={10} />
                     Edit
@@ -434,7 +434,7 @@ const ManageWebhooks = () => {
                 <input
                   type="url"
                   required
-                  className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] outline-none transition-all text-[12px]"
+                  className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-brand-primary focus:border-brand-primary outline-none transition-all text-[12px]"
                   placeholder="https://your-api.com/webhook"
                   value={formData.url}
                   onChange={(e) => setFormData({ ...formData, url: e.target.value })}
@@ -450,7 +450,7 @@ const ManageWebhooks = () => {
                     <input
                       type="text"
                       required
-                      className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] outline-none transition-all text-[12px] pr-8"
+                      className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-brand-primary focus:border-brand-primary outline-none transition-all text-[12px] pr-8"
                       placeholder="Enter secret"
                       value={formData.secret}
                       onChange={(e) => setFormData({ ...formData, secret: e.target.value })}
@@ -458,7 +458,7 @@ const ManageWebhooks = () => {
                     <button 
                       type="button"
                       onClick={() => setFormData({...formData, secret: Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2)})}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#0CBB7D]"
+                      className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-brand-primary"
                     >
                       <FiRefreshCw size={12} />
                     </button>
@@ -469,7 +469,7 @@ const ManageWebhooks = () => {
                   <label className="text-[12px] font-[600] text-gray-700">Alert Email</label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] outline-none transition-all text-[12px]"
+                    className="w-full px-3 py-2 border rounded-lg focus:ring-1 focus:ring-brand-primary focus:border-brand-primary outline-none transition-all text-[12px]"
                     placeholder="tech@example.com"
                     value={formData.alertEmail}
                     onChange={(e) => setFormData({ ...formData, alertEmail: e.target.value })}
@@ -489,8 +489,8 @@ const ManageWebhooks = () => {
                       onClick={() => toggleTopic(topic)}
                       className={`px-3 py-1 rounded-full text-[10px] font-[600] border transition-all ${
                         formData.topics.includes(topic)
-                          ? "bg-[#0CBB7D] text-white border-[#0CBB7D]"
-                          : "bg-white text-gray-600 border-gray-200 hover:border-[#0CBB7D]"
+                          ? "bg-brand-primary text-white border-brand-primary"
+                          : "bg-white text-gray-600 border-gray-200 hover:border-brand-primary"
                       }`}
                     >
                       {topic.replace("_", " ")}
@@ -509,7 +509,7 @@ const ManageWebhooks = () => {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 py-2 rounded-lg bg-[#0CBB7D] text-white hover:bg-opacity-90 text-[12px] font-[600] transition-all"
+                  className="px-4 py-2 rounded-lg bg-brand-primary text-white hover:bg-opacity-90 text-[12px] font-[600] transition-all"
                 >
                   {editingWebhook ? "Update Webhook" : "Create Webhook"}
                 </button>

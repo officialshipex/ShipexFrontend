@@ -28,13 +28,13 @@ const CustomDropdown = ({ options, selected, onChange, label, placeholder = "Sel
 
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className={`bg-white cursor-pointer px-2 h-9 border rounded-lg flex justify-between items-center transition-all ${isOpen ? "border-[#0CBB7D] ring-1 ring-[#0CBB7D]/20" : "border-gray-300 hover:border-gray-300"}`}
+        className={`bg-white cursor-pointer px-2 h-9 border rounded-lg flex justify-between items-center transition-all ${isOpen ? "border-brand-primary ring-1 ring-brand-primary/20" : "border-gray-300 hover:border-gray-300"}`}
       >
         <span className={`truncate text-[10px] sm:text-[12px] ${selectedLabel ? "text-gray-700 font-[600]" : "text-gray-300"}`}>
           {selectedLabel || placeholder}
         </span>
         <ChevronDown
-          className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180 text-[#0CBB7D]" : ""}`}
+          className={`w-3.5 h-3.5 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180 text-brand-primary" : ""}`}
         />
       </div>
 
@@ -48,7 +48,7 @@ const CustomDropdown = ({ options, selected, onChange, label, placeholder = "Sel
                   onChange(option.value);
                   setIsOpen(false);
                 }}
-                className={`px-3 py-2 text-[11px] font-[500] transition-colors cursor-pointer ${selected === option.value ? "bg-green-50 text-[#0CBB7D]" : "text-gray-600 hover:bg-gray-50"}`}
+                className={`px-3 py-2 text-[11px] font-[500] transition-colors cursor-pointer ${selected === option.value ? "bg-green-50 text-brand-primary" : "text-gray-600 hover:bg-gray-50"}`}
               >
                 {option.label}
               </li>

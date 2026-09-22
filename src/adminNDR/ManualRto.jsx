@@ -179,7 +179,7 @@ const ManualRto = ({ userId: initialUserId }) => {
             onClick={() => setIsFilterPanelOpen(true)}
             className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border rounded-lg sm:text-[12px] text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap min-w-[120px]"
           >
-            <Filter className="w-4 h-4 text-[#0CBB7D]" />
+            <Filter className="w-4 h-4 text-brand-primary" />
             More Filters
           </button>
           <div className="hidden md:block">
@@ -205,7 +205,7 @@ const ManualRto = ({ userId: initialUserId }) => {
               disabled={selectedOrders.length === 0}
               className={`py-2 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-2 transition-all border ${selectedOrders.length === 0
                 ? "border-gray-200 text-gray-400 cursor-not-allowed bg-gray-50"
-                : "border-[#0CBB7D] text-[#0CBB7D] bg-white hover:bg-green-50 shadow-sm"
+                : "border-brand-primary text-brand-primary bg-white hover:bg-green-50 shadow-sm"
                 }`}
               onClick={() => setDesktopDropdownOpen(!desktopDropdownOpen)}
             >
@@ -271,7 +271,7 @@ const ManualRto = ({ userId: initialUserId }) => {
       <div className="md:hidden w-full">
         <div className="flex items-center justify-between gap-2 mb-2 bg-white p-2 rounded-lg shadow-sm border border-gray-100">
           <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border flex-1">
-            <input type="checkbox" checked={selectedOrders.length === orders.length && orders.length > 0} onChange={handleSelectAll} className="cursor-pointer accent-[#0CBB7D] w-3 h-3" />
+            <input type="checkbox" checked={selectedOrders.length === orders.length && orders.length > 0} onChange={handleSelectAll} className="cursor-pointer accent-brand-primary w-3 h-3" />
             <span className="text-[10px] font-[600]">Select All</span>
           </div>
           <div className="relative" ref={mobileActionRef}>
@@ -279,11 +279,11 @@ const ManualRto = ({ userId: initialUserId }) => {
               disabled={selectedOrders.length === 0}
               className={`h-7 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 transition-all border ${selectedOrders.length === 0
                 ? "border-gray-200 text-gray-400 cursor-not-allowed bg-gray-50"
-                : "border-[#0CBB7D] text-[#0CBB7D] bg-white shadow-sm"
+                : "border-brand-primary text-brand-primary bg-white shadow-sm"
                 }`}
               onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
             >
-              <FaBars className={selectedOrders.length === 0 ? "text-gray-400" : "text-[#0CBB7D]"} />
+              <FaBars className={selectedOrders.length === 0 ? "text-gray-400" : "text-brand-primary"} />
             </button>
             {mobileDropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white border rounded-lg shadow-sm z-[60] text-[10px] font-[600] overflow-hidden animate-popup-in">

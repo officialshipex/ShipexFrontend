@@ -12,12 +12,12 @@ const ACTIONS = [
 const InputField = ({ label, icon: Icon, ...props }) => (
   <div className="flex flex-col gap-1">
     <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700 flex items-center gap-1.5">
-      {/* {Icon && <Icon className="w-3 h-3 text-[#0CBB7D]" />} */}
+      {/* {Icon && <Icon className="w-3 h-3 text-brand-primary" />} */}
       {label}
     </label>
     <input
       {...props}
-      className="w-full border border-gray-300 px-3 py-2 text-[12px] font-[500] text-gray-700 rounded-lg focus:outline-none focus:border-[#0CBB7D] focus:ring-1 focus:ring-[#0CBB7D]/20 transition-all placeholder:text-gray-400"
+      className="w-full border border-gray-300 px-3 py-2 text-[12px] font-[500] text-gray-700 rounded-lg focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 transition-all placeholder:text-gray-400"
     />
   </div>
 );
@@ -248,7 +248,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
           <div>
             <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">Take NDR Action</h2>
             <p className="text-[10px] text-gray-500 font-[500]">
-              AWB: <span className="text-[#0CBB7D] font-[600]">{order.awb_number}</span>
+              AWB: <span className="text-brand-primary font-[600]">{order.awb_number}</span>
               {/* {provider && <span className="ml-2 text-gray-400">• {provider}</span>} */}
             </p>
           </div>
@@ -269,7 +269,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
             <button
               type="button"
               onClick={() => setDropdownOpen((prev) => !prev)}
-              className="w-full border border-gray-300 px-3 py-2 text-[12px] font-[600] text-gray-700 rounded-lg text-left flex justify-between items-center hover:border-[#0CBB7D] transition-all focus:outline-none focus:border-[#0CBB7D]"
+              className="w-full border border-gray-300 px-3 py-2 text-[12px] font-[600] text-gray-700 rounded-lg text-left flex justify-between items-center hover:border-brand-primary transition-all focus:outline-none focus:border-brand-primary"
             >
               <span className={action ? "text-gray-800" : "text-gray-400"}>{selectedLabel}</span>
               <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${dropdownOpen ? "rotate-180" : ""}`} />
@@ -280,7 +280,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
                   <li
                     key={value}
                     onClick={() => { setAction(value); setDropdownOpen(false); setRemarks(""); setScheduledDate(""); setAddress({ line1: "", line2: "", city: "", state: "", pincode: "", customerName: "" }); }}
-                    className={`px-3 py-2 cursor-pointer font-[600] transition-colors flex items-center gap-2 ${action === value ? "bg-green-50 text-[#0CBB7D]" : "text-gray-700 hover:bg-gray-50"}`}
+                    className={`px-3 py-2 cursor-pointer font-[600] transition-colors flex items-center gap-2 ${action === value ? "bg-green-50 text-brand-primary" : "text-gray-700 hover:bg-gray-50"}`}
                   >
                     {value === "RE-ATTEMPT"}
                     {value === "CHANGE_ADDRESS"}
@@ -296,7 +296,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
           {action && (
             <div className="flex flex-col gap-1">
               <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700 flex items-center gap-1.5">
-                {/* <MessageSquare className="w-3 h-3 text-[#0CBB7D]" /> */}
+                {/* <MessageSquare className="w-3 h-3 text-brand-primary" /> */}
                 Remarks <span className="text-red-400">*</span>
               </label>
               <textarea
@@ -304,15 +304,15 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
                 onChange={(e) => setRemarks(e.target.value)}
                 rows={2}
                 placeholder="Enter remarks..."
-                className="w-full border border-gray-300 px-3 py-2 text-[12px] font-[500] text-gray-700 rounded-lg focus:outline-none focus:border-[#0CBB7D] focus:ring-1 focus:ring-[#0CBB7D]/20 transition-all placeholder:text-gray-400 resize-none"
+                className="w-full border border-gray-300 px-3 py-2 text-[12px] font-[500] text-gray-700 rounded-lg focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 transition-all placeholder:text-gray-400 resize-none"
               />
             </div>
           )}
 
           {/* Change Address Fields - shown for all couriers except Amazon */}
           {needsChangeAddressFields && (
-            <div className="border border-[#0CBB7D]/20 rounded-lg p-3 bg-green-50/30 flex flex-col gap-2.5">
-              <p className="text-[11px] font-[700] text-[#0CBB7D] flex items-center gap-1.5">
+            <div className="border border-brand-primary/20 rounded-lg p-3 bg-green-50/30 flex flex-col gap-2.5">
+              <p className="text-[11px] font-[700] text-brand-primary flex items-center gap-1.5">
                 <MapPin className="w-3 h-3" /> New Delivery Address
               </p>
 
@@ -387,7 +387,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
           {action && needsScheduledDate && (
             <div className="flex flex-col gap-1">
               <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700 flex items-center gap-1.5">
-                <Calendar className="w-3 h-3 text-[#0CBB7D]" />
+                <Calendar className="w-3 h-3 text-brand-primary" />
                 {isSmartship ? "Next Attempt Date *" : "Scheduled Delivery Date *"}
               </label>
               <input
@@ -395,7 +395,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
                 value={scheduledDate}
                 onChange={(e) => setScheduledDate(e.target.value)}
                 min={new Date().toISOString().split("T")[0]}
-                className="w-full border border-gray-300 px-3 py-2 rounded-lg text-[12px] text-gray-700 focus:outline-none focus:border-[#0CBB7D] focus:ring-1 focus:ring-[#0CBB7D]/20 transition-all"
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg text-[12px] text-gray-700 focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 transition-all"
               />
             </div>
           )}
@@ -407,7 +407,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
               <select
                 value={deliverySlot}
                 onChange={(e) => setDeliverySlot(e.target.value)}
-                className="w-full border border-gray-300 px-3 py-2 rounded-lg text-[12px] text-gray-700 font-[600] focus:outline-none focus:border-[#0CBB7D] focus:ring-1 focus:ring-[#0CBB7D]/20 transition-all"
+                className="w-full border border-gray-300 px-3 py-2 rounded-lg text-[12px] text-gray-700 font-[600] focus:outline-none focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 transition-all"
               >
                 <option value="">Select Slot</option>
                 <option value="1">Morning</option>
@@ -452,7 +452,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
             disabled={loading || !action}
             className={`px-3 py-2 text-white font-[600] text-[12px] rounded-lg transition-all ${loading || !action
               ? "bg-gray-300 cursor-not-allowed"
-              : "bg-[#0CBB7D] hover:bg-[#099c68] active:scale-95 shadow-sm shadow-[#0CBB7D]/20"
+              : "bg-brand-primary hover:bg-[#099c68] active:scale-95 shadow-sm shadow-brand-primary/20"
               }`}
           >
             {loading ? (

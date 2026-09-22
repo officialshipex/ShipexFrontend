@@ -28,7 +28,7 @@ const ReferralDetailsModal = ({ referral, onClose }) => {
           {/* Referrer Information Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="bg-green-50/50 border border-green-100 rounded-xl p-4 space-y-3">
-              <h3 className="text-[10px] sm:text-[12px] font-bold text-[#0CBB7D] uppercase tracking-wider flex items-center gap-2">
+              <h3 className="text-[10px] sm:text-[12px] font-bold text-brand-primary uppercase tracking-wider flex items-center gap-2">
                 <User className="w-4 h-4" />
                 Referrer Information
               </h3>
@@ -39,7 +39,7 @@ const ReferralDetailsModal = ({ referral, onClose }) => {
                 </div>
                 <div className="flex justify-between border-b border-green-100 pb-1">
                   <span className="text-gray-500">User ID</span>
-                  <span className="font-bold text-[#0CBB7D]">{referral.userId || "-"}</span>
+                  <span className="font-bold text-brand-primary">{referral.userId || "-"}</span>
                 </div>
                 <div className="flex items-center gap-2 text-gray-600">
                   <Mail className="w-3.5 h-3.5 text-gray-500" />
@@ -64,7 +64,7 @@ const ReferralDetailsModal = ({ referral, onClose }) => {
                 </div>
                 <div className="text-center p-2 bg-white rounded-lg border border-blue-100">
                   <p className="text-[9px] sm:text-[10px] text-gray-500 font-bold">Freight</p>
-                  <p className="text-[10px] sm:text-[12px] font-bold text-[#0CBB7D]">₹{Math.round(referral.totalShipping || 0)}</p>
+                  <p className="text-[10px] sm:text-[12px] font-bold text-brand-primary">₹{Math.round(referral.totalShipping || 0)}</p>
                 </div>
                 <div className="text-center p-2 bg-white rounded-lg border border-blue-100">
                   <p className="text-[9px] sm:text-[10px] text-gray-500 font-bold">Reward</p>
@@ -78,7 +78,7 @@ const ReferralDetailsModal = ({ referral, onClose }) => {
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <h3 className="text-[12px] sm:text-[14px] font-bold text-gray-700 flex items-center gap-2">
-                <Users className="w-4 h-4 text-[#0CBB7D]" />
+                <Users className="w-4 h-4 text-brand-primary" />
                 Referred Customers Tracking
               </h3>
               <span className="bg-gray-100 text-gray-500 px-3 py-1 rounded-full text-[9px] sm:text-[10px] font-bold tracking-widest">
@@ -89,7 +89,7 @@ const ReferralDetailsModal = ({ referral, onClose }) => {
             <div className="overflow-hidden">
               <div className="max-h-[400px] overflow-y-auto">
                 <table className="sm:w-full w-[500px] text-[12px] border-collapse bg-white">
-                  <thead className="bg-[#0CBB7D] text-white font-bold sticky top-0 z-10">
+                  <thead className="bg-brand-primary text-white font-bold sticky top-0 z-10">
                     <tr>
                       <th className="px-3 py-2 text-left">User Details</th>
                       <th className="px-3 py-2 text-center">Orders</th>
@@ -102,7 +102,7 @@ const ReferralDetailsModal = ({ referral, onClose }) => {
                       referral.subUsers.map((sub, idx) => (
                         <tr key={idx} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
                           <td className="px-3 py-2">
-                            <p className="font-bold text-[#0CBB7D]">{sub.userId}</p>
+                            <p className="font-bold text-brand-primary">{sub.userId}</p>
                             <p className="text-gray-700">{sub.fullname}</p>
                             <div className="flex items-center gap-2 text-[12px] text-gray-400">
                               <span className="flex items-center">{sub.email}</span>
@@ -112,7 +112,7 @@ const ReferralDetailsModal = ({ referral, onClose }) => {
                           <td className="px-3 py-2 text-right font-bold text-gray-500">
                             {Number(sub.totalShipping || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                           </td>
-                          <td className="px-3 py-2 text-right font-bold text-[#0CBB7D]">
+                          <td className="px-3 py-2 text-right font-bold text-brand-primary">
                             {Number(sub.commission || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                           </td>
                         </tr>

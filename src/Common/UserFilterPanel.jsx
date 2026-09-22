@@ -109,7 +109,7 @@ const UserFilterPanel = ({
                         <input
                             type="text"
                             placeholder="Enter User ID"
-                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D]`}
+                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-brand-primary`}
                             value={localFilters.userId}
                             onChange={(e) => setLocalFilters({ ...localFilters, userId: e.target.value })}
                         />
@@ -121,7 +121,7 @@ const UserFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowKycDropdown(!showKycDropdown)}
-                                className={`${fieldStyle} ${showKycDropdown ? "border-[#0CBB7D]" : "border-gray-300"} bg-white`}
+                                className={`${fieldStyle} ${showKycDropdown ? "border-brand-primary" : "border-gray-300"} bg-white`}
                             >
                                 <span className={localFilters.kycStatus ? "text-gray-700 font-[600]" : "text-gray-400"}>
                                     {localFilters.kycStatus ? localFilters.kycStatus.charAt(0).toUpperCase() + localFilters.kycStatus.slice(1) : "Select KYC Status"}
@@ -134,7 +134,7 @@ const UserFilterPanel = ({
                                         <div
                                             key={status}
                                             onClick={() => { setLocalFilters({ ...localFilters, kycStatus: status }); setShowKycDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {status.charAt(0).toUpperCase() + status.slice(1)}
                                         </div>
@@ -150,7 +150,7 @@ const UserFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowRateCardDropdown(!showRateCardDropdown)}
-                                className={`${fieldStyle} ${showRateCardDropdown ? "border-[#0CBB7D]" : "border-gray-300"} bg-white`}
+                                className={`${fieldStyle} ${showRateCardDropdown ? "border-brand-primary" : "border-gray-300"} bg-white`}
                             >
                                 <span className={localFilters.rateCard ? "text-gray-700 font-[600]" : "text-gray-400"}>
                                     {localFilters.rateCard ? localFilters.rateCard.charAt(0).toUpperCase() + localFilters.rateCard.slice(1) : "Select Rate Card"}
@@ -163,7 +163,7 @@ const UserFilterPanel = ({
                                         <div
                                             key={card}
                                             onClick={() => { setLocalFilters({ ...localFilters, rateCard: card }); setShowRateCardDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {card.charAt(0).toUpperCase() + card.slice(1)}
                                         </div>
@@ -179,7 +179,7 @@ const UserFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowWalletDropdown(!showWalletDropdown)}
-                                className={`${fieldStyle} ${showWalletDropdown ? "border-[#0CBB7D]" : "border-gray-300"} bg-white`}
+                                className={`${fieldStyle} ${showWalletDropdown ? "border-brand-primary" : "border-gray-300"} bg-white`}
                             >
                                 <span className={localFilters.wallet ? "text-gray-700 font-[600]" : "text-gray-400"}>
                                     {localFilters.wallet ? localFilters.wallet.charAt(0).toUpperCase() + localFilters.wallet.slice(1) : "Select Wallet Status"}
@@ -192,7 +192,7 @@ const UserFilterPanel = ({
                                         <div
                                             key={type}
                                             onClick={() => { setLocalFilters({ ...localFilters, wallet: type }); setShowWalletDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {type.charAt(0).toUpperCase() + type.slice(1)}
                                         </div>
@@ -213,7 +213,7 @@ const UserFilterPanel = ({
                     </button>
                     <button
                         onClick={handleApply}
-                        className="flex-1 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
+                        className="flex-1 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
                     >
                         Apply Filters
                     </button>

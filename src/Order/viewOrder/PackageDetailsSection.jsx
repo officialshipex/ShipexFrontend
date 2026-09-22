@@ -32,7 +32,7 @@ const PackageDetailsSection = ({ order, onUpdate }) => {
                 <div className="flex justify-between items-center mb-3 border-b pb-2">
                     <div className="flex items-center gap-2">
                         <p className="p-2 bg-green-100 hidden sm:block rounded-full">
-                            <Package className="w-4 h-4 text-[#0CBB7D]" />
+                            <Package className="w-4 h-4 text-brand-primary" />
                         </p>
 
                         <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">

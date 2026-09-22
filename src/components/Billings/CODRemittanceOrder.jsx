@@ -378,7 +378,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
     <div className="space-y-2">
       {/* Summary Grid */}
       <div className="text-[12px] font-bold">
-        <div className="md:hidden border text-[10px] border-[#0CBB7D] bg-white rounded-lg px-3 py-2 space-y-2">
+        <div className="md:hidden border text-[10px] border-brand-primary bg-white rounded-lg px-3 py-2 space-y-2">
           {summaryItems.map((item, idx) => (
             <div key={idx} className="flex justify-between items-center">
               <span className="text-gray-500 w-1/2">{item.title}</span>
@@ -389,8 +389,8 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
         </div>
         <div className="hidden md:grid md:grid-cols-5 gap-2 my-2">
           {summaryItems.map((item, idx) => (
-            <div key={idx} className="flex items-center gap-4 p-2 bg-white rounded-lg border border-[#0CBB7D] hover:shadow-sm transition-shadow">
-              <div className="bg-[#0CBB7D] text-white p-2 rounded-full shrink-0">{item.icon}</div>
+            <div key={idx} className="flex items-center gap-4 p-2 bg-white rounded-lg border border-brand-primary hover:shadow-sm transition-shadow">
+              <div className="bg-brand-primary text-white p-2 rounded-full shrink-0">{item.icon}</div>
               <div className="flex flex-col min-w-0">
                 <span className="text-[12px] font-bold text-gray-700 truncate">₹{(Number(item.value) || 0).toFixed(2)}</span>
                 <span className="text-[12px] text-gray-500 truncate">{item.title}</span>
@@ -412,7 +412,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
           onClick={() => setIsFilterPanelOpen(true)}
           className="flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-bold text-gray-600 hover:bg-gray-50 transition-all shadow-sm h-9"
         >
-          <Filter className="w-4 h-4 text-[#0CBB7D]" />
+          <Filter className="w-4 h-4 text-brand-primary" />
           More Filters
         </button>
 
@@ -422,7 +422,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
               Clear All Filters
             </button>
           )}
-          {/* <button onClick={() => setShowUpload(true)} disabled={!employeeAccess.canAction && !employeeAccess.isAdmin} className={`h-9 px-3 rounded-lg text-[12px] font-bold transition-all focus:scale-95 flex items-center justify-center gap-1 ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-[#0CBB7D] text-white hover:bg-opacity-90 shadow-sm" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}>
+          {/* <button onClick={() => setShowUpload(true)} disabled={!employeeAccess.canAction && !employeeAccess.isAdmin} className={`h-9 px-3 rounded-lg text-[12px] font-bold transition-all focus:scale-95 flex items-center justify-center gap-1 ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-brand-primary text-white hover:bg-opacity-90 shadow-sm" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}>
             <Upload className="w-4 h-4" />
             Upload
           </button> */}
@@ -431,7 +431,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
             <button
               disabled={selectedRemittanceIds.length === 0}
               onClick={() => setBulkActionOpen(!bulkActionOpen)}
-              className={`h-9 px-4 rounded-lg text-[12px] font-bold flex items-center gap-1 border transition-all ${selectedRemittanceIds.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50 shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"}`}
+              className={`h-9 px-4 rounded-lg text-[12px] font-bold flex items-center gap-1 border transition-all ${selectedRemittanceIds.length > 0 ? "border-brand-primary text-brand-primary hover:bg-green-50 shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"}`}
             >
               Actions
               <ChevronDown className={`w-4 h-4 transition-transform ${bulkActionOpen ? "rotate-180" : ""}`} />
@@ -439,7 +439,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
             {bulkActionOpen && (
               <div className="absolute right-0 top-full mt-1 bg-white border border-gray-100 rounded-lg shadow-xl w-52 text-[12px] z-[100] animate-popup-in overflow-hidden border">
                 <div className="px-4 py-2 hover:bg-green-50 cursor-pointer font-bold text-gray-700 flex items-center gap-2 border-b border-gray-50 transition-colors" onClick={() => { handleExport(); setBulkActionOpen(false); }}>
-                  <Download className="w-4 h-4 text-[#0CBB7D]" /> Export Data
+                  <Download className="w-4 h-4 text-brand-primary" /> Export Data
                 </div>
                 <div
                   className={`px-4 py-2 hover:bg-green-50 cursor-pointer font-bold text-gray-700 flex items-center gap-2 border-b border-gray-50 transition-colors ${bankExportLoading ? "opacity-60 cursor-not-allowed" : ""}`}
@@ -452,7 +452,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                   <Upload className="w-4 h-4 text-orange-500" /> Upload Bank Response
                 </div>
                 <div className="px-4 py-2 hover:bg-green-50 cursor-pointer font-bold text-gray-700 flex items-center gap-2 transition-colors" onClick={() => { handleTransferCOD(); setBulkActionOpen(false); }}>
-                  <Send className="w-4 h-4 text-[#0CBB7D]" /> Transfer COD
+                  <Send className="w-4 h-4 text-brand-primary" /> Transfer COD
                 </div>
               </div>
             )}
@@ -475,14 +475,14 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
             onClick={() => setIsFilterPanelOpen(true)}
             className="flex items-center justify-center gap-1.5 px-3 h-[34px] bg-white border border-gray-300 rounded-lg text-[10px] font-bold text-gray-700 whitespace-nowrap"
           >
-            <Filter className="w-3 h-3 text-[#0CBB7D]" />
+            <Filter className="w-3 h-3 text-brand-primary" />
             More Filters
           </button>
 
           {/* <button
             onClick={() => setShowUpload(true)}
             disabled={!employeeAccess.canAction && !employeeAccess.isAdmin}
-            className={`p-2.5 rounded-lg active:scale-95 transition-transform ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-[#0CBB7D] text-white" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}
+            className={`p-2.5 rounded-lg active:scale-95 transition-transform ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-brand-primary text-white" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}
           >
             <FiUpload className="w-3 h-3" />
           </button> */}
@@ -500,7 +500,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
               type="checkbox"
               checked={remitedData.length > 0 && selectedRemittanceIds.length === remitedData.length}
               onChange={handleSelectAll}
-              className="w-3 h-3 accent-[#0CBB7D] cursor-pointer shadow-sm"
+              className="w-3 h-3 accent-brand-primary cursor-pointer shadow-sm"
             />
             <span className="text-[10px] font-bold text-gray-700 tracking-tight">Select All</span>
           </div>
@@ -508,7 +508,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
           <div className="relative" ref={bulkActionMobileRef}>
             <button
               onClick={() => setBulkActionOpen(!bulkActionOpen)}
-              className={`py-[8px] px-3 rounded-lg border transition-all ${selectedRemittanceIds.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] shadow-sm" : "border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed"}`}
+              className={`py-[8px] px-3 rounded-lg border transition-all ${selectedRemittanceIds.length > 0 ? "border-brand-primary text-brand-primary shadow-sm" : "border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed"}`}
               disabled={selectedRemittanceIds.length === 0}
             >
               <FaBars className="w-3 h-3" />
@@ -518,9 +518,9 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
               <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-2xl border border-gray-100 z-[100] overflow-hidden animate-popup-in">
                 <button
                   onClick={() => { handleExport(); setBulkActionOpen(false); }}
-                  className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-green-50 hover:text-[#0CBB7D] flex items-center gap-2.5 transition-colors border-b border-gray-50"
+                  className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-green-50 hover:text-brand-primary flex items-center gap-2.5 transition-colors border-b border-gray-50"
                 >
-                  <Download className="w-3 h-3 text-[#0CBB7D]" /> Export Data
+                  <Download className="w-3 h-3 text-brand-primary" /> Export Data
                 </button>
                 <button
                   onClick={() => { if (!bankExportLoading) { handleExportBankTemplate(); setBulkActionOpen(false); } }}
@@ -539,9 +539,9 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 </button>
                 <button
                   onClick={() => { handleTransferCOD(); setBulkActionOpen(false); }}
-                  className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-green-50 hover:text-[#0CBB7D] flex items-center gap-2.5 transition-colors"
+                  className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-green-50 hover:text-brand-primary flex items-center gap-2.5 transition-colors"
                 >
-                  <Send className="w-3 h-3 text-[#0CBB7D]" /> Transfer COD
+                  <Send className="w-3 h-3 text-brand-primary" /> Transfer COD
                 </button>
               </div>
             )}
@@ -553,11 +553,11 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
       <div className="hidden md:block">
         <div className="h-[calc(100vh-300px)] overflow-y-auto bg-white overflow-hidden shadow-sm shadow-green-50/50">
           <table className="w-full text-[12px] border-collapse sticky-header">
-            <thead className="bg-[#0CBB7D] text-white font-bold sticky top-0 z-10 text-center tracking-wider">
+            <thead className="bg-brand-primary text-white font-bold sticky top-0 z-10 text-center tracking-wider">
               <tr>
                 <th className="py-2 px-3">
                   <div className="flex justify-center items-center">
-                    <input type="checkbox" checked={remitedData.length > 0 && selectedRemittanceIds.length === remitedData.length} onChange={handleSelectAll} className="accent-[#0CBB7D] cursor-pointer w-3 h-3" />
+                    <input type="checkbox" checked={remitedData.length > 0 && selectedRemittanceIds.length === remitedData.length} onChange={handleSelectAll} className="accent-brand-primary cursor-pointer w-3 h-3" />
                   </div>
                 </th>
                 <th className="py-2 px-3 text-left">Date</th>
@@ -582,7 +582,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                   <tr key={index} className="border-t border-gray-100 hover:bg-green-50/20 transition-colors">
                     <td className="py-2 px-3">
                       <div className="flex justify-center items-center">
-                        <input type="checkbox" checked={selectedRemittanceIds.includes(row.remittanceId)} onChange={() => handleCheckboxChange(row.remittanceId)} className="accent-[#0CBB7D] cursor-pointer w-3 h-3" />
+                        <input type="checkbox" checked={selectedRemittanceIds.includes(row.remittanceId)} onChange={() => handleCheckboxChange(row.remittanceId)} className="accent-brand-primary cursor-pointer w-3 h-3" />
                       </div>
                     </td>
                     <td className="py-2 px-3 text-left text-gray-700">
@@ -594,19 +594,19 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                     </td>
                     <td className="py-2 px-3">
                       <div className="flex items-center justify-center gap-2 group">
-                        <button onClick={() => openRemittanceDetails(row.remittanceId)} className="text-[#0CBB7D] font-bold hover:underline transition-all">
+                        <button onClick={() => openRemittanceDetails(row.remittanceId)} className="text-brand-primary font-bold hover:underline transition-all">
                           {row.remittanceId}
                         </button>
-                        <button onClick={() => handleCopy(row.remittanceId, row.remittanceId)} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-[#0CBB7D] transition-all opacity-0 group-hover:opacity-100">
+                        <button onClick={() => handleCopy(row.remittanceId, row.remittanceId)} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
                           {copiedId === row.remittanceId ? <FiCheck className="text-green-500 w-3 h-3" /> : <FiCopy className="w-3 h-3" />}
                         </button>
                       </div>
                     </td>
-                    <td className="py-2 px-3 text-[#0CBB7D] font-[600]">
+                    <td className="py-2 px-3 text-brand-primary font-[600]">
                       <div className="flex items-center justify-center gap-1 group">
                         <span>{row.utr || "N/A"}</span>
                         {row.utr && (
-                          <button onClick={() => handleCopy(row.utr, row.remittanceId + '_utr')} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-[#0CBB7D] transition-all opacity-0 group-hover:opacity-100">
+                          <button onClick={() => handleCopy(row.utr, row.remittanceId + '_utr')} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
                             {copiedId === row.remittanceId + '_utr' ? <FiCheck className="text-green-500 w-3 h-3" /> : <FiCopy className="w-3 h-3" />}
                           </button>
                         )}
@@ -616,9 +616,9 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                     <td className="py-2 px-3 text-red-500">₹{(Number(row.amountCreditedToWallet) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3 text-gray-700">₹{(Number(row.adjustedAmount) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3 text-red-700">₹{(Number(row.earlyCodCharges) || 0).toFixed(2)}</td>
-                    <td className="py-2 px-3 text-[#0CBB7D] font-[600]">₹{(Number(row.remittanceInitiated) || 0).toFixed(2)}</td>
+                    <td className="py-2 px-3 text-brand-primary font-[600]">₹{(Number(row.remittanceInitiated) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] shadow-sm ${row.status === "Paid" ? "bg-green-100 text-[#0CBB7D]" : "bg-orange-100 text-orange-600"}`}>{row.status}</span>
+                      <span className={`px-2 py-0.5 rounded text-[10px] shadow-sm ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "bg-orange-100 text-orange-600"}`}>{row.status}</span>
                     </td>
                   </tr>
                 ))
@@ -644,10 +644,10 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                     type="checkbox"
                     checked={selectedRemittanceIds.includes(row.remittanceId)}
                     onChange={() => handleCheckboxChange(row.remittanceId)}
-                    className="w-3.5 h-3.5 accent-[#0CBB7D]"
+                    className="w-3.5 h-3.5 accent-brand-primary"
                   />
                   <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center p-0.5 border shadow-xs overflow-hidden shrink-0">
-                    <Wallet className="w-3.5 h-3.5 text-[#0CBB7D]" />
+                    <Wallet className="w-3.5 h-3.5 text-brand-primary" />
                   </div>
                 </div>
 
@@ -661,11 +661,11 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 </div>
 
                 <div className="text-right flex flex-col items-end">
-                  <span className={`px-2 py-0.5 rounded text-[10px] shadow-xs ${row.status === "Paid" ? "bg-green-100 text-[#0CBB7D]" : "bg-red-100 text-red-600"}`}>
+                  <span className={`px-2 py-0.5 rounded text-[10px] shadow-xs ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>
                     {row.status}
                   </span>
                   <p
-                    className="text-[9px] text-[#0CBB7D] font-bold border-b border-dashed border-[#0CBB7D] cursor-pointer mt-1"
+                    className="text-[9px] text-brand-primary font-bold border-b border-dashed border-brand-primary cursor-pointer mt-1"
                     onClick={() => setDetailsPopupId(detailsPopupId === row.remittanceId ? null : row.remittanceId)}
                   >
                     Details
@@ -680,13 +680,13 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                   <div className="flex items-center gap-1">
                     <button
                       onClick={() => openRemittanceDetails(row.remittanceId)}
-                      className="text-[#0CBB7D] font-[600] text-[10px] hover:underline truncate max-w-[60px]"
+                      className="text-brand-primary font-[600] text-[10px] hover:underline truncate max-w-[60px]"
                     >
                       {row.remittanceId}
                     </button>
                     <button onClick={() => handleCopy(row.remittanceId, row.remittanceId + '_m')}>
                       {copiedId === row.remittanceId + '_m' ? (
-                        <FiCheck className="w-2 h-2 text-[#0CBB7D]" />
+                        <FiCheck className="w-2 h-2 text-brand-primary" />
                       ) : (
                         <FiCopy className="w-3 h-3 text-gray-400" />
                       )}
@@ -704,13 +704,13 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 <div className="text-right">
                   <p className="text-gray-500 font-[600] text-[10px] tracking-tighter">UTR Number</p>
                   <div className="flex items-center justify-end gap-1">
-                    <span className="text-[#0CBB7D] font-[600] truncate text-[10px] max-w-[70px]">
+                    <span className="text-brand-primary font-[600] truncate text-[10px] max-w-[70px]">
                       {row.utr || "N/A"}
                     </span>
                     {row.utr && (
                       <button onClick={() => handleCopy(row.utr, row.remittanceId + '_m_utr')}>
                         {copiedId === row.remittanceId + '_m_utr' ? (
-                          <FiCheck className="w-2 h-2 text-[#0CBB7D]" />
+                          <FiCheck className="w-2 h-2 text-brand-primary" />
                         ) : (
                           <FiCopy className="w-3 h-3 text-gray-400" />
                         )}
@@ -723,7 +723,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
               {/* User Info - Updated styling to match Admin UI */}
               <div className="mt-2 flex items-center justify-between px-0.5 border-t border-gray-100 pt-2">
                 <div className="flex items-center gap-2 min-w-0 max-w-[70%]">
-                  <div className="w-7 h-7 rounded-full bg-[#0CBB7D]/10 border border-[#0CBB7D]/20 flex items-center justify-center font-bold text-[#0CBB7D] text-[10px] shrink-0 shadow-sm uppercase">
+                  <div className="w-7 h-7 rounded-full bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center font-bold text-brand-primary text-[10px] shrink-0 shadow-sm uppercase">
                     {row.user?.name?.charAt(0) || "U"}
                   </div>
                   <div className="min-w-0 flex-1">
@@ -774,8 +774,8 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                           <span className="text-gray-700 font-bold">₹{(Number(row.adjustedAmount) || 0).toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between items-center bg-green-50/50 p-2 rounded-lg border border-green-100 mt-1">
-                          <span className="text-[#0CBB7D] font-bold">Net Payout</span>
-                          <span className="text-[#0CBB7D] font-[600] text-[10px]">₹{(Number(row.remittanceInitiated) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
+                          <span className="text-brand-primary font-bold">Net Payout</span>
+                          <span className="text-brand-primary font-[600] text-[10px]">₹{(Number(row.remittanceInitiated) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                         </div>
                       </div>
                     </motion.div>
@@ -834,7 +834,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
               {/* Header */}
               <div className="flex items-center gap-3 mb-4">
                 <div className="p-2 bg-green-50 rounded-xl border border-green-100">
-                  <FileSpreadsheet className="w-6 h-6 text-[#0CBB7D]" />
+                  <FileSpreadsheet className="w-6 h-6 text-brand-primary" />
                 </div>
                 <div>
                   <h2 className="text-[13px] sm:text-[14px] font-bold text-gray-800">Upload Bank Response</h2>
@@ -847,7 +847,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 {selectedBankFile ? (
                   <div className="flex flex-col items-center">
                     <div className="p-2 bg-green-100 rounded-full mb-2">
-                      <CheckCircle className="w-8 h-8 text-[#0CBB7D]" />
+                      <CheckCircle className="w-8 h-8 text-brand-primary" />
                     </div>
                     <p className="text-[12px] text-gray-800 font-bold mb-1 break-all px-4">
                       {selectedBankFile.name}
@@ -866,7 +866,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                       <button
                         onClick={handleBankResponseSubmit}
                         disabled={bankResponseUploading}
-                        className="px-4 py-1.5 bg-[#0CBB7D] text-white rounded-lg text-[10px] sm:text-[11px] font-bold hover:bg-green-600 transition flex items-center gap-1.5 shadow-sm"
+                        className="px-4 py-1.5 bg-brand-primary text-white rounded-lg text-[10px] sm:text-[11px] font-bold hover:bg-green-600 transition flex items-center gap-1.5 shadow-sm"
                       >
                         {bankResponseUploading ? (
                           <><span className="animate-spin inline-block w-3 h-3 border-2 border-white border-t-transparent rounded-full" /> Processing...</>
@@ -894,7 +894,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                     />
                     <label
                       htmlFor="bankResponseFile"
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-[11px] font-bold cursor-pointer transition-all bg-[#0CBB7D] text-white hover:bg-green-600 shadow-sm"
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-[11px] font-bold cursor-pointer transition-all bg-brand-primary text-white hover:bg-green-600 shadow-sm"
                     >
                       <Upload className="w-4 h-4" /> Choose File
                     </label>
@@ -943,7 +943,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                     <input
                       type="text"
                       placeholder="Enter Remittance ID"
-                      className="w-full h-9 pl-3 pr-3 text-[12px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-all text-gray-700 placeholder:text-gray-400"
+                      className="w-full h-9 pl-3 pr-3 text-[12px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-brand-primary transition-all text-gray-700 placeholder:text-gray-400"
                       value={localFilters.remittanceId}
                       onChange={e => setLocalFilters(prev => ({ ...prev, remittanceId: e.target.value }))}
                     />
@@ -957,7 +957,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                   <div className="relative">
                     <button
                       onClick={() => setStatusDropdownOpen(!statusDropdownOpen)}
-                      className={`w-full h-9 px-3 text-[12px] font-[600] border rounded-lg focus:outline-none flex items-center justify-between transition-all bg-white text-left ${statusDropdownOpen ? "border-[#0CBB7D]" : "border-gray-200"}`}
+                      className={`w-full h-9 px-3 text-[12px] font-[600] border rounded-lg focus:outline-none flex items-center justify-between transition-all bg-white text-left ${statusDropdownOpen ? "border-brand-primary" : "border-gray-200"}`}
                     >
                       <span className={localFilters.status ? "text-gray-700" : "text-gray-400"}>{localFilters.status || "Select Status"}</span>
                       <ChevronDown className={`w-4 h-4 ml-2 text-gray-400 transition-transform ${statusDropdownOpen ? "rotate-180" : ""}`} />
@@ -965,7 +965,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                     {statusDropdownOpen && (
                       <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-[120] py-1 border border-gray-200 animate-popup-in">
                         {["Paid", "Pending"].map(s => (
-                          <div key={s} onClick={() => { setLocalFilters(prev => ({ ...prev, status: s })); setStatusDropdownOpen(false); }} className={`px-4 py-2 text-[12px] font-[600] cursor-pointer transition-colors ${localFilters.status === s ? "bg-green-50 text-[#0CBB7D]" : "text-gray-500 hover:bg-gray-50"}`}>{s}</div>
+                          <div key={s} onClick={() => { setLocalFilters(prev => ({ ...prev, status: s })); setStatusDropdownOpen(false); }} className={`px-4 py-2 text-[12px] font-[600] cursor-pointer transition-colors ${localFilters.status === s ? "bg-green-50 text-brand-primary" : "text-gray-500 hover:bg-gray-50"}`}>{s}</div>
                         ))}
                       </div>
                     )}
@@ -975,7 +975,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
 
               <div className="p-4 border-t bg-gray-50 flex gap-3 mt-auto">
                 <button onClick={handleClearFilters} className="flex-1 py-2 text-gray-500 rounded-lg text-[12px] font-bold hover:bg-white hover:text-red-500 transition-all border border-gray-200">Reset Filter</button>
-                <button onClick={() => { setAppliedFilters(localFilters); setIsFilterPanelOpen(false); setPage(1); }} className="flex-1 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-bold hover:opacity-90 transition-all shadow-md">Apply Filter</button>
+                <button onClick={() => { setAppliedFilters(localFilters); setIsFilterPanelOpen(false); setPage(1); }} className="flex-1 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-bold hover:opacity-90 transition-all shadow-md">Apply Filter</button>
               </div>
             </motion.div>
           </div>

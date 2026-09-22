@@ -23,7 +23,7 @@ const CustomSelect = ({ value, onChange, options }) => {
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
-        className="w-full flex items-center justify-between border border-gray-300 rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 bg-white hover:border-[#0CBB7D] focus:outline-none focus:ring-2 focus:ring-[#0CBB7D] transition-colors"
+        className="w-full flex items-center justify-between border border-gray-300 rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 bg-white hover:border-brand-primary focus:outline-none focus:ring-2 focus:ring-brand-primary transition-colors"
       >
         <span>{value}</span>
         <FiChevronDown
@@ -44,7 +44,7 @@ const CustomSelect = ({ value, onChange, options }) => {
               }}
               className={`w-full text-left px-3 py-2 text-[12px] font-[600] transition-colors ${
                 value === opt
-                  ? "text-[#0CBB7D] bg-[#0CBB7D]/10"
+                  ? "text-brand-primary bg-brand-primary/10"
                   : "text-gray-700 hover:bg-gray-50"
               }`}
             >
@@ -157,7 +157,7 @@ const EarlyCODModal = ({ isOpen, onClose, userId, isAdmin }) => {
   const daysOfWeek = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"];
 
   const codPlans = [
-    { name: "D+2", amount: 0.99, label: "D + 2 Days", bg: "bg-gradient-to-b from-[#E9FBF4] to-[#BFF1DF] border-2 border-[#0CBB7D] text-[#064E3B]" },
+    { name: "D+2", amount: 0.99, label: "D + 2 Days", bg: "bg-gradient-to-b from-[#E9FBF4] to-[#BFF1DF] border-2 border-brand-primary text-[#064E3B]" },
     { name: "D+3", amount: 0.69, label: "D + 3 Days", bg: "bg-white border border-gray-300 text-gray-500" },
     { name: "D+4", amount: 0.49, label: "D + 4 Days", bg: "bg-white border border-gray-300 text-gray-500" },
   ];
@@ -189,7 +189,7 @@ const EarlyCODModal = ({ isOpen, onClose, userId, isAdmin }) => {
             <div className="flex items-center gap-2 mb-5 pr-6">
               <button
                 onClick={() => setShowCustomForm(false)}
-                className="text-gray-500 hover:text-[#0CBB7D] flex items-center gap-1 text-[12px] font-[600] transition-colors"
+                className="text-gray-500 hover:text-brand-primary flex items-center gap-1 text-[12px] font-[600] transition-colors"
               >
                 <FiArrowLeft size={13} />
               </button>
@@ -221,7 +221,7 @@ const EarlyCODModal = ({ isOpen, onClose, userId, isAdmin }) => {
                   onChange={(e) =>
                     setCustomPlan((p) => ({ ...p, codCharge: e.target.value }))
                   }
-                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#0CBB7D] focus:border-transparent"
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
                   placeholder="e.g. 1.5"
                 />
               </div>
@@ -240,7 +240,7 @@ const EarlyCODModal = ({ isOpen, onClose, userId, isAdmin }) => {
                         key={day}
                         className={`flex items-center gap-2 px-3 py-1.5 border rounded-lg cursor-pointer transition-all ${
                           isSelected
-                            ? "border-[#0CBB7D] bg-[#0CBB7D]/10 text-gray-700"
+                            ? "border-brand-primary bg-brand-primary/10 text-gray-700"
                             : "border-gray-200 hover:bg-gray-50 text-gray-600"
                         }`}
                       >
@@ -260,7 +260,7 @@ const EarlyCODModal = ({ isOpen, onClose, userId, isAdmin }) => {
                             }
                             setCustomPlan((p) => ({ ...p, remittanceDay: currentDays }));
                           }}
-                          className="accent-[#0CBB7D] rounded h-3.5 w-3.5 cursor-pointer"
+                          className="accent-brand-primary rounded h-3.5 w-3.5 cursor-pointer"
                         />
                         <span className="text-[12px] font-[600]">{day}</span>
                       </label>
@@ -281,7 +281,7 @@ const EarlyCODModal = ({ isOpen, onClose, userId, isAdmin }) => {
               <button
                 onClick={handleCustomSubmit}
                 disabled={customLoading}
-                className="px-4 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:bg-green-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                className="px-4 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:bg-green-500 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
               >
                 {customLoading ? "Saving..." : "Submit"}
               </button>
@@ -314,7 +314,7 @@ const EarlyCODModal = ({ isOpen, onClose, userId, isAdmin }) => {
                     }
                     setShowCustomForm(true);
                   }}
-                  className="ml-3 flex-shrink-0 px-3 py-1.5 border border-[#0CBB7D] text-[#0CBB7D] rounded-lg text-[11px] font-[600] hover:bg-[#0CBB7D] hover:text-white transition-colors"
+                  className="ml-3 flex-shrink-0 px-3 py-1.5 border border-brand-primary text-brand-primary rounded-lg text-[11px] font-[600] hover:bg-brand-primary hover:text-white transition-colors"
                 >
                   Custom
                 </button>
@@ -341,7 +341,7 @@ const EarlyCODModal = ({ isOpen, onClose, userId, isAdmin }) => {
                       className={`w-full py-2 text-[12px] font-[600] mt-3 rounded-lg border transition-all ${
                         plans === plan.name
                           ? "bg-gray-200 cursor-not-allowed text-gray-600 border-gray-300"
-                          : "bg-[#0CBB7D] text-white hover:opacity-90 border-[#0CBB7D]"
+                          : "bg-brand-primary text-white hover:opacity-90 border-brand-primary"
                       }`}
                       onClick={() => handleActivate(plan.name, plan.amount)}
                       disabled={plans === plan.name}

@@ -156,7 +156,7 @@ export default function UserServiceManagement({
           <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500 mb-1.5">Select Service</p>
           <div
             onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-            className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-10 rounded-lg cursor-pointer hover:border-[#0CBB7D] transition-all group"
+            className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-10 rounded-lg cursor-pointer hover:border-brand-primary transition-all group"
           >
             <div className="flex items-center gap-2 truncate">
               <span className={`text-[10px] sm:text-[12px] truncate ${selectedService ? "text-gray-700" : "text-gray-400"}`}>
@@ -166,7 +166,7 @@ export default function UserServiceManagement({
                 <span className="text-[10px] bg-orange-100 text-orange-600 px-1.5 py-[1px] rounded-lg font-[600] shrink-0">custom</span>
               )}
             </div>
-            <FiChevronDown className={`text-gray-400 group-hover:text-[#0CBB7D] transition-transform flex-shrink-0 ${isDropdownOpen ? "rotate-180" : ""}`} />
+            <FiChevronDown className={`text-gray-400 group-hover:text-brand-primary transition-transform flex-shrink-0 ${isDropdownOpen ? "rotate-180" : ""}`} />
           </div>
 
           {isDropdownOpen && (
@@ -178,7 +178,7 @@ export default function UserServiceManagement({
                     setSelectedService(service);
                     setIsDropdownOpen(false);
                   }}
-                  className={`px-4 py-2.5 text-[12px] sm:text-[13px] border-b border-gray-50 last:border-0 hover:bg-[#0CBB7D]/5 hover:text-[#0CBB7D] cursor-pointer transition-colors flex items-center justify-between ${selectedService?.courierServiceName === service.courierServiceName ? 'bg-[#0CBB7D]/10 text-[#0CBB7D]' : 'text-gray-700'}`}
+                  className={`px-4 py-2.5 text-[12px] sm:text-[13px] border-b border-gray-50 last:border-0 hover:bg-brand-primary/5 hover:text-brand-primary cursor-pointer transition-colors flex items-center justify-between ${selectedService?.courierServiceName === service.courierServiceName ? 'bg-brand-primary/10 text-brand-primary' : 'text-gray-700'}`}
                 >
                   <div className="flex flex-col">
                     <div className="flex items-center gap-2">
@@ -190,7 +190,7 @@ export default function UserServiceManagement({
                     <span className="text-[9px] text-gray-400 font-bold uppercase">{service.courierProviderName} • {service.mode || 'N/A'}</span>
                   </div>
                   {service.status === "Active" ? (
-                    <div className="w-2 h-2 rounded-full bg-[#0CBB7D]"></div>
+                    <div className="w-2 h-2 rounded-full bg-brand-primary"></div>
                   ) : (
                     <div className="w-2 h-2 rounded-full bg-gray-300"></div>
                   )}
@@ -208,7 +208,7 @@ export default function UserServiceManagement({
                 <span className="text-[9px] text-gray-500 font-semibold uppercase">{selectedService.mode || 'N/A'} Mode</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`text-[10px] font-bold ${selectedService.status === 'Active' ? 'text-[#0CBB7D]' : 'text-gray-400'}`}>
+                <span className={`text-[10px] font-bold ${selectedService.status === 'Active' ? 'text-brand-primary' : 'text-gray-400'}`}>
                   {selectedService.status === 'Active' ? 'ENABLED' : 'DISABLED'}
                 </span>
                 <label className="relative inline-flex items-center cursor-pointer">
@@ -218,7 +218,7 @@ export default function UserServiceManagement({
                     checked={selectedService.status === "Active"}
                     onChange={() => handleServiceToggle(selectedService.courierServiceName, selectedService.status)}
                   />
-                  <div className="w-9 h-5 bg-gray-300 rounded-full peer peer-checked:bg-[#0CBB7D] transition-all"></div>
+                  <div className="w-9 h-5 bg-gray-300 rounded-full peer peer-checked:bg-brand-primary transition-all"></div>
                   <div className="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform peer-checked:translate-x-4"></div>
                 </label>
               </div>
@@ -235,7 +235,7 @@ export default function UserServiceManagement({
                     <input
                       type="text"
                       placeholder="Weight (gm) *"
-                      className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                      className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-brand-primary focus:outline-none transition-all"
                       value={currentData.weightPriceBasic[0]?.weight}
                       readOnly
                     />
@@ -246,7 +246,7 @@ export default function UserServiceManagement({
                       <input
                         type="text"
                         placeholder={`Zone ${zone} * ₹`}
-                        className="border border-gray-300 text-gray-700 font-[600] px-3 h-9 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                        className="border border-gray-300 text-gray-700 font-[600] px-3 h-9 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-brand-primary focus:outline-none transition-all"
                         value={currentData.weightPriceBasic[0][`zone${zone}`]}
                         onChange={(e) => handleRateChange(selectedService.courierServiceName, 'weightPriceBasic', 0, `zone${zone}`, e.target.value)}
                       />
@@ -265,7 +265,7 @@ export default function UserServiceManagement({
                     <input
                       type="text"
                       placeholder="Weight (gm) *"
-                      className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                      className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-brand-primary focus:outline-none transition-all"
                       value={currentData.weightPriceAdditional[0]?.weight}
                       readOnly
                     />
@@ -296,7 +296,7 @@ export default function UserServiceManagement({
                       <input
                         type="number"
                         placeholder="COD charges"
-                        className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                        className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-brand-primary focus:outline-none transition-all"
                         value={currentData.codCharge}
                         onChange={(e) => handleCodChange(selectedService.courierServiceName, 'codCharge', e.target.value)}
                       />
@@ -306,7 +306,7 @@ export default function UserServiceManagement({
                       <input
                         type="number"
                         placeholder="COD Percentage"
-                        className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                        className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-brand-primary focus:outline-none transition-all"
                         value={currentData.codPercent}
                         onChange={(e) => handleCodChange(selectedService.courierServiceName, 'codPercent', e.target.value)}
                       />
@@ -315,7 +315,7 @@ export default function UserServiceManagement({
                 </div>
 
                 <button
-                  className={`h-9 px-6 rounded-lg text-white font-[600] text-[10px] sm:text-[12px] flex items-center justify-center gap-2 transition-all shadow-sm w-full sm:w-auto ${editedRates[selectedService.courierServiceName] ? 'bg-[#0CBB7D] hover:bg-green-600' : 'bg-gray-300 cursor-not-allowed'}`}
+                  className={`h-9 px-6 rounded-lg text-white font-[600] text-[10px] sm:text-[12px] flex items-center justify-center gap-2 transition-all shadow-sm w-full sm:w-auto ${editedRates[selectedService.courierServiceName] ? 'bg-brand-primary hover:bg-green-600' : 'bg-gray-300 cursor-not-allowed'}`}
                   disabled={!editedRates[selectedService.courierServiceName]}
                   onClick={() => handleSaveRate(selectedService.courierServiceName)}
                 >
@@ -364,7 +364,7 @@ export default function UserServiceManagement({
                   checked={isAllEnabled}
                   onChange={() => handleProviderToggle(provider, isAllEnabled)}
                 />
-                <div className={`w-9 h-5 rounded-full transition-colors ${isAllEnabled ? 'bg-[#0CBB7D]' : isSomeEnabled ? 'bg-yellow-400' : 'bg-gray-300'}`}></div>
+                <div className={`w-9 h-5 rounded-full transition-colors ${isAllEnabled ? 'bg-brand-primary' : isSomeEnabled ? 'bg-yellow-400' : 'bg-gray-300'}`}></div>
                 <div className={`absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform ${isAllEnabled || isSomeEnabled ? 'translate-x-4' : ''} shadow-sm`}></div>
               </label>
             </div>

@@ -150,17 +150,17 @@ const DashboardCards = ({ }) => {
     {
       title: "Orders",
       value: dashdata.totalOrders || 0,
-      icon: <FaClipboardList className="text-sm text-[#0CBB7D]" />,
+      icon: <FaClipboardList className="text-sm text-brand-primary" />,
     },
     {
       title: "Revenue",
       value: `₹${dashdata?.totalRevenue ?? 0}`,
-      icon: <FaRupeeSign className="text-sm text-[#0CBB7D]" />,
+      icon: <FaRupeeSign className="text-sm text-brand-primary" />,
     },
     {
       title: "Avg Shipping",
       value: `₹${dashdata?.averageShipping ?? 0}`,
-      icon: <FaBox className="text-sm text-[#0CBB7D]" />,
+      icon: <FaBox className="text-sm text-brand-primary" />,
     },
   ];
 
@@ -253,7 +253,7 @@ const DashboardCards = ({ }) => {
         {cardData.map((card, index) => (
           <div
             key={index}
-            className="text-gray-500 bg-[#0CBB7D] p-6 rounded-lg border-1 border-gary-500 shadow-md flex items-center space-x-0"
+            className="text-gray-500 bg-brand-primary p-6 rounded-lg border-1 border-gary-500 shadow-md flex items-center space-x-0"
           >
             <div className="bg-white p-3 rounded-full shadow">{card.icon}</div>
             <div>
@@ -278,7 +278,7 @@ const DashboardCards = ({ }) => {
               {stat.data.map((item, i) => (
                 <div
                   key={i}
-                  className="bg-[#0CBB7D] p-4 md:p-5 border-1 border-gray-800 rounded-lg shadow-md flex flex-col justify-center items-center text-center"
+                  className="bg-brand-primary p-4 md:p-5 border-1 border-gray-800 rounded-lg shadow-md flex flex-col justify-center items-center text-center"
                 >
                   <p className="lg:text-[14px] md:text-[14px] font-bold text-white">{item.value}</p>
                   <p className="text-[10px] md:text-[12px] text-white">
@@ -355,7 +355,7 @@ const DashboardCards = ({ }) => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pt-4">
         <div className="grid grid-cols-1 md:grid-cols-1 lg:grid-rows-3 gap-4 text-sm">
           {/* Total Orders */}
-          <div className="flex items-center p-5 bg-[#0CBB7D] shadow-md rounded-lg text-white">
+          <div className="flex items-center p-5 bg-brand-primary shadow-md rounded-lg text-white">
             <div className="bg-white rounded-full p-2 mr-5">
               <PackageCheck size={20} className="text-green-500" />
             </div>
@@ -366,7 +366,7 @@ const DashboardCards = ({ }) => {
           </div>
 
           {/* Pending Orders */}
-          <div className="flex items-center p-5 bg-[#0CBB7D] shadow-md rounded-lg border text-white">
+          <div className="flex items-center p-5 bg-brand-primary shadow-md rounded-lg border text-white">
             <div className="bg-white rounded-full p-2 mr-5">
               <Clock size={20} className="text-green-500" />
             </div>
@@ -377,7 +377,7 @@ const DashboardCards = ({ }) => {
           </div>
 
           {/* Performance Metrics */}
-          <div className="flex items-center p-5 bg-[#0CBB7D] shadow-md rounded-lg text-white">
+          <div className="flex items-center p-5 bg-brand-primary shadow-md rounded-lg text-white">
             <div className="bg-white rounded-full p-2 mr-5">
               <TrendingUp size={20} className="text-green-500" />
             </div>

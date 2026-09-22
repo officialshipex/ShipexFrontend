@@ -7,7 +7,7 @@ function Finish({ handleSubmit }) {
           All sections complete!
         </p>
         <button
-          className="mt-4 px-6 py-2 text-white bg-[#0CBB7D] hover:bg-[#0CBB7D] rounded-lg shadow-sm"
+          className="mt-4 px-6 py-2 text-white bg-brand-primary hover:bg-brand-primary rounded-lg shadow-sm"
           onClick={handleSubmit}
         >
           Submit

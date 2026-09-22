@@ -87,17 +87,17 @@ const CodUploadPoopup = ({ onClose, setRefresh }) => {
           Download Sample file{" "}
           <button
             onClick={handleDownload}
-            className="text-[#0CBB7D] hover:underline cursor-pointer"
+            className="text-brand-primary hover:underline cursor-pointer"
           >
             click here{" "}
           </button>
           {/* <span className="text-purple-500 cursor-pointer">click here</span> */}
         </p>
 
-        <label className="cursor-pointer flex text-[10px] sm:text-[12px] items-center gap-2 text-[#0CBB7D] bg-white px-3 py-2 mt-4 rounded-lg border border-[#0CBB7D] transition">
+        <label className="cursor-pointer flex text-[10px] sm:text-[12px] items-center gap-2 text-brand-primary bg-white px-3 py-2 mt-4 rounded-lg border border-brand-primary transition">
           <div className="flex justify-between items-center w-full">
             <span>Upload File</span>
-            <FaUpload className="text-[#0CBB7D]" />
+            <FaUpload className="text-brand-primary" />
           </div>
           <input type="file" className="hidden" onChange={handleFileChange} />
         </label>
@@ -105,7 +105,7 @@ const CodUploadPoopup = ({ onClose, setRefresh }) => {
         {selectedFile && (
           <p className="text-[10px] sm:text-[12px] text-gray-700">Selected: {selectedFile.name}</p>
         )}
-        <button onClick={handleSubmit} className="px-3 py-2 me-2 font-[600] hover:opacity-90 mt-2 bg-[#0CBB7D] text-white rounded-lg text-[10px] sm:text-[12px]">
+        <button onClick={handleSubmit} className="px-3 py-2 me-2 font-[600] hover:opacity-90 mt-2 bg-brand-primary text-white rounded-lg text-[10px] sm:text-[12px]">
           Submit
         </button>
 

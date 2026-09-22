@@ -185,7 +185,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
             <div className="col-span-1">
               <label className="block text-gray-600 mb-1">Report Type</label>
               <select
-                className="w-full h-9 px-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-colors"
+                className="w-full h-9 px-3 border border-gray-300 rounded-lg focus:outline-none focus:border-brand-primary transition-colors"
                 value={reportType}
                 onChange={(e) => setReportType(e.target.value)}
               >
@@ -203,7 +203,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                 <label className="block text-gray-600 mb-1">Descriptions</label>
                 <button
                   type="button"
-                  className="w-full h-9 px-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-colors flex items-center justify-between bg-white text-[12px] font-normal"
+                  className="w-full h-9 px-3 border border-gray-300 rounded-lg focus:outline-none focus:border-brand-primary transition-colors flex items-center justify-between bg-white text-[12px] font-normal"
                   onClick={() => setDescDropdownOpen(!descDropdownOpen)}
                 >
                   <span className="truncate">
@@ -228,7 +228,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                       <input
                         type="checkbox"
                         id="select-all-desc"
-                        className="mr-2 accent-[#0CBB7D] h-4 w-4 cursor-pointer"
+                        className="mr-2 accent-brand-primary h-4 w-4 cursor-pointer"
                         checked={selectedDescriptions.length === PASSBOOK_DESCRIPTIONS.length}
                         onChange={(e) => {
                           if (e.target.checked) {
@@ -247,7 +247,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                         <input
                           type="checkbox"
                           id={`desc-${desc}`}
-                          className="mr-2 accent-[#0CBB7D] h-4 w-4 cursor-pointer"
+                          className="mr-2 accent-brand-primary h-4 w-4 cursor-pointer"
                           checked={selectedDescriptions.includes(desc)}
                           onChange={(e) => {
                             if (e.target.checked) {
@@ -269,7 +269,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
               <div className="col-span-1">
                 <label className="block text-gray-600 mb-1">Date Filter Type</label>
                 <select
-                  className="w-full h-9 px-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-colors"
+                  className="w-full h-9 px-3 border border-gray-300 rounded-lg focus:outline-none focus:border-brand-primary transition-colors"
                   value={dateFilterType}
                   onChange={(e) => setDateFilterType(e.target.value)}
                 >
@@ -301,7 +301,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
               <input
                 type="email"
                 placeholder="Enter email to receive report"
-                className="w-full h-9 px-3 border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-colors font-normal text-[12px]"
+                className="w-full h-9 px-3 border border-gray-300 rounded-lg focus:outline-none focus:border-brand-primary transition-colors font-normal text-[12px]"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -335,7 +335,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
           <div style={{ height: tableHeight }} className="overflow-auto relative bg-white">
             <table className="min-w-full text-left border-collapse table-auto">
               <thead className="sticky top-0 z-20">
-                <tr className="bg-[#0CBB7D] text-white text-[12px] font-[600]">
+                <tr className="bg-brand-primary text-white text-[12px] font-[600]">
                   <th className="py-2 px-3 text-left">Sr No</th>
                   {isSidebarAdmin && <th className="py-2 px-3 text-left">User ID</th>}
                   <th className="py-2 px-3 text-left">Report Type</th>
@@ -371,7 +371,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                       {isSidebarAdmin && (
                         <td className="py-2 px-3">
                           <span
-                            className="text-[#0CBB7D] font-bold cursor-pointer hover:underline"
+                            className="text-brand-primary font-bold cursor-pointer hover:underline"
                             onMouseEnter={(e) => {
                               const rect = e.currentTarget.getBoundingClientRect();
                               setTooltipPos({ x: rect.left, y: rect.top - 70 });
@@ -392,7 +392,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                       <td className="py-2 px-3">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                           row.status === "completed"
-                            ? "bg-green-100 text-[#0CBB7D]"
+                            ? "bg-green-100 text-brand-primary"
                             : row.status === "pending"
                             ? "bg-yellow-100 text-yellow-800 animate-pulse"
                             : "bg-red-100 text-red-800"
@@ -406,7 +406,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                             href={row.downloadUrl}
                             target="_blank"
                             rel="noreferrer"
-                            className="text-[#0CBB7D] hover:underline font-bold"
+                            className="text-brand-primary hover:underline font-bold"
                           >
                             Download
                           </a>
@@ -480,7 +480,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                     </div>
                     <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
                       row.status === "completed"
-                        ? "bg-green-100 text-[#0CBB7D]"
+                        ? "bg-green-100 text-brand-primary"
                         : row.status === "pending"
                         ? "bg-yellow-100 text-yellow-800 animate-pulse"
                         : "bg-red-100 text-red-800"
@@ -532,7 +532,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                         href={row.downloadUrl}
                         target="_blank"
                         rel="noreferrer"
-                        className="block w-full text-center py-1 bg-[#0CBB7D] text-white rounded font-bold hover:opacity-95 text-[10.5px] transition-opacity"
+                        className="block w-full text-center py-1 bg-brand-primary text-white rounded font-bold hover:opacity-95 text-[10.5px] transition-opacity"
                       >
                         Download Excel
                       </a>

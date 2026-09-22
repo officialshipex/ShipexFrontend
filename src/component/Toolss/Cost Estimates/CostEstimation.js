@@ -174,7 +174,7 @@ const CostEstimation = () => {
                 onInput={(e) => {
                   e.target.value = e.target.value.replace(/\D/g, "");
                 }}
-                className="w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                className="w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-brand-primary"
               />
             </div>
 
@@ -195,7 +195,7 @@ const CostEstimation = () => {
                   e.target.value = e.target.value.replace(/\D/g, "");
                 }}
                 title="Please enter exactly 6 digits"
-                className="w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                className="w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-brand-primary"
               />
             </div>
           </div>
@@ -232,7 +232,7 @@ const CostEstimation = () => {
                   }}
                   className="flex-1 px-3 py-2 text-[12px] font-[600] text-gray-700 outline-none border border-r-0 rounded-l-lg"
                 />
-                <span className="w-10 py-2 flex items-center justify-center bg-[#0CBB7D] text-white text-[12px] font-[600] border border-l border-[#0CBB7D] rounded-r-lg">
+                <span className="w-10 py-2 flex items-center justify-center bg-brand-primary text-white text-[12px] font-[600] border border-l border-brand-primary rounded-r-lg">
                   kg
                 </span>
               </div>
@@ -257,7 +257,7 @@ const CostEstimation = () => {
                   }}
                   className="flex-1 px-3 py-2 border border-r-0 text-[12px] font-[600] text-gray-700 outline-none rounded-l-lg"
                 />
-                <span className="w-10 py-2 flex items-center justify-center bg-[#0CBB7D] text-white text-[12px] font-[600] border border-l border-[#0CBB7D] rounded-r-lg">
+                <span className="w-10 py-2 flex items-center justify-center bg-brand-primary text-white text-[12px] font-[600] border border-l border-brand-primary rounded-r-lg">
                   ₹
                 </span>
               </div>
@@ -273,7 +273,7 @@ const CostEstimation = () => {
 
               <div
                 onClick={() => setDropdownOpen(!dropdownOpen)}
-                className="flex justify-between items-center w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 cursor-pointer focus:ring-1 focus:ring-[#0CBB7D]"
+                className="flex justify-between items-center w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 cursor-pointer focus:ring-1 focus:ring-brand-primary"
               >
                 {formData.paymentType || "Select Payment Type"}
                 <FiChevronDown
@@ -315,7 +315,7 @@ const CostEstimation = () => {
                   value={formData.dimensions.length}
                   onChange={handleChange}
                   placeholder="Length"
-                  className="w-full border rounded-lg px-2 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                  className="w-full border rounded-lg px-2 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-brand-primary"
                 />
                 <input
                   type="number"
@@ -323,7 +323,7 @@ const CostEstimation = () => {
                   value={formData.dimensions.breadth}
                   onChange={handleChange}
                   placeholder="Width"
-                  className="w-full border rounded-lg px-2 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                  className="w-full border rounded-lg px-2 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-brand-primary"
                 />
                 <input
                   type="number"
@@ -331,7 +331,7 @@ const CostEstimation = () => {
                   value={formData.dimensions.height}
                   onChange={handleChange}
                   placeholder="Height"
-                  className="w-full border rounded-lg px-2 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                  className="w-full border rounded-lg px-2 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-brand-primary"
                 />
                 {/* <span className="text-[12px] font-[600] text-gray-500 whitespace-nowrap">cm</span> */}
               </div>
@@ -342,7 +342,7 @@ const CostEstimation = () => {
             <button
               type="submit"
               disabled={loading}
-              className="bg-[#0CBB7D] text-[12px] text-white font-[600] py-2 px-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              className="bg-brand-primary text-[12px] text-white font-[600] py-2 px-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
             >
               {loading ? (
                 <>

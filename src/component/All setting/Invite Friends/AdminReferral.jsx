@@ -213,7 +213,7 @@ const AdminReferral = () => {
   return (
     <div className="space-y-2 sm:px-2">
       {/* Summary Section - Mobile View */}
-      <div className="sm:hidden bg-white border border-[#0CBB7D] rounded-lg p-3 shadow-sm space-y-1">
+      <div className="sm:hidden bg-white border border-brand-primary rounded-lg p-3 shadow-sm space-y-1">
         {summaryCards.map((card, i) => (
           <div key={i} className="flex justify-between items-center last:border-0 last:pb-0">
             {/* <div className="flex items-center gap-3"> */}
@@ -228,8 +228,8 @@ const AdminReferral = () => {
       {/* Summary Grid - Desktop/Tablet View */}
       <div className="hidden sm:grid grid-cols-2 md:grid-cols-4 gap-2">
         {summaryCards.map((card, i) => (
-          <div key={i} className="bg-white border border-[#0CBB7D] rounded-lg p-3 flex items-center gap-3 shadow-sm hover:shadow-md transition-all">
-            <div className="p-2 rounded-full flex justify-center items-center bg-[#0CBB7D] text-white">
+          <div key={i} className="bg-white border border-brand-primary rounded-lg p-3 flex items-center gap-3 shadow-sm hover:shadow-md transition-all">
+            <div className="p-2 rounded-full flex justify-center items-center bg-brand-primary text-white">
               {card.icon}
             </div>
             <div className="flex flex-col font-[600] leading-tight overflow-hidden">
@@ -251,7 +251,7 @@ const AdminReferral = () => {
             <button
               onClick={() => setIsActionDropdownOpen(!isActionDropdownOpen)}
               className={`h-9 px-4 rounded-lg bg-white text-[12px] font-bold flex items-center gap-1 border transition-all ${selectedRows.length > 0 || isAnyFilterApplied
-                  ? "border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50 shadow-sm"
+                  ? "border-brand-primary text-brand-primary hover:bg-green-50 shadow-sm"
                   : "border-gray-300 text-gray-600 hover:bg-gray-50"
                 }`}
             >
@@ -265,7 +265,7 @@ const AdminReferral = () => {
                   onClick={() => { setIsTransferModalOpen(true); setIsActionDropdownOpen(false); }}
                   className="w-full text-left px-4 py-2 text-[12px] text-gray-700 hover:bg-gray-50 flex items-center gap-2"
                 >
-                  <Wallet className="w-4 h-4 text-[#0CBB7D]" />
+                  <Wallet className="w-4 h-4 text-brand-primary" />
                   Transfer Referral Amount
                 </button>
                 <button
@@ -285,7 +285,7 @@ const AdminReferral = () => {
           onClick={() => setIsFilterPanelOpen(true)}
           className="flex items-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm h-9 whitespace-nowrap"
         >
-          <Filter className="w-4 h-4 text-[#0CBB7D]" />
+          <Filter className="w-4 h-4 text-brand-primary" />
           <span className="hidden xs:inline">More Filters</span>
           <span className="xs:hidden">Filters</span>
         </button>
@@ -313,7 +313,7 @@ const AdminReferral = () => {
           <div className="hidden md:block overflow-hidden bg-white shadow-sm">
             <div className="h-[calc(100vh-235px)] overflow-y-auto">
               <table className="w-full border-collapse">
-                <thead className="bg-[#0CBB7D] text-white font-[600] sticky top-0 z-10">
+                <thead className="bg-brand-primary text-white font-[600] sticky top-0 z-10">
                   <tr className="text-left text-[12px]">
                     <th className="py-2 px-3 text-center">
                       <input
@@ -323,7 +323,7 @@ const AdminReferral = () => {
                           if (e.target.checked) setSelectedRows(data);
                           else setSelectedRows([]);
                         }}
-                        className="rounded w-3 h-3 border-gray-300 accent-[#0CBB7D]"
+                        className="rounded w-3 h-3 border-gray-300 accent-brand-primary"
                       />
                     </th>
                     <th className="py-2 px-3">Refer By (User ID)</th>
@@ -353,11 +353,11 @@ const AdminReferral = () => {
                             type="checkbox"
                             checked={!!selectedRows.find(r => r._id === row._id)}
                             onChange={() => handleSelectRow(row)}
-                            className="rounded w-3 h-3 border-gray-300 accent-[#0CBB7D]"
+                            className="rounded w-3 h-3 border-gray-300 accent-brand-primary"
                           />
                         </td>
                         <td className="py-2 px-3">
-                          <p className="font-bold text-[#0CBB7D]">{row.userId || "-"}</p>
+                          <p className="font-bold text-brand-primary">{row.userId || "-"}</p>
                           <p className="text-gray-900 font-medium">{row.userName}</p>
                         </td>
                         <td className="py-2 px-3">
@@ -367,10 +367,10 @@ const AdminReferral = () => {
                         <td className="py-2 px-3 text-center font-bold text-gray-700">
                           {row.totalOrderCount || 0}
                         </td>
-                        <td className="py-2 px-3 text-right font-bold text-[#0CBB7D]">
+                        <td className="py-2 px-3 text-right font-bold text-brand-primary">
                           ₹{Number(row.totalShipping || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </td>
-                        <td className="py-2 px-3 text-right font-bold text-[#0CBB7D]">
+                        <td className="py-2 px-3 text-right font-bold text-brand-primary">
                           ₹{Number(row.totalCommission || 0).toLocaleString(undefined, { minimumFractionDigits: 2 })}
                         </td>
                         <td className="py-2 px-3">
@@ -381,7 +381,7 @@ const AdminReferral = () => {
                         <td className="py-2 px-3">
                           <button
                             onClick={() => setSelectedReferral(row)}
-                            className="px-3 py-1 bg-green-50 hover:bg-green-100 text-[#0CBB7D] rounded-lg text-[11px] font-bold transition-all"
+                            className="px-3 py-1 bg-green-50 hover:bg-green-100 text-brand-primary rounded-lg text-[11px] font-bold transition-all"
                             title="View Details"
                           >
                             Details
@@ -407,12 +407,12 @@ const AdminReferral = () => {
                 <div key={i} className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm relative animate-popup-in">
                   <div className="flex justify-between items-center mb-2 border-b border-gray-50 pb-2">
                     <div className="min-w-0 flex-1">
-                      <p className="text-[#0CBB7D] font-bold text-[11px] leading-tight">{row.userId || "-"}</p>
+                      <p className="text-brand-primary font-bold text-[11px] leading-tight">{row.userId || "-"}</p>
                       <h4 className="text-gray-800 font-bold text-[13px] truncate leading-tight">{row.userName}</h4>
                     </div>
                     <button
                       onClick={() => setSelectedReferral(row)}
-                      className="px-3 py-1 bg-green-50 text-[#0CBB7D] rounded-lg text-[11px] font-bold border border-green-100 hover:bg-green-100 transition-all ml-2 h-7 flex items-center shrink-0"
+                      className="px-3 py-1 bg-green-50 text-brand-primary rounded-lg text-[11px] font-bold border border-green-100 hover:bg-green-100 transition-all ml-2 h-7 flex items-center shrink-0"
                     >
                       Details
                     </button>
@@ -429,7 +429,7 @@ const AdminReferral = () => {
                     </div>
                     <div className="bg-green-50/30 p-1.5 rounded border border-green-100/20">
                       <p className="text-gray-400 text-[9px] font-bold uppercase tracking-tight">Reward</p>
-                      <p className="font-bold text-[#0CBB7D] text-[11px]">₹{Math.round(row.totalCommission || 0)}</p>
+                      <p className="font-bold text-brand-primary text-[11px]">₹{Math.round(row.totalCommission || 0)}</p>
                     </div>
                   </div>
 
@@ -535,12 +535,12 @@ const AdminReferral = () => {
                       <h3 className="text-[14px] font-bold text-gray-800">{selectedUser.fullname}</h3>
                       <p className="text-[11px] text-gray-500">Wallet Balance: ₹{selectedUser.walletAmount?.toFixed(2)}</p>
                     </div>
-                    <span className="px-2 py-0.5 bg-[#0CBB7D] text-white text-[10px] font-bold rounded">Target User</span>
+                    <span className="px-2 py-0.5 bg-brand-primary text-white text-[10px] font-bold rounded">Target User</span>
                   </div>
 
                   {isStatsLoading ? (
                     <div className="flex justify-center py-4">
-                      <div className="w-6 h-6 border-2 border-[#0CBB7D] border-t-transparent rounded-full animate-spin"></div>
+                      <div className="w-6 h-6 border-2 border-brand-primary border-t-transparent rounded-full animate-spin"></div>
                     </div>
                   ) : userStats ? (
                     <div className="grid grid-cols-3 gap-2">
@@ -554,7 +554,7 @@ const AdminReferral = () => {
                       </div>
                       <div className="bg-white p-2 rounded-lg border border-green-100">
                         <p className="text-[8px] text-gray-400 font-bold uppercase">Remaining</p>
-                        <p className="text-[12px] font-bold text-[#0CBB7D]">₹{userStats.remaining?.toFixed(2)}</p>
+                        <p className="text-[12px] font-bold text-brand-primary">₹{userStats.remaining?.toFixed(2)}</p>
                       </div>
                     </div>
                   ) : (
@@ -569,12 +569,12 @@ const AdminReferral = () => {
                         placeholder="Enter payout amount"
                         value={transferAmount}
                         onChange={(e) => setTransferAmount(e.target.value)}
-                        className="w-full px-4 py-2 border border-green-200 rounded-lg text-[14px] font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#0CBB7D]/20 transition-all"
+                        className="w-full px-4 py-2 border border-green-200 rounded-lg text-[14px] font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition-all"
                       />
                       <button
                         onClick={handleGlobalTransfer}
                         disabled={isProcessing || !transferAmount || Number(transferAmount) <= 0 || Number(transferAmount) > (userStats?.remaining || 0)}
-                        className="w-full py-2.5 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-bold hover:bg-green-600 transition-all shadow-md disabled:opacity-50"
+                        className="w-full py-2.5 bg-brand-primary text-white rounded-lg text-[12px] font-bold hover:bg-green-600 transition-all shadow-md disabled:opacity-50"
                       >
                         {isProcessing ? "Processing..." : "Transfer to Wallet"}
                       </button>

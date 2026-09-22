@@ -15,7 +15,7 @@ const FreightDeductionSection = ({ order }) => {
         <div className="bg-white p-4 rounded-lg shadow-sm">
             <div className="flex items-center gap-2 mb-2 border-b pb-2">
                 <p className="p-2 bg-green-100 hidden sm:block rounded-full">
-                    <IndianRupee className="w-4 h-4 text-[#0CBB7D]" />
+                    <IndianRupee className="w-4 h-4 text-brand-primary" />
                 </p>
                 <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
                     Freight Deduction
@@ -47,9 +47,9 @@ const FreightDeductionSection = ({ order }) => {
                             <td className="py-2 px-3">₹{priceBreakup.freight || 0}</td>
                             <td className="py-2 px-3">₹{priceBreakup.gst || 0}</td>
                             {priceBreakup.liability > 0 && (
-                                <td className="py-2 px-3 text-[#0CBB7D]">₹{priceBreakup.liability}</td>
+                                <td className="py-2 px-3 text-brand-primary">₹{priceBreakup.liability}</td>
                             )}
-                            <td className="py-2 px-3 text-[#0CBB7D]">₹{priceBreakup.total || 0}</td>
+                            <td className="py-2 px-3 text-brand-primary">₹{priceBreakup.total || 0}</td>
                         </tr>
                     </tbody>
                 </table>

@@ -157,7 +157,7 @@ const EditEDD = ({ item, onClose, existingServices = [] }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 animate-popup-in flex justify-center items-center z-50 p-4">
             <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-4 w-full max-w-lg relative space-y-4">
                 <div className="flex items-center gap-2 mb-1">
-                    <Clock className="w-4 h-4 text-[#0CBB7D]" />
+                    <Clock className="w-4 h-4 text-brand-primary" />
                     <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">Update Estimate Date and Time</h2>
                 </div>
 
@@ -171,7 +171,7 @@ const EditEDD = ({ item, onClose, existingServices = [] }) => {
                         <button
                             type="button"
                             onClick={() => setOpenCourierDropdown(prev => !prev)}
-                            className="w-full border text-[10px] sm:text-[12px] font-[600] border-gray-300 rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] transition-all"
+                            className="w-full border text-[10px] sm:text-[12px] font-[600] border-gray-300 rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary transition-all"
                         >
                             {selectedCourier ? selectedCourier.courierProvider : 'Select Courier'}
                         </button>
@@ -200,7 +200,7 @@ const EditEDD = ({ item, onClose, existingServices = [] }) => {
                         <button
                             type="button"
                             onClick={() => setOpenServiceDropdown(prev => !prev)}
-                            className={`w-full border border-gray-300 text-gray-700 text-[10px] sm:text-[12px] font-[600] rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] transition-all ${!form.courier ? 'opacity-50 cursor-not-allowed' : ''
+                            className={`w-full border border-gray-300 text-gray-700 text-[10px] sm:text-[12px] font-[600] rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary transition-all ${!form.courier ? 'opacity-50 cursor-not-allowed' : ''
                                 }`}
                             disabled={!form.courier}
                         >
@@ -239,7 +239,7 @@ const EditEDD = ({ item, onClose, existingServices = [] }) => {
                                 onChange={e => setForm(prev => ({ ...prev, [zone]: e.target.value }))}
                                 min="0"
                                 step="any"
-                                className="block w-full px-2 py-1 text-gray-700 rounded-lg border text-[10px] sm:text-[12px] border-gray-300 shadow-sm focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] transition-all outline-none"
+                                className="block w-full px-2 py-1 text-gray-700 rounded-lg border text-[10px] sm:text-[12px] border-gray-300 shadow-sm focus:ring-1 focus:ring-brand-primary focus:border-brand-primary transition-all outline-none"
                             />
                         </div>
                     ))}
@@ -257,7 +257,7 @@ const EditEDD = ({ item, onClose, existingServices = [] }) => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className={`px-3 py-2 text-[10px] sm:text-[12px] font-[600] rounded-lg text-white ${loading ? 'bg-green-300 cursor-not-allowed' : 'bg-[#0CBB7D] hover:opacity-90'
+                        className={`px-3 py-2 text-[10px] sm:text-[12px] font-[600] rounded-lg text-white ${loading ? 'bg-green-300 cursor-not-allowed' : 'bg-brand-primary hover:opacity-90'
                             } transition`}
                     >
                         {loading ? 'Saving...' : 'Update'}

@@ -97,7 +97,7 @@ const UpdateB2BPackageDetails = ({ isOpen, onClose, onSave, initialPackages = []
                 {/* Header */}
                 <div className="sticky top-0 bg-white border-b py-3 px-4 flex justify-between items-center z-10">
                     <div className="flex items-center gap-2">
-                        <FiBox className="w-4 h-4 text-[#0CBB7D]" />
+                        <FiBox className="w-4 h-4 text-brand-primary" />
                         <h2 className="text-[14px] font-[600] text-gray-700">
                             Update B2B Package Details
                         </h2>
@@ -111,7 +111,7 @@ const UpdateB2BPackageDetails = ({ isOpen, onClose, onSave, initialPackages = []
                         </button>
                         <button
                             onClick={handleSave}
-                            className="px-3 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:opacity-90"
+                            className="px-3 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:opacity-90"
                         >
                             Save Changes
                         </button>
@@ -123,10 +123,10 @@ const UpdateB2BPackageDetails = ({ isOpen, onClose, onSave, initialPackages = []
                     {packages.map((pkg, index) => (
                         <div
                             key={pkg.id}
-                            className="border border-dashed border-[#0CBB7D] rounded-lg p-4 mb-4 relative bg-white"
+                            className="border border-dashed border-brand-primary rounded-lg p-4 mb-4 relative bg-white"
                         >
                             {/* Badge */}
-                            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#0CBB7D] text-white w-8 h-8 flex justify-center items-center rounded-full text-[12px] font-[600] shadow">
+                            <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white w-8 h-8 flex justify-center items-center rounded-full text-[12px] font-[600] shadow">
                                 {index + 1}
                             </div>
 
@@ -153,7 +153,7 @@ const UpdateB2BPackageDetails = ({ isOpen, onClose, onSave, initialPackages = []
                                         type="text"
                                         value={pkg.noOfBox}
                                         onChange={(e) => updateField(pkg.id, "noOfBox", e.target.value)}
-                                        className="border rounded-lg focus:outline-[#0CBB7D] px-3 py-2 text-[12px] w-full"
+                                        className="border rounded-lg focus:outline-brand-primary px-3 py-2 text-[12px] w-full"
                                         placeholder="Box Count"
                                     />
                                 </div>
@@ -166,7 +166,7 @@ const UpdateB2BPackageDetails = ({ isOpen, onClose, onSave, initialPackages = []
                                         onChange={(e) =>
                                             updateField(pkg.id, "weightPerBox", e.target.value)
                                         }
-                                        className="border rounded-lg px-3 focus:outline-[#0CBB7D] py-2 text-[12px] w-full"
+                                        className="border rounded-lg px-3 focus:outline-brand-primary py-2 text-[12px] w-full"
                                         placeholder="Weight"
                                     />
                                 </div>
@@ -181,7 +181,7 @@ const UpdateB2BPackageDetails = ({ isOpen, onClose, onSave, initialPackages = []
                                             type="text"
                                             value={pkg[dim]}
                                             onChange={(e) => updateField(pkg.id, dim, e.target.value)}
-                                            className="border rounded-lg focus:outline-[#0CBB7D] px-3 py-2 font-[600] text-[12px] w-full"
+                                            className="border rounded-lg focus:outline-brand-primary px-3 py-2 font-[600] text-[12px] w-full"
                                             placeholder={dim}
                                         />
                                     </div>
@@ -193,7 +193,7 @@ const UpdateB2BPackageDetails = ({ isOpen, onClose, onSave, initialPackages = []
                     {/* Add Package Button */}
                     <button
                         onClick={addPackage}
-                        className="flex items-center justify-center w-8 h-8 bg-[#0CBB7D] text-white rounded-full mx-auto text-[12px] hover:opacity-90"
+                        className="flex items-center justify-center w-8 h-8 bg-brand-primary text-white rounded-full mx-auto text-[12px] hover:opacity-90"
                     >
                         +
                     </button>

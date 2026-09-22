@@ -36,9 +36,9 @@ const AnnouncementItem = ({ ann, idx, setAnnouncements, announcements }) => {
     }, [ann.message]);
  
     return (
-        <div className="flex items-center justify-between border-2 border-[#0CBB7D] bg-green-50 rounded-lg px-3 py-2 mb-2 shadow-sm w-full max-w-full gap-3 overflow-hidden">
+        <div className="flex items-center justify-between border-2 border-brand-primary bg-green-50 rounded-lg px-3 py-2 mb-2 shadow-sm w-full max-w-full gap-3 overflow-hidden">
             <div className="flex items-center gap-3 flex-1 overflow-hidden">
-                <FiBell className="text-[#0CBB7D] text-[16px] sm:text-[18px] flex-shrink-0" />
+                <FiBell className="text-brand-primary text-[16px] sm:text-[18px] flex-shrink-0" />
                 <div ref={containerRef} className="flex-1 overflow-hidden whitespace-nowrap">
                     <div 
                         className={`inline-block ${isOverflowing ? 'marquee-content' : ''}`}
@@ -217,7 +217,7 @@ const Dashboard = () => {
                                 key={tab}
                                 onClick={() => setActiveTab(tab)}
                                 className={`px-3 py-2 text-[12px] border font-[600] rounded-lg transition-all duration-200 ${activeTab === tab
-                                    ? "bg-[#0CBB7D] text-white"
+                                    ? "bg-brand-primary text-white"
                                     : "text-gray-500 bg-white hover:bg-green-200"
                                     }`}
                             >
@@ -235,7 +235,7 @@ const Dashboard = () => {
                         )}
                         <button
                             onClick={handleRefresh}
-                            className="text-white bg-[#0CBB7D] hover:opacity-90 border px-3 py-2 rounded-lg transition-all duration-300 ease-in-out"
+                            className="text-white bg-brand-primary hover:opacity-90 border px-3 py-2 rounded-lg transition-all duration-300 ease-in-out"
                             title="Refresh"
                         >
                             <FiRefreshCcw className={`text-[14px] ${isRotating ? "animate-spin" : ""}`} />

@@ -145,7 +145,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh, initialData }) => 
               value={formData.contactName}
               onChange={handleChange}
               placeholder="Enter Contact Name"
-              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-brand-primary"
               required
             />
           </div>
@@ -159,7 +159,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh, initialData }) => 
               value={formData.email}
               onChange={handleChange}
               placeholder="receiver.contact@shipex.in"
-              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-brand-primary"
               required
             />
           </div>
@@ -173,7 +173,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh, initialData }) => 
               value={formData.phoneNumber}
               onChange={handleChange}
               placeholder="Enter Phone Number"
-              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-brand-primary"
               required
             />
           </div>
@@ -187,7 +187,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh, initialData }) => 
               value={formData.address}
               onChange={handleChange}
               placeholder="Enter Address"
-              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-brand-primary"
               required
             />
           </div>
@@ -201,7 +201,7 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh, initialData }) => 
               value={formData.pinCode}
               onChange={handlePincodeChange}
               placeholder="Enter Pincode"
-              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px] outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px] outline-none focus:ring-1 focus:ring-brand-primary"
               required
             />
           </div>

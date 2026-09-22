@@ -240,7 +240,7 @@ const Passbooks = () => {
           onClick={() => setIsFilterPanelOpen(true)}
           className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap min-w-[120px] h-9"
         >
-          <Filter className="w-4 h-4 text-[#0CBB7D]" />
+          <Filter className="w-4 h-4 text-brand-primary" />
           More Filters
         </button>
 
@@ -260,7 +260,7 @@ const Passbooks = () => {
               disabled={selectedTransactions.length === 0}
               className={`py-2 px-3 h-9 text-[12px] border rounded-lg font-[600] flex items-center gap-1 transition ${selectedTransactions.length === 0
                 ? "border-gray-300 text-gray-400 cursor-not-allowed"
-                : "text-[#0CBB7D] border-[#0CBB7D] bg-white hover:bg-green-50 shadow-sm"
+                : "text-brand-primary border-brand-primary bg-white hover:bg-green-50 shadow-sm"
                 }`}
             >
               <span>Actions</span>
@@ -308,7 +308,7 @@ const Passbooks = () => {
             onClick={() => setIsFilterPanelOpen(true)}
             className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-[32px] min-w-[100px]"
           >
-            <Filter className="w-3 h-3 text-[#0CBB7D]" />
+            <Filter className="w-3 h-3 text-brand-primary" />
             More Filters
           </button>
         </div>
@@ -329,27 +329,27 @@ const Passbooks = () => {
       <div className="hidden md:block relative">
         <div className="h-[calc(100vh-235px)] overflow-y-auto bg-white shadow-sm">
           <table className="min-w-full border-collapse text-[12px] text-left relative">
-            <thead className="sticky top-0 z-40 bg-[#0CBB7D] text-white font-[600]">
+            <thead className="sticky top-0 z-40 bg-brand-primary text-white font-[600]">
               <tr>
-                <th className="py-2 px-3 text-left shadow-[0_1px_0_0_#0CBB7D]">
+                <th className="py-2 px-3 text-left shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">
                   <div className="flex justify-center items-center">
                     <input
                       type="checkbox"
                       checked={selectedTransactions.length === transactions.length && transactions.length > 0}
                       onChange={handleSelectAll}
-                      className="cursor-pointer accent-[#0CBB7D] w-4"
+                      className="cursor-pointer accent-brand-primary w-4"
                     />
                   </div>
                 </th>
-                <th className="py-2 px-3 shadow-[0_1px_0_0_#0CBB7D]">User Details</th>
-                <th className="py-2 px-3 shadow-[0_1px_0_0_#0CBB7D]">Date</th>
-                <th className="py-2 px-3 shadow-[0_1px_0_0_#0CBB7D]">Order ID</th>
-                <th className="py-2 px-3 shadow-[0_1px_0_0_#0CBB7D]">AWB Number</th>
-                <th className="py-2 px-3 shadow-[0_1px_0_0_#0CBB7D]">Category</th>
-                <th className="py-2 px-3 shadow-[0_1px_0_0_#0CBB7D]">Amount</th>
-                <th className="py-2 px-3 shadow-[0_1px_0_0_#0CBB7D]">Available Balance</th>
-                <th className="py-2 px-3 shadow-[0_1px_0_0_#0CBB7D] w-[20%] text-left">Description</th>
-                <th className="py-2 px-3 shadow-[0_1px_0_0_#0CBB7D]">Action</th>
+                <th className="py-2 px-3 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">User Details</th>
+                <th className="py-2 px-3 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">Date</th>
+                <th className="py-2 px-3 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">Order ID</th>
+                <th className="py-2 px-3 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">AWB Number</th>
+                <th className="py-2 px-3 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">Category</th>
+                <th className="py-2 px-3 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">Amount</th>
+                <th className="py-2 px-3 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">Available Balance</th>
+                <th className="py-2 px-3 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)] w-[20%] text-left">Description</th>
+                <th className="py-2 px-3 shadow-[0_1px_0_0_var(--brand-primary,#0CBB7D)]">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -374,12 +374,12 @@ const Passbooks = () => {
                           type="checkbox"
                           checked={selectedTransactions.includes(row.id || row._id)}
                           onChange={() => handleCheckboxChange(row.id || row._id)}
-                          className="cursor-pointer accent-[#0CBB7D] w-4"
+                          className="cursor-pointer accent-brand-primary w-4"
                         />
                       </div>
                     </td>
                     <td className="py-2 px-3">
-                      <p className="text-[#0CBB7D]">{row.user.userId}</p>
+                      <p className="text-brand-primary">{row.user.userId}</p>
                       <p className="text-gray-700">{row.user.name}</p>
                       <p className="text-gray-700 truncate max-w-[150px]">{row.user.email}</p>
                       <p>{row.user.phoneNumber}</p>
@@ -390,32 +390,32 @@ const Passbooks = () => {
                     </td>
                     <td className="py-2 px-3">
                       <div className="flex items-center gap-1 group">
-                        <Link to={`/dashboard/order/neworder/updateOrder/${row.orderId}`} className="text-[#0CBB7D] hover:underline block">
+                        <Link to={`/dashboard/order/neworder/updateOrder/${row.orderId}`} className="text-brand-primary hover:underline block">
                           {row.orderId}
                         </Link>
                         <button onClick={() => handleCopy(row.orderId, row.id + '_orderId')}>
-                          {copiedId === row.id + '_orderId' ? <FiCheck className="w-3 h-3 text-[#0CBB7D]" /> : <FiCopy className="w-3 h-3 text-gray-400 transition-opacity opacity-0 group-hover:opacity-100" />}
+                          {copiedId === row.id + '_orderId' ? <FiCheck className="w-3 h-3 text-brand-primary" /> : <FiCopy className="w-3 h-3 text-gray-400 transition-opacity opacity-0 group-hover:opacity-100" />}
                         </button>
                       </div>
                     </td>
                     <td className="py-2 px-3">
                       <div className="flex items-center gap-1 group">
-                        <p className="text-[#0CBB7D] cursor-pointer hover:underline" onClick={() => handleTrackingByAwb(row.awb_number)}>
+                        <p className="text-brand-primary cursor-pointer hover:underline" onClick={() => handleTrackingByAwb(row.awb_number)}>
                           {row.awb_number}
                         </p>
                         <button onClick={() => handleCopy(row.awb_number, row.id + '_awb')}>
-                          {copiedId === row.id + '_awb' ? <FiCheck className="w-3 h-3 text-[#0CBB7D]" /> : <FiCopy className="w-3 h-3 text-gray-400 transition-opacity opacity-0 group-hover:opacity-100" />}
+                          {copiedId === row.id + '_awb' ? <FiCheck className="w-3 h-3 text-brand-primary" /> : <FiCopy className="w-3 h-3 text-gray-400 transition-opacity opacity-0 group-hover:opacity-100" />}
                         </button>
                       </div>
                     </td>
                     <td className="py-2 px-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] ${row.category === "debit" ? "bg-red-100 text-red-600" : "bg-green-100 text-[#0CBB7D]"}`}>
+                      <span className={`px-2 py-0.5 rounded text-[10px] ${row.category === "debit" ? "bg-red-100 text-red-600" : "bg-green-100 text-brand-primary"}`}>
                         {row.category}
                       </span>
                     </td>
                     <td className="py-2 px-3">
                       <div className="flex items-center gap-1 justify-start">
-                        <span className={`text-[12px] ${row.category === "debit" ? "text-red-500" : "text-[#0CBB7D]"} font-medium`}>
+                        <span className={`text-[12px] ${row.category === "debit" ? "text-red-500" : "text-brand-primary"} font-medium`}>
                           ₹{Number(row.amount).toLocaleString('en-IN', { minimumFractionDigits: 2 })}
                         </span>
                         {row.category === "debit" && (
@@ -438,7 +438,7 @@ const Passbooks = () => {
                               }, 150);
                             }}
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-[#0CBB7D]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <svg xmlns="http://www.w3.org/2000/svg" className="w-3 h-3 text-brand-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <circle cx="12" cy="12" r="10" strokeWidth="2" />
                               <path d="M12 8v4m0 4h.01" strokeWidth="2" strokeLinecap="round" />
                             </svg>
@@ -453,7 +453,7 @@ const Passbooks = () => {
                     <td className="py-2 px-3">
                       {row.category === "debit" && (
                         <button
-                          className="bg-[#0CBB7D]/10 text-[#0CBB7D] p-2 rounded-full hover:bg-[#0CBB7D] hover:text-white transition-all shadow-sm relative group"
+                          className="bg-brand-primary/10 text-brand-primary p-2 rounded-full hover:bg-brand-primary hover:text-white transition-all shadow-sm relative group"
                           onClick={() => handleReverse(row)}
                         >
                           <FaUndo size={12} />
@@ -479,7 +479,7 @@ const Passbooks = () => {
               type="checkbox"
               checked={selectedTransactions.length === transactions.length && transactions.length > 0}
               onChange={handleSelectAll}
-              className="cursor-pointer accent-[#0CBB7D] w-4"
+              className="cursor-pointer accent-brand-primary w-4"
             />
             <span className="text-[10px] font-[600] text-gray-600 tracking-tight">Select All</span>
           </div>
@@ -488,7 +488,7 @@ const Passbooks = () => {
             <button
               className={`h-[30px] px-3 rounded-lg font-[600] flex items-center gap-2 transition bg-white border ${selectedTransactions.length === 0
                 ? "border-gray-200 text-gray-400 cursor-not-allowed"
-                : "text-[#0CBB7D] border-[#0CBB7D]"
+                : "text-brand-primary border-brand-primary"
                 }`}
               onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
               disabled={selectedTransactions.length === 0}
@@ -526,7 +526,7 @@ const Passbooks = () => {
                       type="checkbox"
                       checked={selectedTransactions.includes(row.id || row._id)}
                       onChange={() => handleCheckboxChange(row.id || row._id)}
-                      className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
+                      className="cursor-pointer accent-brand-primary w-3 h-3"
                     />
                     <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center p-0.5 border shadow-xs overflow-hidden shrink-0">
                       <img
@@ -548,7 +548,7 @@ const Passbooks = () => {
                   </div>
 
                   <div className="text-right">
-                    <span className={`px-2 py-0.5 rounded text-[9px] ${row.category === "debit" ? "bg-red-100 text-red-600" : "bg-green-100 text-[#0CBB7D]"}`}>
+                    <span className={`px-2 py-0.5 rounded text-[9px] ${row.category === "debit" ? "bg-red-100 text-red-600" : "bg-green-100 text-brand-primary"}`}>
                       {row.category}
                     </span>
                   </div>
@@ -559,23 +559,23 @@ const Passbooks = () => {
                   <div>
                     <p className="text-gray-700 text-[10px]">Order ID</p>
                     <div className="flex items-center gap-1">
-                      <Link to={`/dashboard/order/neworder/updateOrder/${row.orderId}`} className="text-[#0CBB7D] font-[600] hover:text-[#0CBB7D] text-[10px]">
+                      <Link to={`/dashboard/order/neworder/updateOrder/${row.orderId}`} className="text-brand-primary font-[600] hover:text-brand-primary text-[10px]">
                         {row.orderId}
                       </Link>
                       <button onClick={() => handleCopy(row.orderId, row.id + '_orderId_mobile')}>
-                        {copiedId === row.id + '_orderId_mobile' ? <FiCheck className="w-2.5 h-2.5 text-[#0CBB7D]" /> : <FiCopy className="w-2.5 h-2.5 text-gray-400" />}
+                        {copiedId === row.id + '_orderId_mobile' ? <FiCheck className="w-2.5 h-2.5 text-brand-primary" /> : <FiCopy className="w-2.5 h-2.5 text-gray-400" />}
                       </button>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="text-gray-700 text-[10px]">AWB Number</p>
                     <div className="flex items-center justify-end gap-1">
-                      <p className="text-[#0CBB7D] font-[600] truncate hover:underline text-[10px]" onClick={() => handleTrackingByAwb(row.awb_number)}>
+                      <p className="text-brand-primary font-[600] truncate hover:underline text-[10px]" onClick={() => handleTrackingByAwb(row.awb_number)}>
                         {row.awb_number || "N/A"}
                       </p>
                       {row.awb_number && (
                         <button onClick={() => handleCopy(row.awb_number, row.id + '_awb_mobile')}>
-                          {copiedId === row.id + '_awb_mobile' ? <FiCheck className="w-2.5 h-2.5 text-[#0CBB7D]" /> : <FiCopy className="w-2.5 h-2.5 text-gray-400" />}
+                          {copiedId === row.id + '_awb_mobile' ? <FiCheck className="w-2.5 h-2.5 text-brand-primary" /> : <FiCopy className="w-2.5 h-2.5 text-gray-400" />}
                         </button>
                       )}
                     </div>
@@ -584,7 +584,7 @@ const Passbooks = () => {
                     <div>
                       <p className="text-gray-700 text-[10px]">Amount</p>
                       <div className="flex items-center gap-1">
-                        <p className={`font-[600] text-[10px] ${row.category === "debit" ? "text-red-500" : "text-[#0CBB7D]"}`}>
+                        <p className={`font-[600] text-[10px] ${row.category === "debit" ? "text-red-500" : "text-brand-primary"}`}>
                           ₹{Number(row.amount).toFixed(2)}
                         </p>
                         {row.category === "debit" && (
@@ -593,7 +593,7 @@ const Passbooks = () => {
                               e.stopPropagation();
                               setMobilePricePopupId(mobilePricePopupId === (row.id || row._id) ? null : (row.id || row._id));
                             }}
-                            className="text-[#0CBB7D] p-1.5 -m-1.5"
+                            className="text-brand-primary p-1.5 -m-1.5"
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                               <circle cx="12" cy="12" r="10" strokeWidth="2" />
@@ -619,7 +619,7 @@ const Passbooks = () => {
                   {row.category === "debit" && (
                     <button
                       onClick={() => handleReverse(row)}
-                      className="bg-white text-[#0CBB7D] p-1.5 rounded-full shadow-sm border border-green-100 shrink-0"
+                      className="bg-white text-brand-primary p-1.5 rounded-full shadow-sm border border-green-100 shrink-0"
                     >
                       <FaUndo size={10} />
                     </button>
@@ -631,7 +631,7 @@ const Passbooks = () => {
 
                   {/* Left Side (Avatar + Name + Email) */}
                   <div className="flex items-center gap-2 min-w-0">
-                    <div className="w-6 h-6 rounded-full bg-white border border-[#0CBB7D]/20 flex items-center justify-center font-bold text-[#0CBB7D] text-[10px] shrink-0 shadow-sm">
+                    <div className="w-6 h-6 rounded-full bg-white border border-brand-primary/20 flex items-center justify-center font-bold text-brand-primary text-[10px] shrink-0 shadow-sm">
                       {row.user?.name?.charAt(0)}
                     </div>
 
@@ -646,7 +646,7 @@ const Passbooks = () => {
                   </div>
 
                   {/* Right Side (User ID) */}
-                  <p className="text-[#0CBB7D] font-bold text-[10px] tracking-widest shrink-0">
+                  <p className="text-brand-primary font-bold text-[10px] tracking-widest shrink-0">
                     {row.user?.userId}
                   </p>
 
@@ -694,7 +694,7 @@ const Passbooks = () => {
       <div className="fixed sm:bottom-10 bottom-8 right-6 sm:right-4 z-50">
         <button
           onClick={() => setShowForm(true)}
-          className="bg-[#0CBB7D] text-white w-10 h-10 rounded-full flex items-center justify-center shadow-2xl hover:opacity-90 transition-all hover:scale-110 active:scale-95 group"
+          className="bg-brand-primary text-white w-10 h-10 rounded-full flex items-center justify-center shadow-2xl hover:opacity-90 transition-all hover:scale-110 active:scale-95 group"
         >
           <FaBook size={16} />
           <span className="absolute right-full mr-3 bg-gray-800 text-white text-xs py-1.5 px-3 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
@@ -751,7 +751,7 @@ const Passbooks = () => {
                         <div className="flex justify-between"><span className="text-gray-500">Freight</span><span className="font-bold">₹ {Number(row.priceBreakup?.freight ?? 0).toFixed(2)}</span></div>
                         <div className="flex justify-between"><span className="text-gray-500">COD</span><span className="font-bold">₹ {Number(row.priceBreakup?.cod ?? 0).toFixed(2)}</span></div>
                         <div className="flex justify-between"><span className="text-gray-500">GST</span><span className="font-bold">₹ {Number(row.priceBreakup?.gst ?? 0).toFixed(2)}</span></div>
-                        <div className="flex justify-between border-t pt-2 mt-1"><span className="font-bold text-gray-800">Total</span><span className="font-bold text-[#0CBB7D]">₹ {Number(row.priceBreakup?.total ?? row.amount ?? 0).toFixed(2)}</span></div>
+                        <div className="flex justify-between border-t pt-2 mt-1"><span className="font-bold text-gray-800">Total</span><span className="font-bold text-brand-primary">₹ {Number(row.priceBreakup?.total ?? row.amount ?? 0).toFixed(2)}</span></div>
                       </div>
                     );
                   } else {
@@ -766,7 +766,7 @@ const Passbooks = () => {
                           ))
                           : <p className="text-gray-400 italic text-center py-2">No breakup available</p>
                         }
-                        <div className="flex justify-between border-t border-dashed pt-2 mt-1"><span className="font-bold text-gray-800">Total</span><span className="font-bold text-[#0CBB7D]">₹ {Number(row.amount || 0).toFixed(2)}</span></div>
+                        <div className="flex justify-between border-t border-dashed pt-2 mt-1"><span className="font-bold text-gray-800">Total</span><span className="font-bold text-brand-primary">₹ {Number(row.amount || 0).toFixed(2)}</span></div>
                       </div>
                     );
                   }
@@ -808,7 +808,7 @@ const Passbooks = () => {
               <div className="flex justify-between"><span className="text-gray-500">Freight</span><span className="font-[600]">₹ {Number(pricePopupPos.order.priceBreakup?.freight ?? 0).toFixed(2)}</span></div>
               <div className="flex justify-between"><span className="text-gray-500">COD</span><span className="font-[600]">₹ {Number(pricePopupPos.order.priceBreakup?.cod ?? 0).toFixed(2)}</span></div>
               <div className="flex justify-between"><span className="text-gray-500">GST</span><span className="font-[600]">₹ {Number(pricePopupPos.order.priceBreakup?.gst ?? 0).toFixed(2)}</span></div>
-              <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-gray-800">Total</span><span className="font-[700] text-[#0CBB7D]">₹ {Number(pricePopupPos.order.priceBreakup?.total ?? pricePopupPos.order.amount ?? 0).toFixed(2)}</span></div>
+              <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-gray-800">Total</span><span className="font-[700] text-brand-primary">₹ {Number(pricePopupPos.order.priceBreakup?.total ?? pricePopupPos.order.amount ?? 0).toFixed(2)}</span></div>
             </div>
           ) : (
             <div className="space-y-1">
@@ -821,7 +821,7 @@ const Passbooks = () => {
                 ))
                 : <p className="text-gray-400 italic">No breakup available</p>
               }
-              <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-gray-800">Total</span><span className="font-[700] text-[#0CBB7D]">₹ {Number(pricePopupPos.order.amount || 0).toFixed(2)}</span></div>
+              <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-gray-800">Total</span><span className="font-[700] text-brand-primary">₹ {Number(pricePopupPos.order.amount || 0).toFixed(2)}</span></div>
             </div>
           )}
         </div>

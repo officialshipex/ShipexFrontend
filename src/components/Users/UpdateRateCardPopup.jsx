@@ -175,7 +175,7 @@ const UpdateRateCardPopup = ({ id, userName, selectedRateCardValue, onClose, onS
                         Cancel
                     </button>
                     <button
-                        className="bg-[#0CBB7D] hover:bg-green-500 font-[600] text-white px-3 py-2 text-[10px] transition-all duration-500 sm:text-[12px] rounded-lg"
+                        className="bg-brand-primary hover:bg-green-500 font-[600] text-white px-3 py-2 text-[10px] transition-all duration-500 sm:text-[12px] rounded-lg"
                         onClick={handleAssign}
                     >
                         Assign

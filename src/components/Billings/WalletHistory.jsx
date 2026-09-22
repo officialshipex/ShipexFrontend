@@ -178,7 +178,7 @@ const WalletHistory = ({
           onClick={() => setIsFilterPanelOpen(true)}
           className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-9"
         >
-          <Filter className="w-4 h-4 text-[#0CBB7D]" />
+          <Filter className="w-4 h-4 text-brand-primary" />
           More Filters
         </button>
 
@@ -196,7 +196,7 @@ const WalletHistory = ({
             <button
               disabled={selectedTransactions.length === 0}
               onClick={() => setActionOpen(!actionOpen)}
-              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedTransactions.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50 shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedTransactions.length > 0 ? "border-brand-primary text-brand-primary hover:bg-green-50 shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
               Actions
@@ -234,7 +234,7 @@ const WalletHistory = ({
             onClick={() => setIsFilterPanelOpen(true)}
             className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-[32px] min-w-[100px]"
           >
-            <Filter className="w-3 h-3 text-[#0CBB7D]" />
+            <Filter className="w-3 h-3 text-brand-primary" />
             More Filters
           </button>
         </div>
@@ -255,7 +255,7 @@ const WalletHistory = ({
       <div className="hidden md:block relative">
         <div className="h-[calc(100vh-300px)] overflow-y-auto bg-white shadow-sm">
           <table className="w-full text-[12px] text-left border-collapse relative table-fixed">
-            <thead className="sticky top-0 z-40 bg-[#0CBB7D] text-white font-[600]">
+            <thead className="sticky top-0 z-40 bg-brand-primary text-white font-[600]">
               <tr>
                 <th className="py-2 px-3 w-[5%]">
                   <div className="flex items-center justify-center">
@@ -263,7 +263,7 @@ const WalletHistory = ({
                       type="checkbox"
                       checked={transactions.length > 0 && selectedTransactions.length === transactions.length}
                       onChange={handleSelectAll}
-                      className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
+                      className="cursor-pointer accent-brand-primary w-3 h-3"
                     />
                   </div>
                 </th>
@@ -297,7 +297,7 @@ const WalletHistory = ({
                         type="checkbox"
                         checked={selectedTransactions.includes(row._id)}
                         onChange={() => handleCheckboxChange(row._id)}
-                        className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
+                        className="cursor-pointer accent-brand-primary w-3 h-3"
                       />
                     </td>
                     <td className="px-3 py-2">
@@ -306,10 +306,10 @@ const WalletHistory = ({
                     </td>
                     <td className="px-3 py-2">
                       <div className="flex items-center gap-1 group">
-                        <span className="text-[#0CBB7D]">{row.paymentDetails?.transactionId}</span>
+                        <span className="text-brand-primary">{row.paymentDetails?.transactionId}</span>
                         <button onClick={() => handleCopy(row.paymentDetails?.transactionId, row._id + '_txn')}>
                           {copiedId === row._id + '_txn' ? (
-                            <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                            <FiCheck className="w-3 h-3 text-brand-primary" />
                           ) : (
                             <FiCopy className="w-3 h-3 text-gray-400 transition-opacity opacity-0 group-hover:opacity-100" />
                           )}
@@ -320,7 +320,7 @@ const WalletHistory = ({
                       <span className="text-gray-700">₹{Number(row.paymentDetails?.amount).toFixed(2)}</span>
                     </td>
                     <td className="px-3 py-2">
-                      <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "success" ? "bg-green-50 text-[#0CBB7D]" : "bg-red-50 text-red-500"}`}>
+                      <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "success" ? "bg-green-50 text-brand-primary" : "bg-red-50 text-red-500"}`}>
                         {row.status}
                       </span>
                     </td>
@@ -332,7 +332,7 @@ const WalletHistory = ({
                             <span className="text-[12px] text-gray-700">{row.paymentDetails?.paymentId || "N/A"}</span>
                             {row.paymentDetails?.paymentId && (
                               <button onClick={() => handleCopy(row.paymentDetails.paymentId, row._id + '_pay')}>
-                                {copiedId === row._id + '_pay' ? <FiCheck className="w-3 h-3 text-[#0CBB7D]" /> : <FiCopy className="w-3 h-3 text-gray-400 transition-opacity opacity-0 group-hover:opacity-100" />}
+                                {copiedId === row._id + '_pay' ? <FiCheck className="w-3 h-3 text-brand-primary" /> : <FiCopy className="w-3 h-3 text-gray-400 transition-opacity opacity-0 group-hover:opacity-100" />}
                               </button>
                             )}
                           </div>
@@ -361,7 +361,7 @@ const WalletHistory = ({
               type="checkbox"
               checked={transactions.length > 0 && selectedTransactions.length === transactions.length}
               onChange={handleSelectAll}
-              className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
+              className="cursor-pointer accent-brand-primary w-3 h-3"
             />
             <span className="text-[10px] font-[600] text-gray-700">Select All</span>
           </div>
@@ -370,7 +370,7 @@ const WalletHistory = ({
             <button
               disabled={selectedTransactions.length === 0}
               onClick={() => setActionOpen(!actionOpen)}
-              className={`h-[30px] px-3 rounded-lg flex items-center justify-center border transition-all ${selectedTransactions.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] bg-white shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+              className={`h-[30px] px-3 rounded-lg flex items-center justify-center border transition-all ${selectedTransactions.length > 0 ? "border-brand-primary text-brand-primary bg-white shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
               <FaBars className="w-3 h-3" />
@@ -403,14 +403,14 @@ const WalletHistory = ({
                         type="checkbox"
                         checked={selectedTransactions.includes(row._id)}
                         onChange={() => handleCheckboxChange(row._id)}
-                        className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
+                        className="cursor-pointer accent-brand-primary w-3 h-3"
                       />
                     </div>
                     <div className="space-y-1">
                       <div className="flex items-center gap-1">
-                        <span className="text-gray-700 font-[600] text-[10px]">Transaction Id : <span className="text-[#0CBB7D] font-[600]">{row.paymentDetails?.transactionId}</span></span>
+                        <span className="text-gray-700 font-[600] text-[10px]">Transaction Id : <span className="text-brand-primary font-[600]">{row.paymentDetails?.transactionId}</span></span>
                         <button onClick={() => handleCopy(row.paymentDetails?.transactionId, row._id + '_txn_mobile')}>
-                          {copiedId === row._id + '_txn_mobile' ? <FiCheck className="w-3 h-3 text-[#0CBB7D]" /> : <FiCopy className="w-3 h-3 text-gray-300" />}
+                          {copiedId === row._id + '_txn_mobile' ? <FiCheck className="w-3 h-3 text-brand-primary" /> : <FiCopy className="w-3 h-3 text-gray-300" />}
                         </button>
                       </div>
                       <p className="text-gray-500 text-[10px]">
@@ -420,7 +420,7 @@ const WalletHistory = ({
                   </div>
                   <div className="text-right">
                     <p className="font-[600] text-gray-700 text-[10px]">₹{Number(row.paymentDetails?.amount).toFixed(2)}</p>
-                    <span className={`px-2 py-0.5 rounded text-[10px] inline-block mt-1 ${row.status === "success" ? "bg-green-50 text-[#0CBB7D]" : "bg-red-50 text-red-500"}`}>
+                    <span className={`px-2 py-0.5 rounded text-[10px] inline-block mt-1 ${row.status === "success" ? "bg-green-50 text-brand-primary" : "bg-red-50 text-red-500"}`}>
                       {row.status}
                     </span>
                   </div>
@@ -430,10 +430,10 @@ const WalletHistory = ({
                   <div className="space-y-0.5">
                     <p className="text-gray-700 text-[10px] tracking-wider">Payment ID</p>
                     <div className="flex items-center gap-1">
-                      <p className="text-[#0CBB7D] font-[600] truncate max-w-[120px] text-[10px]">{row.paymentDetails?.paymentId || "N/A"}</p>
+                      <p className="text-brand-primary font-[600] truncate max-w-[120px] text-[10px]">{row.paymentDetails?.paymentId || "N/A"}</p>
                       {row.paymentDetails?.paymentId && (
                         <button onClick={() => handleCopy(row.paymentDetails.paymentId, row._id + '_pay_mobile')}>
-                          {copiedId === row._id + '_pay_mobile' ? <FiCheck className="w-3 h-3 text-[#0CBB7D]" /> : <FiCopy className="w-3 h-3 text-gray-300" />}
+                          {copiedId === row._id + '_pay_mobile' ? <FiCheck className="w-3 h-3 text-brand-primary" /> : <FiCopy className="w-3 h-3 text-gray-300" />}
                         </button>
                       )}
                     </div>
@@ -441,7 +441,7 @@ const WalletHistory = ({
                   {row.paymentDetails?.orderId && (
                     <div className="text-right space-y-0.5">
                       <p className="text-gray-700 text-[10px] tracking-wider">Order ID</p>
-                      <p className="text-[#0CBB7D] font-[600] truncate text-[10px]">{row.paymentDetails.orderId}</p>
+                      <p className="text-brand-primary font-[600] truncate text-[10px]">{row.paymentDetails.orderId}</p>
                     </div>
                   )}
                 </div>

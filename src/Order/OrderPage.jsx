@@ -117,7 +117,7 @@ const OrdersPage = () => {
           <h1 className="text-[12px] md:text-[14px] font-[600] text-gray-700">B2C</h1>
           <button
             onClick={handleNewOrderClick}
-            className="md:hidden px-3 py-1.5 bg-[#0CBB7D] text-white rounded-lg text-[10px] font-[600] transition-all duration-200 shadow-sm"
+            className="md:hidden px-3 py-1.5 bg-brand-primary text-white rounded-lg text-[10px] font-[600] transition-all duration-200 shadow-sm"
           >
             + New Order
           </button>
@@ -132,7 +132,7 @@ const OrdersPage = () => {
               <button
                 key={tab}
                 className={`px-3 py-2 text-[12px] rounded-lg font-[600] transition-all duration-200 shadow-sm border ${activeTab === tab
-                  ? "bg-[#0CBB7D] text-white border-[#0CBB7D]"
+                  ? "bg-brand-primary text-white border-brand-primary"
                   : "bg-white text-gray-700 border-gray-200 hover:bg-green-200"
                   }`}
                 onClick={() => setActiveTab(tab)}
@@ -145,7 +145,7 @@ const OrdersPage = () => {
               <button
                 onClick={() => setShowMoreTabs((prev) => !prev)}
                 className={`px-3 py-2 text-[12px] rounded-lg font-[600] transition-all duration-200 shadow-sm border flex items-center gap-1 ${moreTabs.includes(activeTab)
-                  ? "bg-[#0CBB7D] text-white border-[#0CBB7D]"
+                  ? "bg-brand-primary text-white border-brand-primary"
                   : "bg-white text-gray-700 border-gray-200 hover:bg-green-200"
                   }`}
               >
@@ -163,7 +163,7 @@ const OrdersPage = () => {
                         setShowMoreTabs(false);
                       }}
                       className={`w-full text-left px-3 py-2 text-[12px] font-[600] transition-colors ${activeTab === tab
-                        ? "bg-green-50 text-[#0CBB7D]"
+                        ? "bg-green-50 text-brand-primary"
                         : "text-gray-700 hover:bg-green-200"
                         }`}
                     >
@@ -177,7 +177,7 @@ const OrdersPage = () => {
 
           <button
             onClick={handleNewOrderClick}
-            className="px-4 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] transition-all duration-200 shadow-sm"
+            className="px-4 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] transition-all duration-200 shadow-sm"
           >
             + New Order
           </button>
@@ -196,7 +196,7 @@ const OrdersPage = () => {
               {allTabs.map((tab) => (
                 <button
                   key={tab}
-                  className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${activeTab === tab ? "bg-green-50 text-[#0CBB7D]" : "text-gray-700 hover:bg-gray-50"
+                  className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${activeTab === tab ? "bg-green-50 text-brand-primary" : "text-gray-700 hover:bg-gray-50"
                     }`}
                   onClick={() => {
                     setActiveTab(tab);
@@ -220,7 +220,7 @@ const OrdersPage = () => {
             </p>
             <div className="flex justify-center gap-4">
               <button
-                className="px-6 py-2 bg-[#0CBB7D] text-white rounded-lg text-sm"
+                className="px-6 py-2 bg-brand-primary text-white rounded-lg text-sm"
                 onClick={() => {
                   navigate("/kyc");
                   setShowModal(false);

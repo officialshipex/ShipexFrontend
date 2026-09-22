@@ -188,7 +188,7 @@ const AddEDD = ({ show, onClose, existingData = [] }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 animate-popup-in flex justify-center items-center z-50 p-4">
       <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-4 w-full max-w-lg relative space-y-4">
         <div className="flex items-center gap-2 mb-1">
-          <Clock className="w-4 h-4 text-[#0CBB7D]" />
+          <Clock className="w-4 h-4 text-brand-primary" />
           <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">Add Estimate Date and Time</h2>
         </div>
 
@@ -201,7 +201,7 @@ const AddEDD = ({ show, onClose, existingData = [] }) => {
             <button
               type="button"
               onClick={() => setOpenCourierDropdown((prev) => !prev)}
-              className="w-full border text-[10px] sm:text-[12px] font-[600] text-gray-500 border-gray-300 rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] transition-all overflow-hidden text-ellipsis whitespace-nowrap"
+              className="w-full border text-[10px] sm:text-[12px] font-[600] text-gray-500 border-gray-300 rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary transition-all overflow-hidden text-ellipsis whitespace-nowrap"
             >
               {form.couriers.length === 0 
                 ? 'Select Couriers' 
@@ -221,7 +221,7 @@ const AddEDD = ({ show, onClose, existingData = [] }) => {
                     type="checkbox" 
                     checked={form.couriers.length === couriers.length && couriers.length > 0} 
                     readOnly 
-                    className="accent-[#0CBB7D]"
+                    className="accent-brand-primary"
                   />
                   Select All
                 </div>
@@ -238,7 +238,7 @@ const AddEDD = ({ show, onClose, existingData = [] }) => {
                         type="checkbox" 
                         checked={form.couriers.includes(courier.courierProvider)} 
                         readOnly 
-                        className="accent-[#0CBB7D]"
+                        className="accent-brand-primary"
                       />
                       {courier.courierProvider}
                     </div>
@@ -254,7 +254,7 @@ const AddEDD = ({ show, onClose, existingData = [] }) => {
             <button
               type="button"
               onClick={() => setOpenServiceDropdown((prev) => !prev)}
-              className={`w-full border border-gray-300 text-gray-700 text-[10px] sm:text-[12px] font-[600] rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] transition-all overflow-hidden text-ellipsis whitespace-nowrap ${form.couriers.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
+              className={`w-full border border-gray-300 text-gray-700 text-[10px] sm:text-[12px] font-[600] rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary transition-all overflow-hidden text-ellipsis whitespace-nowrap ${form.couriers.length === 0 ? 'opacity-50 cursor-not-allowed' : ''}`}
               disabled={form.couriers.length === 0}
             >
               {form.serviceNames.length === 0 
@@ -275,7 +275,7 @@ const AddEDD = ({ show, onClose, existingData = [] }) => {
                     type="checkbox" 
                     checked={form.serviceNames.length === uniqueServiceNames.length && uniqueServiceNames.length > 0} 
                     readOnly 
-                    className="accent-[#0CBB7D]"
+                    className="accent-brand-primary"
                   />
                   Select All
                 </div>
@@ -292,7 +292,7 @@ const AddEDD = ({ show, onClose, existingData = [] }) => {
                         type="checkbox" 
                         checked={form.serviceNames.includes(name)} 
                         readOnly 
-                        className="accent-[#0CBB7D]"
+                        className="accent-brand-primary"
                       />
                       {name}
                     </div>
@@ -315,7 +315,7 @@ const AddEDD = ({ show, onClose, existingData = [] }) => {
                 onChange={(e) => setForm((prev) => ({ ...prev, [zone]: e.target.value }))}
                 min="0"
                 step="any"
-                className="block w-full px-2 py-1 text-gray-700 rounded-lg border text-[10px] sm:text-[12px] border-gray-300 shadow-sm focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] transition-all outline-none"
+                className="block w-full px-2 py-1 text-gray-700 rounded-lg border text-[10px] sm:text-[12px] border-gray-300 shadow-sm focus:ring-1 focus:ring-brand-primary focus:border-brand-primary transition-all outline-none"
               />
             </div>
           ))}
@@ -334,7 +334,7 @@ const AddEDD = ({ show, onClose, existingData = [] }) => {
           <button
             type="submit"
             disabled={loading}
-            className={`px-3 py-2 text-[10px] sm:text-[12px] font-[600] rounded-lg text-white ${loading ? 'bg-green-300 cursor-not-allowed' : 'bg-[#0CBB7D] hover:opacity-90'
+            className={`px-3 py-2 text-[10px] sm:text-[12px] font-[600] rounded-lg text-white ${loading ? 'bg-green-300 cursor-not-allowed' : 'bg-brand-primary hover:opacity-90'
               } transition`}
           >
             {loading ? 'Saving...' : 'Save'}

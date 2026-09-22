@@ -111,7 +111,7 @@ const CourierComparisonSwapped = ({ selectedUserId, refresh, selectedDateRange }
       </p>
       <button
         onClick={handleShip}
-        className="mt-6 px-3 py-2 bg-[#0CBB7D] text-white text-[12px] font-[600] rounded-lg hover:bg-green-500 transition"
+        className="mt-6 px-3 py-2 bg-brand-primary text-white text-[12px] font-[600] rounded-lg hover:bg-green-500 transition"
       >
         Ship Now
       </button>
@@ -124,7 +124,7 @@ const CourierComparisonSwapped = ({ selectedUserId, refresh, selectedDateRange }
       {/* Desktop Table View */}
       <div ref={tableRef} style={{ height: tableHeight }} className="hidden md:block overflow-auto relative">
         <table className="min-w-full text-[12px]">
-          <thead className="sticky top-0 z-10 bg-[#0CBB7D]">
+          <thead className="sticky top-0 z-10 bg-brand-primary">
             <tr className="text-white font-[600]">
               <th className="px-3 py-2 text-left border-gray-200">Courier</th>
               {headers.map((header, idx) => (
@@ -219,15 +219,15 @@ const CourierComparisonSwapped = ({ selectedUserId, refresh, selectedDateRange }
               <div className="grid grid-cols-2 gap-2 text-[12px] mb-2">
                 {[
                   { label: "Shipments", value: courier.shipmentCount, color: "text-gray-700" },
-                  { label: "Delivered", value: courier.delivered, color: "text-[#0CBB7D]" },
+                  { label: "Delivered", value: courier.delivered, color: "text-brand-primary" },
                   { label: "COD", value: courier.codOrders, color: "text-gray-700" },
                   { label: "Prepaid", value: courier.prepaidOrders, color: "text-gray-700" },
                   { label: "RTO", value: courier.rto, color: "text-red-500" },
                   { label: "NDR Raised", value: courier.ndrRaised, color: "text-yellow-500" },
-                  { label: "NDR Delivered", value: courier.ndrDelivered, color: "text-[#0CBB7D]" },
+                  { label: "NDR Delivered", value: courier.ndrDelivered, color: "text-brand-primary" },
                   { label: "Lost/Damaged", value: courier["Lost/Damaged"], color: "text-gray-700" },
                 ].map((item, idx) => (
-                  <div key={idx} className="bg-gray-50 border border-[#0CBB7D] rounded-lg px-2 py-1">
+                  <div key={idx} className="bg-gray-50 border border-brand-primary rounded-lg px-2 py-1">
                     <div className="text-gray-500">{item.label}</div>
                     <div className={`font-[600] ${item.color}`}>{item.value || 0}</div>
                   </div>
@@ -241,10 +241,10 @@ const CourierComparisonSwapped = ({ selectedUserId, refresh, selectedDateRange }
                   {["Zone A", "Zone B", "Zone C", "Zone D", "Zone E"].map((zone) => (
                     <div
                       key={zone}
-                      className="flex flex-col border border-[#0CBB7D] items-center justify-center px-2 py-1 rounded-lg bg-[#F5F7FA] text-center text-[10px] font-[500] text-gray-700 shadow-sm"
+                      className="flex flex-col border border-brand-primary items-center justify-center px-2 py-1 rounded-lg bg-[#F5F7FA] text-center text-[10px] font-[500] text-gray-700 shadow-sm"
                     >
                       <div className="text-gray-500 text-[10px]">{zone}</div>
-                      <div className="text-[10px] font-[600] text-[#0CBB7D]">
+                      <div className="text-[10px] font-[600] text-brand-primary">
                         {courier[zone] !== undefined ? courier[zone] : "-"}
                       </div>
                     </div>

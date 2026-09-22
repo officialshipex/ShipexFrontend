@@ -168,14 +168,14 @@ const StatusMaping = () => {
                 {/* Buttons */}
                 <div className="flex gap-2">
                     <button
-                        className="bg-[#0CBB7D] border-2 border-gray-100 text-[10px] sm:w-auto w-full h-9 sm:text-[12px] text-white px-3 py-2 font-[600] rounded-lg"
+                        className="bg-brand-primary border-2 border-gray-100 text-[10px] sm:w-auto w-full h-9 sm:text-[12px] text-white px-3 py-2 font-[600] rounded-lg"
                         onClick={handleExport}
                         disabled={!selectedCourier || loading}
                     >
                         Export
                     </button>
                     <button
-                        className="bg-[#0CBB7D] border-2 border-gray-100 text-[10px] sm:w-auto w-full h-9 sm:text-[12px] text-white px-3 py-2 font-[600] rounded-lg"
+                        className="bg-brand-primary border-2 border-gray-100 text-[10px] sm:w-auto w-full h-9 sm:text-[12px] text-white px-3 py-2 font-[600] rounded-lg"
                         onClick={() => setIsUploadStatusModalOpen(true)}
                     >
                         Upload
@@ -196,7 +196,7 @@ const StatusMaping = () => {
                 <div className="hidden sm:block overflow-hidden shadow-sm bg-white w-full">
                     <div className="h-[calc(100vh-190px)] overflow-y-auto overflow-x-auto relative">
                         <table className="table-fixed min-w-full text-[12px] border-collapse bg-white">
-                            <thead className="bg-[#0CBB7D] text-white font-[600] sticky top-0 z-10 shadow-sm">
+                            <thead className="bg-brand-primary text-white font-[600] sticky top-0 z-10 shadow-sm">
                                 <tr className="">
                                     {Object.keys(status[0]).map((key) => (
                                         <th key={key} className="py-2 px-3 text-left whitespace-nowrap">{key}</th>

@@ -58,10 +58,10 @@ export default function B2BPackageModal({
                 {packages.map((pkg, index) => (
                     <div
                         key={pkg.id}
-                        className="border border-dashed border-[#0CBB7D] rounded-lg p-4 my-4 relative bg-white"
+                        className="border border-dashed border-brand-primary rounded-lg p-4 my-4 relative bg-white"
                     >
                         {/* INDEX BADGE */}
-                        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#0CBB7D] text-white w-8 h-8 flex justify-center items-center rounded-full text-[12px] font-[600] shadow">
+                        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white w-8 h-8 flex justify-center items-center rounded-full text-[12px] font-[600] shadow">
                             {index + 1}
                         </div>
 
@@ -93,7 +93,7 @@ export default function B2BPackageModal({
                                     onChange={(e) =>
                                         updateField(pkg.id, "noOfBox", e.target.value)
                                     }
-                                    className="border px-3 py-2 text-[12px] font-[600] rounded-lg w-full focus:outline-[#0CBB7D]"
+                                    className="border px-3 py-2 text-[12px] font-[600] rounded-lg w-full focus:outline-brand-primary"
                                     placeholder="Boxes"
                                 />
                             </div>
@@ -109,7 +109,7 @@ export default function B2BPackageModal({
                                     onChange={(e) =>
                                         updateField(pkg.id, "weightPerBox", e.target.value)
                                     }
-                                    className="border px-3 py-2 text-[12px] font-[600] rounded-lg w-full focus:outline-[#0CBB7D]"
+                                    className="border px-3 py-2 text-[12px] font-[600] rounded-lg w-full focus:outline-brand-primary"
                                     placeholder="Kg"
                                 />
                             </div>
@@ -125,7 +125,7 @@ export default function B2BPackageModal({
                                     onChange={(e) =>
                                         updateField(pkg.id, "length", e.target.value)
                                     }
-                                    className="border px-3 py-2 text-[12px] font-[600] rounded-lg w-full focus:outline-[#0CBB7D]"
+                                    className="border px-3 py-2 text-[12px] font-[600] rounded-lg w-full focus:outline-brand-primary"
                                 />
                             </div>
 
@@ -140,7 +140,7 @@ export default function B2BPackageModal({
                                     onChange={(e) =>
                                         updateField(pkg.id, "width", e.target.value)
                                     }
-                                    className="border px-3 py-2 text-[12px] font-[600] rounded-lg w-full focus:outline-[#0CBB7D]"
+                                    className="border px-3 py-2 text-[12px] font-[600] rounded-lg w-full focus:outline-brand-primary"
                                 />
                             </div>
 
@@ -155,7 +155,7 @@ export default function B2BPackageModal({
                                     onChange={(e) =>
                                         updateField(pkg.id, "height", e.target.value)
                                     }
-                                    className="border px-3 py-2 text-[12px] font-[600] rounded-lg w-full focus:outline-[#0CBB7D]"
+                                    className="border px-3 py-2 text-[12px] font-[600] rounded-lg w-full focus:outline-brand-primary"
                                 />
                             </div>
                         </div>
@@ -166,7 +166,7 @@ export default function B2BPackageModal({
                 <div className="flex justify-center my-4">
                     <button
                         onClick={addPackage}
-                        className="w-8 h-8 rounded-full bg-[#0CBB7D] flex justify-center items-center text-white text-[12px] font-[600]"
+                        className="w-8 h-8 rounded-full bg-brand-primary flex justify-center items-center text-white text-[12px] font-[600]"
                     >
                         <span>+</span>
                     </button>
@@ -182,7 +182,7 @@ export default function B2BPackageModal({
                     </button>
                     <button
                         onClick={() => onSave(packages)}
-                        className="px-3 py-2 bg-[#0CBB7D] font-[600] hover:opacity-90 transition text-white rounded-lg text-[12px]"
+                        className="px-3 py-2 bg-brand-primary font-[600] hover:opacity-90 transition text-white rounded-lg text-[12px]"
                     >
                         Save
                     </button>

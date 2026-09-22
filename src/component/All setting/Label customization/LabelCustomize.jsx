@@ -164,7 +164,7 @@ export default function LabelCustomize() {
             onClick={() => setActiveTab(tab.id)}
             className={`px-3 py-2 text-[12px] rounded-lg font-[600] transition-all duration-200 shadow-sm border ${
               activeTab === tab.id
-                ? "bg-[#0CBB7D] text-white border-[#0CBB7D]"
+                ? "bg-brand-primary text-white border-brand-primary"
                 : "bg-white text-gray-700 border-gray-200 hover:bg-green-200"
             }`}
           >
@@ -181,7 +181,7 @@ export default function LabelCustomize() {
             <h2 className="sm:text-[14px] text-gray-700 text-[12px] font-[600] mt-2">Common Setting</h2>
             <div className="space-y-2 text-[10px] font-[600] text-gray-500 sm:text-[12px]">
               <label className="flex font-[600] text-gray-500 items-center gap-2">
-                <input type="checkbox" checked={settings.showLogoOnLabel} onChange={() => handleChange(null, "showLogoOnLabel")} className="accent-[#0CBB7D] w-4" />
+                <input type="checkbox" checked={settings.showLogoOnLabel} onChange={() => handleChange(null, "showLogoOnLabel")} className="accent-brand-primary w-4" />
                 Show Logo on Label
               </label>
               {settings.showLogoOnLabel && (
@@ -191,11 +191,11 @@ export default function LabelCustomize() {
                 </div>
               )}
               <label className="flex items-center gap-2">
-                <input type="checkbox" checked={settings.hideCustomerMobile} onChange={() => handleChange(null, "hideCustomerMobile")} className="accent-[#0CBB7D] w-4" />
+                <input type="checkbox" checked={settings.hideCustomerMobile} onChange={() => handleChange(null, "hideCustomerMobile")} className="accent-brand-primary w-4" />
                 Hide Customer Mobile Number
               </label>
               <label className="flex items-center gap-2">
-                <input type="checkbox" checked={settings.hideOrderBarcode} onChange={() => handleChange(null, "hideOrderBarcode")} className="accent-[#0CBB7D] w-4" />
+                <input type="checkbox" checked={settings.hideOrderBarcode} onChange={() => handleChange(null, "hideOrderBarcode")} className="accent-brand-primary w-4" />
                 Hide Customer Order Barcode
               </label>
             </div>
@@ -204,7 +204,7 @@ export default function LabelCustomize() {
             <div className="grid grid-cols-2 gap-2 sm:text-[12px] font-[600] text-gray-500 text-[10px]">
               {Object.entries(settings.warehouseSettings).map(([key, val]) => (
                 <label key={key} className="flex items-center gap-2 capitalize">
-                  <input type="checkbox" checked={val} onChange={() => handleChange("warehouseSettings", key)} className="accent-[#0CBB7D] w-4" />
+                  <input type="checkbox" checked={val} onChange={() => handleChange("warehouseSettings", key)} className="accent-brand-primary w-4" />
                   {key.replace(/([A-Z])/g, " $1")}
                 </label>
               ))}
@@ -214,13 +214,13 @@ export default function LabelCustomize() {
             <div className="grid grid-cols-2 gap-2 sm:text-[12px] font-[600] text-gray-500 text-[10px]">
               {Object.entries(settings.productDetails).map(([key, val]) => (
                 <label key={key} className="flex items-center gap-2 capitalize">
-                  <input type="checkbox" checked={val} onChange={() => handleChange("productDetails", key)} className="accent-[#0CBB7D] w-4" />
+                  <input type="checkbox" checked={val} onChange={() => handleChange("productDetails", key)} className="accent-brand-primary w-4" />
                   {key.replace(/([A-Z])/g, " $1")}
                 </label>
               ))}
             </div>
 
-            <button onClick={handleSave} className="bg-[#0CBB7D] sm:text-[12px] font-[600] text-[10px] text-white px-3 py-2 rounded-lg hover:bg-green-500 mt-4">
+            <button onClick={handleSave} className="bg-brand-primary sm:text-[12px] font-[600] text-[10px] text-white px-3 py-2 rounded-lg hover:bg-green-500 mt-4">
               Save
             </button>
           </div>
@@ -340,21 +340,21 @@ export default function LabelCustomize() {
               onClick={() => handleLabelSizeChange("A4")}
               className={`flex-1 flex items-start gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${
                 settings.labelSize === "A4"
-                  ? "border-[#0CBB7D] bg-green-50"
+                  ? "border-brand-primary bg-green-50"
                   : "border-gray-200 hover:border-gray-300"
               }`}
             >
               <div className="mt-1">
                 <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                  settings.labelSize === "A4" ? "border-[#0CBB7D]" : "border-gray-400"
+                  settings.labelSize === "A4" ? "border-brand-primary" : "border-gray-400"
                 }`}>
                   {settings.labelSize === "A4" && (
-                    <div className="w-2 h-2 rounded-full bg-[#0CBB7D]" />
+                    <div className="w-2 h-2 rounded-full bg-brand-primary" />
                   )}
                 </div>
               </div>
               <div className="flex-1">
-                <p className={`text-[12px] font-[700] ${settings.labelSize === "A4" ? "text-[#0CBB7D]" : "text-gray-700"}`}>
+                <p className={`text-[12px] font-[700] ${settings.labelSize === "A4" ? "text-brand-primary" : "text-gray-700"}`}>
                   Standard Desktop Printers - Size A4 (8"X11")
                 </p>
                 <p className="text-[11px] text-gray-500 font-[500] mt-0.5">
@@ -369,21 +369,21 @@ export default function LabelCustomize() {
               onClick={() => handleLabelSizeChange("thermal")}
               className={`flex-1 flex items-start gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${
                 settings.labelSize === "thermal"
-                  ? "border-[#0CBB7D] bg-green-50"
+                  ? "border-brand-primary bg-green-50"
                   : "border-gray-200 hover:border-gray-300"
               }`}
             >
               <div className="mt-1">
                 <div className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
-                  settings.labelSize === "thermal" ? "border-[#0CBB7D]" : "border-gray-400"
+                  settings.labelSize === "thermal" ? "border-brand-primary" : "border-gray-400"
                 }`}>
                   {settings.labelSize === "thermal" && (
-                    <div className="w-2 h-2 rounded-full bg-[#0CBB7D]" />
+                    <div className="w-2 h-2 rounded-full bg-brand-primary" />
                   )}
                 </div>
               </div>
               <div className="flex-1">
-                <p className={`text-[12px] font-[700] ${settings.labelSize === "thermal" ? "text-[#0CBB7D]" : "text-gray-700"}`}>
+                <p className={`text-[12px] font-[700] ${settings.labelSize === "thermal" ? "text-brand-primary" : "text-gray-700"}`}>
                   Thermal Label Printers - Size (4"X6")
                 </p>
                 <p className="text-[11px] text-gray-500 font-[500] mt-0.5">
@@ -397,7 +397,7 @@ export default function LabelCustomize() {
           <div className="flex justify-start mt-4">
             <button
               onClick={handleSave}
-              className="bg-[#0CBB7D] text-white text-[12px] font-[600] py-2 px-3 rounded-lg hover:bg-opacity-90 transition-colors shadow-sm"
+              className="bg-brand-primary text-white text-[12px] font-[600] py-2 px-3 rounded-lg hover:bg-opacity-90 transition-colors shadow-sm"
             >
               Submit
             </button>

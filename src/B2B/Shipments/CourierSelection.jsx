@@ -212,7 +212,7 @@ const CarrierSelection = () => {
   return (
     <div className="sm:px-2 bg-[#f5f7fb] text-gray-700 relative pb-2">
       <h1 className="sm:text-[18px] text-[14px] font-[600] text-gray-700 mb-2 tracking-tight">
-        Order ID : <span className="text-[#0CBB7D]">{orderDetails?.orderId}</span>
+        Order ID : <span className="text-brand-primary">{orderDetails?.orderId}</span>
       </h1>
 
       <div className="sm:flex hidden flex-wrap gap-2 items-center justify-between bg-white rounded-lg px-3 py-2 mb-2 shadow border">
@@ -250,7 +250,7 @@ const CarrierSelection = () => {
             {/* Floating Icon */}
             <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
               <span className="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full shadow p-1">
-                <i className="fa-solid fa-location-dot text-[#0CBB7D] text-[18px]"></i>
+                <i className="fa-solid fa-location-dot text-brand-primary text-[18px]"></i>
               </span>
             </div>
             <div className="mt-7 flex flex-col items-center">
@@ -266,7 +266,7 @@ const CarrierSelection = () => {
             {/* Floating Icon */}
             <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
               <span className="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full shadow p-1">
-                <i className="fa-solid fa-indian-rupee-sign text-[#0CBB7D] text-[18px]"></i>
+                <i className="fa-solid fa-indian-rupee-sign text-brand-primary text-[18px]"></i>
               </span>
             </div>
             <div className="mt-7 flex flex-col items-center">
@@ -280,7 +280,7 @@ const CarrierSelection = () => {
             {/* Floating Icon */}
             <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
               <span className="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full shadow p-1">
-                <i className="fa-solid fa-weight-hanging text-[#0CBB7D] text-[18px]"></i>
+                <i className="fa-solid fa-weight-hanging text-brand-primary text-[18px]"></i>
               </span>
             </div>
             <div className="mt-7 flex flex-col items-center">
@@ -311,7 +311,7 @@ const CarrierSelection = () => {
                   <div
                     key={item._id}
                     className={`relative border text-[12px] rounded-lg p-4 mb-2 shadow-lg bg-white cursor-pointer transition
-  ${isActive ? "border-[#0CBB7D] ring-1 ring-[#0CBB7D]" : "border-gray-200"}
+  ${isActive ? "border-brand-primary ring-1 ring-brand-primary" : "border-gray-200"}
 `}
 
                     onClick={() => setSelectedCourier(item)}
@@ -374,7 +374,7 @@ const CarrierSelection = () => {
                         <span className="text-gray-500">Charges</span>
                         <div className="text-gray-700">₹{item.working.grand_total}
                           <FaInfoCircle
-                            className="rate-info-icon inline ml-1 mb-0.5 text-[#0CBB7D] cursor-pointer"
+                            className="rate-info-icon inline ml-1 mb-0.5 text-brand-primary cursor-pointer"
                             onMouseEnter={(e) => showRatePopup(e, item.working)}
                             onMouseLeave={hideRatePopup}
                             onClick={(e) => {
@@ -395,7 +395,7 @@ const CarrierSelection = () => {
                 <button
                   onClick={() => handleShip()}
                   disabled={!selectedCourier || loadingButtons[selectedCourier?.courierServiceName || isAnyShipmentProcessing]}
-                  className={`w-full px-3 py-2 rounded-lg font-[600] text-white bg-[#0CBB7D] shadow text-[12px] transition
+                  className={`w-full px-3 py-2 rounded-lg font-[600] text-white bg-brand-primary shadow text-[12px] transition
                     ${(!selectedCourier || isAnyShipmentProcessing) ? "opacity-50 cursor-not-allowed" : ""}
                     ${loadingButtons[selectedCourier?.courierServiceName] ? "opacity-50 cursor-not-allowed" : ""}
                   `}
@@ -460,7 +460,7 @@ const CarrierSelection = () => {
                         <td className="text-center font-[600] text-gray-700 text-[12px] relative">
                           ₹{item.working.grand_total}
                           <FaInfoCircle
-                            className="rate-info-icon inline ml-1 mb-0.5 text-[#0CBB7D] cursor-pointer"
+                            className="rate-info-icon inline ml-1 mb-0.5 text-brand-primary cursor-pointer"
                             onMouseEnter={(e) => showRatePopup(e, item.working)}
                             onMouseLeave={hideRatePopup}
                             onClick={(e) => {
@@ -477,7 +477,7 @@ const CarrierSelection = () => {
                           <button
                             onClick={() => handleShip(item)}
                             disabled={loadingButtons[item.courierServiceName] || isAnyShipmentProcessing}
-                            className={`px-3 py-2 rounded-lg font-[600] text-[10px] sm:text-[12px] text-white bg-[#0CBB7D] shadow
+                            className={`px-3 py-2 rounded-lg font-[600] text-[10px] sm:text-[12px] text-white bg-brand-primary shadow
               ${(loadingButtons[item.courierServiceName] || isAnyShipmentProcessing) ? "opacity-50 cursor-not-allowed" : ""}
               `}
                           >

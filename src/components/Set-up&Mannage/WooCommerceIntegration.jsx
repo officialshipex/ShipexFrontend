@@ -199,7 +199,7 @@ const WooCommerceIntegration = () => {
               name="multiSeller"
               checked={storeDetails.multiSeller}
               onChange={handleChange}
-              className="mr-2 accent-[#0CBB7D]"
+              className="mr-2 accent-brand-primary"
             />
             <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">Enable Multi Seller</label>
           </div>
@@ -213,7 +213,7 @@ const WooCommerceIntegration = () => {
                 name="syncInventory"
                 checked={storeDetails.syncInventory}
                 onChange={handleChange}
-                className="mr-2 accent-[#0CBB7D]"
+                className="mr-2 accent-brand-primary"
               />
               <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">Enable Inventory Sync</label>
             </div>
@@ -244,7 +244,7 @@ const WooCommerceIntegration = () => {
               !storeDetails.storeClientId ||
               !storeDetails.storeClientSecret
               ? "bg-gray-400 cursor-not-allowed text-gray-700"
-              : "bg-[#0CBB7D] text-white"
+              : "bg-brand-primary text-white"
               }`}
           >
             {id ? "Update Channel" : "Add Channel"}

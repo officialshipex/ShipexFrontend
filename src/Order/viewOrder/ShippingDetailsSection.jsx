@@ -31,7 +31,7 @@ const ShippingDetailsSection = ({ order }) => {
         <div className="bg-white p-4 rounded-lg shadow-sm">
             <div className="flex items-center gap-2 mb-2 border-b pb-2">
                 <p className="p-2 bg-green-100 hidden sm:block rounded-full">
-                    <Truck className="w-4 h-4 text-[#0CBB7D]" />
+                    <Truck className="w-4 h-4 text-brand-primary" />
                 </p>
 
                 <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
@@ -121,15 +121,15 @@ const ShippingDetailsSection = ({ order }) => {
                     <div className="group">
                         <span className="font-[600] text-gray-700">AWB Number:</span>
                         <div className="flex items-center gap-2">
-                            <p className="text-[#0CBB7D]">{order.awb_number}</p>
+                            <p className="text-brand-primary">{order.awb_number}</p>
 
                             <div
                                 onClick={handleCopyAwb}
                                 className="md:opacity-0 md:group-hover:opacity-100 cursor-pointer transition-opacity"
                             >
-                                <div className="relative flex items-center justify-center text-gray-500 hover:text-[#0CBB7D]">
+                                <div className="relative flex items-center justify-center text-gray-500 hover:text-brand-primary">
                                     {copiedAwb ? (
-                                        <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                                        <FiCheck className="w-3 h-3 text-brand-primary" />
                                     ) : (
                                         <FiCopy className="w-3 h-3" />
                                     )}
@@ -171,7 +171,7 @@ const ShippingDetailsSection = ({ order }) => {
                                 }}
                                 className="md:opacity-0 md:group-hover:opacity-100 cursor-pointer transition-opacity"
                             >
-                                <div className="relative flex items-center justify-center w-5 h-5 rounded bg-white shadow-md text-gray-500 hover:text-[#0CBB7D]">
+                                <div className="relative flex items-center justify-center w-5 h-5 rounded bg-white shadow-md text-gray-500 hover:text-brand-primary">
                                     {copiedAwb ? (
                                         <FiCheck className="w-3 h-3 text-green-600" />
                                     ) : (

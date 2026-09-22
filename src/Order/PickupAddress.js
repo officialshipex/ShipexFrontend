@@ -163,7 +163,7 @@ const AddPickupAddress = ({
             value={formData.contactName}
             onChange={handleChange}
             placeholder="Enter Contact Name"
-            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-primary"
           />
         </div>
         <div>
@@ -176,7 +176,7 @@ const AddPickupAddress = ({
             value={formData.email}
             onChange={handleChange}
             placeholder="Seller.contact@shipex.com"
-            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-primary"
           />
         </div>
         <div>
@@ -189,7 +189,7 @@ const AddPickupAddress = ({
             value={formData.phoneNumber}
             onChange={handleChange}
             placeholder="Enter Phone Number"
-            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-primary"
           />
         </div>
         <div>
@@ -202,7 +202,7 @@ const AddPickupAddress = ({
             value={formData.address}
             onChange={handleChange}
             placeholder="Enter Address"
-            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-primary"
           />
         </div>
         <div>
@@ -215,7 +215,7 @@ const AddPickupAddress = ({
             value={formData.pinCode}
             onChange={handlePincodeChange}
             placeholder="Enter Pincode"
-            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full m-1 px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-primary"
             inputMode="numeric"
             pattern="[0-9]*"
           />
@@ -247,7 +247,7 @@ const AddPickupAddress = ({
         <div className="col-span-2 text-right">
           <button
             type="submit"
-            className="bg-[#0CBB7D] font-[600] text-[12px] text-white px-3 py-2 hover:opacity-90 transition rounded-lg"
+            className="bg-brand-primary font-[600] text-[12px] text-white px-3 py-2 hover:opacity-90 transition rounded-lg"
           >
             Save
           </button>

@@ -93,7 +93,7 @@ const RemittanceDetails = ({ remittanceId }) => {
   const StatusBadge = ({ status }) => {
     if (status === "Paid") {
       return (
-        <div className="flex items-center gap-1 text-[#0CBB7D] font-[600] sm:text-[14px] text-[12px]">
+        <div className="flex items-center gap-1 text-brand-primary font-[600] sm:text-[14px] text-[12px]">
           <CheckCircle className="w-3 h-3 md:w-3.5 md:h-3.5" /> <span>Paid</span>
         </div>
       );
@@ -125,7 +125,7 @@ const RemittanceDetails = ({ remittanceId }) => {
         {/* Left Block (ID + Amount + Reason) */}
         <div className="flex flex-col">
           <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
-            Remittance ID : <span className="text-[#0CBB7D]">{remittanceId || "N/A"}</span>
+            Remittance ID : <span className="text-brand-primary">{remittanceId || "N/A"}</span>
           </h2>
 
           <p className="text-[12px] sm:text-[14px] font-[600] text-gray-700 mt-2">
@@ -149,8 +149,8 @@ const RemittanceDetails = ({ remittanceId }) => {
       <div className="overflow-x-auto max-h-[350px] overflow-y-auto mb-2">
 
         <table className="sm:w-full min-w-[700px] text-left border-collapse">
-          <thead className="bg-[#0CBB7D] sticky top-0 z-10">
-            <tr className="text-white text-[12px] font-[600] border border-[#0CBB7D]">
+          <thead className="bg-brand-primary sticky top-0 z-10">
+            <tr className="text-white text-[12px] font-[600] border border-brand-primary">
               <th className="px-3 py-2">Order ID</th>
               <th className="px-3 py-2">Courier Service Name</th>
               <th className="px-3 py-2">AWB Number</th>
@@ -170,7 +170,7 @@ const RemittanceDetails = ({ remittanceId }) => {
                 >
 
                   {/* Order ID */}
-                  <td className="px-3 py-2 text-[#0CBB7D]">
+                  <td className="px-3 py-2 text-brand-primary">
                     {item.orderId}
                   </td>
 
@@ -180,10 +180,10 @@ const RemittanceDetails = ({ remittanceId }) => {
                   </td>
 
                   {/* AWB */}
-                  <td className="px-3 py-2 text-[#0CBB7D]">
+                  <td className="px-3 py-2 text-brand-primary">
                     <button
                       onClick={() => handleTrackingByAwb(item.awb_number)}
-                      className="text-[#0CBB7D] hover:underline"
+                      className="text-brand-primary hover:underline"
                     >
                       {item.awb_number}
                     </button>
@@ -226,7 +226,7 @@ const RemittanceDetails = ({ remittanceId }) => {
       <div className="w-full flex justify-center mt-3">
         <button
           onClick={exportToExcel}
-          className="bg-[#0CBB7D] text-white px-3 py-2 rounded-lg text-[12px] font-[600] hover:bg-green-500 transition"
+          className="bg-brand-primary text-white px-3 py-2 rounded-lg text-[12px] font-[600] hover:bg-green-500 transition"
         >
           Export
         </button>

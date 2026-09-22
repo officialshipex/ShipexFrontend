@@ -16,7 +16,7 @@ const DetailsModal = ({ isOpen, onClose, data }) => {
         <p className="text-gray-700 text-[12px]">{data.text}</p>
         <div className="flex justify-center">
           <button
-            className="mt-4 bg-[#0CBB7D] text-[12px] font-[600] hover:bg-opacity-90 transition-all text-white px-3 py-2 rounded-lg w-full sm:w-auto"
+            className="mt-4 bg-brand-primary text-[12px] font-[600] hover:bg-opacity-90 transition-all text-white px-3 py-2 rounded-lg w-full sm:w-auto"
             onClick={onClose}
           >
             Close

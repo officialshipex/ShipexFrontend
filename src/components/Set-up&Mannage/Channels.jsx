@@ -127,7 +127,7 @@ const Channels = () => {
           <h2 className="text-[14px] text-gray-700 font-[600]">Channels</h2>
           <button
             onClick={handleNewChannelClick}
-            className="flex items-center bg-[#0CBB7D] text-white px-3 py-2 rounded-lg hover:opacity-90 transition-all text-[12px] font-[600]"
+            className="flex items-center bg-brand-primary text-white px-3 py-2 rounded-lg hover:opacity-90 transition-all text-[12px] font-[600]"
           >
             <HiPlus className="mr-2" /> New Channel
           </button>

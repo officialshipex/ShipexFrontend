@@ -313,7 +313,7 @@ const BulkNdrActionModal = ({ isOpen, onClose, selectedOrders = [], onRefresh })
                     </button>
 
                     <button
-                        className="px-3 py-2 bg-[#0CBB7D] text-white rounded-lg text-[10px] sm:text-[12px] font-[600] hover:bg-green-500 disabled:opacity-50"
+                        className="px-3 py-2 bg-brand-primary text-white rounded-lg text-[10px] sm:text-[12px] font-[600] hover:bg-green-500 disabled:opacity-50"
                         disabled={loading}
                         onClick={handleSubmit}
                     >

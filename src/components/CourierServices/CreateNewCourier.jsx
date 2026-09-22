@@ -232,9 +232,9 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         <div className="bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-100 mb-2">
           <div className="flex items-center gap-2 mb-3 border-b border-gray-50">
             {formData._id ? (
-              <FaEdit className="text-[#0CBB7D] w-3.5 h-3.5" />
+              <FaEdit className="text-brand-primary w-3.5 h-3.5" />
             ) : (
-              <FaPlus className="text-[#0CBB7D] w-3.5 h-3.5" />
+              <FaPlus className="text-brand-primary w-3.5 h-3.5" />
             )}
 
             <h2 className="text-[12px] md:text-[14px] text-gray-700 font-[600]">
@@ -265,7 +265,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                       placeholder="Enter Courier Service ID"
                       value={formData.courier}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-[#0CBB7D] transition-all font-[600] text-gray-700"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-brand-primary transition-all font-[600] text-gray-700"
                     />
                   </div>
                 ) : selectedProvider === "Losung360" ? (
@@ -277,7 +277,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                       placeholder="Enter Courier ID"
                       value={formData.courier_id}
                       onChange={handleChange}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-[#0CBB7D] transition-all font-[600] text-gray-700"
+                      className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-brand-primary transition-all font-[600] text-gray-700"
                     />
                   </div>
                 ) : (
@@ -321,7 +321,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                   placeholder="Enter name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-[#0CBB7D] transition-all font-[600] text-gray-700"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-brand-primary transition-all font-[600] text-gray-700"
                 />
               </div>
             </div>
@@ -329,7 +329,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className={`bg-[#0CBB7D] font-[700] text-white py-2 px-3 text-[10px] sm:text-[12px] rounded-lg shadow-sm transition-all hover:bg-opacity-90 active:scale-95 ${(!canSave || loading) ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`bg-brand-primary font-[700] text-white py-2 px-3 text-[10px] sm:text-[12px] rounded-lg shadow-sm transition-all hover:bg-opacity-90 active:scale-95 ${(!canSave || loading) ? "opacity-50 cursor-not-allowed" : ""}`}
                 disabled={!canSave || loading}
               >
                 {loading ? "Processing..." : (formData._id ? "Update Courier Service" : "Save Courier Service")}

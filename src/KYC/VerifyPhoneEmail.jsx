@@ -292,12 +292,12 @@ const VerifyPhoneEmail = ({ onVerificationChange }) => {
                         disabled={phoneVerified}
                         required
                         className="w-full sm:w-[250px] px-3 py-2 text-gray-600 h-9 text-[12px] font-[600] border border-gray-300 rounded-lg outline-none 
-        focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D]"
+        focus:ring-1 focus:ring-brand-primary focus:border-brand-primary"
                     />
                 </div>
 
                 {phoneVerified ? (
-                    <div className="flex items-center gap-1 text-[#0CBB7D] font-semibold w-[100px] text-[12px] mt-5 sm:mb-2">
+                    <div className="flex items-center gap-1 text-brand-primary font-semibold w-[100px] text-[12px] mt-5 sm:mb-2">
                         <CheckCircleIcon className="w-6 h-6" />
                         Verified
                     </div>
@@ -306,9 +306,9 @@ const VerifyPhoneEmail = ({ onVerificationChange }) => {
                         type="button"
                         onClick={sendOtp}
                         disabled={phoneOtpTimer > 0 || loadingPhoneOtp || !formData.phoneNumber}
-                        className={`text-[10px] font-[600] border-2 border-[#0CBB7D] px-3 w-[100px] h-9 mt-[21px] py-2 rounded-lg transition-all duration-200 ${phoneOtpTimer > 0 || loadingPhoneOtp
+                        className={`text-[10px] font-[600] border-2 border-brand-primary px-3 w-[100px] h-9 mt-[21px] py-2 rounded-lg transition-all duration-200 ${phoneOtpTimer > 0 || loadingPhoneOtp
                             ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                            : "bg-[#0CBB7D] text-white hover:bg-[#0aa56c]"
+                            : "bg-brand-primary text-white hover:bg-[#0aa56c]"
                             }`}
                     >
                         {loadingPhoneOtp
@@ -335,12 +335,12 @@ const VerifyPhoneEmail = ({ onVerificationChange }) => {
                         disabled={emailVerified}
                         required
                         className="w-full sm:w-[250px] h-9 px-3 py-2 text-gray-600 text-[12px] font-[600] border border-gray-300 rounded-lg outline-none 
-        focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D]"
+        focus:ring-1 focus:ring-brand-primary focus:border-brand-primary"
                     />
                 </div>
 
                 {emailVerified ? (
-                    <div className="flex items-center gap-1 w-[100px] text-[#0CBB7D] font-semibold text-[12px] mt-5 sm:mb-2">
+                    <div className="flex items-center gap-1 w-[100px] text-brand-primary font-semibold text-[12px] mt-5 sm:mb-2">
                         <CheckCircleIcon className="w-6 h-6" />
                         Verified
                     </div>
@@ -349,9 +349,9 @@ const VerifyPhoneEmail = ({ onVerificationChange }) => {
                         type="button"
                         onClick={sendEmailOtp}
                         disabled={emailOtpTimer > 0 || loadingEmailOtp || !formData.email}
-                        className={`text-[10px] font-[600] border-2 border-[#0CBB7D] w-[100px] h-9 mt-[21px] px-3 py-2 rounded-lg transition-all duration-200 ${emailOtpTimer > 0 || loadingEmailOtp
+                        className={`text-[10px] font-[600] border-2 border-brand-primary w-[100px] h-9 mt-[21px] px-3 py-2 rounded-lg transition-all duration-200 ${emailOtpTimer > 0 || loadingEmailOtp
                             ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                            : "bg-[#0CBB7D] text-white hover:bg-[#0aa56c]"
+                            : "bg-brand-primary text-white hover:bg-[#0aa56c]"
                             }`}
                     >
                         {loadingEmailOtp

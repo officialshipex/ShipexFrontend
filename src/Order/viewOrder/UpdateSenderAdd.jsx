@@ -99,7 +99,7 @@ const UpdateSenderAdd = ({ isOpen, onClose, onSave, PickupAddress, title }) => {
             value={formData.contactName}
             onChange={handleChange}
             placeholder="Enter Contact Name"
-            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-primary"
           />
         </div>
         <div>
@@ -112,7 +112,7 @@ const UpdateSenderAdd = ({ isOpen, onClose, onSave, PickupAddress, title }) => {
             value={formData.email}
             onChange={handleChange}
             placeholder="buyer.contact@shipex.in"
-            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-primary"
           />
         </div>
         <div>
@@ -125,7 +125,7 @@ const UpdateSenderAdd = ({ isOpen, onClose, onSave, PickupAddress, title }) => {
             value={formData.phoneNumber}
             onChange={handleChange}
             placeholder="Enter Phone Number"
-            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-primary"
           />
         </div>
         <div>
@@ -138,7 +138,7 @@ const UpdateSenderAdd = ({ isOpen, onClose, onSave, PickupAddress, title }) => {
             value={formData.address}
             onChange={handleChange}
             placeholder="Enter Address"
-            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-primary"
           />
         </div>
         <div>
@@ -151,7 +151,7 @@ const UpdateSenderAdd = ({ isOpen, onClose, onSave, PickupAddress, title }) => {
             value={formData.pinCode}
             onChange={handlePincodeChange}
             placeholder="Enter Pincode"
-            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full px-3 py-2 text-[12px] font-[600] border rounded-lg focus:outline-none focus:ring-1 focus:ring-brand-primary"
           />
         </div>
         <div>
@@ -183,7 +183,7 @@ const UpdateSenderAdd = ({ isOpen, onClose, onSave, PickupAddress, title }) => {
           />
         </div>
         <div className="col-span-2 text-right">
-          <button type="submit" className="bg-[#0CBB7D] text-white px-4 py-2 sm:text-[12px] text-[10px] hover:opacity-90 transition rounded-lg">
+          <button type="submit" className="bg-brand-primary text-white px-4 py-2 sm:text-[12px] text-[10px] hover:opacity-90 transition rounded-lg">
             Save
           </button>
         </div>

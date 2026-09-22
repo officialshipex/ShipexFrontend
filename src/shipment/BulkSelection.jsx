@@ -123,7 +123,7 @@ const BulkSelection = () => {
                 <div className="overflow-x-auto">
                     <table className="w-full border border-gray-300">
                         <thead>
-                            <tr className="text-white bg-[#0CBB7D] border border-[#0CBB7D] text-[12px] font-600">
+                            <tr className="text-white bg-brand-primary border border-brand-primary text-[12px] font-600">
                                 <th className="px-3 py-2 text-left">Courier</th>
                                 <th className="px-3 py-2 text-left">Courier Type</th>
                                 <th className="px-3 py-2 text-left">Mode</th>
@@ -173,7 +173,7 @@ const BulkSelection = () => {
                                                 disabled={loadingButtons[item.name]}
                                                 className={`px-3 py-2 rounded-lg text-white sm:text-[12px] text-[10px] transition ${loadingButtons[item.name]
                                                     ? "bg-gray-400 cursor-not-allowed"
-                                                    : "bg-[#0CBB7D]"
+                                                    : "bg-brand-primary"
                                                     }`}
                                                 onClick={() => handleBulkShip(item)}
 
@@ -213,7 +213,7 @@ const BulkSelection = () => {
                             <div
                                 key={item._id}
                                 className={`relative border text-[12px] rounded-lg p-4 mb-2 shadow-lg bg-white cursor-pointer transition
-                  ${isActive ? "border-[#0CBB7D] ring-1 ring-[#0CBB7D]" : "border-gray-200"}`}
+                  ${isActive ? "border-brand-primary ring-1 ring-brand-primary" : "border-gray-200"}`}
                                 onClick={() => setSelectedCourier(item)}
                             >
                                 <div className="flex justify-between items-center gap-4 w-full mb-2">
@@ -255,7 +255,7 @@ const BulkSelection = () => {
                     <button
                         onClick={() => handleBulkShip(selectedCourier)}
                         disabled={!selectedCourier || loadingButtons[selectedCourier?.name]}
-                        className={`w-full px-3 py-2 rounded-lg font-[600] text-white bg-[#0CBB7D] shadow text-[12px] transition
+                        className={`w-full px-3 py-2 rounded-lg font-[600] text-white bg-brand-primary shadow text-[12px] transition
     ${!selectedCourier ? "opacity-50 cursor-not-allowed" : ""}
     ${selectedCourier && loadingButtons[selectedCourier?.name]
                                 ? "opacity-50 cursor-not-allowed"

@@ -46,7 +46,7 @@ const OrdersLast10DaysChart = () => {
                         <Line
                             type="monotone"
                             dataKey="orders"
-                            stroke="#0CBB7D"
+                            stroke="var(--brand-primary, #0CBB7D)"
                             strokeWidth={2}
                             activeDot={{ r: 6 }}
                         />

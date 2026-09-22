@@ -17,7 +17,7 @@ export default function OverheadCharges({ data, mode = "view", onChange }) {
       <input
         defaultValue={valuesRef.current[key][field]}
         className={`${width} border rounded px-2 py-1 text-[12px]
-        focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]`}
+        focus:outline-none focus:ring-1 focus:ring-brand-primary`}
         onChange={(e) => {
           valuesRef.current[key][field] = e.target.value;
         }}

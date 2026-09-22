@@ -83,12 +83,12 @@ const ResetPasswordPage = () => {
                         placeholder="New password"
                         value={newPassword}
                         onChange={(e) => setNewPassword(e.target.value)}
-                        className="border rounded-lg px-3 py-2 w-full text-[12px] sm:text-[14px] outline-none focus:ring-1 focus:ring-[#0CBB7D] pr-10"
+                        className="border rounded-lg px-3 py-2 w-full text-[12px] sm:text-[14px] outline-none focus:ring-1 focus:ring-brand-primary pr-10"
                         required
                     />
                     <span
                         onClick={() => setShowNewPassword((prev) => !prev)}
-                        className="absolute right-3 top-2.5 cursor-pointer text-gray-500 hover:text-[#0CBB7D]"
+                        className="absolute right-3 top-2.5 cursor-pointer text-gray-500 hover:text-brand-primary"
                     >
                         {showNewPassword ? <FaEye /> : <FaEyeSlash />}
                     </span>
@@ -101,12 +101,12 @@ const ResetPasswordPage = () => {
                         placeholder="Confirm password"
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
-                        className="border rounded-lg px-3 py-2 w-full text-[12px] sm:text-[14px] outline-none focus:ring-1 focus:ring-[#0CBB7D] pr-10"
+                        className="border rounded-lg px-3 py-2 w-full text-[12px] sm:text-[14px] outline-none focus:ring-1 focus:ring-brand-primary pr-10"
                         required
                     />
                     <span
                         onClick={() => setShowConfirmPassword((prev) => !prev)}
-                        className="absolute right-3 top-2.5 cursor-pointer text-gray-500 hover:text-[#0CBB7D]"
+                        className="absolute right-3 top-2.5 cursor-pointer text-gray-500 hover:text-brand-primary"
                     >
                         {showConfirmPassword ? <FaEye /> : <FaEyeSlash />}
                     </span>
@@ -116,7 +116,7 @@ const ResetPasswordPage = () => {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="bg-[#0CBB7D] text-white text-[12px] sm:text-[14px] w-full px-3 py-2 rounded-lg font-[600] hover:bg-[#0ba76e] transition disabled:opacity-70"
+                    className="bg-brand-primary text-white text-[12px] sm:text-[14px] w-full px-3 py-2 rounded-lg font-[600] hover:bg-[#0ba76e] transition disabled:opacity-70"
                 >
                     {loading ? "Saving..." : "Save"}
                 </button>

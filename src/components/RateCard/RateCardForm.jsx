@@ -260,7 +260,7 @@ export default function RateCardForm() {
           <FiArrowLeft size={16} />
         </button>
         <h2 className="text-[12px] sm:text-[14px] font-bold text-gray-700">
-          Rate Cards <span className="text-gray-400 font-medium mx-1">|</span> <span className="text-[#0CBB7D]">Form</span>
+          Rate Cards <span className="text-gray-400 font-medium mx-1">|</span> <span className="text-brand-primary">Form</span>
         </h2>
       </div>
 
@@ -272,12 +272,12 @@ export default function RateCardForm() {
             <div className="relative flex-1 sm:max-w-[180px]">
               <div
                 onClick={() => setIsPlanOpen(!isPlanOpen)}
-                className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-[#0CBB7D] transition-all group"
+                className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-brand-primary transition-all group"
               >
                 <span className={`text-[10px] sm:text-[12px] truncate ${formData.plan ? "text-gray-700" : "text-gray-400"}`}>
                   {formData.plan || "Select Plans"}
                 </span>
-                <FiChevronDown className={`text-gray-400 group-hover:text-[#0CBB7D] transition-transform flex-shrink-0 ${isPlanOpen ? "rotate-180" : ""}`} />
+                <FiChevronDown className={`text-gray-400 group-hover:text-brand-primary transition-transform flex-shrink-0 ${isPlanOpen ? "rotate-180" : ""}`} />
               </div>
               {isPlanOpen && (
                 <div className="absolute font-[600] top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-sm z-[100] animate-in fade-in slide-in-from-top-2 max-h-48 overflow-y-auto">
@@ -289,7 +289,7 @@ export default function RateCardForm() {
                         setErrors({ ...errors, plan: "" });
                         setIsPlanOpen(false);
                       }}
-                      className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                      className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors"
                     >
                       {plan}
                     </div>
@@ -306,12 +306,12 @@ export default function RateCardForm() {
           <div className="relative flex-1 sm:w-[200px] sm:max-w-[200px]">
             <div
               onClick={() => setIsProviderOpen(!isProviderOpen)}
-              className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-[#0CBB7D] transition-all group"
+              className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-brand-primary transition-all group"
             >
               <span className={`text-[10px] sm:text-[12px] truncate ${formData.courierProviderName ? "text-gray-700" : "text-gray-400"}`}>
                 {formData.courierProviderName || "Select Provider"}
               </span>
-              <FiChevronDown className={`text-gray-400 group-hover:text-[#0CBB7D] transition-transform flex-shrink-0 ${isProviderOpen ? "rotate-180" : ""}`} />
+              <FiChevronDown className={`text-gray-400 group-hover:text-brand-primary transition-transform flex-shrink-0 ${isProviderOpen ? "rotate-180" : ""}`} />
             </div>
             {isProviderOpen && (
               <div className="absolute font-[600] top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-sm z-[100] animate-in fade-in slide-in-from-top-2 max-h-48 overflow-y-auto">
@@ -328,7 +328,7 @@ export default function RateCardForm() {
                         setServices(serviceNames);
                         setIsProviderOpen(false);
                       }}
-                      className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                      className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors"
                     >
                       {provider}
                     </div>
@@ -346,12 +346,12 @@ export default function RateCardForm() {
           <div className="relative flex-1 sm:max-w-[220px]">
             <div
               onClick={() => setIsServiceOpen(!isServiceOpen)}
-              className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-[#0CBB7D] transition-all group"
+              className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-brand-primary transition-all group"
             >
               <span className={`text-[10px] sm:text-[12px] truncate ${formData.courierServiceName ? "text-gray-700" : "text-gray-400"}`}>
                 {formData.courierServiceName || "Select Courier Service"}
               </span>
-              <FiChevronDown className={`text-gray-400 group-hover:text-[#0CBB7D] transition-transform flex-shrink-0 ${isServiceOpen ? "rotate-180" : ""}`} />
+              <FiChevronDown className={`text-gray-400 group-hover:text-brand-primary transition-transform flex-shrink-0 ${isServiceOpen ? "rotate-180" : ""}`} />
             </div>
             {isServiceOpen && (
               <div className="absolute font-[600] top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-sm z-[100] animate-in fade-in slide-in-from-top-2 max-h-48 overflow-y-auto">
@@ -366,7 +366,7 @@ export default function RateCardForm() {
                         setSelectedService(selectedObject || null);
                         setIsServiceOpen(false);
                       }}
-                      className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                      className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors"
                     >
                       {service}
                     </div>
@@ -385,10 +385,10 @@ export default function RateCardForm() {
           <div className="relative min-w-[100px] flex-1 sm:max-w-[120px]">
             <div
               onClick={() => setIsStatusOpen(!isStatusOpen)}
-              className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-[#0CBB7D] transition-all group"
+              className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-brand-primary transition-all group"
             >
               <span className="text-[10px] sm:text-[12px] text-gray-700">{formData.status}</span>
-              <FiChevronDown className={`text-gray-400 group-hover:text-[#0CBB7D] transition-transform flex-shrink-0 ${isStatusOpen ? "rotate-180" : ""}`} />
+              <FiChevronDown className={`text-gray-400 group-hover:text-brand-primary transition-transform flex-shrink-0 ${isStatusOpen ? "rotate-180" : ""}`} />
             </div>
             {isStatusOpen && (
               <div className="absolute font-[600] top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-sm z-[100] animate-in fade-in slide-in-from-top-2">
@@ -400,7 +400,7 @@ export default function RateCardForm() {
                       setErrors({ ...errors, status: "" });
                       setIsStatusOpen(false);
                     }}
-                    className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                    className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors"
                   >
                     {status}
                   </div>
@@ -416,10 +416,10 @@ export default function RateCardForm() {
           <div className="relative min-w-[100px] flex-1 sm:max-w-[120px]">
             <div
               onClick={() => setIsShipmentTypeOpen(!isShipmentTypeOpen)}
-              className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-[#0CBB7D] transition-all group"
+              className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-brand-primary transition-all group"
             >
               <span className="text-[10px] sm:text-[12px] text-gray-700">{formData.shipmentType}</span>
-              <FiChevronDown className={`text-gray-400 group-hover:text-[#0CBB7D] transition-transform flex-shrink-0 ${isShipmentTypeOpen ? "rotate-180" : ""}`} />
+              <FiChevronDown className={`text-gray-400 group-hover:text-brand-primary transition-transform flex-shrink-0 ${isShipmentTypeOpen ? "rotate-180" : ""}`} />
             </div>
             {isShipmentTypeOpen && (
               <div className="absolute font-[600] top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-sm z-[100] animate-in fade-in slide-in-from-top-2">
@@ -431,7 +431,7 @@ export default function RateCardForm() {
                       setErrors({ ...errors, shipmentType: "" });
                       setIsShipmentTypeOpen(false);
                     }}
-                    className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-[#0CBB7D]/10 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                    className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors"
                   >
                     {type}
                   </div>
@@ -457,16 +457,16 @@ export default function RateCardForm() {
               checked={formData.isFlatRate}
               onChange={handleFlatRateToggle}
             />
-            <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#0CBB7D]"></div>
+            <div className="w-10 h-5 bg-gray-200 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-primary"></div>
           </div>
-          <span className="text-[12px] font-bold text-gray-700 group-hover:text-[#0CBB7D] transition-colors">Is Flat Rate?</span>
+          <span className="text-[12px] font-bold text-gray-700 group-hover:text-brand-primary transition-colors">Is Flat Rate?</span>
         </label>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {/* Forward Charges Section */}
         <div className="md:col-span-2">
-          <h2 className="text-[#0CBB7D] font-bold text-[14px] mb-4 border-b border-[#0CBB7D]/20 pb-2">Forward Charges</h2>
+          <h2 className="text-brand-primary font-bold text-[14px] mb-4 border-b border-brand-primary/20 pb-2">Forward Charges</h2>
           {/* Weight Price Basic (Forward) */}
           <h3 className="font-[600] text-gray-500 text-[12px] sm:text-[14px]">
             Weight Type <span className="text-red-500">Basic *</span> (in gram)
@@ -477,7 +477,7 @@ export default function RateCardForm() {
                 type="text"
                 placeholder="Weight (gm) *"
                 value={item.weight}
-                className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-brand-primary focus:outline-none transition-all"
                 onChange={(e) => handleWeightChange(index, "weightPriceBasic", "weight", e.target.value)}
               />
               {["A", "B", "C", "D", "E"].map((zone) => (
@@ -486,7 +486,7 @@ export default function RateCardForm() {
                   type="text"
                   placeholder={`Zone ${zone} * ₹`}
                   value={item[`zone${zone}`]}
-                  className="border border-gray-300 text-gray-700 font-[600] px-3 h-9 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                  className="border border-gray-300 text-gray-700 font-[600] px-3 h-9 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-brand-primary focus:outline-none transition-all"
                   onChange={(e) => handleWeightChange(index, "weightPriceBasic", `zone${zone}`, e.target.value)}
                 />
               ))}
@@ -503,7 +503,7 @@ export default function RateCardForm() {
                 type="text"
                 placeholder="Weight (gm) *"
                 value={item.weight}
-                className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                className="border border-gray-300 h-9 text-gray-700 font-[600] px-3 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-brand-primary focus:outline-none transition-all"
                 onChange={(e) => handleWeightChange(index, "weightPriceAdditional", "weight", e.target.value)}
               />
               {["A", "B", "C", "D", "E"].map((zone) => (
@@ -512,7 +512,7 @@ export default function RateCardForm() {
                   type="text"
                   placeholder={`Zone ${zone} * ₹`}
                   value={item[`zone${zone}`]}
-                  className="border border-gray-300 text-gray-700 font-[600] px-3 h-9 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-[#0CBB7D] focus:outline-none transition-all"
+                  className="border border-gray-300 text-gray-700 font-[600] px-3 h-9 rounded-lg text-[10px] sm:text-[12px] w-full focus:border-brand-primary focus:outline-none transition-all"
                   onChange={(e) => handleWeightChange(index, "weightPriceAdditional", `zone${zone}`, e.target.value)}
                 />
               ))}
@@ -531,7 +531,7 @@ export default function RateCardForm() {
           name="codCharge"
           type="text"
           placeholder="COD charges"
-          className="border border-gray-300 h-9 text-gray-700 font-[600] mt-2 px-3 rounded-lg text-[10px] sm:text-[12px] w-full sm:w-auto focus:border-[#0CBB7D] focus:outline-none transition-all"
+          className="border border-gray-300 h-9 text-gray-700 font-[600] mt-2 px-3 rounded-lg text-[10px] sm:text-[12px] w-full sm:w-auto focus:border-brand-primary focus:outline-none transition-all"
           onChange={handleChange}
         />
         <input
@@ -539,7 +539,7 @@ export default function RateCardForm() {
           name="codPercent"
           type="text"
           placeholder="COD Percentage"
-          className="border border-gray-300 h-9 text-gray-700 font-[600] mt-2 px-3 rounded-lg text-[10px] sm:text-[12px] w-full sm:w-auto focus:border-[#0CBB7D] focus:outline-none transition-all"
+          className="border border-gray-300 h-9 text-gray-700 font-[600] mt-2 px-3 rounded-lg text-[10px] sm:text-[12px] w-full sm:w-auto focus:border-brand-primary focus:outline-none transition-all"
           onChange={handleChange}
         />
       </div>
@@ -556,7 +556,7 @@ export default function RateCardForm() {
           Cancel
         </button>
         <button
-          className="bg-[#0CBB7D] text-white hover:bg-opacity-90 px-3 py-2 rounded-lg text-[10px] sm:text-[12px] font-bold transition-all"
+          className="bg-brand-primary text-white hover:bg-opacity-90 px-3 py-2 rounded-lg text-[10px] sm:text-[12px] font-bold transition-all"
           onClick={handleSave}
         >
           Save Rate Card

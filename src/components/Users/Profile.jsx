@@ -32,7 +32,7 @@ function Profile() {
             end
             className={({ isActive }) =>
               `px-3 py-2 text-[12px] font-[600] rounded-lg transition duration-200 ${isActive
-                ? 'bg-[#0CBB7D] text-white'
+                ? 'bg-brand-primary text-white'
                 : 'bg-white text-gray-700 hover:bg-green-200'
               }`
             }

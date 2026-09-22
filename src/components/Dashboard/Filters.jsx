@@ -211,7 +211,7 @@ const FilterBar = ({ filters, setFilters }) => {
                                 ranges={tempDateRange}
                                 moveRangeOnFirstSelection={false}
                                 showMonthAndYearPickers={false}
-                                rangeColors={["#0CBB7D"]}
+                                rangeColors={["var(--brand-primary, #0CBB7D)"]}
                                 months={1}
                                 direction="horizontal"
                                 showDateDisplay={false}
@@ -219,7 +219,7 @@ const FilterBar = ({ filters, setFilters }) => {
                             />
                             <div className="flex justify-end gap-2 mt-2">
                                 <button
-                                    className="bg-[#0CBB7D] text-white px-3 py-1 text-xs rounded"
+                                    className="bg-brand-primary text-white px-3 py-1 text-xs rounded"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         handleDateApply();
@@ -259,7 +259,7 @@ const FilterBar = ({ filters, setFilters }) => {
                 {/* Clear Filters Button */}
                 <button
                     onClick={clearFilters}
-                    className="ml-auto px-3 py-2 text-[12px] border bg-[#0CBB7D] text-white rounded-lg hover:bg-green-500 transition-all"
+                    className="ml-auto px-3 py-2 text-[12px] border bg-brand-primary text-white rounded-lg hover:bg-green-500 transition-all"
                 >
                     Clear
                 </button>

@@ -150,7 +150,7 @@ const CodRemittances = () => {
       {/* Summary Grid */}
       <div className="text-[12px] font-[600]">
         {/* ✅ Mobile View: Single Box */}
-        <div className="md:hidden border text-[10px] border-[#0CBB7D] bg-white rounded-lg px-3 py-2 space-y-2">
+        <div className="md:hidden border text-[10px] border-brand-primary bg-white rounded-lg px-3 py-2 space-y-2">
           {summaryItems.map((item, idx) => (
             <div key={idx} className="flex items-center">
               <span className="text-gray-500 w-1/2">{item.title}</span>
@@ -167,9 +167,9 @@ const CodRemittances = () => {
           {summaryItems.map((item, idx) => (
             <div
               key={idx}
-              className="flex items-center justify-start text-start gap-4 p-2 bg-white rounded-lg border border-[#0CBB7D] hover:shadow-sm transition-shadow duration-300"
+              className="flex items-center justify-start text-start gap-4 p-2 bg-white rounded-lg border border-brand-primary hover:shadow-sm transition-shadow duration-300"
             >
-              <div className="bg-[#0CBB7D] text-white p-2 rounded-full">
+              <div className="bg-brand-primary text-white p-2 rounded-full">
                 {item.icon}
               </div>
               <div className="flex flex-col">
@@ -200,7 +200,7 @@ const CodRemittances = () => {
             onClick={() => setIsFilterPanelOpen(true)}
             className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-[32px] min-w-[100px]"
           >
-            <Filter className="w-3 h-3 text-[#0CBB7D]" />
+            <Filter className="w-3 h-3 text-brand-primary" />
             More Filters
           </button>
         </div>
@@ -232,7 +232,7 @@ const CodRemittances = () => {
           onClick={() => setIsFilterPanelOpen(true)}
           className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-9"
         >
-          <Filter className="w-4 h-4 text-[#0CBB7D]" />
+          <Filter className="w-4 h-4 text-brand-primary" />
           More Filters
         </button>
 
@@ -250,7 +250,7 @@ const CodRemittances = () => {
             <button
               disabled={selectedRemittances.length === 0}
               onClick={() => setActionOpen(!actionOpen)}
-              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedRemittances.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedRemittances.length > 0 ? "border-brand-primary text-brand-primary hover:bg-green-50" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
               Actions
@@ -275,15 +275,15 @@ const CodRemittances = () => {
       <div className="hidden md:block">
         <div className="h-[calc(100vh-295px)] overflow-y-auto bg-white">
           <table className="w-full text-[12px] border-collapse">
-            <thead className="bg-[#0CBB7D] text-white font-[600] sticky top-0 z-10">
-              <tr className="text-white bg-[#0CBB7D] text-[12px] font-600">
+            <thead className="bg-brand-primary text-white font-[600] sticky top-0 z-10">
+              <tr className="text-white bg-brand-primary text-[12px] font-600">
                 <th className="py-2 px-3 w-10">
                   <div className="flex justify-center items-center">
                     <input
                       type="checkbox"
                       checked={transactions.length > 0 && selectedRemittances.length === transactions.length}
                       onChange={handleSelectAll}
-                      className="cursor-pointer accent-[#0CBB7D]"
+                      className="cursor-pointer accent-brand-primary"
                     />
                   </div>
                 </th>
@@ -325,12 +325,12 @@ const CodRemittances = () => {
                           type="checkbox"
                           checked={selectedRemittances.includes(row._id)}
                           onChange={() => handleCheckboxChange(row._id)}
-                          className="cursor-pointer accent-[#0CBB7D]"
+                          className="cursor-pointer accent-brand-primary"
                         />
                       </div>
                     </td>
                     <td className="py-2 px-3 text-gray-700 w-[180px] max-w-[180px]">
-                      <p className="text-[#0CBB7D] font-medium truncate">
+                      <p className="text-brand-primary font-medium truncate">
                         {row.user?.userId}
                       </p>
 
@@ -352,7 +352,7 @@ const CodRemittances = () => {
                     </td>
                     <td className="py-2 px-3">
                       <div className="flex items-center gap-1 group">
-                        <span className="text-[#0CBB7D] font-medium cursor-pointer hover:underline" onClick={() => openRemittanceDetails(row.remittanceId)}>
+                        <span className="text-brand-primary font-medium cursor-pointer hover:underline" onClick={() => openRemittanceDetails(row.remittanceId)}>
                           {row.remittanceId}
                         </span>
                         <button onClick={() => handleCopy(row.remittanceId, row._id + '_remId')}>
@@ -360,7 +360,7 @@ const CodRemittances = () => {
                         </button>
                       </div>
                     </td>
-                    <td className="py-2 px-3 text-[#0CBB7D] font-medium">
+                    <td className="py-2 px-3 text-brand-primary font-medium">
                       <div className="flex items-center gap-1 group">
                         <span>{row.utr || "N/A"}</span>
                         {row.utr && (
@@ -375,9 +375,9 @@ const CodRemittances = () => {
                     <td className="py-2 px-3">{row.earlyCodCharges?.toFixed(2)}</td>
                     <td className="py-2 px-3">{row.adjustedAmount?.toFixed(2)}</td>
                     <td className="py-2 px-3">{row.remittanceMethod}</td>
-                    <td className="py-2 px-3 font-medium text-[#0CBB7D]">{row.remittanceInitiated?.toFixed(2)}</td>
+                    <td className="py-2 px-3 font-medium text-brand-primary">{row.remittanceInitiated?.toFixed(2)}</td>
                     <td className={`py-2 px-3`}>
-                      <p className={`rounded px-2 py-0.5 text-[10px] text-center ${row.status === "Paid" ? "bg-green-100 text-[#0CBB7D]" : "text-red-600 bg-red-100"}`}>{row.status}</p>
+                      <p className={`rounded px-2 py-0.5 text-[10px] text-center ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "text-red-600 bg-red-100"}`}>{row.status}</p>
                     </td>
                   </tr>
                 ))
@@ -396,7 +396,7 @@ const CodRemittances = () => {
               type="checkbox"
               checked={transactions.length > 0 && selectedRemittances.length === transactions.length}
               onChange={handleSelectAll}
-              className="cursor-pointer accent-[#0CBB7D] w-4"
+              className="cursor-pointer accent-brand-primary w-4"
             />
             <span className="text-[10px] font-[600] text-gray-700 tracking-wider">Select All</span>
           </div>
@@ -405,7 +405,7 @@ const CodRemittances = () => {
             <button
               disabled={selectedRemittances.length === 0}
               onClick={() => setActionOpen(!actionOpen)}
-              className={`h-[30px] px-3 rounded-lg flex items-center justify-center border transition-all ${selectedRemittances.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] bg-white shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+              className={`h-[30px] px-3 rounded-lg flex items-center justify-center border transition-all ${selectedRemittances.length > 0 ? "border-brand-primary text-brand-primary bg-white shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
               <FaBars className="w-3 h-3" />
@@ -441,7 +441,7 @@ const CodRemittances = () => {
                       type="checkbox"
                       checked={selectedRemittances.includes(row._id)}
                       onChange={() => handleCheckboxChange(row._id)}
-                      className="cursor-pointer accent-[#0CBB7D] w-4"
+                      className="cursor-pointer accent-brand-primary w-4"
                     />
                     <div className="flex flex-col">
                       <div className="flex items-center gap-2">
@@ -449,14 +449,14 @@ const CodRemittances = () => {
                           {/* <span className="text-gray-400 text-[8px] font-bold uppercase leading-none">Remittance ID</span> */}
                           <div className="flex items-center gap-1 group">
                             <span className="font-[600] text-gray-700 text-[10px] hover:underline cursor-pointer" onClick={() => openRemittanceDetails(row.remittanceId)}>
-                              Remmitance Id : <span className="font-bold text-[#0CBB7D]">{row.remittanceId}</span>
+                              Remmitance Id : <span className="font-bold text-brand-primary">{row.remittanceId}</span>
                             </span>
                             <button onClick={() => handleCopy(row.remittanceId, row.remittanceId + '_remId_mob')}>
                               {copiedId === row.remittanceId + '_remId_mob' ? <FiCheck className="w-2.5 h-2.5 text-green-500" /> : <FiCopy className="w-2.5 h-2.5 text-gray-300" />}
                             </button>
                           </div>
                         </div>
-                        <span className={`px-2 py-0.5 rounded text-[10px] whitespace-nowrap ${row.status === "Paid" ? "bg-green-100 text-[#0CBB7D]" : "bg-red-100 text-red-600"}`}>
+                        <span className={`px-2 py-0.5 rounded text-[10px] whitespace-nowrap ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>
                           {row.status}
                         </span>
                       </div>
@@ -466,9 +466,9 @@ const CodRemittances = () => {
                   <div className="text-right flex flex-col items-end">
                     <div className="flex flex-col items-end">
                       {/* <span className="text-gray-400 text-[8px] font-bold uppercase leading-none">Amount</span> */}
-                      <p className="font-bold text-[#0CBB7D] text-[10px] tracking-tight">₹{row.remittanceInitiated?.toFixed(2)}</p>
+                      <p className="font-bold text-brand-primary text-[10px] tracking-tight">₹{row.remittanceInitiated?.toFixed(2)}</p>
                       <p
-                        className="text-[9px] text-[#0CBB7D] font-bold border-b border-dashed border-[#0CBB7D] cursor-pointer hover:opacity-80"
+                        className="text-[9px] text-brand-primary font-bold border-b border-dashed border-brand-primary cursor-pointer hover:opacity-80"
                         onClick={() => setDetailsPopupId(detailsPopupId === row.remittanceId ? null : row.remittanceId)}
                       >
                         Details
@@ -481,7 +481,7 @@ const CodRemittances = () => {
                   <div>
                     <p className="text-gray-700">UTR Number</p>
                     <div className="flex items-center gap-1 group">
-                      <p className="font-bold text-[#0CBB7D]">{row.utr || "N/A"}</p>
+                      <p className="font-bold text-brand-primary">{row.utr || "N/A"}</p>
                       {row.utr && row.utr !== "N/A" && (
                         <button onClick={() => handleCopy(row.utr, row.remittanceId + '_utr_mob')}>
                           {copiedId === row.remittanceId + '_utr_mob' ? <FiCheck className="w-2.5 h-2.5 text-green-500" /> : <FiCopy className="w-2.5 h-2.5 text-gray-300" />}
@@ -491,7 +491,7 @@ const CodRemittances = () => {
                   </div>
                   <div className="text-right">
                     <p className="text-gray-700">Method</p>
-                    <p className="font-bold text-[#0CBB7D]">{row.remittanceMethod || "N/A"}</p>
+                    <p className="font-bold text-brand-primary">{row.remittanceMethod || "N/A"}</p>
                   </div>
                 </div>
 
@@ -519,7 +519,7 @@ const CodRemittances = () => {
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-400 font-medium">Credited to Wallet</span>
-                            <span className="text-[#0CBB7D] font-bold">₹{row.amountCreditedToWallet?.toFixed(2)}</span>
+                            <span className="text-brand-primary font-bold">₹{row.amountCreditedToWallet?.toFixed(2)}</span>
                           </div>
                           <div className="flex justify-between">
                             <span className="text-gray-400 font-medium font-bold">Early COD Charges</span>
@@ -531,7 +531,7 @@ const CodRemittances = () => {
                           </div>
                           <div className="flex justify-between border-t border-gray-50 pt-1">
                             <span className="text-gray-600 font-bold italic">Final Remittance</span>
-                            <span className="text-[#0CBB7D] font-bold">₹{row.remittanceInitiated?.toFixed(2)}</span>
+                            <span className="text-brand-primary font-bold">₹{row.remittanceInitiated?.toFixed(2)}</span>
                           </div>
                         </div>
                       </motion.div>
@@ -541,7 +541,7 @@ const CodRemittances = () => {
 
                 <div className="mt-2 pt-2 border-t border-gray-100 flex items-center justify-between">
                   <div className="flex w-full items-center gap-2">
-                    <div className="w-6 h-6 rounded-full border bg-white border-gray-300 flex items-center justify-center text-[#0CBB7D] font-[600] text-[10px]">
+                    <div className="w-6 h-6 rounded-full border bg-white border-gray-300 flex items-center justify-center text-brand-primary font-[600] text-[10px]">
                       {row.user?.name?.charAt(0)}
                     </div>
                     <div className="flex justify-between items-center w-full">
@@ -549,7 +549,7 @@ const CodRemittances = () => {
                         <p className="font-bold text-gray-700 text-[10px] truncate">{row.user?.name}</p>
                         <p className="text-gray-500 text-[10px] truncate">{row.user?.email}</p>
                       </div>
-                      <p className="text-[#0CBB7D] font-[600] text-[10px] truncate">{row.user?.userId}</p>
+                      <p className="text-brand-primary font-[600] text-[10px] truncate">{row.user?.userId}</p>
                     </div>
                   </div>
                 </div>

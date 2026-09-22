@@ -48,7 +48,7 @@ const AcceptDiscrepancy = ({ isOpen, onClose, awbNumber, setRefresh }) => {
         </h2>
         <div className="flex justify-center space-x-4">
           <button
-            className={`px-4 py-2 bg-[#0CBB7D] text-white rounded-md transition ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}
+            className={`px-4 py-2 bg-brand-primary text-white rounded-md transition ${isUploading ? "opacity-50 cursor-not-allowed" : ""}`}
             onClick={handleConfirm} // Call local function
             disabled={isUploading}
           >

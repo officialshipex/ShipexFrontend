@@ -107,7 +107,7 @@ const EditPickupAddressModal = ({ isOpen, editData, onClose }) => {
             </button>
             <button
               type="submit"
-              className="bg-[#0CBB7D] text-white px-6 py-2 rounded"
+              className="bg-brand-primary text-white px-6 py-2 rounded"
             >
               Save
             </button>

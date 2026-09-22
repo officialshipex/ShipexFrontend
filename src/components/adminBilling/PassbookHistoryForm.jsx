@@ -108,7 +108,7 @@ const PassbookHistoryForm = ({ onClose }) => {
     }, []);
 
     return (
-        <div className="max-w-lg mx-auto mt-10 bg-white rounded-lg shadow-sm border border-[#0CBB7D] p-6">
+        <div className="max-w-lg mx-auto mt-10 bg-white rounded-lg shadow-sm border border-brand-primary p-6">
             <h2 className="text-[18px] font-[600] text-gray-700 mb-6">Update Passbook</h2>
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* User Search Input */}
@@ -140,12 +140,12 @@ const PassbookHistoryForm = ({ onClose }) => {
                                     }}
                                 >
                                     <div className="w-1/4 flex items-center justify-center p-2">
-                                        <p className="text-[12px] text-gray-400 group-hover:text-[#0CBB7D] font-medium truncate text-center">
+                                        <p className="text-[12px] text-gray-400 group-hover:text-brand-primary font-medium truncate text-center">
                                             {user.userId}
                                         </p>
                                     </div>
                                     <div className="w-3/4 flex flex-col justify-center py-[7px] pr-2 leading-tight">
-                                        <p className="text-[13px] text-gray-500 group-hover:text-[#0CBB7D] font-medium truncate">
+                                        <p className="text-[13px] text-gray-500 group-hover:text-brand-primary font-medium truncate">
                                             {user.fullname}
                                         </p>
                                         <p className="text-[11px] text-gray-400 truncate">{user.email}</p>
@@ -270,7 +270,7 @@ const PassbookHistoryForm = ({ onClose }) => {
                                 }
                                 className={`text-[10px] px-2 py-1 rounded border transition-colors ${
                                     formData.description === suggestion
-                                        ? "bg-green-100 border-[#0CBB7D] text-[#0CBB7D] font-bold"
+                                        ? "bg-green-100 border-brand-primary text-brand-primary font-bold"
                                         : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100"
                                 }`}
                             >
@@ -285,7 +285,7 @@ const PassbookHistoryForm = ({ onClose }) => {
                         value={formData.description}
                         onChange={handleChange}
                         placeholder="Enter description..."
-                        className="resize-none w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D] font-[600] text-[12px]"
+                        className="resize-none w-full px-3 py-2 border-2 border-gray-300 rounded-lg text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-brand-primary font-[600] text-[12px]"
                     ></textarea>
                 </div>
 
@@ -293,7 +293,7 @@ const PassbookHistoryForm = ({ onClose }) => {
                 <div className="flex space-x-2">
                     <button
                         type="submit"
-                        className="flex bg-[#0CBB7D] font-[600] text-[10px] sm:text-[12px] text-white py-2 px-3 rounded-lg hover:bg-[#0aa76f]"
+                        className="flex bg-brand-primary font-[600] text-[10px] sm:text-[12px] text-white py-2 px-3 rounded-lg hover:bg-[#0aa76f]"
                         disabled={!selectedUserId}
                     >
                         Submit

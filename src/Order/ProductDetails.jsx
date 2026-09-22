@@ -150,9 +150,9 @@ const ProductDetails = ({ Address, initialData, userId, updateId }) => {
 
     return (
         <div className="max-w-full mx-auto">
-            <div className="border border-[#0CBB7D] rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
+            <div className="border border-brand-primary rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
                 <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 mb-2 flex items-center gap-2">
-                    <span className="bg-[#0CBB7D] text-white rounded-lg p-2">
+                    <span className="bg-brand-primary text-white rounded-lg p-2">
                         <FiTag className="text-[14px]" />
                     </span>
                     Product Details
@@ -161,9 +161,9 @@ const ProductDetails = ({ Address, initialData, userId, updateId }) => {
                 {products.map((product, index) => (
                     <div
                         key={product.id}
-                        className="border border-dashed border-[#0CBB7D] rounded-lg p-4 mb-6 relative bg-white"
+                        className="border border-dashed border-brand-primary rounded-lg p-4 mb-6 relative bg-white"
                     >
-                        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#0CBB7D] text-white w-8 h-8 flex justify-center items-center rounded-full text-[12px] font-[600] shadow">
+                        <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white w-8 h-8 flex justify-center items-center rounded-full text-[12px] font-[600] shadow">
                             {index + 1}
                         </div>
 
@@ -189,7 +189,7 @@ const ProductDetails = ({ Address, initialData, userId, updateId }) => {
                                     value={product.name}
                                     placeholder="Enter name or search"
                                     onChange={(e) => handleInputChange(product.id, "name", e.target.value)}
-                                    className="w-full border focus:outline-[#0CBB7D] rounded-lg px-3 py-2 text-[12px]"
+                                    className="w-full border focus:outline-brand-primary rounded-lg px-3 py-2 text-[12px]"
                                 />
                             </div>
                             <div>
@@ -199,7 +199,7 @@ const ProductDetails = ({ Address, initialData, userId, updateId }) => {
                                     value={product.hsn}
                                     placeholder="HSN"
                                     onChange={(e) => handleInputChange(product.id, "hsn", e.target.value)}
-                                    className="w-full border rounded-lg focus:outline-[#0CBB7D] px-3 py-2 text-[12px]"
+                                    className="w-full border rounded-lg focus:outline-brand-primary px-3 py-2 text-[12px]"
                                 />
                             </div>
 
@@ -225,7 +225,7 @@ const ProductDetails = ({ Address, initialData, userId, updateId }) => {
                                         value={product.unitPrice}
                                         placeholder="Unit Price"
                                         onChange={(e) => handleInputChange(product.id, "unitPrice", e.target.value)}
-                                        className="w-full pl-7 border focus:outline-[#0CBB7D] rounded-lg px-3 py-2 text-[12px]"
+                                        className="w-full pl-7 border focus:outline-brand-primary rounded-lg px-3 py-2 text-[12px]"
                                     />
                                 </div>
                             </div>
@@ -235,7 +235,7 @@ const ProductDetails = ({ Address, initialData, userId, updateId }) => {
                             className="mt-4 flex items-center space-x-1 cursor-pointer text-[12px]"
                             onClick={() => setShowAdditionalFees(!showAdditionalFees)}
                         >
-                            <span className="text-[#0CBB7D] text-[12px] font-[600]">
+                            <span className="text-brand-primary text-[12px] font-[600]">
                                 + Add Category, SKU, Discount and Tax
                             </span>
                             <span className="text-[12px] font-[600] text-gray-500">(optional)</span>
@@ -243,10 +243,10 @@ const ProductDetails = ({ Address, initialData, userId, updateId }) => {
 
                         {showAdditionalFees && (
                             <div className="grid grid-cols-2 font-[600] md:grid-cols-4 gap-2 mt-4">
-                                <input className="border rounded-lg px-3 py-2 text-[12px] focus:outline-[#0CBB7D]" type="text" placeholder="Product Category" onChange={(e) => handleInputChange(product.id, "category", e.target.value)} value={product.category} />
-                                <input className="border rounded-lg px-3 py-2 text-[12px] focus:outline-[#0CBB7D]" type="text" placeholder="SKU" onChange={(e) => handleInputChange(product.id, "sku", e.target.value)} value={product.sku} />
-                                <input className="border rounded-lg px-3 py-2 text-[12px] focus:outline-[#0CBB7D]" type="text" placeholder="Discount" onChange={(e) => handleInputChange(product.id, "discount", e.target.value)} value={product.discount} />
-                                <input className="border rounded-lg px-3 py-2 text-[12px] focus:outline-[#0CBB7D]" type="text" placeholder="Tax" onChange={(e) => handleInputChange(product.id, "tax", e.target.value)} value={product.tax} />
+                                <input className="border rounded-lg px-3 py-2 text-[12px] focus:outline-brand-primary" type="text" placeholder="Product Category" onChange={(e) => handleInputChange(product.id, "category", e.target.value)} value={product.category} />
+                                <input className="border rounded-lg px-3 py-2 text-[12px] focus:outline-brand-primary" type="text" placeholder="SKU" onChange={(e) => handleInputChange(product.id, "sku", e.target.value)} value={product.sku} />
+                                <input className="border rounded-lg px-3 py-2 text-[12px] focus:outline-brand-primary" type="text" placeholder="Discount" onChange={(e) => handleInputChange(product.id, "discount", e.target.value)} value={product.discount} />
+                                <input className="border rounded-lg px-3 py-2 text-[12px] focus:outline-brand-primary" type="text" placeholder="Tax" onChange={(e) => handleInputChange(product.id, "tax", e.target.value)} value={product.tax} />
                             </div>
                         )}
                     </div>
@@ -254,7 +254,7 @@ const ProductDetails = ({ Address, initialData, userId, updateId }) => {
 
                 <button
                     onClick={addProduct}
-                    className="flex items-center justify-center w-8 h-8 bg-[#0CBB7D] text-white rounded-full mx-auto"
+                    className="flex items-center justify-center w-8 h-8 bg-brand-primary text-white rounded-full mx-auto"
                 >
                     +
                 </button>

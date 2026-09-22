@@ -195,7 +195,7 @@ const OrderFilterPanel = ({
                             <input
                                 type="text"
                                 placeholder={searchPlaceholder}
-                                className={`${fieldStyle} bg-white border text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D]`}
+                                className={`${fieldStyle} bg-white border text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-brand-primary`}
                                 value={localFilters.searchQuery}
                                 onChange={(e) => {
                                     setLocalFilters({ ...localFilters, searchQuery: e.target.value });
@@ -205,7 +205,7 @@ const OrderFilterPanel = ({
                             />
                             {loadingSuggestions && (
                                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
-                                    <Loader2 className="w-4 h-4 text-[#0CBB7D] animate-spin" />
+                                    <Loader2 className="w-4 h-4 text-brand-primary animate-spin" />
                                 </div>
                             )}
                         </div>
@@ -237,7 +237,7 @@ const OrderFilterPanel = ({
                         <input
                             type="text"
                             placeholder="Enter Order ID"
-                            className={`${fieldStyle} bg-white border text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D]`}
+                            className={`${fieldStyle} bg-white border text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-brand-primary`}
                             value={localFilters.orderId}
                             onChange={(e) => setLocalFilters({ ...localFilters, orderId: e.target.value })}
                         />
@@ -250,7 +250,7 @@ const OrderFilterPanel = ({
                             <input
                                 type="text"
                                 placeholder="Enter AWB Number"
-                                className={`${fieldStyle} bg-white border text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D]`}
+                                className={`${fieldStyle} bg-white border text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-brand-primary`}
                                 value={localFilters.awbNumber}
                                 onChange={(e) => setLocalFilters({ ...localFilters, awbNumber: e.target.value })}
                             />
@@ -263,7 +263,7 @@ const OrderFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowPaymentDropdown(!showPaymentDropdown)}
-                                className={`${fieldStyle} ${showPaymentDropdown ? "border-[#0CBB7D]" : "border-gray-200"} bg-white`}
+                                className={`${fieldStyle} ${showPaymentDropdown ? "border-brand-primary" : "border-gray-200"} bg-white`}
                             >
                                 <span className={localFilters.paymentType ? "text-gray-700 font-[600]" : "text-gray-400"}>
                                     {localFilters.paymentType || "Select Payment Type"}
@@ -276,7 +276,7 @@ const OrderFilterPanel = ({
                                         <div
                                             key={type}
                                             onClick={() => { setLocalFilters({ ...localFilters, paymentType: type }); setShowPaymentDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {type}
                                         </div>
@@ -292,7 +292,7 @@ const OrderFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowPickupDropdown(!showPickupDropdown)}
-                                className={`${fieldStyle} ${showPickupDropdown ? "border-[#0CBB7D]" : "border-gray-200"} bg-white`}
+                                className={`${fieldStyle} ${showPickupDropdown ? "border-brand-primary" : "border-gray-200"} bg-white`}
                             >
                                 <span className={localFilters.selectedPickupAddress.length > 0 ? "text-gray-700 font-[600]" : "text-gray-400"}>
                                     {localFilters.selectedPickupAddress.length > 0
@@ -307,7 +307,7 @@ const OrderFilterPanel = ({
                                         <input
                                             type="text"
                                             placeholder="Search pickup address..."
-                                            className="w-full px-2 py-1 text-[11px] border rounded focus:outline-none focus:border-[#0CBB7D]"
+                                            className="w-full px-2 py-1 text-[11px] border rounded focus:outline-none focus:border-brand-primary"
                                             value={pickupSearch}
                                             onChange={(e) => setPickupSearch(e.target.value)}
                                             onClick={(e) => e.stopPropagation()}
@@ -325,9 +325,9 @@ const OrderFilterPanel = ({
                                                 <div
                                                     key={idx}
                                                     onClick={() => handleTogglePickup(contactName)}
-                                                    className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors flex items-center gap-2"
+                                                    className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors flex items-center gap-2"
                                                 >
-                                                    <input type="checkbox" checked={isSelected} readOnly className="accent-[#0CBB7D] w-3 h-3" />
+                                                    <input type="checkbox" checked={isSelected} readOnly className="accent-brand-primary w-3 h-3" />
                                                     <span className="truncate">{contactName}</span>
                                                 </div>
                                             );
@@ -348,7 +348,7 @@ const OrderFilterPanel = ({
                             <div className="relative">
                                 <button
                                     onClick={() => setShowCourierDropdown(!showCourierDropdown)}
-                                    className={`${fieldStyle} ${showCourierDropdown ? "border-[#0CBB7D]" : "border-gray-200"} bg-white`}
+                                    className={`${fieldStyle} ${showCourierDropdown ? "border-brand-primary" : "border-gray-200"} bg-white`}
                                 >
                                     <span className={localFilters.selectedCourier.length > 0 ? "text-gray-700 font-[600]" : "text-gray-400"}>
                                         {localFilters.selectedCourier.length > 0
@@ -363,7 +363,7 @@ const OrderFilterPanel = ({
                                             <input
                                                 type="text"
                                                 placeholder="Search courier service ..."
-                                                className="w-full px-2 py-1 text-[11px] border rounded focus:outline-none focus:border-[#0CBB7D]"
+                                                className="w-full px-2 py-1 text-[11px] border rounded focus:outline-none focus:border-brand-primary"
                                                 value={courierSearch}
                                                 onChange={(e) => setCourierSearch(e.target.value)}
                                                 onClick={(e) => e.stopPropagation()}
@@ -377,9 +377,9 @@ const OrderFilterPanel = ({
                                                     <div
                                                         key={idx}
                                                         onClick={() => handleToggleCourier(courier)}
-                                                        className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors flex items-center gap-2"
+                                                        className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors flex items-center gap-2"
                                                     >
-                                                        <input type="checkbox" checked={isSelected} readOnly className="accent-[#0CBB7D] w-3 h-3" />
+                                                        <input type="checkbox" checked={isSelected} readOnly className="accent-brand-primary w-3 h-3" />
                                                         <span className="truncate">{courier}</span>
                                                     </div>
                                                 );
@@ -404,7 +404,7 @@ const OrderFilterPanel = ({
                     </button>
                     <button
                         onClick={handleApply}
-                        className="flex-1 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
+                        className="flex-1 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
                     >
                         Apply Filters
                     </button>

@@ -187,7 +187,7 @@ const PickupAddress = ({ isAdminView = false }) => {
         <div className="flex gap-2 order-2 sm:order-3">
           <button
             onClick={handleDownloadExcel}
-            className="border border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50 text-[10px] sm:text-[12px] transition-all rounded-lg font-[600] px-3 py-2"
+            className="border border-brand-primary text-brand-primary hover:bg-green-50 text-[10px] sm:text-[12px] transition-all rounded-lg font-[600] px-3 py-2"
           >
             Download Excel
           </button>
@@ -197,7 +197,7 @@ const PickupAddress = ({ isAdminView = false }) => {
                 openModal();
                 setTitle("Add New Address");
               }}
-              className="bg-[#0CBB7D] text-white text-[10px] sm:text-[12px] hover:opacity-90 transition-all rounded-lg font-[600] px-3 py-2"
+              className="bg-brand-primary text-white text-[10px] sm:text-[12px] hover:opacity-90 transition-all rounded-lg font-[600] px-3 py-2"
             >
               + Add New Address
             </button>
@@ -232,7 +232,7 @@ const PickupAddress = ({ isAdminView = false }) => {
           <FiSearch
             className="absolute left-3 top-1/2 -translate-y-1/2 
              text-gray-400 
-             group-focus-within:text-[#0CBB7D] 
+             group-focus-within:text-brand-primary 
              transition-colors duration-200"
             size={14}
           />
@@ -245,7 +245,7 @@ const PickupAddress = ({ isAdminView = false }) => {
              border border-gray-300 
              rounded-lg 
              outline-none 
-             focus:border-[#0CBB7D] 
+             focus:border-brand-primary 
              transition-all duration-200"
           />
         </div>
@@ -255,7 +255,7 @@ const PickupAddress = ({ isAdminView = false }) => {
       <div className="hidden sm:block">
         <div className="relative overflow-x-auto bg-white overflow-y-auto h-[calc(100dvh-165px)] shadow-sm">
           <table className="min-w-full text-left">
-            <thead className="bg-[#0CBB7D] text-white sticky top-0 z-20">
+            <thead className="bg-brand-primary text-white sticky top-0 z-20">
               <tr className="text-[12px] font-[600]">
                 {isAdminView && <th className="px-3 py-2 text-left">User Details</th>}
                 <th className="px-3 py-2 text-left">Name</th>
@@ -278,7 +278,7 @@ const PickupAddress = ({ isAdminView = false }) => {
                   <tr key={index} className="border-b text-gray-700 text-[12px] border-gray-200 hover:bg-gray-50 transition-all">
                     {isAdminView && (
                       <td className="px-3 py-2 whitespace-nowrap text-gray-700" style={{ maxWidth: "120px", width: "110px" }}>
-                        <p className="text-[#0CBB7D]">{address.userId?.userId || "N/A"}</p>
+                        <p className="text-brand-primary">{address.userId?.userId || "N/A"}</p>
                         <p className="">{address.userId?.fullname || "N/A"}</p>
                         <p className="text-gray-500 max-w-[160px] truncate sm:max-w-[200px]" title={address.userId?.email}>
                           {address.userId?.email || "N/A"}
@@ -294,7 +294,7 @@ const PickupAddress = ({ isAdminView = false }) => {
                         <span className="truncate">{address.pickupAddress.address}</span>
                         <button
                           onClick={() => handleCopy(address.pickupAddress.address, address._id)}
-                          className="ml-2 p-1 text-gray-400 hover:text-[#0CBB7D] transition-colors opacity-0 group-hover:opacity-100"
+                          className="ml-2 p-1 text-gray-400 hover:text-brand-primary transition-colors opacity-0 group-hover:opacity-100"
                         >
                           {copiedId === address._id ? <FiCheck size={12} className="text-green-500" /> : <FiCopy size={12} />}
                         </button>
@@ -308,7 +308,7 @@ const PickupAddress = ({ isAdminView = false }) => {
                           checked={primaryAddressId === address._id}
                           onChange={() => handlePrimaryChange(address._id)}
                         />
-                        <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-focus:outline-none peer-checked:bg-[#0CBB7D] transition-colors duration-300"></div>
+                        <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-focus:outline-none peer-checked:bg-brand-primary transition-colors duration-300"></div>
                         <div className="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform duration-300 transform peer-checked:translate-x-5"></div>
                       </label>
                     </td>
@@ -361,7 +361,7 @@ const PickupAddress = ({ isAdminView = false }) => {
               >
                 {isAdminView && (
                   <div className="border-b pb-1 mb-1 flex justify-between items-center bg-green-50/50 p-1.5 rounded">
-                    <span className="text-[10px] font-bold text-[#0CBB7D] truncate max-w-[120px]">{address.userId?.company || "N/A"}</span>
+                    <span className="text-[10px] font-bold text-brand-primary truncate max-w-[120px]">{address.userId?.company || "N/A"}</span>
                     <span className="text-[9px] text-gray-500 truncate max-w-[120px]">{address.userId?.fullname || "N/A"}</span>
                   </div>
                 )}
@@ -378,7 +378,7 @@ const PickupAddress = ({ isAdminView = false }) => {
                           checked={primaryAddressId === address._id}
                           onChange={() => handlePrimaryChange(address._id)}
                         />
-                        <div className="w-7 h-3.5 bg-gray-200 rounded-full peer peer-focus:outline-none peer-checked:bg-[#0CBB7D] transition-colors duration-300"></div>
+                        <div className="w-7 h-3.5 bg-gray-200 rounded-full peer peer-focus:outline-none peer-checked:bg-brand-primary transition-colors duration-300"></div>
                         <div className="absolute left-0.5 top-0.5 bg-white w-2.5 h-2.5 rounded-full transition-transform duration-300 transform peer-checked:translate-x-3.5"></div>
                       </label>
                     </div>
@@ -429,7 +429,7 @@ const PickupAddress = ({ isAdminView = false }) => {
                   </span>
                   <button
                     onClick={() => handleCopy(address.pickupAddress.address, address._id)}
-                    className="p-1 text-gray-400 hover:text-[#0CBB7D] shrink-0"
+                    className="p-1 text-gray-400 hover:text-brand-primary shrink-0"
                   >
                     {copiedId === address._id ? <FiCheck size={12} className="text-green-500" /> : <FiCopy size={12} />}
                   </button>

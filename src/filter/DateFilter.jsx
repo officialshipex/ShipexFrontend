@@ -144,7 +144,7 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter, className }) 
             <div className={`relative w-full ${className || "sm:w-[200px]"}`} ref={dateRef}>
                 {/* Button */}
                 <button
-                    className={`w-full bg-white py-2 px-3 sm:text-[12px] text-[10px] font-[600] border rounded-lg focus:outline-none text-left flex items-center justify-between text-gray-400 ${showDropdown ? "border-[#0CBB7D]" : "border-gray-300"}`}
+                    className={`w-full bg-white py-2 px-3 sm:text-[12px] text-[10px] font-[600] border rounded-lg focus:outline-none text-left flex items-center justify-between text-gray-400 ${showDropdown ? "border-brand-primary" : "border-gray-300"}`}
                     onClick={() => {
                         if (showCustom) {
                             setShowDropdown(false);
@@ -165,7 +165,7 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter, className }) 
 
                     </span>
                     <Calendar
-                        className={`w-4 h-4 ml-2 transition-colors ${showDropdown || showCustom ? "text-[#0CBB7D]" : "text-gray-400"}`}
+                        className={`w-4 h-4 ml-2 transition-colors ${showDropdown || showCustom ? "text-brand-primary" : "text-gray-400"}`}
                     />
                 </button>
 
@@ -202,7 +202,7 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter, className }) 
                             ranges={tempDateRange}
                             moveRangeOnFirstSelection={false}
                             showMonthAndYearPickers={false}
-                            rangeColors={["#0CBB7D"]}
+                            rangeColors={["var(--brand-primary, #0CBB7D)"]}
                             months={1}
                             direction="horizontal"
                             showDateDisplay={false}
@@ -211,7 +211,7 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter, className }) 
 
                         <div className="flex justify-end gap-2 mt-2">
                             <button
-                                className="bg-[#0CBB7D] text-white px-3 py-1 text-xs rounded"
+                                className="bg-brand-primary text-white px-3 py-1 text-xs rounded"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     setDateRange(tempDateRange);

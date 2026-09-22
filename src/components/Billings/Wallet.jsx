@@ -165,7 +165,7 @@ const navigate=useNavigate()
             type="date"
             value={filters[header] || ""}
             onChange={(e) => handleFilterChange(header, e.target.value)}
-            className="w-full px-1 py-1 text-[12px] border rounded-md focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full px-1 py-1 text-[12px] border rounded-md focus:outline-none focus:ring-1 focus:ring-brand-primary"
           />
         );
       } else if (header === "Category") {
@@ -174,7 +174,7 @@ const navigate=useNavigate()
             key={index}
             value={filters[header] || ""}
             onChange={(e) => handleFilterChange(header, e.target.value)}
-            className="w-full px-1 py-1.5 text-[12px] border rounded-md focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full px-1 py-1.5 text-[12px] border rounded-md focus:outline-none focus:ring-1 focus:ring-brand-primary"
           >
             <option value="">Category</option>
             <option value="Credit">Credit</option>
@@ -189,7 +189,7 @@ const navigate=useNavigate()
             placeholder={header}
             value={filters[header] || ""}
             onChange={(e) => handleFilterChange(header, e.target.value)}
-            className="w-full px-1 py-1.5 text-[12px] border rounded-md focus:outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+            className="w-full px-1 py-1.5 text-[12px] border rounded-md focus:outline-none focus:ring-1 focus:ring-brand-primary"
           />
         );
       }
@@ -197,7 +197,7 @@ const navigate=useNavigate()
     <div className="md:col-span-full flex justify-end ">
       <button
         onClick={applyFilters}
-        className="bg-[#0CBB7D] text-white px-3 py-1.5 rounded-md text-[12px]"
+        className="bg-brand-primary text-white px-3 py-1.5 rounded-md text-[12px]"
       >
         Apply
       </button>
@@ -208,7 +208,7 @@ const navigate=useNavigate()
 
       {/* Desktop Table View */}
       <div className="hidden md:block">
-        <div className="grid grid-cols-7 gap-6 mb-4 py-2 bg-[#0CBB7D] text-white font-semibold text-left rounded-[5px] shadow-md text-[12px] text-center">
+        <div className="grid grid-cols-7 gap-6 mb-4 py-2 bg-brand-primary text-white font-semibold text-left rounded-[5px] shadow-md text-[12px] text-center">
           <div>Date</div>
           <div>Channel Order ID</div>
           <div>AWB Number</div>
@@ -232,7 +232,7 @@ const navigate=useNavigate()
                 <div className="flex items-center justify-center">
                   {row.channelOrderId}
                 </div>
-                <div className="flex items-center cursor-pointer justify-center text-[#0CBB7D]" onClick={() => handleTrackingByAwb(row.awb_number)}>
+                <div className="flex items-center cursor-pointer justify-center text-brand-primary" onClick={() => handleTrackingByAwb(row.awb_number)}>
                   {row.awb_number}
                 </div>
                 <div className="flex items-center justify-center">

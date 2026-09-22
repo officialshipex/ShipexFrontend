@@ -216,7 +216,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
     { label: "Pending COD Amount", value: summary.pendingCODAmount, icon: <Clock size={20} /> },
   ];
 
-  const fieldStyle = "w-full h-[36px] px-3 text-[12px] font-[600] border border-gray-200 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-all bg-white";
+  const fieldStyle = "w-full h-[36px] px-3 text-[12px] font-[600] border border-gray-200 rounded-lg focus:outline-none focus:border-brand-primary transition-all bg-white";
 
   const isAnyFilterApplied = appliedFilters.selectedUserId || appliedFilters.orderId || appliedFilters.awbNumber || appliedFilters.status || appliedFilters.couriers.length > 0 || dateRange;
 
@@ -235,7 +235,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
     <div className="space-y-2">
       {/* Summary Grid */}
       <div className="text-[12px] font-[600]">
-        <div className="md:hidden border text-[10px] border-[#0CBB7D] bg-white rounded-lg px-3 py-2 space-y-2">
+        <div className="md:hidden border text-[10px] border-brand-primary bg-white rounded-lg px-3 py-2 space-y-2">
           {summaryItems.map((item, idx) => (
             <div key={idx} className="flex justify-between items-center">
               <span className="text-gray-500 w-1/2">{item.label}</span>
@@ -246,8 +246,8 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
         </div>
         <div className="hidden md:grid md:grid-cols-3 gap-2 my-2">
           {summaryItems.map((item, idx) => (
-            <div key={idx} className="flex items-center gap-4 p-2 bg-white rounded-lg border border-[#0CBB7D] hover:shadow-sm transition-shadow">
-              <div className="bg-[#0CBB7D] text-white p-2 rounded-full">{item.icon}</div>
+            <div key={idx} className="flex items-center gap-4 p-2 bg-white rounded-lg border border-brand-primary hover:shadow-sm transition-shadow">
+              <div className="bg-brand-primary text-white p-2 rounded-full">{item.icon}</div>
               <div className="flex flex-col">
                 <span className="text-[12px] font-bold text-gray-700">₹{(Number(item.value) || 0).toFixed(2)}</span>
                 <span className="text-[12px] text-gray-500">{item.label}</span>
@@ -269,7 +269,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
           onClick={() => setIsFilterPanelOpen(true)}
           className="flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-bold text-gray-600 hover:bg-gray-50 transition-all shadow-sm h-9"
         >
-          <Filter className="w-4 h-4 text-[#0CBB7D]" />
+          <Filter className="w-4 h-4 text-brand-primary" />
           More Filters
         </button>
 
@@ -279,14 +279,14 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
               Clear All Filters
             </button>
           )}
-          <button onClick={() => setShowUpload(true)} disabled={!employeeAccess.canAction && !employeeAccess.isAdmin} className={`h-9 px-3 rounded-lg text-[12px] font-bold transition-all focus:scale-95 flex items-center justify-center gap-1 ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-[#0CBB7D] text-white hover:bg-opacity-90 shadow-sm" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}>
+          <button onClick={() => setShowUpload(true)} disabled={!employeeAccess.canAction && !employeeAccess.isAdmin} className={`h-9 px-3 rounded-lg text-[12px] font-bold transition-all focus:scale-95 flex items-center justify-center gap-1 ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-brand-primary text-white hover:bg-opacity-90 shadow-sm" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}>
             <Upload className="w-4 h-4" />
             Upload
           </button>
           <button
             onClick={handleExport}
             disabled={selectedIds.length === 0}
-            className={`h-9 px-4 rounded-lg text-[12px] font-bold flex items-center justify-center gap-1 border transition-all ${selectedIds.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50 shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"}`}
+            className={`h-9 px-4 rounded-lg text-[12px] font-bold flex items-center justify-center gap-1 border transition-all ${selectedIds.length > 0 ? "border-brand-primary text-brand-primary hover:bg-green-50 shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"}`}
           >
             <Download className="w-4 h-4" />
             Export
@@ -309,14 +309,14 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
             onClick={() => setIsFilterPanelOpen(true)}
             className="flex items-center justify-center gap-1.5 px-3 h-[34px] bg-white border border-gray-300 rounded-lg text-[10px] font-bold text-gray-700 whitespace-nowrap"
           >
-            <Filter className="w-3 h-3 text-[#0CBB7D]" />
+            <Filter className="w-3 h-3 text-brand-primary" />
             More Filters
           </button>
 
           <button
             onClick={() => setShowUpload(true)}
             disabled={!employeeAccess.canAction && !employeeAccess.isAdmin}
-            className={`p-2.5 rounded-lg active:scale-95 transition-transform ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-[#0CBB7D] text-white" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}
+            className={`p-2.5 rounded-lg active:scale-95 transition-transform ${employeeAccess.canAction || employeeAccess.isAdmin ? "bg-brand-primary text-white" : "bg-gray-100 text-gray-400 cursor-not-allowed"}`}
           >
             <FiUpload className="w-3 h-3" />
           </button>
@@ -334,7 +334,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
               type="checkbox"
               checked={remitedData.length > 0 && selectedIds.length === remitedData.length}
               onChange={handleSelectAll}
-              className="w-3 h-3 accent-[#0CBB7D] cursor-pointer shadow-sm"
+              className="w-3 h-3 accent-brand-primary cursor-pointer shadow-sm"
             />
             <span className="text-[10px] font-bold text-gray-700 tracking-tight">Select All</span>
           </div>
@@ -342,7 +342,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
           <div className="relative" ref={bulkActionRef} >
             <button
               onClick={() => setBulkActionOpen(!bulkActionOpen)}
-              className={`py-[8px] px-3 rounded-lg border transition-all ${selectedIds.length > 0 ? "border-[#0CBB7D] text-[#0CBB7D] shadow-sm" : "border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed"}`}
+              className={`py-[8px] px-3 rounded-lg border transition-all ${selectedIds.length > 0 ? "border-brand-primary text-brand-primary shadow-sm" : "border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed"}`}
               disabled={selectedIds.length === 0}
             >
               <FaBars className="w-3 h-3" />
@@ -352,9 +352,9 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
               <div className="absolute right-0 top-full mt-2 w-44 bg-white rounded-xl shadow-2xl border border-gray-100 z-[100] overflow-hidden animate-popup-in">
                 <button
                   onClick={() => { handleExport(); setBulkActionOpen(false); }}
-                  className="w-full px-3 py-2 text-[12px] font-bold text-gray-700 hover:bg-green-50 hover:text-[#0CBB7D] flex items-center gap-2.5 transition-colors border-b border-gray-50"
+                  className="w-full px-3 py-2 text-[12px] font-bold text-gray-700 hover:bg-green-50 hover:text-brand-primary flex items-center gap-2.5 transition-colors border-b border-gray-50"
                 >
-                  <Download className="w-3 h-3 text-[#0CBB7D]" />
+                  <Download className="w-3 h-3 text-brand-primary" />
                   Export
                 </button>
               </div>
@@ -367,11 +367,11 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
       <div className="hidden md:block">
         <div className="h-[calc(100vh-300px)] overflow-y-auto bg-white overflow-hidden shadow-sm shadow-green-50/50">
           <table className="w-full text-[12px] border-collapse sticky-header">
-            <thead className="bg-[#0CBB7D] text-white font-bold sticky top-0 z-10 text-left">
+            <thead className="bg-brand-primary text-white font-bold sticky top-0 z-10 text-left">
               <tr>
                 <th className="py-2 px-3">
                   <div className="flex justify-center items-center">
-                    <input type="checkbox" checked={remitedData.length > 0 && selectedIds.length === remitedData.length} onChange={handleSelectAll} className="cursor-pointer accent-[#0CBB7D] w-3 h-3" />
+                    <input type="checkbox" checked={remitedData.length > 0 && selectedIds.length === remitedData.length} onChange={handleSelectAll} className="cursor-pointer accent-brand-primary w-3 h-3" />
                   </div>
                 </th>
                 <th className="py-2 px-3">User Details</th>
@@ -397,7 +397,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                     <tr key={index} className="border-t border-gray-200 hover:bg-green-50/30 transition-colors">
                       <td className="py-2 px-3">
                         <div className="flex justify-center items-center">
-                          <input type="checkbox" checked={selectedIds.includes(rowId)} onChange={() => handleSelectRow(rowId)} className="cursor-pointer accent-[#0CBB7D] w-3 h-3" />
+                          <input type="checkbox" checked={selectedIds.includes(rowId)} onChange={() => handleSelectRow(rowId)} className="cursor-pointer accent-brand-primary w-3 h-3" />
                         </div>
                       </td>
                       <td className="py-2 px-3">
@@ -407,21 +407,21 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                       </td>
                       <td className="py-2 px-3">
                         <div className="flex items-center gap-2 group">
-                          <Link to={`/dashboard/order/neworder/updateOrder/${row.orderID}`} className="text-[#0CBB7D] font-bold hover:underline transition-all">
+                          <Link to={`/dashboard/order/neworder/updateOrder/${row.orderID}`} className="text-brand-primary font-bold hover:underline transition-all">
                             {row.orderID}
                           </Link>
-                          <button onClick={() => handleCopy(row.orderID, row.orderID)} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-[#0CBB7D] transition-all opacity-0 group-hover:opacity-100">
+                          <button onClick={() => handleCopy(row.orderID, row.orderID)} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
                             {copiedId === row.orderID ? <FiCheck className="text-green-500 w-3 h-3" /> : <FiCopy className="w-3 h-3" />}
                           </button>
                         </div>
                       </td>
                       <td className="py-2 px-3 leading-tight">
                         <div className="flex items-center gap-2 group">
-                          <Link to={`/dashboard/order/tracking/${row.AwbNumber}`} className="text-[#0CBB7D] font-bold flex items-center gap-1 hover:underline">
+                          <Link to={`/dashboard/order/tracking/${row.AwbNumber}`} className="text-brand-primary font-bold flex items-center gap-1 hover:underline">
                             {row.AwbNumber}
 
                           </Link>
-                          <button onClick={() => handleCopy(row.AwbNumber, row.AwbNumber + '_awb')} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-[#0CBB7D] transition-all opacity-0 group-hover:opacity-100">
+                          <button onClick={() => handleCopy(row.AwbNumber, row.AwbNumber + '_awb')} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
                             {copiedId === row.AwbNumber + '_awb' ? <FiCheck className="text-green-500 w-3 h-3" /> : <FiCopy className="w-3 h-3" />}
                           </button>
                         </div>
@@ -432,7 +432,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                       </td>
                       <td className="py-2 px-3 text-gray-700">₹{(Number(row.CODAmount) || 0).toFixed(2)}</td>
                       <td className="py-2 px-3">
-                        <span className={`px-2 py-0.5 rounded text-[10px] shadow-sm ${row.status === "Paid" ? "bg-green-100 text-[#0CBB7D]" : "bg-red-100 text-red-600"}`}>{row.status}</span>
+                        <span className={`px-2 py-0.5 rounded text-[10px] shadow-sm ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>{row.status}</span>
                       </td>
                     </tr>
                   )
@@ -463,7 +463,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                       type="checkbox"
                       checked={selectedIds.includes(rowId)}
                       onChange={() => handleSelectRow(rowId)}
-                      className="w-3 h-3 accent-[#0CBB7D] cursor-pointer"
+                      className="w-3 h-3 accent-brand-primary cursor-pointer"
                     />
                     <div className="w-6 h-6 rounded-full bg-white flex items-center justify-center p-0.5 border shadow-xs overflow-hidden shrink-0">
                       <img
@@ -485,7 +485,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                   </div>
 
                   <div className="text-right">
-                    <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "Paid" ? "bg-green-100 text-[#0CBB7D]" : "bg-red-100 text-red-600"}`}>
+                    <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>
                       {row.status}
                     </span>
                   </div>
@@ -496,11 +496,11 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                   <div>
                     <p className="text-gray-500 font-[600] text-[10px] tracking-tighter">Order ID</p>
                     <div className="flex items-center gap-1">
-                      <Link to={`/dashboard/order/neworder/updateOrder/${row.orderID}`} className="text-[#0CBB7D] font-[600] text-[10px] hover:underline truncate max-w-[60px]">
+                      <Link to={`/dashboard/order/neworder/updateOrder/${row.orderID}`} className="text-brand-primary font-[600] text-[10px] hover:underline truncate max-w-[60px]">
                         #{row.orderID}
                       </Link>
                       <button onClick={() => handleCopy(row.orderID, row.orderID + '_m')}>
-                        {copiedId === row.orderID + '_m' ? <FiCheck className="w-2 h-2 text-[#0CBB7D]" /> : <FiCopy className="w-3 h-3 text-gray-400" />}
+                        {copiedId === row.orderID + '_m' ? <FiCheck className="w-2 h-2 text-brand-primary" /> : <FiCopy className="w-3 h-3 text-gray-400" />}
                       </button>
                     </div>
                   </div>
@@ -515,11 +515,11 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                   <div className="text-right">
                     <p className="text-gray-500 font-[600] text-[10px] tracking-tighter">AWB Number</p>
                     <div className="flex items-center justify-end gap-1">
-                      <span className="text-[#0CBB7D] font-[600] truncate text-[10px] max-w-[70px]">
+                      <span className="text-brand-primary font-[600] truncate text-[10px] max-w-[70px]">
                         {row.AwbNumber || "N/A"}
                       </span>
                       <button onClick={() => handleCopy(row.AwbNumber, row.AwbNumber + '_m_m')}>
-                        {copiedId === row.AwbNumber + '_m_m' ? <FiCheck className="w-2 h-2 text-[#0CBB7D]" /> : <FiCopy className="w-3 h-3 text-gray-400" />}
+                        {copiedId === row.AwbNumber + '_m_m' ? <FiCheck className="w-2 h-2 text-brand-primary" /> : <FiCopy className="w-3 h-3 text-gray-400" />}
                       </button>
                     </div>
                   </div>
@@ -528,7 +528,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                 {/* User Info */}
                 <div className="mt-2 flex items-center justify-between px-0.5 border-t border-gray-100 pt-2">
                   <div className="flex items-center gap-2 min-w-0 max-w-[70%]">
-                    <div className="w-7 h-7 rounded-full bg-[#0CBB7D]/10 border border-[#0CBB7D]/20 flex items-center justify-center font-bold text-[#0CBB7D] text-[10px] shrink-0 shadow-sm uppercase">
+                    <div className="w-7 h-7 rounded-full bg-brand-primary/10 border border-brand-primary/20 flex items-center justify-center font-bold text-brand-primary text-[10px] shrink-0 shadow-sm uppercase">
                       {row.userName?.charAt(0) || "U"}
                     </div>
 
@@ -603,7 +603,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                   <input
                     type="text"
                     placeholder="Enter Order ID"
-                    className="w-full h-9 px-3 text-[12px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-all text-gray-700 placeholder:text-gray-400"
+                    className="w-full h-9 px-3 text-[12px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-brand-primary transition-all text-gray-700 placeholder:text-gray-400"
                     value={localFilters.orderId}
                     onChange={e => setLocalFilters(prev => ({ ...prev, orderId: e.target.value }))}
                   />
@@ -615,7 +615,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                   <input
                     type="text"
                     placeholder="Enter AWB Number"
-                    className="w-full h-9 px-3 text-[12px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-[#0CBB7D] transition-all text-gray-700 placeholder:text-gray-400"
+                    className="w-full h-9 px-3 text-[12px] font-[600] border border-gray-300 rounded-lg focus:outline-none focus:border-brand-primary transition-all text-gray-700 placeholder:text-gray-400"
                     value={localFilters.awbNumber}
                     onChange={e => setLocalFilters(prev => ({ ...prev, awbNumber: e.target.value }))}
                   />
@@ -627,7 +627,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                   <div className="relative">
                     <button
                       onClick={() => setStatusDropdownOpen(!statusDropdownOpen)}
-                      className={`w-full h-9 px-3 text-[12px] font-[600] border rounded-lg focus:outline-none flex items-center justify-between transition-all bg-white text-left ${statusDropdownOpen ? "border-[#0CBB7D]" : "border-gray-300"}`}
+                      className={`w-full h-9 px-3 text-[12px] font-[600] border rounded-lg focus:outline-none flex items-center justify-between transition-all bg-white text-left ${statusDropdownOpen ? "border-brand-primary" : "border-gray-300"}`}
                     >
                       <span className={localFilters.status ? "text-gray-700" : "text-gray-400"}>
                         {localFilters.status || "Select Status"}
@@ -646,7 +646,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                             <div
                               key={s}
                               onClick={() => { setLocalFilters(prev => ({ ...prev, status: s })); setStatusDropdownOpen(false); }}
-                              className={`px-3 py-2 text-[12px] font-[600] cursor-pointer transition-colors ${localFilters.status === s ? "bg-green-50 text-[#0CBB7D]" : "text-gray-500 hover:bg-gray-50 hover:text-[#0CBB7D]"}`}
+                              className={`px-3 py-2 text-[12px] font-[600] cursor-pointer transition-colors ${localFilters.status === s ? "bg-green-50 text-brand-primary" : "text-gray-500 hover:bg-gray-50 hover:text-brand-primary"}`}
                             >
                               {s}
                             </div>
@@ -671,7 +671,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                   <div className="relative">
                     <button
                       onClick={() => setCourierDropdownOpen(!courierDropdownOpen)}
-                      className={`w-full h-9 px-3 text-[12px] font-[600] border rounded-lg focus:outline-none flex items-center justify-between transition-all bg-white text-left ${courierDropdownOpen ? "border-[#0CBB7D]" : "border-gray-300"}`}
+                      className={`w-full h-9 px-3 text-[12px] font-[600] border rounded-lg focus:outline-none flex items-center justify-between transition-all bg-white text-left ${courierDropdownOpen ? "border-brand-primary" : "border-gray-300"}`}
                     >
                       <span className={localFilters.couriers.length > 0 ? "text-gray-700" : "text-gray-400"}>
                         {localFilters.couriers.length > 0 ? `${localFilters.couriers.length} Selected` : "Select Couriers"}
@@ -694,18 +694,18 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                               value={courierSearch}
                               onChange={e => setCourierSearch(e.target.value)}
                               placeholder="Search couriers..."
-                              className="w-full h-8 pl-8 pr-3 text-[11px] font-[500] border border-gray-200 rounded-md focus:border-[#0CBB7D] focus:outline-none transition-all"
+                              className="w-full h-8 pl-8 pr-3 text-[11px] font-[500] border border-gray-200 rounded-md focus:border-brand-primary focus:outline-none transition-all"
                             />
                           </div>
 
                           <div className="max-h-[160px] overflow-y-auto pr-1 space-y-1 custom-scrollbar-thin">
                             {filteredCourierOptions.length > 0 ? filteredCourierOptions.map(c => (
-                              <label key={c} className={`flex items-center gap-2.5 p-1.5 rounded-md cursor-pointer transition-all ${localFilters.couriers.includes(c) ? "bg-green-50 text-[#0CBB7D]" : "hover:bg-gray-50 text-gray-600"}`}>
+                              <label key={c} className={`flex items-center gap-2.5 p-1.5 rounded-md cursor-pointer transition-all ${localFilters.couriers.includes(c) ? "bg-green-50 text-brand-primary" : "hover:bg-gray-50 text-gray-600"}`}>
                                 <input
                                   type="checkbox"
                                   checked={localFilters.couriers.includes(c)}
                                   onChange={() => toggleCourier(c)}
-                                  className="w-3.5 h-3.5 accent-[#0CBB7D] rounded border-gray-300"
+                                  className="w-3.5 h-3.5 accent-brand-primary rounded border-gray-300"
                                 />
                                 <span className="text-[11px] font-[600]">{c}</span>
                               </label>
@@ -746,7 +746,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                     setCourierDropdownOpen(false);
                     setStatusDropdownOpen(false);
                   }}
-                  className="flex-1 py-2.5 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:bg-green-600 transition-all shadow-md active:scale-95"
+                  className="flex-1 py-2.5 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:bg-green-600 transition-all shadow-md active:scale-95"
                 >
                   Apply Filters
                 </button>

@@ -127,7 +127,7 @@ const EditEPD = ({ item, onClose }) => {
     <div className="fixed inset-0 bg-black bg-opacity-50 animate-popup-in flex justify-center items-center z-[70] p-4">
       <form onSubmit={handleSubmit} className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg relative space-y-4">
         <div className="flex items-center gap-2 mb-2">
-          <Clock className="w-5 h-5 text-[#0CBB7D]" />
+          <Clock className="w-5 h-5 text-brand-primary" />
           <h2 className="text-[14px] sm:text-[16px] font-[600] text-gray-700">Update Estimate Pickup Date</h2>
         </div>
 
@@ -140,7 +140,7 @@ const EditEPD = ({ item, onClose }) => {
             <button
               type="button"
               onClick={() => setOpenCourierDropdown((prev) => !prev)}
-              className="w-full border text-[12px] font-[600] text-gray-700 border-gray-300 rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] transition-all bg-white shadow-sm"
+              className="w-full border text-[12px] font-[600] text-gray-700 border-gray-300 rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary transition-all bg-white shadow-sm"
             >
               {selectedCourier ? selectedCourier.courierProvider : form.courier || 'Select Courier'}
             </button>
@@ -169,7 +169,7 @@ const EditEPD = ({ item, onClose }) => {
             <button
               type="button"
               onClick={() => setOpenServiceDropdown((prev) => !prev)}
-              className={`w-full border border-gray-300 text-gray-700 text-[12px] font-[600] rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] transition-all bg-white shadow-sm ${!form.courier ? 'opacity-50 cursor-not-allowed' : ''
+              className={`w-full border border-gray-300 text-gray-700 text-[12px] font-[600] rounded-lg px-3 py-2 text-left focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary transition-all bg-white shadow-sm ${!form.courier ? 'opacity-50 cursor-not-allowed' : ''
                 }`}
               disabled={!form.courier}
             >
@@ -198,14 +198,14 @@ const EditEPD = ({ item, onClose }) => {
         <div className="space-y-1">
           <div className="flex justify-between items-center mb-1">
             <label className="block text-gray-700 text-[12px] font-[600]">Cutoff Time (HH:mm)</label>
-            <span className="text-[10px] sm:text-[12px] font-[700] text-[#0CBB7D] bg-green-50 px-2 py-0.5 rounded border border-green-100 italic">
+            <span className="text-[10px] sm:text-[12px] font-[700] text-brand-primary bg-green-50 px-2 py-0.5 rounded border border-green-100 italic">
                {formatTo12H(form.cutoffTime)}
             </span>
           </div>
           <input
             type="time"
             required
-            className="w-full h-10 px-3 py-2 text-[12px] border rounded-lg border-gray-300 focus:outline-none focus:ring-1 focus:ring-[#0CBB7D] focus:border-[#0CBB7D] bg-white transition-all shadow-sm"
+            className="w-full h-10 px-3 py-2 text-[12px] border rounded-lg border-gray-300 focus:outline-none focus:ring-1 focus:ring-brand-primary focus:border-brand-primary bg-white transition-all shadow-sm"
             value={form.cutoffTime}
             onChange={e => setForm(prev => ({ ...prev, cutoffTime: e.target.value }))}
           />
@@ -224,7 +224,7 @@ const EditEPD = ({ item, onClose }) => {
           <button
             type="submit"
             disabled={loading}
-            className={`px-6 py-2 text-[12px] font-[600] rounded-lg text-white shadow-md ${loading ? 'bg-green-300 cursor-not-allowed' : 'bg-[#0CBB7D] hover:opacity-90'
+            className={`px-6 py-2 text-[12px] font-[600] rounded-lg text-white shadow-md ${loading ? 'bg-green-300 cursor-not-allowed' : 'bg-brand-primary hover:opacity-90'
               } transition`}
           >
             {loading ? 'Saving...' : 'Update Settings'}

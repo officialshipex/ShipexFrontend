@@ -104,7 +104,7 @@ const UserFilter = ({ onUserSelect, clearTrigger }) => {
                 <input
                     type="text"
                     placeholder="Search by Name, Email, or Contact"
-                    className="w-full h-9 py-2 px-3 text-[12px] font-[600] border border-gray-300 rounded-lg placeholder:text-gray-400 placeholder:font-[600] focus:outline-none focus:border-[#0CBB7D] transition-colors"
+                    className="w-full h-9 py-2 px-3 text-[12px] font-[600] border border-gray-300 rounded-lg placeholder:text-gray-400 placeholder:font-[600] focus:outline-none focus:border-brand-primary transition-colors"
                     onChange={(e) => {
                         const value = e.target.value;
                         setSearchUser(value);
@@ -132,12 +132,12 @@ const UserFilter = ({ onUserSelect, clearTrigger }) => {
                                 }}
                             >
                                 <div className="w-1/4 flex items-center justify-center p-2">
-                                    <p className="text-[12px] text-gray-400 group-hover:text-[#0CBB7D] font-medium truncate text-center">
+                                    <p className="text-[12px] text-gray-400 group-hover:text-brand-primary font-medium truncate text-center">
                                         {user.userId}
                                     </p>
                                 </div>
                                 <div className="w-3/4 flex flex-col justify-center py-[7px] pr-2 leading-tight">
-                                    <p className="text-[13px] text-gray-500 group-hover:text-[#0CBB7D] font-medium truncate">
+                                    <p className="text-[13px] text-gray-500 group-hover:text-brand-primary font-medium truncate">
                                         {user.fullname}
                                     </p>
                                     <p className="text-[11px] text-gray-400 truncate">{user.email}</p>

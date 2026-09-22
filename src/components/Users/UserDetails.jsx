@@ -49,7 +49,7 @@ const ReferralCommissionEditModal = ({
           type="number"
           value={newValue}
           onChange={(e) => setNewValue(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] sm:text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0CBB7D] focus:border-transparent"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] sm:text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
           placeholder="Enter commission percentage"
         />
         <div className="flex justify-end gap-3 mt-4">
@@ -61,7 +61,7 @@ const ReferralCommissionEditModal = ({
           </button>
           <button
             onClick={handleSave}
-            className="px-3 py-2 rounded-lg bg-[#0CBB7D] text-white hover:bg-green-500 text-[10px] sm:text-[12px] font-[600] transition-colors"
+            className="px-3 py-2 rounded-lg bg-brand-primary text-white hover:bg-green-500 text-[10px] sm:text-[12px] font-[600] transition-colors"
           >
             Save
           </button>
@@ -116,7 +116,7 @@ const ChangePasswordModal = ({
             setNewPassword(e.target.value);
             if (e.target.value.length >= 8) setError("");
           }}
-          className={`w-full border ${error ? "border-red-500" : "border-gray-300"} rounded-lg px-3 py-2 text-[12px] sm:text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0CBB7D] focus:border-transparent`}
+          className={`w-full border ${error ? "border-red-500" : "border-gray-300"} rounded-lg px-3 py-2 text-[12px] sm:text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent`}
           placeholder="Enter new 8-character password"
         />
         {error && <p className="text-red-500 text-[10px] mt-1">{error}</p>}
@@ -129,7 +129,7 @@ const ChangePasswordModal = ({
           </button>
           <button
             onClick={handleSave}
-            className="px-3 py-2 rounded-lg bg-[#0CBB7D] text-white hover:bg-opacity-90 text-[10px] sm:text-[12px] font-[600] transition-colors"
+            className="px-3 py-2 rounded-lg bg-brand-primary text-white hover:bg-opacity-90 text-[10px] sm:text-[12px] font-[600] transition-colors"
           >
             Update Password
           </button>
@@ -295,7 +295,7 @@ export default function ProfileCard() {
   const renderRateTable = () => (
     <div className="overflow-auto bg-white mt-2 max-h-[535px]">
       <table className="w-full text-center border-collapse">
-        <thead className="sticky top-0 z-10 bg-[#0CBB7D] text-[10px] sm:text-[11px] text-white">
+        <thead className="sticky top-0 z-10 bg-brand-primary text-[10px] sm:text-[11px] text-white">
           <tr>
             <th className="px-2 py-2 font-bold">Provider</th>
             <th className="px-2 py-2 font-bold">Service</th>
@@ -329,7 +329,7 @@ export default function ProfileCard() {
                   <td className="px-2 py-1.5 font-medium" rowSpan={2}>₹{card.codCharge} / {card.codPercent}%</td>
                   <td className="px-2 py-1.5" rowSpan={2}>
                     <div className="flex justify-center gap-1.5">
-                      <button onClick={() => navigate(`/dashboard/ratecard/update/${card._id}?userId=${id}`)} className="text-[#0CBB7D]"><FaEdit size={12} /></button>
+                      <button onClick={() => navigate(`/dashboard/ratecard/update/${card._id}?userId=${id}`)} className="text-brand-primary"><FaEdit size={12} /></button>
                       <button onClick={() => handleDeleteRateCard(card._id)} className="text-red-500"><FaTrash size={12} /></button>
                     </div>
                   </td>
@@ -670,7 +670,7 @@ export default function ProfileCard() {
                         <span>{value}</span>
                         {(isEmail || isPhone) && (
                           isVerified ? (
-                            <CheckCircleIcon size={14} className="text-[#0CBB7D]" />
+                            <CheckCircleIcon size={14} className="text-brand-primary" />
                           ) : (
                             <FiAlertCircle size={14} className="text-red-400" />
                           )
@@ -902,7 +902,7 @@ export default function ProfileCard() {
                         navigate(`/dashboard/ratecard/rateCardform?plan=${planToUse || ""}&userId=${id}`);
                       }
                     }}
-                    className="bg-[#0CBB7D] text-white px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-600 transition-colors"
+                    className="bg-brand-primary text-white px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-600 transition-colors"
                   >
                     Add Rate Card
                   </button>
@@ -911,7 +911,7 @@ export default function ProfileCard() {
                       setRateCardType("B2C");
                       setShowRateCardModal(true);
                     }}
-                    className="bg-[#0CBB7D] text-white px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-600 transition-colors"
+                    className="bg-brand-primary text-white px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-600 transition-colors"
                   >
                     Assign
                   </button>
@@ -920,7 +920,7 @@ export default function ProfileCard() {
                       const desiredPlan = `${userData.fullname.replace(/\s+/g, '_')}_${userData.userId}`;
                       setIsUploadRatecardModalOpen(true);
                     }}
-                    className="bg-[#0CBB7D] text-white px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-600 transition-colors"
+                    className="bg-brand-primary text-white px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-600 transition-colors"
                   >
                     Upload
                   </button>
@@ -972,7 +972,7 @@ export default function ProfileCard() {
                   {
                     label: "KYC Status",
                     value: (
-                      <span className={`inline-flex items-center gap-1.5 text-[10px] font-[600] ${userData?.kycStatus ? "text-[#0CBB7D]" : "text-yellow-700"}`}>
+                      <span className={`inline-flex items-center gap-1.5 text-[10px] font-[600] ${userData?.kycStatus ? "text-brand-primary" : "text-yellow-700"}`}>
                         {userData?.kycStatus ? (
                           <><CheckCircleIcon size={12} /> Verified</>
                         ) : (
@@ -992,7 +992,7 @@ export default function ProfileCard() {
                               setSelectedUserId(userData?._id);
                               setShowEarlyCODModal(true);
                             }}
-                            className="text-[#0CBB7D] hover:text-green-500"
+                            className="text-brand-primary hover:text-green-500"
                           >
                             <FiEdit size={12} />
                           </button>
@@ -1007,7 +1007,7 @@ export default function ProfileCard() {
                         <span>{userData?.rateCard || "Basic Plan"}</span>
                         <button
                           onClick={() => { setShowRateCardModal(true); setRateCardType("B2C") }}
-                          className="text-[#0CBB7D] hover:text-green-500"
+                          className="text-brand-primary hover:text-green-500"
                         >
                           <FiEdit size={12} />
                         </button>
@@ -1023,7 +1023,7 @@ export default function ProfileCard() {
                         <span>{userData?.b2bRateCard || "Basic Plan"}</span>
                         <button
                           onClick={() => { setShowRateCardModal(true); setRateCardType("B2B") }}
-                          className="text-[#0CBB7D] hover:text-green-500"
+                          className="text-brand-primary hover:text-green-500"
                         >
                           <FiEdit size={12} />
                         </button>
@@ -1038,7 +1038,7 @@ export default function ProfileCard() {
                     value: admin ? (
                       <button
                         onClick={() => setShowChangePasswordModal(true)}
-                        className="text-[#0CBB7D] hover:text-green-500 flex items-center gap-1 font-[600]"
+                        className="text-brand-primary hover:text-green-500 flex items-center gap-1 font-[600]"
                       >
                         <Settings size={14} />
                         Change
@@ -1057,7 +1057,7 @@ export default function ProfileCard() {
                     <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">Referral Commission</p>
                     <div className="flex items-center gap-2">
                       <p className="text-[10px] sm:text-[12px] text-gray-700 font-[600]">{userData.referralCommissionPercentage}%</p>
-                      <button onClick={() => setShowReferralModal(true)} className="text-[#0CBB7D] hover:text-green-500">
+                      <button onClick={() => setShowReferralModal(true)} className="text-brand-primary hover:text-green-500">
                         <FiEdit size={12} />
                       </button>
                     </div>
@@ -1068,7 +1068,7 @@ export default function ProfileCard() {
                   <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">Credit Limit</p>
                   <div className="flex items-center gap-2">
                     <p className="text-[10px] sm:text-[12px] text-gray-700 font-[600]">{userData?.creditLimit || 0}</p>
-                    <button onClick={() => setShowCreditLimitModal(true)} className="text-[#0CBB7D] hover:text-green-500">
+                    <button onClick={() => setShowCreditLimitModal(true)} className="text-brand-primary hover:text-green-500">
                       <FiEdit size={12} />
                     </button>
                   </div>
@@ -1083,7 +1083,7 @@ export default function ProfileCard() {
                       onChange={(e) => handleNotificationToggle("isAdminWhatsAppEnable", e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-[#0CBB7D] transition-all"></div>
+                    <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-brand-primary transition-all"></div>
                     <div className="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform peer-checked:translate-x-4"></div>
                   </label>
                 </div>
@@ -1097,7 +1097,7 @@ export default function ProfileCard() {
                       onChange={(e) => handleNotificationToggle("isAdminSMSEnable", e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-[#0CBB7D] transition-all"></div>
+                    <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-brand-primary transition-all"></div>
                     <div className="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform peer-checked:translate-x-4"></div>
                   </label>
                 </div>
@@ -1111,7 +1111,7 @@ export default function ProfileCard() {
                       onChange={(e) => handleNotificationToggle("isAdminEmailEnable", e.target.checked)}
                       className="sr-only peer"
                     />
-                    <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-[#0CBB7D] transition-all"></div>
+                    <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-brand-primary transition-all"></div>
                     <div className="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform peer-checked:translate-x-4"></div>
                   </label>
                 </div>
@@ -1150,15 +1150,15 @@ export default function ProfileCard() {
               <div className="p-4 sm:p-4 space-y-2">
                 <div className="flex items-center gap-2 text-[10px] sm:text-[12px] font-[600]">
                   <p>Check latest version of API documentation</p>
-                  <button onClick={() => window.open("https://api-docs.shipexindia.com/", "_blank")} className="hover:text-green-500 text-[#0CBB7D] transition-colors">
+                  <button onClick={() => window.open("https://api-docs.shipexindia.com/", "_blank")} className="hover:text-green-500 text-brand-primary transition-colors">
                     <ExternalLink size={16} />
                   </button>
                 </div>
                 <div className="flex items-center gap-2 text-[10px] sm:text-[12px] font-[600]">
-                  <p>Download Postman Collection <span className="text-[#0CBB7D] text-[9px]">(Recommended)</span></p>
+                  <p>Download Postman Collection <span className="text-brand-primary text-[9px]">(Recommended)</span></p>
                   <button
                     onClick={() => window.open("https://documenter.getpostman.com/view/32361120/2sB3HetiH6", "_blank")}
-                    className="hover:text-green-500 text-[#0CBB7D] transition-colors"
+                    className="hover:text-green-500 text-brand-primary transition-colors"
                   >
                     <Download size={16} />
                   </button>
@@ -1167,7 +1167,7 @@ export default function ProfileCard() {
                   <p>API Access</p>
                   <label className="relative inline-flex items-center cursor-pointer">
                     <input type="checkbox" className="sr-only peer" checked={apiAccess} onChange={handleApiToggle} />
-                    <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-[#0CBB7D] transition-all"></div>
+                    <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-brand-primary transition-all"></div>
                     <div className="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform peer-checked:translate-x-4"></div>
                   </label>
                 </div>
@@ -1209,9 +1209,9 @@ export default function ProfileCard() {
       ) : (
         <>
           {/* Header Banner with Gradient */}
-          <div className="relative bg-gradient-to-br from-[#0CBB7D]/20 via-teal-50 to-green-100 h-24 sm:h-36">
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0CBB7D]/15 via-cyan-200/25 to-purple-200/30"></div>
-            <div className="absolute top-10 left-20 w-32 h-32 bg-gradient-to-br from-[#0CBB7D]/40 to-cyan-300/40 rounded-full blur-2xl"></div>
+          <div className="relative bg-gradient-to-br from-brand-primary/20 via-teal-50 to-green-100 h-24 sm:h-36">
+            <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/15 via-cyan-200/25 to-purple-200/30"></div>
+            <div className="absolute top-10 left-20 w-32 h-32 bg-gradient-to-br from-brand-primary/40 to-cyan-300/40 rounded-full blur-2xl"></div>
             <div className="absolute bottom-10 right-32 w-40 h-40 bg-gradient-to-br from-green-300/40 to-purple-300/40 rounded-full blur-2xl"></div>
           </div>
 
@@ -1233,7 +1233,7 @@ export default function ProfileCard() {
                     <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
                       <div className="flex items-center gap-2">
                         <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <Wallet size={20} className="text-[#0CBB7D]" />
+                          <Wallet size={20} className="text-brand-primary" />
                         </div>
                         <div>
                           <p className="text-[10px] sm:text-[12px] font-[600] text-gray-700">
@@ -1275,7 +1275,7 @@ export default function ProfileCard() {
                               onChange={handleKycToggle}
                               className="sr-only peer"
                             />
-                            <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-[#0CBB7D] transition-colors"></div>
+                            <div className="w-11 h-6 bg-gray-300 rounded-full peer peer-checked:bg-brand-primary transition-colors"></div>
                             <div className="absolute left-1 top-1 bg-white w-4 h-4 rounded-full peer-checked:translate-x-5 transition-transform shadow-md"></div>
                           </label>
                         </div>

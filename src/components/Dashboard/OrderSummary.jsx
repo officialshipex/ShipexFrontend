@@ -195,10 +195,10 @@ const OrderSummary = ({ filters, selectedUserId, refresh, selectedDateRange }) =
                         <div
                             key={index}
                             onClick={handleShipmentClick}
-                            className="flex flex-col justify-between rounded-lg p-4 shadow-sm border border-gray-200 hover:border-[#0CBB7D] cursor-pointer transition-all duration-700"
+                            className="flex flex-col justify-between rounded-lg p-4 shadow-sm border border-gray-200 hover:border-brand-primary cursor-pointer transition-all duration-700"
                         >
                             <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-[16px] bg-[#0CBB7D] text-white">
+                                <div className="w-10 h-10 rounded-lg flex items-center justify-center text-[16px] bg-brand-primary text-white">
                                     {item.icon}
                                 </div>
                                 <div className="flex flex-col">

@@ -64,7 +64,7 @@ const UploadImageModal = ({ onClose, awbNumber, setRefresh1, setRefresh }) => {
                 {/* Header */}
                 <div className="mb-4">
                     <h2 className="text-[14px] sm:text-[16px] font-bold text-gray-700 flex items-center gap-2">
-                        <div className="bg-green-100 p-2 rounded-lg text-[#0CBB7D]">
+                        <div className="bg-green-100 p-2 rounded-lg text-brand-primary">
                             <FiUploadCloud size={18} />
                         </div>
                         Raise Discrepancy
@@ -85,7 +85,7 @@ const UploadImageModal = ({ onClose, awbNumber, setRefresh1, setRefresh }) => {
                     <div>
                         <label className="block mb-1.5 font-bold text-[10px] sm:text-[12px] text-gray-600 uppercase tracking-tight">Remarks</label>
                         <textarea
-                            className="w-full border border-gray-200 rounded-xl placeholder:text-[11px] text-[11px] sm:text-[13px] text-gray-700 p-3 focus:outline-none focus:ring-2 focus:ring-[#0CBB7D]/20 focus:border-[#0CBB7D] transition-all min-h-[100px]"
+                            className="w-full border border-gray-200 rounded-xl placeholder:text-[11px] text-[11px] sm:text-[13px] text-gray-700 p-3 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all min-h-[100px]"
                             placeholder="Describe the discrepancy details here..."
                             rows="4"
                             value={text}
@@ -99,9 +99,9 @@ const UploadImageModal = ({ onClose, awbNumber, setRefresh1, setRefresh }) => {
                         <label className="group cursor-pointer block relative">
                             <div className={`
                                 border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center transition-all duration-300
-                                ${file ? 'border-[#0CBB7D] bg-green-50/30' : 'border-gray-200 hover:border-[#0CBB7D] hover:bg-gray-50'}
+                                ${file ? 'border-brand-primary bg-green-50/30' : 'border-gray-200 hover:border-brand-primary hover:bg-gray-50'}
                             `}>
-                                <div className={`p-3 rounded-full mb-2 transition-colors ${file ? 'bg-[#0CBB7D] text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-green-100 group-hover:text-[#0CBB7D]'}`}>
+                                <div className={`p-3 rounded-full mb-2 transition-colors ${file ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-green-100 group-hover:text-brand-primary'}`}>
                                     <FaUpload size={14} />
                                 </div>
                                 <span className="text-[10px] sm:text-[12px] font-bold text-gray-700 tracking-tight">
@@ -136,12 +136,12 @@ const UploadImageModal = ({ onClose, awbNumber, setRefresh1, setRefresh }) => {
                 <div className="flex justify-between items-center mt-8 gap-3">
                     <button
                         onClick={onClose}
-                        className="flex items-center justify-center bg-gray-50 border border-gray-200 px-4 py-2 rounded-lg gap-2 text-[10px] sm:text-[12px] font-bold text-gray-600 hover:text-[#0CBB7D] hover:border-[#0CBB7D] hover:bg-green-50 transition-all"
+                        className="flex items-center justify-center bg-gray-50 border border-gray-200 px-4 py-2 rounded-lg gap-2 text-[10px] sm:text-[12px] font-bold text-gray-600 hover:text-brand-primary hover:border-brand-primary hover:bg-green-50 transition-all"
                     >
                         Cancel
                     </button>
                     <button
-                        className={`flex py-2 px-6 bg-[#0CBB7D] text-white rounded-lg text-[10px] sm:text-[12px] font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-100 ${loading ? "opacity-50 cursor-not-allowed" : ""
+                        className={`flex py-2 px-6 bg-brand-primary text-white rounded-lg text-[10px] sm:text-[12px] font-bold hover:opacity-90 transition-all flex items-center justify-center gap-2 shadow-lg shadow-green-100 ${loading ? "opacity-50 cursor-not-allowed" : ""
                             }`}
                         onClick={handleSubmit}
                         disabled={loading}

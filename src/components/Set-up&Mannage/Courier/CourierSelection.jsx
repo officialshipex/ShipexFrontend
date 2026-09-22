@@ -124,7 +124,7 @@ const CourierSelection = () => {
         <div className="relative overflow-x-auto bg-white overflow-y-auto h-[calc(100dvh-150px)] shadow-sm">
           <table className="min-w-full text-left">
             <thead className="sticky top-0 z-20">
-              <tr className="text-white bg-[#0CBB7D] font-[600] text-[12px]">
+              <tr className="text-white bg-brand-primary font-[600] text-[12px]">
                 <th className="py-2 px-3">Sr.</th>
                 <th className="py-2 px-3">Courier Service</th>
                 <th className="py-2 px-3 text-center">Mode</th>
@@ -164,7 +164,7 @@ const CourierSelection = () => {
                           checked={courier.status === "Active"}
                           onChange={() => toggleStatus(courier.id)}
                         />
-                        <div className="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-[#0CBB7D] relative transition-all duration-300">
+                        <div className="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-brand-primary relative transition-all duration-300">
                           <div
                             className={`absolute top-1 left-1 w-3 h-3 bg-white rounded-full transition-transform ${courier.status === "Active" ? "translate-x-5" : "translate-x-1"
                               }`}
@@ -206,7 +206,7 @@ const CourierSelection = () => {
 
               <div className="flex items-center justify-between mt-3 px-1">
                 <div className="text-[11px] text-gray-500">
-                  Status: <span className={courier.status === "Active" ? "text-[#0CBB7D] font-[600]" : "text-red-500 font-[600]"}>{courier.status}</span>
+                  Status: <span className={courier.status === "Active" ? "text-brand-primary font-[600]" : "text-red-500 font-[600]"}>{courier.status}</span>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
@@ -215,7 +215,7 @@ const CourierSelection = () => {
                     checked={courier.status === "Active"}
                     onChange={() => toggleStatus(courier.id)}
                   />
-                  <div className="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-[#0CBB7D] relative transition-all duration-300">
+                  <div className="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-brand-primary relative transition-all duration-300">
                     <div
                       className={`absolute top-0.5 w-4 h-4 bg-white rounded-full transition-transform ${courier.status === "Active" ? "translate-x-5" : "translate-x-1"
                         }`}

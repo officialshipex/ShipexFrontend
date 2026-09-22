@@ -139,7 +139,7 @@ const DiscrepancyFilterPanel = ({
                                     setShowSearchTypeDropdown(!showSearchTypeDropdown)
                                 }
                                 className={`${fieldStyle} border ${showSearchTypeDropdown
-                                    ? "border-[#0CBB7D]"
+                                    ? "border-brand-primary"
                                     : "border-gray-300"
                                     } bg-white`}
                             >
@@ -168,7 +168,7 @@ const DiscrepancyFilterPanel = ({
                                                 });
                                                 setShowSearchTypeDropdown(false);
                                             }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {opt.label}
                                         </div>
@@ -194,7 +194,7 @@ const DiscrepancyFilterPanel = ({
                                 ? "AWB Number"
                                 : "Order ID"
                                 }`}
-                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:border-[#0CBB7D]`}
+                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:border-brand-primary`}
                             value={localFilters.searchInput}
                             onChange={(e) =>
                                 setLocalFilters({
@@ -214,7 +214,7 @@ const DiscrepancyFilterPanel = ({
                             <button
                                 onClick={() => setShowCourierDropdown(!showCourierDropdown)}
                                 className={`${fieldStyle} border ${showCourierDropdown
-                                    ? "border-[#0CBB7D]"
+                                    ? "border-brand-primary"
                                     : "border-gray-300"
                                     } bg-white`}
                             >
@@ -240,7 +240,7 @@ const DiscrepancyFilterPanel = ({
                                         <input
                                             type="text"
                                             placeholder="Search courier service ..."
-                                            className="w-full px-2 py-1 text-[11px] border rounded focus:outline-none focus:border-[#0CBB7D]"
+                                            className="w-full px-2 py-1 text-[11px] border rounded focus:outline-none focus:border-brand-primary"
                                             value={courierSearch}
                                             onChange={(e) => setCourierSearch(e.target.value)}
                                             onClick={(e) => e.stopPropagation()}
@@ -253,13 +253,13 @@ const DiscrepancyFilterPanel = ({
                                                 <div
                                                     key={courier}
                                                     onClick={() => handleToggleCourier(courier)}
-                                                    className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors flex items-center gap-2"
+                                                    className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors flex items-center gap-2"
                                                 >
                                                     <input
                                                         type="checkbox"
                                                         checked={isSelected}
                                                         readOnly
-                                                        className="accent-[#0CBB7D] w-3 h-3"
+                                                        className="accent-brand-primary w-3 h-3"
                                                     />
                                                     <span>{courier}</span>
                                                 </div>
@@ -285,7 +285,7 @@ const DiscrepancyFilterPanel = ({
                                 <button
                                     onClick={() => setShowStatusDropdown(!showStatusDropdown)}
                                     className={`${fieldStyle} border ${showStatusDropdown
-                                        ? "border-[#0CBB7D]"
+                                        ? "border-brand-primary"
                                         : "border-gray-300"
                                         } bg-white`}
                                 >
@@ -315,7 +315,7 @@ const DiscrepancyFilterPanel = ({
                                                     });
                                                     setShowStatusDropdown(false);
                                                 }}
-                                                className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                                className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                             >
                                                 {opt.label}
                                             </div>
@@ -337,7 +337,7 @@ const DiscrepancyFilterPanel = ({
                     </button>
                     <button
                         onClick={handleApply}
-                        className="flex-1 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
+                        className="flex-1 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
                     >
                         Apply Filters
                     </button>

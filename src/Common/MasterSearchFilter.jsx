@@ -107,8 +107,8 @@ const MasterSearchFilter = ({ isMobile = false }) => {
     if (isMobile) {
         return (
             <div className="relative w-full" ref={dropdownRef}>
-                <div className="relative flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:border-[#0CBB7D] transition-colors group">
-                    <div className="pl-3 text-gray-400 group-focus-within:text-[#0CBB7D] transition-colors">
+                <div className="relative flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:border-brand-primary transition-colors group">
+                    <div className="pl-3 text-gray-400 group-focus-within:text-brand-primary transition-colors">
                         <FiSearch className="text-[14px]" />
                     </div>
                     <div className="relative flex-1 h-[35px] overflow-hidden">
@@ -119,7 +119,7 @@ const MasterSearchFilter = ({ isMobile = false }) => {
                             onChange={(e) => setSearchQuery(e.target.value)}
                             onKeyDown={handleKeyDown}
                             className="absolute inset-0 w-full h-full px-3 text-[12px] font-[600] border-none focus:outline-none bg-transparent"
-                            style={{ caretColor: '#0CBB7D' }}
+                            style={{ caretColor: 'var(--brand-primary, #0CBB7D)' }}
                         />
                         {!searchQuery && (
                             <div className="absolute inset-0 flex items-center px-3 pointer-events-none">
@@ -165,7 +165,7 @@ const MasterSearchFilter = ({ isMobile = false }) => {
                                             </div>
 
                                             {order.awb_number && (
-                                                <div className="text-[#0CBB7D] font-[600]">
+                                                <div className="text-brand-primary font-[600]">
                                                     {order.awb_number}
                                                 </div>
                                             )}
@@ -179,7 +179,7 @@ const MasterSearchFilter = ({ isMobile = false }) => {
 
                                         {/* Right Section */}
                                         <div className="text-[10px] text-right space-y-0.5 text-gray-700">
-                                            <div className="font-[500] bg-green-100 text-[#0CBB7D] px-1 rounded">
+                                            <div className="font-[500] bg-green-100 text-brand-primary px-1 rounded">
                                                 {order.status}
                                             </div>
 
@@ -204,8 +204,8 @@ const MasterSearchFilter = ({ isMobile = false }) => {
     // Desktop version
     return (
         <div className="relative w-[350px]" ref={dropdownRef}>
-            <div className="relative flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:border-[#0CBB7D] transition-colors h-[32px] group">
-                <div className="pl-3 text-gray-400 group-focus-within:text-[#0CBB7D] transition-colors">
+            <div className="relative flex items-center border border-gray-300 rounded-lg overflow-hidden focus-within:border-brand-primary transition-colors h-[32px] group">
+                <div className="pl-3 text-gray-400 group-focus-within:text-brand-primary transition-colors">
                     <FiSearch className="text-[14px]" />
                 </div>
                 <div className="relative flex-1 h-full overflow-hidden">
@@ -216,7 +216,7 @@ const MasterSearchFilter = ({ isMobile = false }) => {
                         onChange={(e) => setSearchQuery(e.target.value)}
                         onKeyDown={handleKeyDown}
                         className="absolute inset-0 w-full text-gray-700 h-full px-3 text-[11px] font-[600] border-none focus:outline-none bg-transparent"
-                        style={{ caretColor: '#0CBB7D' }}
+                        style={{ caretColor: 'var(--brand-primary, #0CBB7D)' }}
                     />
                     {!searchQuery && (
                         <div className="absolute inset-0 flex items-center px-3 pointer-events-none">
@@ -263,7 +263,7 @@ const MasterSearchFilter = ({ isMobile = false }) => {
                                         </div>
 
                                         {order.awb_number && (
-                                            <div className="text-[#0CBB7D] font-[600]">
+                                            <div className="text-brand-primary font-[600]">
                                                 {order.awb_number}
                                             </div>
                                         )}
@@ -278,7 +278,7 @@ const MasterSearchFilter = ({ isMobile = false }) => {
                                     {/* Right Section */}
                                     <div className="text-[10px] text-right space-y-0.5 text-gray-700">
 
-                                        <div className="px-2 py-0.5 bg-green-100 text-[#0CBB7D] rounded uppercase inline-block">
+                                        <div className="px-2 py-0.5 bg-green-100 text-brand-primary rounded uppercase inline-block">
                                             {order.status}
                                         </div>
 

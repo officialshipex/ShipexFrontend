@@ -6,7 +6,8 @@ import Cookies from "js-cookie";
 import logo from "../../assets/LOGO.svg";
 import Sidebar from "../../components/Sidebar";
 import { Logo } from "../../components/Logo";
-import grouplogo from "../../assets/Group.png"; // adjust path as needed
+import { useBranding } from "../../context/BrandingContext";
+import grouplogo from "../../assets/Group.png"; // adjust path as needed; falls back to this until the company's own favicon loads (or if it never uploaded one)
 import BulkUploadPopup from "../../Order/BulkUploadPopup"
 import SelectOrderTypePopup from "../../Order/SelectOrderTypePopup"
 import { FaPlus, FaWallet, FaSyncAlt, FaCaretDown, FaEllipsisV } from "react-icons/fa";
@@ -35,6 +36,7 @@ import NotificationHistoryModal from "../../Common/NotificationHistoryModal";
 
 
 const Navbar = () => {
+  const { faviconUrl } = useBranding();
   const navigate = useNavigate();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -617,7 +619,7 @@ const Navbar = () => {
           <div className="flex items-center justify-center">
             <button className="text-[12px] hidden lg:block lg:ml-0 text-brand-primary">
               <img
-                src={grouplogo}
+                src={faviconUrl || grouplogo}
                 alt="description"
                 className="h-7 w-7 rounded-full"
               />

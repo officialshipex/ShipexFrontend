@@ -98,7 +98,7 @@ const WalletHistoryFilterPanel = ({
                         <input
                             type="text"
                             placeholder="Enter Transaction ID"
-                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D]`}
+                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-brand-primary`}
                             value={localFilters.transactionId}
                             onChange={(e) => setLocalFilters({ ...localFilters, transactionId: e.target.value })}
                         />
@@ -110,7 +110,7 @@ const WalletHistoryFilterPanel = ({
                         <input
                             type="text"
                             placeholder="Enter Payment ID"
-                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-[#0CBB7D]`}
+                            className={`${fieldStyle} bg-white border border-gray-300 text-gray-700 placeholder:text-gray-400 focus:outline-none focus:border-brand-primary`}
                             value={localFilters.paymentId}
                             onChange={(e) => setLocalFilters({ ...localFilters, paymentId: e.target.value })}
                         />
@@ -122,7 +122,7 @@ const WalletHistoryFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowStatusDropdown(!showStatusDropdown)}
-                                className={`${fieldStyle} ${showStatusDropdown ? "border-[#0CBB7D]" : "border-gray-300"} bg-white`}
+                                className={`${fieldStyle} ${showStatusDropdown ? "border-brand-primary" : "border-gray-300"} bg-white`}
                             >
                                 <span className={localFilters.status ? "text-gray-700 font-[600]" : "text-gray-400"}>
                                     {localFilters.status ? localFilters.status.charAt(0).toUpperCase() + localFilters.status.slice(1) : "Select Status"}
@@ -135,7 +135,7 @@ const WalletHistoryFilterPanel = ({
                                         <div
                                             key={s}
                                             onClick={() => { setLocalFilters({ ...localFilters, status: s }); setShowStatusDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {s.charAt(0).toUpperCase() + s.slice(1)}
                                         </div>
@@ -156,7 +156,7 @@ const WalletHistoryFilterPanel = ({
                     </button>
                     <button
                         onClick={handleApply}
-                        className="flex-1 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
+                        className="flex-1 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
                     >
                         Apply Filters
                     </button>

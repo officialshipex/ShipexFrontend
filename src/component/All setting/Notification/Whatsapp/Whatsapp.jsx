@@ -186,7 +186,7 @@ const Whatsapp = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setTestOpen(true)}
-              className="text-[10px] text-[#0CBB7D] font-bold hover:bg-green-50 px-3 py-1.5 border border-green-100 rounded-lg transition-all"
+              className="text-[10px] text-brand-primary font-bold hover:bg-green-50 px-3 py-1.5 border border-green-100 rounded-lg transition-all"
             >
               Send Test
             </button>
@@ -194,7 +194,7 @@ const Whatsapp = () => {
             <Switch
               checked={mainEnabled}
               onChange={handleMainToggle}
-              className={`${mainEnabled ? "bg-[#0CBB7D]" : "bg-gray-300"
+              className={`${mainEnabled ? "bg-brand-primary" : "bg-gray-300"
                 } relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none`}
             >
               <span
@@ -209,7 +209,7 @@ const Whatsapp = () => {
       <div className="hidden sm:block bg-white overflow-hidden">
         <div className="h-[calc(100vh-220px)] overflow-y-auto custom-scrollbar">
           <table className="min-w-full text-[12px] border-collapse">
-            <thead className="bg-[#0CBB7D] text-white sticky top-0 z-10 shadow-sm">
+            <thead className="bg-brand-primary text-white sticky top-0 z-10 shadow-sm">
               <tr>
                 <th className="text-left px-3 py-2 font-bold tracking-wider">Status</th>
                 <th className="text-left px-3 py-2 font-bold tracking-wider">Enable/Disable</th>
@@ -231,7 +231,7 @@ const Whatsapp = () => {
                       onChange={() => handleToggle(status.key)}
                       disabled={!mainEnabled || loading}
                       className={`${statusToggles[status.key]
-                          ? "bg-[#0CBB7D]"
+                          ? "bg-brand-primary"
                           : "bg-gray-300"
                         } ${!mainEnabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"
                         } relative inline-flex h-5 w-10 items-center rounded-full transition-colors focus:outline-none`}
@@ -257,7 +257,7 @@ const Whatsapp = () => {
                   <td className="px-3 py-2 text-center">
                     <button 
                       onClick={() => openEditModal(status)}
-                      className="text-[10px] text-[#0CBB7D] font-bold hover:bg-green-50 px-3 py-2 border border-green-100 rounded-lg transition-all"
+                      className="text-[10px] text-brand-primary font-bold hover:bg-green-50 px-3 py-2 border border-green-100 rounded-lg transition-all"
                     >
                       Edit
                     </button>
@@ -284,7 +284,7 @@ const Whatsapp = () => {
                 checked={!!statusToggles[status.key]}
                 onChange={() => handleToggle(status.key)}
                 disabled={!mainEnabled || loading}
-                className={`${statusToggles[status.key] ? "bg-[#0CBB7D]" : "bg-gray-300"
+                className={`${statusToggles[status.key] ? "bg-brand-primary" : "bg-gray-300"
                   } relative inline-flex h-5 w-10 items-center rounded-full transition-colors`}
               >
                 <span
@@ -304,7 +304,7 @@ const Whatsapp = () => {
               </span>
               <button 
                 onClick={() => openEditModal(status)}
-                className="text-[#0CBB7D] font-bold text-[12px] px-4 py-1.5 border border-green-100 rounded-lg shadow-sm"
+                className="text-brand-primary font-bold text-[12px] px-4 py-1.5 border border-green-100 rounded-lg shadow-sm"
               >
                 Edit
               </button>

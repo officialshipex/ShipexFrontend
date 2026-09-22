@@ -142,10 +142,10 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
     const customStyles = {
         control: (provided, state) => ({
             ...provided,
-            borderColor: state.isFocused ? "#0CBB7D" : "#e2e8f0",
-            boxShadow: state.isFocused ? "0 0 0 1px #0CBB7D" : "none",
+            borderColor: state.isFocused ? "var(--brand-primary, #0CBB7D)" : "#e2e8f0",
+            boxShadow: state.isFocused ? "0 0 0 1px var(--brand-primary, #0CBB7D)" : "none",
             "&:hover": {
-                borderColor: "#0CBB7D",
+                borderColor: "var(--brand-primary, #0CBB7D)",
             },
             borderRadius: "8px",
             fontSize: "12px",
@@ -156,7 +156,7 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
         option: (provided, state) => ({
             ...provided,
             backgroundColor: state.isSelected
-                ? "#0CBB7D"
+                ? "var(--brand-primary, #0CBB7D)"
                 : state.isFocused
                     ? "#F0FDF4"
                     : "white",
@@ -165,7 +165,7 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
             fontSize: "12px",
             fontWeight: "600",
             "&:active": {
-                backgroundColor: "#0CBB7D",
+                backgroundColor: "var(--brand-primary, #0CBB7D)",
                 color: "white",
             },
         }),
@@ -181,7 +181,7 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
         <div className="fixed inset-0 flex items-center justify-center bg-gray-500 z-[1000] animate-popup-in bg-opacity-50">
             <div className="bg-white p-4 rounded-lg shadow-lg w-[700px] relative">
                 <div className="flex items-center gap-2 mb-2">
-                    <MapPin className="w-4 h-4 text-[#0CBB7D]" />
+                    <MapPin className="w-4 h-4 text-brand-primary" />
                     <h2 className="font-[600] text-[12px] sm:text-[14px] text-gray-700">
                         Select Pickup Address
                     </h2>
@@ -195,7 +195,7 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
                 />
                 <button
                     onClick={() => setShowBulkShipModal(true)}
-                    className="text-[#0CBB7D] mt-2 text-[10px] sm:text-[12px] w-full sm:w-auto text-left sm:text-right hover:underline transition-all"
+                    className="text-brand-primary mt-2 text-[10px] sm:text-[12px] w-full sm:w-auto text-left sm:text-right hover:underline transition-all"
                 >
                     + Add new pickup address
                 </button>
@@ -224,7 +224,7 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
                     <button
                         type="button"
                         onClick={handleSubmit}
-                        className="bg-[#0CBB7D] text-[10px] sm:text-[12px] font-[600] text-white px-5 py-2 rounded-lg hover:bg-opacity-90 transition-all"
+                        className="bg-brand-primary text-[10px] sm:text-[12px] font-[600] text-white px-5 py-2 rounded-lg hover:bg-opacity-90 transition-all"
                     >
                         Save
                     </button>

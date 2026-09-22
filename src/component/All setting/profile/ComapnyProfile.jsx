@@ -41,7 +41,7 @@ const ReferralCommissionEditModal = ({
           type="number"
           value={newValue}
           onChange={(e) => setNewValue(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] sm:text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0CBB7D] focus:border-transparent"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] sm:text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
           placeholder="Enter commission percentage"
         />
         <div className="flex justify-end gap-3 mt-4">
@@ -53,7 +53,7 @@ const ReferralCommissionEditModal = ({
           </button>
           <button
             onClick={handleSave}
-            className="px-3 py-2 rounded-lg bg-[#0CBB7D] text-white hover:bg-green-500 text-[10px] sm:text-[12px] font-[600] transition-colors"
+            className="px-3 py-2 rounded-lg bg-brand-primary text-white hover:bg-green-500 text-[10px] sm:text-[12px] font-[600] transition-colors"
           >
             Save
           </button>
@@ -327,7 +327,7 @@ export default function ProfileCard() {
                         {/* ✅ Show verified/unverified icons */}
                         {(isEmail || isPhone) && (
                           isVerified ? (
-                            <CheckCircleIcon size={14} className="text-[#0CBB7D]" />
+                            <CheckCircleIcon size={14} className="text-brand-primary" />
                           ) : (
                             <FiAlertCircle size={14} className="text-red-400" /> // unverified icon
                           )
@@ -565,7 +565,7 @@ export default function ProfileCard() {
                     label: "KYC Status",
                     value: (
                       <span
-                        className={`inline-flex items-center gap-1.5 text-[10px] font-[600] ${userData?.kycStatus ? "text-[#0CBB7D]" : "text-yellow-700"
+                        className={`inline-flex items-center gap-1.5 text-[10px] font-[600] ${userData?.kycStatus ? "text-brand-primary" : "text-yellow-700"
                           }`}
                       >
                         {userData?.kycStatus ? (
@@ -698,17 +698,17 @@ export default function ProfileCard() {
                   <p>Check latest version of API documentation</p>
                   <button
                     onClick={() => window.open("https://api-docs.shipexindia.com/", "_blank")}
-                    className="hover:text-green-500 text-[#0CBB7D] transition-colors"
+                    className="hover:text-green-500 text-brand-primary transition-colors"
                   >
                     <ExternalLink size={16} />
                   </button>
                 </div>
 
                 <div className="flex items-center gap-2 text-[10px] sm:text-[12px] font-[600]">
-                  <p>Download Postman Collection <span className="text-[#0CBB7D] text-[9px]">(Recommended)</span></p>
+                  <p>Download Postman Collection <span className="text-brand-primary text-[9px]">(Recommended)</span></p>
                   <button
                     onClick={() => window.open("https://documenter.getpostman.com/view/32361120/2sB3HetiH6", "_blank")}
-                    className="hover:text-green-500 text-[#0CBB7D] transition-colors"
+                    className="hover:text-green-500 text-brand-primary transition-colors"
                   >
                     <Download size={16} />
                   </button>
@@ -725,7 +725,7 @@ export default function ProfileCard() {
                       checked={apiAccess}
                       onChange={handleApiToggle}
                     />
-                    <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-[#0CBB7D] transition-all"></div>
+                    <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-brand-primary transition-all"></div>
                     <div className="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform peer-checked:translate-x-4"></div>
                   </label>
                 </div>
@@ -754,12 +754,12 @@ export default function ProfileCard() {
       ) : (
         <>
           {/* Header Banner with Gradient */}
-          <div className="relative bg-gradient-to-br from-[#0CBB7D]/20 via-teal-50 to-green-100 h-24 sm:h-36">
+          <div className="relative bg-gradient-to-br from-brand-primary/20 via-teal-50 to-green-100 h-24 sm:h-36">
             {/* Subtle overlay gradient */}
-            <div className="absolute inset-0 bg-gradient-to-r from-[#0CBB7D]/15 via-cyan-200/25 to-purple-200/30"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-brand-primary/15 via-cyan-200/25 to-purple-200/30"></div>
 
             {/* Decorative circles */}
-            <div className="absolute top-10 left-20 w-32 h-32 bg-gradient-to-br from-[#0CBB7D]/40 to-cyan-300/40 rounded-full blur-2xl"></div>
+            <div className="absolute top-10 left-20 w-32 h-32 bg-gradient-to-br from-brand-primary/40 to-cyan-300/40 rounded-full blur-2xl"></div>
             <div className="absolute bottom-10 right-32 w-40 h-40 bg-gradient-to-br from-green-300/40 to-purple-300/40 rounded-full blur-2xl"></div>
           </div>
 
@@ -802,7 +802,7 @@ export default function ProfileCard() {
                     <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-8">
                       <div className="flex items-center gap-2">
                         <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                          <Wallet size={20} className="text-[#0CBB7D]" />
+                          <Wallet size={20} className="text-brand-primary" />
                         </div>
                         <div>
                           <p className="text-[10px] sm:text-[12px] font-[600] text-gray-700">
@@ -820,7 +820,7 @@ export default function ProfileCard() {
                           disabled={triggeringCod}
                           className={`px-3 py-1.5 rounded-lg text-white font-[600] text-[11px] sm:text-[12px] transition-all ${triggeringCod
                               ? "bg-gray-400 cursor-not-allowed"
-                              : "bg-[#0CBB7D] hover:bg-green-600 active:scale-95 shadow-sm"
+                              : "bg-brand-primary hover:bg-green-600 active:scale-95 shadow-sm"
                             }`}
                         >
                           {triggeringCod ? "Processing COD..." : "Process COD Manually"}

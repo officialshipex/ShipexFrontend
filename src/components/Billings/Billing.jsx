@@ -232,7 +232,7 @@ const Billing = () => {
             <div className="w-full sm:w-full">
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="w-full bg-[#0CBB7D] mb-2 sm:mb-0 text-white font-[600] px-3 py-2 rounded-lg text-[10px]"
+                className="w-full bg-brand-primary mb-2 sm:mb-0 text-white font-[600] px-3 py-2 rounded-lg text-[10px]"
               >
                 Early COD
               </button>
@@ -251,8 +251,8 @@ const Billing = () => {
 
         <div className="flex gap-2 w-full">
           {/* Wallet Balance Box */}
-          <div className="flex flex-row w-full bg-white text-gray-700 rounded-lg gap-2 px-2 h-14 items-center justify-start text-[12px] border border-[#0CBB7D]">
-            <div className="p-2 rounded-full flex justify-center items-center bg-[#0CBB7D] text-white">
+          <div className="flex flex-row w-full bg-white text-gray-700 rounded-lg gap-2 px-2 h-14 items-center justify-start text-[12px] border border-brand-primary">
+            <div className="p-2 rounded-full flex justify-center items-center bg-brand-primary text-white">
               <Wallet className="w-4 h-4" />
             </div>
 
@@ -263,8 +263,8 @@ const Billing = () => {
           </div>
 
           {/* Hold Amount Box */}
-          <div className="flex flex-row w-full bg-white text-gray-700 rounded-lg gap-2 px-2 h-14 items-center justify-start text-[12px] border border-[#0CBB7D]">
-            <div className="p-2 rounded-full flex justify-center items-center bg-[#0CBB7D] text-white">
+          <div className="flex flex-row w-full bg-white text-gray-700 rounded-lg gap-2 px-2 h-14 items-center justify-start text-[12px] border border-brand-primary">
+            <div className="p-2 rounded-full flex justify-center items-center bg-brand-primary text-white">
               <Lock className="w-4 h-4" />
             </div>
 
@@ -277,8 +277,8 @@ const Billing = () => {
 
         <div className="flex gap-2 w-full">
           {/* Credit Limit Box */}
-          <div className="flex flex-row w-full bg-white text-gray-700 rounded-lg gap-2 px-2 h-14 items-center justify-start text-[12px] border border-[#0CBB7D]">
-            <div className="p-2 rounded-full flex justify-center items-center bg-[#0CBB7D] text-white">
+          <div className="flex flex-row w-full bg-white text-gray-700 rounded-lg gap-2 px-2 h-14 items-center justify-start text-[12px] border border-brand-primary">
+            <div className="p-2 rounded-full flex justify-center items-center bg-brand-primary text-white">
               <Lock className="w-4 h-4" />
             </div>
 
@@ -289,8 +289,8 @@ const Billing = () => {
           </div>
 
           {/* Usable Balance Box */}
-          <div className="flex flex-row w-full bg-white text-gray-700 rounded-lg gap-2 px-3 py-2 items-center justify-start text-[12px] border border-[#0CBB7D]">
-            <div className="p-2 rounded-full flex justify-center items-center bg-[#0CBB7D] text-white">
+          <div className="flex flex-row w-full bg-white text-gray-700 rounded-lg gap-2 px-3 py-2 items-center justify-start text-[12px] border border-brand-primary">
+            <div className="p-2 rounded-full flex justify-center items-center bg-brand-primary text-white">
               <CircleDollarSign className="w-4 h-4 rotate-180" />
             </div>
 
@@ -317,7 +317,7 @@ const Billing = () => {
                 <button
                   key={tab}
                   className={`px-3 py-2 text-[12px] border rounded-lg font-[600] transition-all duration-200 ${selectedItem === tab
-                    ? "bg-[#0CBB7D] text-white"
+                    ? "bg-brand-primary text-white"
                     : "bg-white text-gray-700 hover:bg-green-200"
                     }`}
                   onClick={() => setSelectedItem(tab)}
@@ -341,7 +341,7 @@ const Billing = () => {
             {tabs.map((tab) => (
               <button
                 key={tab}
-                className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${selectedItem === tab ? "bg-green-50 text-[#0CBB7D]" : "text-gray-700 hover:bg-gray-50"
+                className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${selectedItem === tab ? "bg-green-50 text-brand-primary" : "text-gray-700 hover:bg-gray-50"
                   }`}
                 onClick={() => {
                   setSelectedItem(tab);

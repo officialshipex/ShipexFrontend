@@ -32,7 +32,7 @@ const SmartPopupTrigger = ({ label, children, isOpen, onToggle }) => {
       <button
         ref={triggerRef}
         onClick={handleToggle}
-        className="text-[11px] font-bold text-gray-800 hover:text-[#0CBB7D] transition-colors flex items-center gap-1"
+        className="text-[11px] font-bold text-gray-800 hover:text-brand-primary transition-colors flex items-center gap-1"
       >
         {label}
         <span className="text-[9px] text-gray-400">{isOpen ? "▲" : "▼"}</span>
@@ -184,8 +184,8 @@ const UserList2 = ({ isSidebarAdmin }) => {
             { icon: <FaCheckCircle className="text-white w-4 h-4 md:w-5 md:h-5" />, label: "Verified KYC", value: verified || 0 },
             { icon: <FaClock className="text-white w-4 h-4 md:w-5 md:h-5" />, label: "Pending KYC", value: pending || 0 },
           ].map((item, index) => (
-            <div key={index} className="p-2 rounded-lg bg-white border border-[#0CBB7D] flex items-center space-x-2">
-              <div className="px-2 py-2 rounded-lg bg-[#0CBB7D] shrink-0">{item.icon}</div>
+            <div key={index} className="p-2 rounded-lg bg-white border border-brand-primary flex items-center space-x-2">
+              <div className="px-2 py-2 rounded-lg bg-brand-primary shrink-0">{item.icon}</div>
               <div className="truncate">
                 <p className="text-gray-700 text-[10px] uppercase md:text-[12px] font-[600]">{item.label}</p>
                 <p className="text-[10px] md:text-[12px] font-[600] text-gray-700">{item.value}</p>
@@ -202,7 +202,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
               <UserFilter onUserSelect={(id) => { setSelectedUserId(id); setPage(1); }} clearTrigger={clearUserTrigger} />
             </div>
             <button onClick={() => setIsFilterPanelOpen(true)} className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-9">
-              <Filter className="w-4 h-4 text-[#0CBB7D]" />
+              <Filter className="w-4 h-4 text-brand-primary" />
               More Filters
             </button>
             {isAnyFilterApplied && (
@@ -218,7 +218,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
               <UserFilter onUserSelect={(id) => { setSelectedUserId(id); setPage(1); }} clearTrigger={clearUserTrigger} />
             </div>
             <button onClick={() => setIsFilterPanelOpen(true)} className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[11px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-[36px]">
-              <Filter className="w-4 h-4 text-[#0CBB7D]" />
+              <Filter className="w-4 h-4 text-brand-primary" />
               More Filters
             </button>
           </div>
@@ -240,7 +240,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
               <thead className="sticky top-0 z-20">
                 <tr className="text-[12px]">
                   {["User ID", "User Details", "Business Details", "KYC", "Rate Card", "Balance", "Account Manager", "Registration Date", "Last Scheduled Date", "Action"].map((header, idx) => (
-                    <th key={idx} className={`bg-[#0CBB7D] text-white font-bold px-3 py-2 border-b border-gray-300 sticky top-0 ${header.includes("Details") || header.includes("Date") || header.includes("User") ? "text-left" : "text-center"}`}>
+                    <th key={idx} className={`bg-brand-primary text-white font-bold px-3 py-2 border-b border-gray-300 sticky top-0 ${header.includes("Details") || header.includes("Date") || header.includes("User") ? "text-left" : "text-center"}`}>
                       {header}
                     </th>
                   ))}
@@ -284,20 +284,20 @@ const UserList2 = ({ isSidebarAdmin }) => {
                         </p>
                       </td>
                       <td className="border-b border-gray-300 px-3 py-2 text-center">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${e.kycStatus ? "bg-green-100 text-[#0CBB7D]" : "bg-red-100 text-red-600"}`}>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${e.kycStatus ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>
                           {e.kycStatus ? "Verified" : "Pending"}
                         </span>
                       </td>
                       <td className="border-b border-gray-300 px-3 py-2">
                         <div className="flex items-center justify-center gap-2">
-                          <span className="px-2 py-0.5 bg-green-50 text-[10px] text-[#0CBB7D] rounded border border-green-100 font-bold">
+                          <span className="px-2 py-0.5 bg-green-50 text-[10px] text-brand-primary rounded border border-green-100 font-bold">
                             {e.rateCard || "bronze"}
                           </span>
-                          <MdEdit className="text-[#0CBB7D] cursor-pointer hover:scale-110 transition-transform" onClick={() => { setSelectedRateCardValue(e.rateCard); setSelectedItemId(e.id); setSelectedItemName(e.fullname); setShowPopup(true); }} />
+                          <MdEdit className="text-brand-primary cursor-pointer hover:scale-110 transition-transform" onClick={() => { setSelectedRateCardValue(e.rateCard); setSelectedItemId(e.id); setSelectedItemName(e.fullname); setShowPopup(true); }} />
                         </div>
                       </td>
                       <td className="border-b border-gray-300 px-3 py-2 text-center font-bold">
-                        <span className={e.walletAmount < 0 ? "text-red-500" : "text-[#0CBB7D]"}>₹{e.walletAmount?.toFixed(2) || "0.00"}</span>
+                        <span className={e.walletAmount < 0 ? "text-red-500" : "text-brand-primary"}>₹{e.walletAmount?.toFixed(2) || "0.00"}</span>
                       </td>
                       <td className="border-b border-gray-300 px-3 py-2 text-center font-medium">{e.kamName || "Not Assigned"}</td>
                       <td className="border-b border-gray-300 px-3 text-left py-2">
@@ -314,7 +314,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
                         </div>
                       </td>
                       <td className="border-b border-gray-300 px-3 py-2 text-center">
-                        <button onClick={() => userProfile(e?.id)} className={`px-3 py-1 rounded-full text-[10px] font-bold text-white transition-all active:scale-95 ${e?.isBlocked ? "bg-red-500 hover:bg-red-600" : "bg-[#0CBB7D] hover:bg-opacity-90 shadow-sm"}`}>
+                        <button onClick={() => userProfile(e?.id)} className={`px-3 py-1 rounded-full text-[10px] font-bold text-white transition-all active:scale-95 ${e?.isBlocked ? "bg-red-500 hover:bg-red-600" : "bg-brand-primary hover:bg-opacity-90 shadow-sm"}`}>
                           Profile
                         </button>
                       </td>
@@ -343,7 +343,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
                 return (
                   <div key={e.id} className="bg-white border rounded-lg shadow-sm overflow-visible animate-popup-in">
                     {/* Header */}
-                    <div className="bg-[#0CBB7D] px-3 py-1.5 flex justify-between items-center rounded-t-lg">
+                    <div className="bg-brand-primary px-3 py-1.5 flex justify-between items-center rounded-t-lg">
                       <div className="flex items-center gap-1.5 min-w-0">
                         <CheckCircle className="w-3 h-3 text-white shrink-0" />
                         <span className="text-white font-bold text-[10px]">User ID: {e.userId}</span>
@@ -351,7 +351,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
                           {e.kycStatus ? "KYC ✓" : "KYC ✗"}
                         </span>
                       </div>
-                      <button onClick={() => userProfile(e?.id)} className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white shrink-0 ml-2 ${e?.isBlocked ? "text-red-500" : "text-[#0CBB7D]"}`}>
+                      <button onClick={() => userProfile(e?.id)} className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white shrink-0 ml-2 ${e?.isBlocked ? "text-red-500" : "text-brand-primary"}`}>
                         Profile
                       </button>
                     </div>
@@ -365,7 +365,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
                         isOpen={isUserOpen}
                         onToggle={() => setOpenPopup(isUserOpen ? null : userKey)}
                       >
-                        <p className="text-[9px] font-bold text-[#0CBB7D] tracking-widest mb-2 border-b pb-1">User Details</p>
+                        <p className="text-[9px] font-bold text-brand-primary tracking-widest mb-2 border-b pb-1">User Details</p>
                         <div className="space-y-1.5">
                           <div>
                             <p className="text-[10px] text-gray-400">Name</p>
@@ -412,7 +412,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
                         isOpen={isBizOpen}
                         onToggle={() => setOpenPopup(isBizOpen ? null : bizKey)}
                       >
-                        <p className="text-[9px] font-bold text-[#0CBB7D] uppercase tracking-widest mb-2 border-b pb-1">Business Details</p>
+                        <p className="text-[9px] font-bold text-brand-primary uppercase tracking-widest mb-2 border-b pb-1">Business Details</p>
                         <div className="space-y-1.5">
                           <div>
                             <p className="text-[10px] text-gray-400">Company</p>
@@ -435,14 +435,14 @@ const UserList2 = ({ isSidebarAdmin }) => {
 
                       {/* Inline compact badges — Rate Card + Wallet */}
                       <div className="ml-auto flex items-center gap-1.5 shrink-0">
-                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${e.rateCard ? "bg-green-50 text-[#0CBB7D] border-green-200" : "bg-gray-50 text-gray-500 border-gray-200"}`}>
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${e.rateCard ? "bg-green-50 text-brand-primary border-green-200" : "bg-gray-50 text-gray-500 border-gray-200"}`}>
                           {e.rateCard || "N/A"}
                         </span>
                         <MdEdit
-                          className="w-3.5 h-3.5 text-[#0CBB7D] cursor-pointer shrink-0"
+                          className="w-3.5 h-3.5 text-brand-primary cursor-pointer shrink-0"
                           onClick={() => { setSelectedRateCardValue(e.rateCard); setSelectedItemId(e.id); setSelectedItemName(e.fullname); setShowPopup(true); }}
                         />
-                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${e.walletAmount < 0 ? "text-red-500 bg-red-50" : "text-[#0CBB7D] bg-green-50"}`}>
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${e.walletAmount < 0 ? "text-red-500 bg-red-50" : "text-brand-primary bg-green-50"}`}>
                           ₹{e.walletAmount?.toFixed(0) || "0"}
                         </span>
                       </div>

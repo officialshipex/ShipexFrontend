@@ -307,9 +307,9 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
 
   return (
     <div>
-      <div className="border mt-2 border-[#0CBB7D] rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
+      <div className="border mt-2 border-brand-primary rounded-lg p-4 bg-white hover:shadow-sm transition-shadow">
         <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 mb-2 text-left flex items-center gap-2">
-          <span className="bg-[#0CBB7D] text-white rounded-lg p-2">
+          <span className="bg-brand-primary text-white rounded-lg p-2">
             <FiCreditCard className="text-[14px]" />
           </span>
           Payment Details
@@ -328,7 +328,7 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
                 value="COD"
                 checked={paymentMode === "COD"}
                 onChange={(e) => setPaymentMode(e.target.value)}
-                className="h-4 w-4 appearance-none rounded-full border-2 border-[#0CBB7D] checked:bg-[#0CBB7D] focus:outline-none cursor-pointer"
+                className="h-4 w-4 appearance-none rounded-full border-2 border-brand-primary checked:bg-brand-primary focus:outline-none cursor-pointer"
               />
               <span className="text-gray-700 text-[12px] font-[600]">COD</span>
               <p className="text-[12px] text-gray-500 ml-2">
@@ -343,7 +343,7 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
                 value="Prepaid"
                 checked={paymentMode === "Prepaid"}
                 onChange={(e) => setPaymentMode(e.target.value)}
-                className="h-4 w-4 appearance-none rounded-full border-2 border-[#0CBB7D] checked:bg-[#0CBB7D] focus:outline-none cursor-pointer"
+                className="h-4 w-4 appearance-none rounded-full border-2 border-brand-primary checked:bg-brand-primary focus:outline-none cursor-pointer"
               />
               <span className="text-gray-700 text-[12px] font-[600]">
                 Prepaid
@@ -360,8 +360,8 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
           onClick={() => setShowAdditionalFees(!showAdditionalFees)}
           className="text-[#e8cafe] text-xs flex items-left space-x-2"
         >
-          <span className="text-[#0CBB7D] hover:underline text-left hover:text-green-500 text-[12px] font-[600]">
-            <span className="text-[#0CBB7D] hover:underline hover:text-green-500 text-[12px] font-[600]">
+          <span className="text-brand-primary hover:underline text-left hover:text-green-500 text-[12px] font-[600]">
+            <span className="text-brand-primary hover:underline hover:text-green-500 text-[12px] font-[600]">
               +
             </span>
             Add Shipping Charges, Gift Wrap, Transaction Fee
@@ -387,7 +387,7 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
                   </label>
 
                   {/* Input Wrapper */}
-                  <div className="flex items-center border rounded-lg overflow-hidden focus-within:ring-1 focus-within:ring-[#0CBB7D] focus-within:border-[#0CBB7D]">
+                  <div className="flex items-center border rounded-lg overflow-hidden focus-within:ring-1 focus-within:ring-brand-primary focus-within:border-brand-primary">
                     <input
                       type="number"
                       name={key}
@@ -418,7 +418,7 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
         <button
           onClick={handleCreateOrder}
           disabled={isSubmitting}
-          className="bg-[#0CBB7D] font-[600] hover:bg-green-500 text-white text-[12px] px-3 py-2 rounded-lg shadow-sm"
+          className="bg-brand-primary font-[600] hover:bg-green-500 text-white text-[12px] px-3 py-2 rounded-lg shadow-sm"
         >
           {isSubmitting ? "Processing..." : (updateId ? "Update Order" : "Create Order")}
         </button>

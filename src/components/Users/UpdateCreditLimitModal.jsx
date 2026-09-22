@@ -54,7 +54,7 @@ const UpdateCreditLimitEditModal = ({
           type="number"
           value={newValue}
           onChange={(e) => setNewValue(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] sm:text-[14px] focus:outline-none focus:ring-2 focus:ring-[#0CBB7D]"
+          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] sm:text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary"
           placeholder="Enter credit limit amount"
         />
 
@@ -68,7 +68,7 @@ const UpdateCreditLimitEditModal = ({
 
           <button
             onClick={handleSave}
-            className="px-3 py-2 rounded-lg bg-[#0CBB7D] text-white hover:bg-green-500 text-[10px] font-[600] sm:text-[12px]"
+            className="px-3 py-2 rounded-lg bg-brand-primary text-white hover:bg-green-500 text-[10px] font-[600] sm:text-[12px]"
           >
             Save
           </button>

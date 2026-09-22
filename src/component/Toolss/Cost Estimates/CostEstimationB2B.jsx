@@ -186,7 +186,7 @@ const CostEstimationB2B = () => {
                                 onInput={(e) => {
                                     e.target.value = e.target.value.replace(/\D/g, "");
                                 }}
-                                className="w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                                className="w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-brand-primary"
                             />
                         </div>
 
@@ -203,7 +203,7 @@ const CostEstimationB2B = () => {
                                 onInput={(e) => {
                                     e.target.value = e.target.value.replace(/\D/g, "");
                                 }}
-                                className="w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                                className="w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-brand-primary"
                             />
                         </div>
                     </div>
@@ -293,7 +293,7 @@ const CostEstimationB2B = () => {
                                 onInput={(e) => {
                                     e.target.value = e.target.value.replace(/\D/g, "");
                                 }}
-                                className="w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                                className="w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-brand-primary"
                             />
                         </div>
                     </div>
@@ -302,9 +302,9 @@ const CostEstimationB2B = () => {
                     {packages.map((pkg, idx) => (
                         <div
                             key={pkg.id}
-                            className="border border-dashed border-[#0CBB7D] rounded-lg p-4 relative"
+                            className="border border-dashed border-brand-primary rounded-lg p-4 relative"
                         >
-                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-[#0CBB7D] text-white w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-[600]">
+                            <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-brand-primary text-white w-6 h-6 rounded-full flex items-center justify-center text-[12px] font-[600]">
                                 {idx + 1}
                             </div>
 
@@ -335,7 +335,7 @@ const CostEstimationB2B = () => {
                                             onInput={(e) => {
                                                 e.target.value = e.target.value.replace(/[^0-9.]/g, "");
                                             }}
-                                            className="w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                                            className="w-full border rounded-lg px-3 py-2 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-brand-primary"
                                         />
                                     </div>
                                 ))}
@@ -347,7 +347,7 @@ const CostEstimationB2B = () => {
                     <div className="flex justify-center">
                         <button
                             onClick={addPackage}
-                            className="w-7 h-7 rounded-full bg-[#0CBB7D] text-white flex items-center justify-center font-[600] hover:opacity-90 transition-all"
+                            className="w-7 h-7 rounded-full bg-brand-primary text-white flex items-center justify-center font-[600] hover:opacity-90 transition-all"
                         >
                             +
                         </button>
@@ -357,7 +357,7 @@ const CostEstimationB2B = () => {
                     <button
                         onClick={handleCalculate}
                         disabled={loading}
-                        className="bg-[#0CBB7D] text-white text-[12px] font-[600] py-2 px-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                        className="bg-brand-primary text-white text-[12px] font-[600] py-2 px-3 rounded-lg hover:opacity-90 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                     >
                         {loading ? (
                             <>

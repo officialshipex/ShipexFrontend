@@ -169,7 +169,7 @@ const ForgotPassword = () => {
               </div>
             ) : (
               <button
-                className="px-3 py-2 text-xs bg-[#0CBB7D] text-white rounded-md transition disabled:opacity-60 w-full sm:w-auto whitespace-nowrap"
+                className="px-3 py-2 text-xs bg-brand-primary text-white rounded-md transition disabled:opacity-60 w-full sm:w-auto whitespace-nowrap"
                 onClick={handleSendOtp}
                 disabled={otpTimer > 0}
               >
@@ -226,13 +226,13 @@ const ForgotPassword = () => {
 
         <button
           onClick={handleUpdatePassword}
-          className="w-full mt-4 bg-[#0CBB7D] text-white py-2 rounded-md transition"
+          className="w-full mt-4 bg-brand-primary text-white py-2 rounded-md transition"
         >
           Update Password
         </button>
 
         <div className="text-center mt-4">
-          <Link to="/login" className="text-[#0CBB7D] hover:underline text-sm">
+          <Link to="/login" className="text-brand-primary hover:underline text-sm">
             Back to Login
           </Link>
         </div>

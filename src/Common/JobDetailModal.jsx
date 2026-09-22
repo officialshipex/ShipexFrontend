@@ -11,9 +11,9 @@ const authHeaders = () => ({ headers: { authorization: `Bearer ${Cookies.get("se
 const statusIcon = (status) => {
     switch (status) {
         case "processing":
-            return <Loader2 className="w-4 h-4 text-[#0CBB7D] animate-spin flex-shrink-0" />;
+            return <Loader2 className="w-4 h-4 text-brand-primary animate-spin flex-shrink-0" />;
         case "success":
-            return <CheckCircle2 className="w-4 h-4 text-[#0CBB7D] flex-shrink-0" />;
+            return <CheckCircle2 className="w-4 h-4 text-brand-primary flex-shrink-0" />;
         case "failed":
             return <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />;
         default:
@@ -122,8 +122,8 @@ const BulkShipDetail = ({ job }) => {
             <SummaryBar
                 items={[
                     isRunning
-                        ? { label: `Processing… ${doneCount}/${job.totalOrders}`, className: "bg-green-50 text-[#0CBB7D] border border-green-200" }
-                        : { label: "Completed", className: "bg-green-50 text-[#0CBB7D] border border-green-200" },
+                        ? { label: `Processing… ${doneCount}/${job.totalOrders}`, className: "bg-green-50 text-brand-primary border border-green-200" }
+                        : { label: "Completed", className: "bg-green-50 text-brand-primary border border-green-200" },
                     { label: `${job.successCount || 0} succeeded`, className: "bg-green-50 text-green-700 border border-green-200" },
                     { label: `${job.failureCount || 0} failed`, className: job.failureCount ? "bg-red-50 text-red-600 border border-red-200" : "bg-white text-gray-500 border border-gray-200" },
                 ]}
@@ -136,7 +136,7 @@ const BulkShipDetail = ({ job }) => {
                             <div className="flex-1 min-w-0 text-[12px]">
                                 <div className="text-gray-700 font-[600]">Order {r.displayOrderId ?? "—"}</div>
                                 {r.status === "success" && r.courierServiceName && (
-                                    <div className="text-[11px] text-[#0CBB7D] mt-0.5">Shipped via {r.courierServiceName}</div>
+                                    <div className="text-[11px] text-brand-primary mt-0.5">Shipped via {r.courierServiceName}</div>
                                 )}
                                 {r.status === "failed" && r.failureReason && (
                                     <div className="text-[11px] text-red-500 mt-0.5 whitespace-pre-wrap break-words">{r.failureReason}</div>
@@ -173,7 +173,7 @@ const BulkUploadDetail = ({ file }) => {
         <>
             <SummaryBar
                 items={[
-                    { label: file.status, className: "bg-green-50 text-[#0CBB7D] border border-green-200" },
+                    { label: file.status, className: "bg-green-50 text-brand-primary border border-green-200" },
                     { label: `${file.noOfOrders || 0} total`, className: "bg-white text-gray-600 border border-gray-200" },
                     { label: `${file.successfullyUploaded || 0} succeeded`, className: "bg-green-50 text-green-700 border border-green-200" },
                     { label: `${file.errorOrders || 0} failed`, className: file.errorOrders ? "bg-red-50 text-red-600 border border-red-200" : "bg-white text-gray-500 border border-gray-200" },
@@ -187,7 +187,7 @@ const BulkUploadDetail = ({ file }) => {
                         return (
                             <div key={idx} className="flex items-start gap-3 px-5 py-3">
                                 {isSuccess ? (
-                                    <CheckCircle2 className="w-4 h-4 text-[#0CBB7D] flex-shrink-0" />
+                                    <CheckCircle2 className="w-4 h-4 text-brand-primary flex-shrink-0" />
                                 ) : (
                                     <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
                                 )}
@@ -195,7 +195,7 @@ const BulkUploadDetail = ({ file }) => {
                                     <div className="text-gray-700 font-[600]">
                                         Row {r.row}
                                         {isSuccess && r.orderId != null && (
-                                            <span className="text-[#0CBB7D]"> — Order #{r.orderId}</span>
+                                            <span className="text-brand-primary"> — Order #{r.orderId}</span>
                                         )}
                                     </div>
                                     {isSuccess ? (
@@ -208,7 +208,7 @@ const BulkUploadDetail = ({ file }) => {
                         );
                     })
                 ) : (
-                    <div className="p-10 text-center text-[#0CBB7D] text-[12px] flex flex-col items-center gap-2">
+                    <div className="p-10 text-center text-brand-primary text-[12px] flex flex-col items-center gap-2">
                         <CheckCircle2 className="w-8 h-8" />
                         All rows uploaded successfully.
                     </div>

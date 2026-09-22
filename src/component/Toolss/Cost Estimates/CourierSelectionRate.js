@@ -83,7 +83,7 @@ const CourierSelectionRate = ({ plan, loading, hasFetched }) => {
             <div className="overflow-x-auto">
               <table className="w-full border-collapse">
                 <thead>
-                  <tr className="border-b text-left bg-[#0CBB7D] text-white font-[600] text-[12px]">
+                  <tr className="border-b text-left bg-brand-primary text-white font-[600] text-[12px]">
                     <th className="px-3 py-2">Courier</th>
                     <th className="px-3 py-2 text-center">Mode</th>
                     <th className="px-3 py-2 text-center">Charges</th>
@@ -142,7 +142,7 @@ const CourierSelectionRate = ({ plan, loading, hasFetched }) => {
                           <td className="text-center font-[600] px-3 py-2 text-gray-500">
                             ₹{item.working.grand_total}
                             <FaInfoCircle
-                              className="rate-info-icon inline ml-1 mb-0.5 text-[#0CBB7D] cursor-pointer"
+                              className="rate-info-icon inline ml-1 mb-0.5 text-brand-primary cursor-pointer"
                               onMouseEnter={(e) =>
                                 showRatePopup(e, item.working)
                               }
@@ -158,14 +158,14 @@ const CourierSelectionRate = ({ plan, loading, hasFetched }) => {
                         <td className="text-center px-3 py-2">
                           {item.orderType === "B2C" && (
                             <Link to="/dashboard/b2c/order">
-                              <button className="px-3 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:opacity-90 transition-all">
+                              <button className="px-3 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:opacity-90 transition-all">
                                 + Create Shipment
                               </button>
                             </Link>
                           )}
                           {item.orderType === "B2B" && (
                             <Link to="/dashboard/b2b/order">
-                              <button className="px-3 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:opacity-90 transition-all">
+                              <button className="px-3 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:opacity-90 transition-all">
                                 + Create Shipment
                               </button>
                             </Link>
@@ -244,7 +244,7 @@ const CourierSelectionRate = ({ plan, loading, hasFetched }) => {
                       <div className="text-gray-700">
                         ₹{item.working.grand_total}
                         <FaInfoCircle
-                          className="rate-info-icon inline ml-1 mb-0.5 text-[#0CBB7D] cursor-pointer"
+                          className="rate-info-icon inline ml-1 mb-0.5 text-brand-primary cursor-pointer"
                           onMouseEnter={(e) => showRatePopup(e, item.working)}
                           onMouseLeave={hideRatePopup}
                           onClick={(e) => {
@@ -260,14 +260,14 @@ const CourierSelectionRate = ({ plan, loading, hasFetched }) => {
                 <div className="mt-2 flex justify-center">
                   {item.orderType === "B2C" && (
                     <Link to="/dashboard/b2c/order">
-                      <button className="w-full py-2 px-3 bg-[#0CBB7D] text-white rounded-lg text-[10px] font-[600] hover:opacity-90 transition-all">
+                      <button className="w-full py-2 px-3 bg-brand-primary text-white rounded-lg text-[10px] font-[600] hover:opacity-90 transition-all">
                         + Create Shipment
                       </button>
                     </Link>
                   )}
                   {item.orderType === "B2B" && (
                     <Link to="/dashboard/b2b/order">
-                      <button className="w-full py-2 px-3 bg-[#0CBB7D] text-white rounded-lg text-[10px] font-[600] hover:opacity-90 transition-all">
+                      <button className="w-full py-2 px-3 bg-brand-primary text-white rounded-lg text-[10px] font-[600] hover:opacity-90 transition-all">
                         + Create Shipment
                       </button>
                     </Link>

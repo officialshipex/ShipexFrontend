@@ -147,7 +147,7 @@ const SupportPage = ({ isSidebarAdmin }) => {
         <div className="md:hidden flex flex-col items-center mt-4">
           <div className="flex gap-2">
             <button
-              className="flex items-center gap-1 px-3 py-2 bg-[#0CBB7D] text-white text-[10px] sm:text-[12px] font-[600] rounded-lg hover:bg-green-500 transition"
+              className="flex items-center gap-1 px-3 py-2 bg-brand-primary text-white text-[10px] sm:text-[12px] font-[600] rounded-lg hover:bg-green-500 transition"
               onClick={handleCreateTicket}
             >
               <FiTag className="w-4 h-4" />
@@ -180,7 +180,7 @@ const SupportPage = ({ isSidebarAdmin }) => {
           </h3>
           <div className="flex gap-2">
             <button
-              className="flex items-center gap-1 px-3 py-2 bg-[#0CBB7D] text-white text-[10px] sm:text-[12px] font-[600] rounded-lg hover:bg-green-500 transition"
+              className="flex items-center gap-1 px-3 py-2 bg-brand-primary text-white text-[10px] sm:text-[12px] font-[600] rounded-lg hover:bg-green-500 transition"
               onClick={handleCreateTicket}
             >
               <FiTag className="w-4 h-4" />
@@ -218,7 +218,7 @@ const SupportPage = ({ isSidebarAdmin }) => {
               <div className="hidden md:block overflow-x-auto">
                 <table className="min-w-full bg-white border border-gray-200">
                   <thead>
-                    <tr className="bg-[#0CBB7D] text-white text-[12px] font-[600] border border-gray-200">
+                    <tr className="bg-brand-primary text-white text-[12px] font-[600] border border-gray-200">
                       <th className="px-3 py-2 text-center" style={{ width: "80px", maxWidth: "100px" }}>
                         Sl No.
                       </th>

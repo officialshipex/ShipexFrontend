@@ -128,7 +128,7 @@ const WebhookLogs = () => {
       <div ref={tableRef} style={{ height: tableHeight }} className="hidden md:block overflow-auto relative bg-white">
         <table className="min-w-full table-auto">
           <thead className="sticky top-0 z-10">
-            <tr className="bg-[#0CBB7D] text-white text-[12px] font-[600]">
+            <tr className="bg-brand-primary text-white text-[12px] font-[600]">
               <th className="py-2 px-3 text-left">Timestamp</th>
               <th className="py-2 px-3 text-left">Webhook ID</th>
               <th className="py-2 px-3 text-left">URL</th>
@@ -156,7 +156,7 @@ const WebhookLogs = () => {
                     })}
                   </td>
                   <td className="py-2 px-3 font-mono text-[11px]">{log.webhookId}</td>
-                  <td className="py-2 px-3 max-w-xs truncate text-[#0CBB7D]" title={log.url}>{log.url}</td>
+                  <td className="py-2 px-3 max-w-xs truncate text-brand-primary" title={log.url}>{log.url}</td>
                   <td className="py-2 px-3">
                     <span className="bg-blue-100 text-blue-600 text-[10px] px-2 py-0.5 rounded border border-blue-200">
                       {log.eventTopic}
@@ -169,7 +169,7 @@ const WebhookLogs = () => {
                   </td>
                   <td className="py-2 px-3 text-center">
                     <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${
-                      log.status === "Success" ? "bg-green-100 text-[#0CBB7D] border-green-200" : "bg-red-100 text-red-600 border-red-200"
+                      log.status === "Success" ? "bg-green-100 text-brand-primary border-green-200" : "bg-red-100 text-red-600 border-red-200"
                     }`}>
                       {log.status}
                     </span>
@@ -180,7 +180,7 @@ const WebhookLogs = () => {
                         setSelectedLog(log);
                         setIsLogDetailOpen(true);
                       }}
-                      className="text-[#0CBB7D] hover:underline font-[600]"
+                      className="text-brand-primary hover:underline font-[600]"
                     >
                       Details
                     </button>
@@ -220,7 +220,7 @@ const WebhookLogs = () => {
                         HTTP {log.httpStatus || "N/A"}
                       </span>
                       <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold border ${
-                        log.status === "Success" ? "bg-green-50 text-[#0CBB7D] border-green-100" : "bg-red-50 text-red-600 border-red-100"
+                        log.status === "Success" ? "bg-green-50 text-brand-primary border-green-100" : "bg-red-50 text-red-600 border-red-100"
                       }`}>
                         {log.status}
                       </span>
@@ -242,7 +242,7 @@ const WebhookLogs = () => {
                         setSelectedLog(log);
                         setIsLogDetailOpen(true);
                       }}
-                      className="text-[#0CBB7D] hover:underline text-[10px] font-semibold"
+                      className="text-brand-primary hover:underline text-[10px] font-semibold"
                     >
                       View Details →
                     </button>
@@ -283,7 +283,7 @@ const WebhookLogs = () => {
                 </div>
                 <div className="bg-gray-50 p-2 rounded border col-span-2">
                   <p className="text-gray-400 text-[10px] uppercase font-bold">Destination URL</p>
-                  <p className="text-[#0CBB7D] font-mono break-all">{selectedLog.url}</p>
+                  <p className="text-brand-primary font-mono break-all">{selectedLog.url}</p>
                 </div>
                 <div className="bg-gray-50 p-2 rounded border">
                   <p className="text-gray-400 text-[10px] uppercase font-bold">HTTP Status</p>
@@ -301,7 +301,7 @@ const WebhookLogs = () => {
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <h3 className="text-[12px] font-[600] text-gray-700">Payload Sent</h3>
-                    <button onClick={() => copyToClipboard(JSON.stringify(selectedLog.payload, null, 2), "payload")} className="text-gray-400 hover:text-[#0CBB7D]">
+                    <button onClick={() => copyToClipboard(JSON.stringify(selectedLog.payload, null, 2), "payload")} className="text-gray-400 hover:text-brand-primary">
                       {copiedId === "payload" ? <FiCheck size={14} /> : <FiCopy size={14} />}
                     </button>
                   </div>
@@ -313,7 +313,7 @@ const WebhookLogs = () => {
                 <div>
                   <div className="flex items-center justify-between mb-1">
                     <h3 className="text-[12px] font-[600] text-gray-700">Server Response</h3>
-                    <button onClick={() => copyToClipboard(JSON.stringify(selectedLog.response, null, 2), "response")} className="text-gray-400 hover:text-[#0CBB7D]">
+                    <button onClick={() => copyToClipboard(JSON.stringify(selectedLog.response, null, 2), "response")} className="text-gray-400 hover:text-brand-primary">
                       {copiedId === "response" ? <FiCheck size={14} /> : <FiCopy size={14} />}
                     </button>
                   </div>

@@ -15,7 +15,7 @@ function EmployeeAuthModal({ employeeModalShow, employeeModalClose }) {
         </h2>
         <button
           onClick={employeeModalClose}
-          className="mt-4 bg-[#0CBB7D] hover:bg-green-700 text-white px-8 py-3 rounded-md transition"
+          className="mt-4 bg-brand-primary hover:bg-green-700 text-white px-8 py-3 rounded-md transition"
         >
           OK
         </button>

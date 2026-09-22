@@ -84,7 +84,7 @@ const TestMessageModal = ({ onClose, channel, channelLabel, targetUserId, initia
                                     key={i}
                                     className={`inline-block w-2.5 h-2.5 rounded-full border transition-colors ${
                                         i < usedCount
-                                            ? "bg-[#0CBB7D] border-[#0CBB7D]"
+                                            ? "bg-brand-primary border-brand-primary"
                                             : "bg-white border-gray-300"
                                     }`}
                                 />
@@ -113,7 +113,7 @@ const TestMessageModal = ({ onClose, channel, channelLabel, targetUserId, initia
                             onKeyDown={(e) => {
                                 if (e.key === "Enter" && !loading && !isSuccess) handleSend();
                             }}
-                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] mt-1 mb-2 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] mt-1 mb-2 outline-none focus:ring-1 focus:ring-brand-primary"
                         />
                         <p className="text-[10px] sm:text-[12px] text-gray-500 font-[500]">
                             ✓ Test messages are free — no credits deducted. Max {MAX_TESTS} per account.
@@ -122,7 +122,7 @@ const TestMessageModal = ({ onClose, channel, channelLabel, targetUserId, initia
                 )}
 
                 {resultMsg && (
-                    <p className={`text-[10px] sm:text-[12px] font-[600] mt-2 ${isSuccess ? "text-[#0CBB7D]" : "text-red-500"}`}>
+                    <p className={`text-[10px] sm:text-[12px] font-[600] mt-2 ${isSuccess ? "text-brand-primary" : "text-red-500"}`}>
                         {resultMsg}
                     </p>
                 )}
@@ -142,7 +142,7 @@ const TestMessageModal = ({ onClose, channel, channelLabel, targetUserId, initia
                             className={`rounded-lg px-5 py-2 text-[10px] sm:text-[12px] font-[600] transition-all ${
                                 !recipient.trim() || loading
                                     ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                                    : "bg-[#0CBB7D] text-white hover:bg-green-500"
+                                    : "bg-brand-primary text-white hover:bg-green-500"
                             }`}
                         >
                             {loading ? "Sending..." : "Send Test"}

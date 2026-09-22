@@ -243,7 +243,7 @@ const DisputeRaisedDiscrepancy = ({ refresh, setRefresh, canAction }) => {
           onClick={() => setIsFilterPanelOpen(true)}
           className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[12px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-9"
         >
-          <Filter className="w-4 h-4 text-[#0CBB7D]" />
+          <Filter className="w-4 h-4 text-brand-primary" />
           More Filters
         </button>
 
@@ -262,7 +262,7 @@ const DisputeRaisedDiscrepancy = ({ refresh, setRefresh, canAction }) => {
               disabled={selectedDispute.length === 0}
               onClick={() => setDesktopDropdownOpen(!desktopDropdownOpen)}
               className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedDispute.length > 0
-                ? "border-[#0CBB7D] text-[#0CBB7D] hover:bg-green-50"
+                ? "border-brand-primary text-brand-primary hover:bg-green-50"
                 : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
@@ -307,7 +307,7 @@ const DisputeRaisedDiscrepancy = ({ refresh, setRefresh, canAction }) => {
             onClick={() => setIsFilterPanelOpen(true)}
             className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border border-gray-300 rounded-lg text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap h-[32px] min-w-[100px]"
           >
-            <Filter className="w-3 h-3 text-[#0CBB7D]" />
+            <Filter className="w-3 h-3 text-brand-primary" />
             More Filters
           </button>
         </div>
@@ -340,7 +340,7 @@ const DisputeRaisedDiscrepancy = ({ refresh, setRefresh, canAction }) => {
             <div className="flex justify-center w-full">
               <button
                 onClick={() => handleOpenModal(order.text, order.imageUrl)}
-                className="text-[#0CBB7D] font-[600] text-[12px] underline hover:bg-opacity-90 transition"
+                className="text-brand-primary font-[600] text-[12px] underline hover:bg-opacity-90 transition"
               >
                 Details
               </button>
@@ -351,7 +351,7 @@ const DisputeRaisedDiscrepancy = ({ refresh, setRefresh, canAction }) => {
             <div className="flex flex-col gap-1 items-center justify-center w-full">
               <button
                 onClick={() => handleOpenPopup(order.awbNumber)}
-                className="w-16 bg-[#0CBB7D] text-white px-2 py-1 rounded-lg text-[10px] hover:bg-opacity-90 transition disabled:opacity-50"
+                className="w-16 bg-brand-primary text-white px-2 py-1 rounded-lg text-[10px] hover:bg-opacity-90 transition disabled:opacity-50"
                 disabled={!canAction}
               >
                 Accept
@@ -376,7 +376,7 @@ const DisputeRaisedDiscrepancy = ({ refresh, setRefresh, canAction }) => {
               type="checkbox"
               checked={selectedDispute.length === orders.length && orders.length > 0}
               onChange={handleSelectAll}
-              className="accent-[#0CBB7D] w-3 h-3"
+              className="accent-brand-primary w-3 h-3"
             />
             <span className="text-[10px] font-[600] text-gray-700 tracking-wider">Select All</span>
           </div>
@@ -386,7 +386,7 @@ const DisputeRaisedDiscrepancy = ({ refresh, setRefresh, canAction }) => {
               disabled={selectedDispute.length === 0}
               onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
               className={`h-[30px] px-3 rounded-lg flex items-center justify-center border transition-all ${selectedDispute.length > 0
-                ? "border-[#0CBB7D] text-[#0CBB7D] bg-white shadow-sm"
+                ? "border-brand-primary text-brand-primary bg-white shadow-sm"
                 : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
@@ -424,14 +424,14 @@ const DisputeRaisedDiscrepancy = ({ refresh, setRefresh, canAction }) => {
               <div className="px-3 py-2 bg-gray-50 flex justify-between items-center border-t">
                 <button
                   onClick={() => handleOpenModal(order.text, order.imageUrl)}
-                  className="bg-[#0CBB7D] text-white px-3 py-1 rounded-md text-[10px]"
+                  className="bg-brand-primary text-white px-3 py-1 rounded-md text-[10px]"
                 >
                   Details
                 </button>
                 <div className="flex gap-2">
                   <button
                     onClick={() => handleOpenPopup(order.awbNumber)}
-                    className="bg-[#0CBB7D] text-white px-3 py-1 rounded-md text-[10px] disabled:opacity-50"
+                    className="bg-brand-primary text-white px-3 py-1 rounded-md text-[10px] disabled:opacity-50"
                     disabled={!canAction}
                   >
                     Accept

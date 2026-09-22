@@ -181,7 +181,7 @@ const CarrierSelection = () => {
       {/* Fixed Header Section */}
       <div className="flex-shrink-0 bg-[#f5f7fb] z-40">
         <h1 className="sm:text-[14px] text-[12px] font-[600] text-gray-700 mb-2 tracking-tight">
-          Order ID : <span className="text-[#0CBB7D]">{orderDetails.orderId}</span>
+          Order ID : <span className="text-brand-primary">{orderDetails.orderId}</span>
         </h1>
 
         <div className="sm:flex hidden font-[600] flex-wrap gap-2 items-center justify-between bg-white rounded-lg px-3 py-2 mb-2 shadow border">
@@ -322,7 +322,7 @@ const CarrierSelection = () => {
               {/* Floating Icon */}
               <div className="absolute -top-7 left-1/2 -translate-x-1/2 flex flex-col items-center z-50">
                 <span className="w-10 h-10 flex items-center justify-center text-gray-700 bg-white rounded-full shadow-lg border p-1">
-                  <FaMapMarkerAlt className="text-[#0CBB7D] text-[16px]" />
+                  <FaMapMarkerAlt className="text-brand-primary text-[16px]" />
                 </span>
               </div>
               <div className="mt-7 flex flex-col items-center w-full px-1">
@@ -384,7 +384,7 @@ const CarrierSelection = () => {
               {/* Floating Icon */}
               <div className="absolute -top-7 left-1/2 -translate-x-1/2 flex flex-col items-center z-50">
                 <span className="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-lg border p-1">
-                  <FaRupeeSign className="text-[#0CBB7D] text-[16px]" />
+                  <FaRupeeSign className="text-brand-primary text-[16px]" />
                 </span>
               </div>
               <div className="mt-7 flex flex-col items-center">
@@ -398,7 +398,7 @@ const CarrierSelection = () => {
               {/* Floating Icon */}
               <div className="absolute -top-7 left-1/2 -translate-x-1/2 flex flex-col items-center z-50">
                 <span className="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-lg border p-1">
-                  <FaWeightHanging className="text-[#0CBB7D] text-[16px]" />
+                  <FaWeightHanging className="text-brand-primary text-[16px]" />
                 </span>
               </div>
               <div
@@ -468,7 +468,7 @@ const CarrierSelection = () => {
                   <div
                     key={item._id}
                     className={`relative border text-[10px] rounded-lg p-3 mb-2 shadow-sm bg-white cursor-pointer transition
-                      ${isActive ? "border-[#0CBB7D] ring-[#0CBB7D]" : "border-gray-200"}
+                      ${isActive ? "border-brand-primary ring-brand-primary" : "border-gray-200"}
                     `}
                     onClick={() => setSelectedCourier(item)}
                   >
@@ -575,7 +575,7 @@ const CarrierSelection = () => {
                         <div className="text-gray-700 flex items-center gap-1">
                           ₹{Number(item.forward.finalCharges).toFixed(2)}
                           <FiInfo
-                            className="text-[#0CBB7D] cursor-pointer"
+                            className="text-brand-primary cursor-pointer"
                             onClick={(e) => {
                               e.stopPropagation();
                               setOpenPopup(openPopup === `charges_${idx}` ? null : `charges_${idx}`);
@@ -599,7 +599,7 @@ const CarrierSelection = () => {
                                 </div>
                                 <div className="flex justify-between border-t pt-1">
                                   <span className="text-gray-700 font-bold">Total:</span>
-                                  <span className="font-bold text-[#0CBB7D]">₹{Number(item?.forward?.finalCharges || 0).toFixed(2)}</span>
+                                  <span className="font-bold text-brand-primary">₹{Number(item?.forward?.finalCharges || 0).toFixed(2)}</span>
                                 </div>
                               </div>
                             </div>
@@ -615,7 +615,7 @@ const CarrierSelection = () => {
                 <button
                   onClick={() => handleShip()}
                   disabled={!selectedCourier || loadingButtons[selectedCourier?.courierServiceName || isAnyShipmentProcessing]}
-                  className={`w-full px-3 py-2 rounded-lg font-[600] text-white bg-[#0CBB7D] shadow-lg text-[12px] transition
+                  className={`w-full px-3 py-2 rounded-lg font-[600] text-white bg-brand-primary shadow-lg text-[12px] transition
                     ${(!selectedCourier || isAnyShipmentProcessing) ? "opacity-50 cursor-not-allowed" : ""}
                     ${loadingButtons[selectedCourier?.courierServiceName] ? "opacity-50 cursor-not-allowed" : ""}
                   `}
@@ -634,14 +634,14 @@ const CarrierSelection = () => {
               <div className="overflow-auto relative bg-white h-[calc(100vh-205px)] shadow-sm">
                 <table className="w-full text-[12px] bg-white table-fixed">
                   <thead className="sticky top-0 z-10">
-                    <tr className="bg-[#0CBB7D] text-white text-[12px] font-[600]">
-                      <th className="py-2 px-3 text-left bg-[#0CBB7D]">Courier Partner</th>
-                      <th className="py-2 px-3 text-center bg-[#0CBB7D]">Mode</th>
-                      <th className="py-2 px-3 text-center bg-[#0CBB7D]">Estimated Pickup Date</th>
-                      <th className="py-2 px-3 text-center bg-[#0CBB7D]">Estimated Delivery Date</th>
-                      <th className="py-2 px-3 text-center bg-[#0CBB7D]">Chargeable Weight</th>
-                      <th className="py-2 px-3 text-center bg-[#0CBB7D]">Charges</th>
-                      <th className="py-2 px-3 text-center bg-[#0CBB7D]">Action</th>
+                    <tr className="bg-brand-primary text-white text-[12px] font-[600]">
+                      <th className="py-2 px-3 text-left bg-brand-primary">Courier Partner</th>
+                      <th className="py-2 px-3 text-center bg-brand-primary">Mode</th>
+                      <th className="py-2 px-3 text-center bg-brand-primary">Estimated Pickup Date</th>
+                      <th className="py-2 px-3 text-center bg-brand-primary">Estimated Delivery Date</th>
+                      <th className="py-2 px-3 text-center bg-brand-primary">Chargeable Weight</th>
+                      <th className="py-2 px-3 text-center bg-brand-primary">Charges</th>
+                      <th className="py-2 px-3 text-center bg-brand-primary">Action</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -722,7 +722,7 @@ const CarrierSelection = () => {
                           <div className="flex items-center justify-center gap-1">
                             ₹{Number(item.forward.finalCharges).toFixed(2)}
                             <div className="relative group p-1">
-                              <FiInfo className="text-[#0CBB7D] cursor-help" />
+                              <FiInfo className="text-brand-primary cursor-help" />
                               {/* HOVER DETAILS (STAYS OPEN) - Match OrdersTable Style */}
                               <div className={`absolute z-[200] hidden group-hover:block bg-white text-gray-700 text-[10px] p-3 rounded-md border shadow-2xl w-48 right-full mr-3 whitespace-normal break-words leading-relaxed font-normal ${index >= plan.length - 2 ? "bottom-0 mb-4" : "top-1/2 -translate-y-1/2"
                                 }`}>
@@ -743,7 +743,7 @@ const CarrierSelection = () => {
                                     </div>
                                     <div className="flex justify-between border-t mt-1 pt-1 font-[600]">
                                       <span className="text-gray-700">Total:</span>
-                                      <span className="text-[#0CBB7D]">₹{Number(item?.forward?.finalCharges || 0).toFixed(2)}</span>
+                                      <span className="text-brand-primary">₹{Number(item?.forward?.finalCharges || 0).toFixed(2)}</span>
                                     </div>
                                   </div>
                                 </div>
@@ -757,7 +757,7 @@ const CarrierSelection = () => {
                           <button
                             onClick={() => handleShip(item)}
                             disabled={loadingButtons[item.courierServiceName] || isAnyShipmentProcessing}
-                            className={`px-3 py-2 rounded-lg font-[600] text-[10px] text-white bg-[#0CBB7D] shadow
+                            className={`px-3 py-2 rounded-lg font-[600] text-[10px] text-white bg-brand-primary shadow
               ${(loadingButtons[item.courierServiceName] || isAnyShipmentProcessing) ? "opacity-50 cursor-not-allowed" : ""}
               `}
                           >

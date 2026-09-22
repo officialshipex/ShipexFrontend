@@ -48,11 +48,11 @@ const OverviewWeightDisputeSection = ({ selectedUserId }) => {
 
   const StatBox = ({ label, value, icon: Icon, onClick }) => (
     <div
-      className="flex items-center border border-gray-200 cursor-pointer bg-white rounded-lg p-3 shadow-sm hover:border-[#0CBB7D] transition-all duration-700 w-full"
+      className="flex items-center border border-gray-200 cursor-pointer bg-white rounded-lg p-3 shadow-sm hover:border-brand-primary transition-all duration-700 w-full"
       onClick={onClick}
     >
       {Icon && (
-        <div className="bg-[#0CBB7D] p-2 rounded-full mr-3">
+        <div className="bg-brand-primary p-2 rounded-full mr-3">
           <Icon className="text-white text-[14px] sm:text-[16px]" />
         </div>
       )}

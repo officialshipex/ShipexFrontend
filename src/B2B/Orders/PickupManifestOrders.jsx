@@ -160,7 +160,7 @@ const PickupManifestOrders = () => {
                         onClick={() => setIsFilterPanelOpen(true)}
                         className="flex-shrink-0 flex items-center justify-center gap-2 px-3 py-2 bg-white border rounded-lg sm:text-[12px] text-[10px] font-[600] text-gray-500 hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap min-w-[120px]"
                     >
-                        <Filter className="w-4 h-4 text-[#0CBB7D]" />
+                        <Filter className="w-4 h-4 text-brand-primary" />
                         More Filters
                     </button>
                     <div className="hidden md:block">
@@ -178,7 +178,7 @@ const PickupManifestOrders = () => {
                         onClick={() => setDesktopActionDropdown(!desktopActionDropdown)}
                         className={`h-9 px-4 rounded-lg text-[12px] font-[600] flex items-center gap-2 transition-all border ${selectedManifests.length === 0
                             ? "border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed"
-                            : "border-[#0CBB7D] text-[#0CBB7D] bg-white hover:bg-green-50 shadow-sm"
+                            : "border-brand-primary text-brand-primary bg-white hover:bg-green-50 shadow-sm"
                             }`}
                     >
                         Actions <ChevronDown className={`w-4 h-4 transition-transform ${desktopActionDropdown ? 'rotate-180' : ''}`} />
@@ -217,7 +217,7 @@ const PickupManifestOrders = () => {
             <div ref={tableRef} className="hidden md:block">
                 <div style={{ height: tableHeight }} className="overflow-auto relative bg-white">
                     <table className="w-full text-left border-collapse">
-                        <thead className="sticky top-0 z-20 bg-[#0CBB7D] text-white">
+                        <thead className="sticky top-0 z-20 bg-brand-primary text-white">
                             <tr className="">
                                 <th className="px-3 py-2 text-[12px] font-[600] text-center w-10">
                                     <input
@@ -227,7 +227,7 @@ const PickupManifestOrders = () => {
                                             if (selectedManifests.length === manifests.length) setSelectedManifests([]);
                                             else setSelectedManifests(manifests.map(m => m._id));
                                         }}
-                                        className="accent-[#0CBB7D] w-3 h-3 cursor-pointer"
+                                        className="accent-brand-primary w-3 h-3 cursor-pointer"
                                     />
                                 </th>
                                 <th className="px-3 py-2 text-[12px] font-[600]">Pickup ID</th>
@@ -257,13 +257,13 @@ const PickupManifestOrders = () => {
                                                         setSelectedManifests([...selectedManifests, m._id]);
                                                     }
                                                 }}
-                                                className="accent-[#0CBB7D] w-3 h-3 cursor-pointer"
+                                                className="accent-brand-primary w-3 h-3 cursor-pointer"
                                             />
                                         </td>
                                         <td className="px-3 py-2">
                                             <div
                                                 onClick={() => navigate(`/dashboard/order/pickup-manifest/${m.pickupId}`)}
-                                                className="text-[12px] font-[600] text-[#0CBB7D] cursor-pointer hover:underline"
+                                                className="text-[12px] font-[600] text-brand-primary cursor-pointer hover:underline"
                                             >
                                                 {m.pickupId}
                                             </div>
@@ -282,7 +282,7 @@ const PickupManifestOrders = () => {
                                             </div>
                                             {hoveredAddressId === m._id && (
                                                 <div className="absolute z-[100] left-0 mt-1 p-2 bg-white border border-gray-200 shadow-xl rounded-lg text-[10px] min-w-[200px] animate-popup-in pointer-events-none">
-                                                    <div className="font-[600] text-[#0CBB7D] mb-1">{m.pickupAddress?.contactName}</div>
+                                                    <div className="font-[600] text-brand-primary mb-1">{m.pickupAddress?.contactName}</div>
                                                     <div className="text-gray-700">{m.pickupAddress?.address}</div>
                                                     <div className="text-gray-500">{m.pickupAddress?.city}, {m.pickupAddress?.state} - {m.pickupAddress?.pincode}</div>
                                                     {m.pickupAddress?.phone && <div className="text-gray-500 mt-1">{m.pickupAddress?.phone}</div>}
@@ -301,7 +301,7 @@ const PickupManifestOrders = () => {
                                             </div>
                                         </td>
                                         <td className="px-3 py-2">
-                                            <span className="px-2 py-0.5 bg-green-100 text-[#0CBB7D] text-[10px] rounded">
+                                            <span className="px-2 py-0.5 bg-green-100 text-brand-primary text-[10px] rounded">
                                                 {m.status.replace(/_/g, " ")}
                                             </span>
                                         </td>
@@ -311,8 +311,8 @@ const PickupManifestOrders = () => {
                                                     <button
                                                         onClick={() => setIndividualDropdown(individualDropdown === m._id ? null : m._id)}
                                                         className={`h-8 px-3 rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all border ${individualDropdown === m._id
-                                                            ? "border-[#0CBB7D] text-white bg-[#0CBB7D]"
-                                                            : "border-[#0CBB7D] text-[#0CBB7D] bg-white hover:bg-green-50 shadow-sm"
+                                                            ? "border-brand-primary text-white bg-brand-primary"
+                                                            : "border-brand-primary text-brand-primary bg-white hover:bg-green-50 shadow-sm"
                                                             }`}
                                                     >
                                                         Actions <ChevronDown className={`w-3 h-3 transition-transform ${individualDropdown === m._id ? 'rotate-180' : ''}`} />
@@ -380,7 +380,7 @@ const PickupManifestOrders = () => {
                                 if (selectedManifests.length === manifests.length) setSelectedManifests([]);
                                 else setSelectedManifests(manifests.map(m => m._id));
                             }}
-                            className="cursor-pointer accent-[#0CBB7D] w-3 h-3"
+                            className="cursor-pointer accent-brand-primary w-3 h-3"
                         />
                         <span className="text-[10px] font-[600]">Select All</span>
                     </div>
@@ -390,11 +390,11 @@ const PickupManifestOrders = () => {
                             disabled={selectedManifests.length === 0}
                             className={`h-7 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 transition-all border ${selectedManifests.length === 0
                                 ? "border-gray-200 text-gray-400 cursor-not-allowed bg-gray-50"
-                                : "border-[#0CBB7D] text-[#0CBB7D] bg-white shadow-sm"
+                                : "border-brand-primary text-brand-primary bg-white shadow-sm"
                                 }`}
                             onClick={() => setMobileDropdownOpen(!mobileDropdownOpen)}
                         >
-                            <FaBars className={selectedManifests.length === 0 ? "text-gray-400" : "text-[#0CBB7D]"} />
+                            <FaBars className={selectedManifests.length === 0 ? "text-gray-400" : "text-brand-primary"} />
                             <span className="hidden sm:inline">Actions▼</span>
                         </button>
                         {mobileDropdownOpen && (
@@ -448,15 +448,15 @@ const PickupManifestOrders = () => {
                                                     setSelectedManifests([...selectedManifests, m._id]);
                                                 }
                                             }}
-                                            className="accent-[#0CBB7D] w-3 h-3 cursor-pointer"
+                                            className="accent-brand-primary w-3 h-3 cursor-pointer"
                                         />
                                         <div className="flex items-center gap-1 text-[10px]">
                                             <span className="text-gray-500 font-medium">Pickup ID:</span>
-                                            <h3 className="text-[11px] font-bold text-[#0CBB7D] cursor-pointer hover:underline" onClick={() => navigate(`/dashboard/order/pickup-manifest/${m.pickupId}`)}>
+                                            <h3 className="text-[11px] font-bold text-brand-primary cursor-pointer hover:underline" onClick={() => navigate(`/dashboard/order/pickup-manifest/${m.pickupId}`)}>
                                                 {m.pickupId}
                                             </h3>
                                         </div>
-                                        <span className="px-2 py-0.5 bg-green-200 text-[#0CBB7D] text-[9px] rounded font-bold uppercase">
+                                        <span className="px-2 py-0.5 bg-green-200 text-brand-primary text-[9px] rounded font-bold uppercase">
                                             {m.status?.replace(/_/g, " ")}
                                         </span>
                                     </div>
@@ -472,7 +472,7 @@ const PickupManifestOrders = () => {
                                         </div>
                                         {clickedAddressId === m._id && (
                                             <div className="absolute z-[100] right-0 mt-1 p-2 bg-white border border-gray-200 shadow-xl rounded-lg text-[10px] min-w-[200px] animate-popup-in">
-                                                <div className="font-[600] text-[#0CBB7D] mb-1">{m.pickupAddress?.contactName}</div>
+                                                <div className="font-[600] text-brand-primary mb-1">{m.pickupAddress?.contactName}</div>
                                                 <div className="text-gray-700">{m.pickupAddress?.address}</div>
                                                 <div className="text-gray-500">{m.pickupAddress?.city}, {m.pickupAddress?.state} - {m.pickupAddress?.pincode}</div>
                                                 {m.pickupAddress?.phone && <div className="text-gray-500 mt-1">{m.pickupAddress?.phone}</div>}
@@ -482,7 +482,7 @@ const PickupManifestOrders = () => {
                                     <div className="relative" ref={el => individualRefs.current[m._id] = el}>
                                         <button
                                             onClick={() => setIndividualDropdown(individualDropdown === m._id ? null : m._id)}
-                                            className={`h-7 px-2 rounded-lg text-[10px] font-bold flex items-center gap-1 border ${individualDropdown === m._id ? "bg-[#0CBB7D] text-white" : "bg-white text-[#0CBB7D] border-[#0CBB7D]"}`}
+                                            className={`h-7 px-2 rounded-lg text-[10px] font-bold flex items-center gap-1 border ${individualDropdown === m._id ? "bg-brand-primary text-white" : "bg-white text-brand-primary border-brand-primary"}`}
                                         >
                                             Actions <ChevronDown className="w-3 h-3" />
                                         </button>
@@ -508,20 +508,20 @@ const PickupManifestOrders = () => {
 
                                 <div className="flex justify-between text-[10px] text-gray-500 px-1">
                                     <span>Created: {dayjs(m.createdAt).format('DD MMM, hh:mm A')}</span>
-                                    <span className="text-[#0CBB7D] font-medium">{m.orderIds?.length || 0} Shipments</span>
+                                    <span className="text-brand-primary font-medium">{m.orderIds?.length || 0} Shipments</span>
                                 </div>
 
                                 <div className="flex items-center p-2 bg-green-200 rounded-lg justify-between gap-4 mt-1">
                                     <div>
                                         <p className="text-[9px] text-gray-500 uppercase tracking-wider font-bold">Pickup Date</p>
                                         <div className="flex items-center gap-1.5 mt-0.5 text-gray-700 font-bold text-[11px]">
-                                            <Calendar className="w-3.5 h-3.5 text-[#0CBB7D]" />
+                                            <Calendar className="w-3.5 h-3.5 text-brand-primary" />
                                             {dayjs(m.pickupDate).format('DD MMM YYYY')}
                                         </div>
                                     </div>
                                     <button
                                         onClick={() => handleDownloadManifest(m)}
-                                        className="bg-white text-[#0CBB7D] border border-[#0CBB7D] px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-50 shadow-sm flex items-center gap-1.5"
+                                        className="bg-white text-brand-primary border border-brand-primary px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-50 shadow-sm flex items-center gap-1.5"
                                     >
                                         <Download className="w-3 h-3" /> Manifest
                                     </button>

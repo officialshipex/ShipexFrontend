@@ -100,7 +100,7 @@ const InvoicesFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowMonthDropdown(!showMonthDropdown)}
-                                className={`${fieldStyle} ${showMonthDropdown ? "border-[#0CBB7D]" : "border-gray-300"} bg-white`}
+                                className={`${fieldStyle} ${showMonthDropdown ? "border-brand-primary" : "border-gray-300"} bg-white`}
                             >
                                 <span className={localFilters.month ? "text-gray-700 font-[600]" : "text-gray-400"}>
                                     {localFilters.month ? MONTHS.find(m => m.value === localFilters.month)?.label : "Select Month"}
@@ -113,7 +113,7 @@ const InvoicesFilterPanel = ({
                                         <div
                                             key={m.value}
                                             onClick={() => { setLocalFilters({ ...localFilters, month: m.value }); setShowMonthDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {m.label}
                                         </div>
@@ -129,7 +129,7 @@ const InvoicesFilterPanel = ({
                         <div className="relative">
                             <button
                                 onClick={() => setShowYearDropdown(!showYearDropdown)}
-                                className={`${fieldStyle} ${showYearDropdown ? "border-[#0CBB7D]" : "border-gray-300"} bg-white`}
+                                className={`${fieldStyle} ${showYearDropdown ? "border-brand-primary" : "border-gray-300"} bg-white`}
                             >
                                 <span className={localFilters.year ? "text-gray-700 font-[600]" : "text-gray-400"}>
                                     {localFilters.year || "Select Year"}
@@ -142,7 +142,7 @@ const InvoicesFilterPanel = ({
                                         <div
                                             key={y}
                                             onClick={() => { setLocalFilters({ ...localFilters, year: y }); setShowYearDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-[#0CBB7D] cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {y}
                                         </div>
@@ -163,7 +163,7 @@ const InvoicesFilterPanel = ({
                     </button>
                     <button
                         onClick={handleApply}
-                        className="flex-1 py-2 bg-[#0CBB7D] text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
+                        className="flex-1 py-2 bg-brand-primary text-white rounded-lg text-[12px] font-[600] hover:bg-opacity-90 transition-all shadow-sm active:scale-[0.98]"
                     >
                         Apply Filters
                     </button>

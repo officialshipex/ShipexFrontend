@@ -161,7 +161,7 @@ const KamDetailsEditModal = ({ isOpen, onClose, userId }) => {
                             </button>
 
                             <button
-                                className="px-3 py-2 rounded-lg bg-[#0CBB7D] hover:bg-green-500 text-white text-[10px] sm:text-[12px] font-[600]"
+                                className="px-3 py-2 rounded-lg bg-brand-primary hover:bg-green-500 text-white text-[10px] sm:text-[12px] font-[600]"
                                 onClick={handleSave}
                                 disabled={saving}
                             >

@@ -8,7 +8,7 @@ const WalletHistoryForm = ({ onClose }) => {
   const [activeTab, setActiveTab] = useState("recharge");
 
   return (
-    <div className="flex flex-col md:flex-row max-w-4xl mx-auto mt-10 bg-white rounded-lg shadow-sm border border-[#0CBB7D]">
+    <div className="flex flex-col md:flex-row max-w-4xl mx-auto mt-10 bg-white rounded-lg shadow-sm border border-brand-primary">
       {/* Left Side Image */}
       <div className="md:w-1/2 flex items-center justify-center p-6">
         <img
@@ -25,7 +25,7 @@ const WalletHistoryForm = ({ onClose }) => {
           <button
             onClick={() => setActiveTab("recharge")}
             className={`px-4 py-2 font-semibold text-sm 
-              ${activeTab === "recharge" ? "text-[#0CBB7D] border-b-2 border-[#0CBB7D]" : "text-gray-500"}
+              ${activeTab === "recharge" ? "text-brand-primary border-b-2 border-brand-primary" : "text-gray-500"}
             `}
           >
             Recharge
@@ -33,7 +33,7 @@ const WalletHistoryForm = ({ onClose }) => {
           <button
             onClick={() => setActiveTab("updation")}
             className={`px-4 py-2 font-semibold text-sm 
-              ${activeTab === "updation" ? "text-[#0CBB7D] border-b-2 border-[#0CBB7D]" : "text-gray-500"}
+              ${activeTab === "updation" ? "text-brand-primary border-b-2 border-brand-primary" : "text-gray-500"}
             `}
           >
             Updation
@@ -41,7 +41,7 @@ const WalletHistoryForm = ({ onClose }) => {
           <button
             onClick={() => setActiveTab("direct")}
             className={`px-4 py-2 font-semibold text-sm 
-              ${activeTab === "direct" ? "text-[#0CBB7D] border-b-2 border-[#0CBB7D]" : "text-gray-500"}
+              ${activeTab === "direct" ? "text-brand-primary border-b-2 border-brand-primary" : "text-gray-500"}
             `}
           >
             Direct Update

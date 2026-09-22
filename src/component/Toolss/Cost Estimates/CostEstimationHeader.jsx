@@ -35,7 +35,7 @@ const CostEstimationHeader = () => {
           {/* Selected */}
           <div
             onClick={() => setOpen(!open)}
-            className="flex items-center justify-between px-3 py-2 border rounded-lg bg-gray-50 text-[12px] cursor-pointer focus:ring-1 focus:ring-[#0CBB7D]"
+            className="flex items-center justify-between px-3 py-2 border rounded-lg bg-gray-50 text-[12px] cursor-pointer focus:ring-1 focus:ring-brand-primary"
           >
             <span className="font-[600] text-gray-700">{selected}</span>
             <FiChevronDown

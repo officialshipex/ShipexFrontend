@@ -63,7 +63,7 @@ const AddPlanModal = ({ isOpen, onClose, onSuccess, rateType, setPlanNameAdd }) 
                         value={planName}
                         onChange={(e) => setPlanName(e.target.value)}
                         placeholder="Plan Name"
-                        className="w-full border border-gray-300 text-[11px] sm:text-[12px] font-medium placeholder:text-gray-400 text-gray-700 focus:border-[#0CBB7D] focus:outline-none px-3 py-2 rounded-lg transition-all"
+                        className="w-full border border-gray-300 text-[11px] sm:text-[12px] font-medium placeholder:text-gray-400 text-gray-700 focus:border-brand-primary focus:outline-none px-3 py-2 rounded-lg transition-all"
                         required
                         disabled={isSubmitting}
                     />
@@ -78,7 +78,7 @@ const AddPlanModal = ({ isOpen, onClose, onSuccess, rateType, setPlanNameAdd }) 
                         </button>
                         <button
                             type="submit"
-                            className={`bg-[#0CBB7D] text-white px-3 py-2 rounded-lg text-[10px] sm:text-[12px] font-[600] ${!planName.trim() ? "opacity-50 cursor-not-allowed" : "hover:bg-green-500"} transition-all duration-300`}
+                            className={`bg-brand-primary text-white px-3 py-2 rounded-lg text-[10px] sm:text-[12px] font-[600] ${!planName.trim() ? "opacity-50 cursor-not-allowed" : "hover:bg-green-500"} transition-all duration-300`}
                             disabled={isSubmitting || !planName.trim()}
                         >
                             {isSubmitting ? "Submitting..." : "Submit"}

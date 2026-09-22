@@ -100,7 +100,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                 <div className="flex justify-between items-center mb-3 border-b pb-2">
                     <div className="flex items-center gap-2">
                         <p className="p-2 bg-green-100 hidden sm:block rounded-full">
-                            <Package className="w-4 h-4 text-[#0CBB7D]" />
+                            <Package className="w-4 h-4 text-brand-primary" />
                         </p>
 
                         <h2 className="text-[12px] sm:text-[14px] font-[600] text-gray-700">
@@ -149,7 +149,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                 {/* Total Amount - Always visible on mobile */}
                 <div className="mt-3 pt-3 border-t flex justify-between items-center sm:text-[12px] text-[10px] font-[600]">
                     <span className="text-gray-700">Total Amount:</span>
-                    <span className="text-[#0CBB7D]">
+                    <span className="text-brand-primary">
                         ₹{parseFloat(order.paymentDetails?.amount || 0).toFixed(2)}
                     </span>
                 </div>
@@ -178,7 +178,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                                 </button>
                                 <button
                                     onClick={handleSave}
-                                    className="px-3 py-2 bg-[#0CBB7D] text-white rounded-lg text-[10px] sm:text-[12px] font-[600] hover:opacity-90"
+                                    className="px-3 py-2 bg-brand-primary text-white rounded-lg text-[10px] sm:text-[12px] font-[600] hover:opacity-90"
                                 >
                                     Save Changes
                                 </button>
@@ -189,10 +189,10 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                             {products.map((product, index) => (
                                 <div
                                     key={index}
-                                    className="border border-dashed border-[#0CBB7D] rounded-lg p-4 mb-4 relative bg-white"
+                                    className="border border-dashed border-brand-primary rounded-lg p-4 mb-4 relative bg-white"
                                 >
                                     {/* Number Badge */}
-                                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-[#0CBB7D] text-white sm:w-8 sm:h-8 w-6 h-6 flex justify-center items-center rounded-full text-[12px] font-[600] shadow">
+                                    <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-brand-primary text-white sm:w-8 sm:h-8 w-6 h-6 flex justify-center items-center rounded-full text-[12px] font-[600] shadow">
                                         {index + 1}
                                     </div>
 
@@ -221,7 +221,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                                                 type="text"
                                                 value={product.name || ""}
                                                 onChange={(e) => handleProductChange(index, "name", e.target.value)}
-                                                className="w-full border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-[#0CBB7D]"
+                                                className="w-full border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-brand-primary"
                                                 placeholder="Enter product name"
                                             />
                                         </div>
@@ -232,7 +232,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                                                 type="text"
                                                 value={product.hsn || ""}
                                                 onChange={(e) => handleProductChange(index, "hsn", e.target.value)}
-                                                className="w-full border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-[#0CBB7D]"
+                                                className="w-full border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-brand-primary"
                                                 placeholder="HSN"
                                             />
                                         </div>
@@ -272,7 +272,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                                                     type="text"
                                                     value={product.unitPrice || ""}
                                                     onChange={(e) => handleProductChange(index, "unitPrice", e.target.value)}
-                                                    className="w-full pl-7 border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-[#0CBB7D]"
+                                                    className="w-full pl-7 border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-brand-primary"
                                                     placeholder="Unit Price"
                                                 />
                                             </div>
@@ -292,14 +292,14 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                                     >
                                         {/* Arrow Icon */}
                                         <ChevronDown
-                                            className={`w-4 h-4 text-[#0CBB7D] transition-transform duration-300
+                                            className={`w-4 h-4 text-brand-primary transition-transform duration-300
     ${product.showAdditionalFields ? "rotate-180" : "rotate-0"}
   `}
                                         />
 
 
                                         {/* Text */}
-                                        <span className="text-[#0CBB7D] sm:text-[12px] text-[10px] font-[600]">
+                                        <span className="text-brand-primary sm:text-[12px] text-[10px] font-[600]">
                                             {product.showAdditionalFields
                                                 ? "Hide additional fields"
                                                 : "Add Category, Discount and Tax"}
@@ -321,7 +321,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                                                     type="text"
                                                     value={product.category || ""}
                                                     onChange={(e) => handleProductChange(index, "category", e.target.value)}
-                                                    className="w-full border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-[#0CBB7D]"
+                                                    className="w-full border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-brand-primary"
                                                     placeholder="Product Category"
                                                 />
                                             </div>
@@ -332,7 +332,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                                                     type="text"
                                                     value={product.sku || ""}
                                                     onChange={(e) => handleProductChange(index, "sku", e.target.value)}
-                                                    className="w-full border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-[#0CBB7D]"
+                                                    className="w-full border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-brand-primary"
                                                     placeholder="SKU"
                                                 />
                                             </div>
@@ -343,7 +343,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                                                     type="text"
                                                     value={product.discount || ""}
                                                     onChange={(e) => handleProductChange(index, "discount", e.target.value)}
-                                                    className="w-full border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-[#0CBB7D]"
+                                                    className="w-full border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-brand-primary"
                                                     placeholder="Discount"
                                                 />
                                             </div>
@@ -354,7 +354,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                                                     type="text"
                                                     value={product.tax || ""}
                                                     onChange={(e) => handleProductChange(index, "tax", e.target.value)}
-                                                    className="w-full border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-[#0CBB7D]"
+                                                    className="w-full border rounded-lg px-3 py-2 sm:text-[12px] text-[10px] focus:outline-brand-primary"
                                                     placeholder="Tax"
                                                 />
                                             </div>
@@ -366,7 +366,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                             {/* Add Product Button */}
                             <button
                                 onClick={addProduct}
-                                className="flex items-center justify-center sm:w-8 sm:h-8 w-6 h-6 bg-[#0CBB7D] text-white rounded-full mx-auto hover:opacity-90"
+                                className="flex items-center justify-center sm:w-8 sm:h-8 w-6 h-6 bg-brand-primary text-white rounded-full mx-auto hover:opacity-90"
                             >
                                 +
                             </button>
@@ -374,7 +374,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                             {/* Total Display */}
                             <div className="mt-2 px-3 py-2 bg-green-100 rounded-lg flex justify-between items-center">
                                 <span className="sm:text-[12px] text-[10px] font-[600] text-gray-700">Total Amount</span>
-                                <span className="sm:text-[12px] text-[10px] font-[600] text-[#0CBB7D]">₹ {calculateTotal()}</span>
+                                <span className="sm:text-[12px] text-[10px] font-[600] text-brand-primary">₹ {calculateTotal()}</span>
                             </div>
                         </div>
                     </div>

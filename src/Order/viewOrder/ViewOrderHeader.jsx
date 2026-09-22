@@ -51,7 +51,7 @@ const ViewOrderHeader = ({ order }) => {
 
                         <div className="flex items-center gap-2 group">
                             <h1 className="sm:text-[14px] text-[10px] font-[600] text-gray-700">
-                                Order ID <span className="text-[#0CBB7D]">{order.orderId}</span>
+                                Order ID <span className="text-brand-primary">{order.orderId}</span>
                             </h1>
 
                             {/* Copy Icon */}
@@ -59,9 +59,9 @@ const ViewOrderHeader = ({ order }) => {
                                 onClick={handleCopyOrderId}
                                 className="cursor-pointer transition-opacity"
                             >
-                                <div className="relative flex items-center justify-center text-gray-500 hover:text-[#0CBB7D]">
+                                <div className="relative flex items-center justify-center text-gray-500 hover:text-brand-primary">
                                     {copiedOrderId ? (
-                                        <FiCheck className="w-3 h-3 text-[#0CBB7D]" />
+                                        <FiCheck className="w-3 h-3 text-brand-primary" />
                                     ) : (
                                         <FiCopy className="w-3 h-3" />
                                     )}
@@ -78,7 +78,7 @@ const ViewOrderHeader = ({ order }) => {
                         <span
                             className={`hidden sm:inline-block px-2 font-[600] py-1 rounded text-[10px] ${order.status === "Cancelled"
                                 ? "bg-red-100 text-red-600"
-                                : "bg-green-100 text-[#0CBB7D]"
+                                : "bg-green-100 text-brand-primary"
                                 }`}
                         >
                             {order.status}
@@ -111,7 +111,7 @@ const ViewOrderHeader = ({ order }) => {
                     <span
                         className={`sm:hidden px-2 font-[600] py-1 rounded text-[10px] ${order.status === "Cancelled"
                             ? "bg-red-100 text-red-600"
-                            : "bg-green-100 text-[#0CBB7D]"
+                            : "bg-green-100 text-brand-primary"
                             }`}
                     >
                         {order.status}

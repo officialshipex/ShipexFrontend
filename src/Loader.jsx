@@ -4,7 +4,7 @@ const SpinnerWithCompanyIcon = () => {
         <div className="flex justify-center items-center h-20">
             <div className="relative w-10 h-10">
                 {/* Spinner Circle */}
-                <div className="absolute inset-0 rounded-full border-4 border-t-gray-300 border-r-gray-300 border-b-[#0CBB7D] border-l-[#0CBB7D] animate-spin"></div>
+                <div className="absolute inset-0 rounded-full border-4 border-t-gray-300 border-r-gray-300 border-b-brand-primary border-l-brand-primary animate-spin"></div>
 
                 {/* Company Logo in Center */}
                 <img

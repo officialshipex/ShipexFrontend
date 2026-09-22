@@ -183,7 +183,7 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
                     <div className="w-full">
 
                         {/* Mobile View: One Combined Card */}
-                        <div className="md:hidden bg-white border border-[#0CBB7D] rounded-lg px-3 py-2 text-[10px] text-gray-700 space-y-1">
+                        <div className="md:hidden bg-white border border-brand-primary rounded-lg px-3 py-2 text-[10px] text-gray-700 space-y-1">
                             {[
                                 { label: "New Discrepancies", count: counts.pending },
                                 { label: "Accepted", count: counts.accepted },
@@ -229,10 +229,10 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
                             ].map((item, index) => (
                                 <div
                                     key={index}
-                                    className="flex items-center space-x-2 bg-white border border-[#0CBB7D] p-2 rounded-lg"
+                                    className="flex items-center space-x-2 bg-white border border-brand-primary p-2 rounded-lg"
                                 // onClick={() => setActiveTab(item.status)}
                                 >
-                                    <div className="p-2 bg-[#0CBB7D] rounded-full flex items-center justify-center">
+                                    <div className="p-2 bg-brand-primary rounded-full flex items-center justify-center">
                                         {item.icon}
                                     </div>
                                     <div>
@@ -253,7 +253,7 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
                                 <button
                                     key={tab}
                                     className={`px-3 py-2 rounded-lg border text-[12px] font-[600] transition-all ${activeTab === tab
-                                        ? "bg-[#0CBB7D] text-white"
+                                        ? "bg-brand-primary text-white"
                                         : "bg-white text-gray-700 hover:bg-green-200"
                                         }`}
                                     onClick={() => setActiveTab(tab)}
@@ -276,11 +276,11 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
                             <label
                                 className={`cursor-pointer hidden sm:flex text-[12px] font-[600] items-center gap-2 px-3 py-2 rounded-lg border transition
       ${isSidebarAdmin || employeeAccess.canAction
-                                        ? "text-[#0CBB7D] bg-white border-[#0CBB7D] hover:bg-green-100"
+                                        ? "text-brand-primary bg-white border-brand-primary hover:bg-green-100"
                                         : "text-gray-400 bg-gray-100 border-gray-300 cursor-not-allowed"
                                     }`}
                             >
-                                <FaUpload className="text-[#0CBB7D]" />
+                                <FaUpload className="text-brand-primary" />
                                 <span>Upload</span>
                             </label>
                         </div>
@@ -310,7 +310,7 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
                                 ))}
                             </div>
                         )}
-                        <div className="h-[34px] px-3 bg-[#0CBB7D] rounded-lg flex items-center justify-center cursor-pointer">
+                        <div className="h-[34px] px-3 bg-brand-primary rounded-lg flex items-center justify-center cursor-pointer">
                             <FaUpload className="text-white" size={12} />
                         </div>
                     </div>
