@@ -112,7 +112,7 @@ const Elogin = ({ setEmployeeAuthenticated }) => {
               <Logo className="h-10 md:h-12" />
             </div>
 
-            <h1 className="text-2xl md:text-3xl font-bold mb-3 text-left text-[#0CBB7D]">
+            <h1 className="text-2xl md:text-3xl font-bold mb-3 text-left text-brand-primary">
               Welcome Team
             </h1>
             <p className="text-gray-600 mb-4 text-xs md:text-sm">
@@ -189,7 +189,7 @@ const Elogin = ({ setEmployeeAuthenticated }) => {
               {/* Login Button */}
               <button
                 type="submit"
-                className="bg-[#0CBB7D] text-white py-[8px]  px-3 rounded-lg w-full mt-6 hover:bg-green-700 transition"
+                className="bg-brand-primary text-white py-[8px]  px-3 rounded-lg w-full mt-6 hover:bg-green-700 transition"
               >
                 Log In
               </button>

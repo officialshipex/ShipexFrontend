@@ -181,7 +181,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
             </div>
 
             {/* Heading */}
-            <h1 className="text-[18px] md:text-[24px] font-[600] mb-2 md:mb-3 text-left text-[#0CBB7D]">
+            <h1 className="text-[18px] md:text-[24px] font-[600] mb-2 md:mb-3 text-left text-brand-primary">
               Welcome Back!
             </h1>
             <p className="text-gray-500 mb-4 text-[12px] md:text-[12px] font-[600]">
@@ -206,7 +206,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                   placeholder="Enter Email"
                   value={formData.email}
                   onChange={handleChange}
-                  className="border rounded-lg px-3 py-2 w-full text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                  className="border rounded-lg px-3 py-2 w-full text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-brand-primary"
                 />
                 {error.email && (
                   <p className="text-[12px] text-red-500 mt-1">{error.email}</p>
@@ -218,7 +218,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                 <label className="w-full text-[12px] font-[600] flex justify-end">
                   <span
                     onClick={handleForgotPassword}
-                    className="text-[12px] text-[#0CBB7D] hover:underline cursor-pointer"
+                    className="text-[12px] text-brand-primary hover:underline cursor-pointer"
                   >
                     Forgot Password?
                   </span>
@@ -234,11 +234,11 @@ const LoginPage = ({ setIsAuthenticated }) => {
                     placeholder="Password"
                     value={formData.password}
                     onChange={handleChange}
-                    className="border rounded-lg px-3 py-2 w-full pr-10 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-[#0CBB7D]"
+                    className="border rounded-lg px-3 py-2 w-full pr-10 text-[12px] font-[600] text-gray-700 outline-none focus:ring-1 focus:ring-brand-primary"
                   />
                   <span
                     onClick={togglePasswordVisibility}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-[#0CBB7D]"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer text-brand-primary"
                   >
                     {showPassword ? <FaEye /> : <FaEyeSlash />}
                   </span>
@@ -253,7 +253,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
 
               {/* Remember Me */}
               <div className="flex items-center space-x-2">
-                <input type="checkbox" className="h-3 w-3 accent-[#0CBB7D] cursor-pointer" />
+                <input type="checkbox" className="h-3 w-3 accent-brand-primary cursor-pointer" />
                 <p className="text-[10px] font-[600] text-gray-700">Remember me</p>
               </div>
 
@@ -264,7 +264,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                 disabled={isLoading}
                 className={`py-2 px-3 text-[12px] font-[600] rounded-lg w-full mt-4 transition ${isLoading
                   ? "bg-gray-400 text-gray-200 cursor-not-allowed"
-                  : "bg-[#0CBB7D] text-white hover:bg-opacity-90"
+                  : "bg-brand-primary text-white hover:bg-opacity-90"
                   }`}
               >
                 {isLoading ? (
@@ -285,7 +285,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                 New to ShipexIndia?{" "}
                 <Link
                   to="/register"
-                  className="text-[#0CBB7D] underline hover:font-[600] hover:text-[#0CBB7D]"
+                  className="text-brand-primary underline hover:font-[600] hover:text-brand-primary"
                 >
                   Create new account
                 </Link>
@@ -306,7 +306,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
             <div className="absolute w-full h-full rounded-full border-2 border-dashed border-black" />
 
             {/* Inner Light Circle with Center Text */}
-            <div className="w-[180px] h-[180px] rounded-full border border-bg-[#0CBB7D] bg-white flex items-center justify-center text-center px-4">
+            <div className="w-[180px] h-[180px] rounded-full border border-bg-brand-primary bg-white flex items-center justify-center text-center px-4">
               <p className="text-[14px] font-[600] text-gray-700 leading-snug">
                 Start shipping<br />in 3 easy steps
               </p>
@@ -315,13 +315,13 @@ const LoginPage = ({ setIsAuthenticated }) => {
             {/* Step 1 - Top */}
             <div className="absolute -top-5 left-1/2 transform -translate-x-1/2 text-center">
               <p className="text-[12px] text-gray-700 -mt-7 font-[600]">Sign Up</p>
-              <div className="bg-[#0CBB7D] text-white w-10 h-10 rounded-full flex items-center justify-center font-[600] text-[12px] shadow-md mt-3">1</div>
+              <div className="bg-brand-primary text-white w-10 h-10 rounded-full flex items-center justify-center font-[600] text-[12px] shadow-md mt-3">1</div>
             </div>
 
             {/* Step 2 - Right (FIXED ALIGNMENT) */}
             <div className="absolute top-1/2 right-[-40px] transform -translate-y-1/2 text-center">
               <div className="flex flex-row items-center -ml-[70px]">
-                <div className="bg-[#0CBB7D] text-white w-10 h-10 rounded-full flex items-center justify-center font-[600] text-[12px] shadow-sm ml-2">
+                <div className="bg-brand-primary text-white w-10 h-10 rounded-full flex items-center justify-center font-[600] text-[12px] shadow-sm ml-2">
                   2
                 </div>
                 <p className="text-[12px] text-gray-700 mt-4 ml-3 font-[600] leading-snug text-center -mr-32">
@@ -332,7 +332,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
 
             {/* Step 3 - Bottom */}
             <div className="absolute -bottom-14 left-1/2 transform -translate-x-1/2 text-center w-28">
-              <div className="bg-[#0CBB7D] text-white w-10 h-10 rounded-full flex items-center justify-center font-[600] text-[12px] shadow-sm mx-auto">3</div>
+              <div className="bg-brand-primary text-white w-10 h-10 rounded-full flex items-center justify-center font-[600] text-[12px] shadow-sm mx-auto">3</div>
               <p className="text-[12px] text-gray-700 mt-1 font-[600] leading-snug">
                 Recharge Your<br />Account
               </p>
@@ -344,7 +344,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
                 <p className="text-[12px] text-gray-700 mt-0 font-[600] leading-snug text-center mr-3">
                   Start Shipping
                 </p>
-                <div className="bg-[#0CBB7D] text-white w-10 h-10 rounded-full flex items-center justify-center font-[600] text-[12px] shadow-sm mx-auto">
+                <div className="bg-brand-primary text-white w-10 h-10 rounded-full flex items-center justify-center font-[600] text-[12px] shadow-sm mx-auto">
                   4
                 </div>
               </div>

@@ -149,11 +149,11 @@ export default function Signup({ setIsAuthenticated }) {
         <div className="w-full max-w-sm md:max-w-md lg:max-w-xl p-4 md:p-6 rounded-lg shadow-sm bg-white">
           <div className="flex justify-between items-center mb-2">
             <Logo className="h-10 md:h-12" />
-            <Link to="/login" className="text-[12px] font-[600] text-[#0CBB7D]">
+            <Link to="/login" className="text-[12px] font-[600] text-brand-primary">
               &lt; <strong>Back</strong>
             </Link>
           </div>
-          <h1 className="text-[18px] md:text-[24px] font-[600] mb-2 md:mb-3 text-left text-[#0CBB7D]">
+          <h1 className="text-[18px] md:text-[24px] font-[600] mb-2 md:mb-3 text-left text-brand-primary">
             Sign Up Today!
           </h1>
           <p className="text-gray-500 mb-2 text-[12px] font-[600]">
@@ -246,7 +246,7 @@ export default function Signup({ setIsAuthenticated }) {
               />
               <span
                 onClick={togglePasswordVisibility}
-                className="absolute right-3 top-[34px] cursor-pointer text-[#0CBB7D]"
+                className="absolute right-3 top-[34px] cursor-pointer text-brand-primary"
               >
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </span>
@@ -266,7 +266,7 @@ export default function Signup({ setIsAuthenticated }) {
               />
               {/* <span
                 onClick={togglePasswordVisibility}
-                className="absolute right-3 top-[34px] cursor-pointer text-[#0CBB7D]"
+                className="absolute right-3 top-[34px] cursor-pointer text-brand-primary"
               >
                 {showPassword ? <FaEye /> : <FaEyeSlash />}
               </span> */}
@@ -276,15 +276,15 @@ export default function Signup({ setIsAuthenticated }) {
                 type="checkbox"
                 checked={isTermsAccepted}
                 onChange={handleTermsChange}
-                className="accent-[#0CBB7D] mt-2.5 cursor-pointer"
+                className="accent-brand-primary mt-2.5 cursor-pointer"
               />
               <label className="text-[10px] text-gray-700 font-[600] my-2">
                 By clicking this check box, you accept Shipex&apos;s{" "}
-                <a href="#" className="text-[#0CBB7D] underline">
+                <a href="#" className="text-brand-primary underline">
                   Terms & Conditions
                 </a>{" "}
                 &{" "}
-                <a href="#" className="text-[#0CBB7D] underline">
+                <a href="#" className="text-brand-primary underline">
                   Privacy Policy
                 </a>
               </label>
@@ -293,7 +293,7 @@ export default function Signup({ setIsAuthenticated }) {
               type="submit"
               disabled={!isTermsAccepted || loadingRegister}
               className={`w-full py-2 px-3 text-[12px] font-[600] rounded-lg transition ${isTermsAccepted && !loadingRegister
-                ? "bg-[#0CBB7D] text-white hover:bg-opacity-90"
+                ? "bg-brand-primary text-white hover:bg-opacity-90"
                 : "bg-gray-400 text-gray-200 cursor-not-allowed"
                 }`}
             >

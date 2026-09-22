@@ -8,7 +8,7 @@ const FALLBACK_BRANDING = {
   companyDisplayName: "Shipex India",
   logoUrl: null, // null means "use the bundled static logo" (see Logo.jsx)
   faviconUrl: null,
-  colors: { primary: "#00A86B", secondary: "#0F172A", accent: "#00A86B" },
+  colors: { primary: "#0CBB7D", secondary: "#0F172A", accent: "#0CBB7D" },
 };
 
 const BrandingContext = createContext({ ...FALLBACK_BRANDING, loading: true });

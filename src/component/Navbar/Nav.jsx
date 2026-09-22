@@ -538,11 +538,11 @@ const Navbar = () => {
             >
               <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                 {isRunning ? (
-                  <Loader2 className="w-3.5 h-3.5 text-[#0CBB7D] animate-spin" />
+                  <Loader2 className="w-3.5 h-3.5 text-brand-primary animate-spin" />
                 ) : isBulkShip ? (
-                  <Package className="w-3.5 h-3.5 text-[#0CBB7D]" />
+                  <Package className="w-3.5 h-3.5 text-brand-primary" />
                 ) : (
-                  <UploadCloud className="w-3.5 h-3.5 text-[#0CBB7D]" />
+                  <UploadCloud className="w-3.5 h-3.5 text-brand-primary" />
                 )}
               </div>
               <div className="flex-1 min-w-0">
@@ -582,7 +582,7 @@ const Navbar = () => {
             setShowNotifications(false);
             setShowNotificationHistory(true);
           }}
-          className="text-[11px] font-[600] text-[#0CBB7D] hover:underline px-2 py-1"
+          className="text-[11px] font-[600] text-brand-primary hover:underline px-2 py-1"
         >
           Show All
         </button>
@@ -615,7 +615,7 @@ const Navbar = () => {
         <div className="flex items-center justify-end gap-2 px-3 py-1.5 min-h-[55px] sm:min-h-[60px]">
           {/* Left Side: Sidebar Toggle (Hidden in Mobile) */}
           <div className="flex items-center justify-center">
-            <button className="text-[12px] hidden lg:block lg:ml-0 text-[#0CBB7D]">
+            <button className="text-[12px] hidden lg:block lg:ml-0 text-brand-primary">
               <img
                 src={grouplogo}
                 alt="description"
@@ -633,7 +633,7 @@ const Navbar = () => {
           <div className="sm:hidden">
             <button
               onClick={() => setShowQuickPopup(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-full bg-[#0CBB7D] text-white hover:bg-green-50 transition"
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary text-white hover:bg-green-50 transition"
             >
               <FiZap className="text-[14px]" />
             </button>
@@ -661,9 +661,9 @@ const Navbar = () => {
                       setShowQuickPopup(false);
                       setIsMobileMenuOpen(false);
                     }}
-                    className="flex flex-col items-center justify-center bg-gray-50 border border-[#0CBB7D] rounded-lg py-3 cursor-pointer hover:bg-gray-100 transition"
+                    className="flex flex-col items-center justify-center bg-gray-50 border border-brand-primary rounded-lg py-3 cursor-pointer hover:bg-gray-100 transition"
                   >
-                    <div className="bg-[#E1F7F2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
+                    <div className="bg-[#E1F7F2] p-2 rounded-full text-brand-primary text-[12px]">
                       <FiPlusSquare />
                     </div>
                     <p className="text-[12px] font-[600] mt-1">Add Order</p>
@@ -676,9 +676,9 @@ const Navbar = () => {
                       setShowQuickPopup(false);
                       setIsMobileMenuOpen(false);
                     }}
-                    className="flex flex-col items-center justify-center bg-gray-50 border border-[#0CBB7D] rounded-lg py-3 cursor-pointer hover:bg-gray-100 transition"
+                    className="flex flex-col items-center justify-center bg-gray-50 border border-brand-primary rounded-lg py-3 cursor-pointer hover:bg-gray-100 transition"
                   >
-                    <div className="bg-[#E1F7F2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
+                    <div className="bg-[#E1F7F2] p-2 rounded-full text-brand-primary text-[12px]">
                       <FiUploadCloud />
                     </div>
                     <p className="text-[12px] font-[600] mt-1">Bulk Import</p>
@@ -691,9 +691,9 @@ const Navbar = () => {
                       setShowQuickPopup(false);
                       setIsMobileMenuOpen(false);
                     }}
-                    className="flex flex-col items-center justify-center bg-gray-50 border border-[#0CBB7D] rounded-lg py-3 cursor-pointer hover:bg-gray-100 transition"
+                    className="flex flex-col items-center justify-center bg-gray-50 border border-brand-primary rounded-lg py-3 cursor-pointer hover:bg-gray-100 transition"
                   >
-                    <div className="bg-[#E1F7F2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
+                    <div className="bg-[#E1F7F2] p-2 rounded-full text-brand-primary text-[12px]">
                       <MdOutlineCalculate />
                     </div>
                     <p className="text-[12px] font-[600] mt-1">Calculate Rate</p>
@@ -707,9 +707,9 @@ const Navbar = () => {
                         setShowQuickPopup(false);
                         setIsMobileMenuOpen(false);
                       }}
-                      className="flex flex-col items-center justify-center bg-gray-50 border border-[#0CBB7D] rounded-lg py-3 cursor-pointer hover:bg-gray-100 transition"
+                      className="flex flex-col items-center justify-center bg-gray-50 border border-brand-primary rounded-lg py-3 cursor-pointer hover:bg-gray-100 transition"
                     >
-                      <div className="bg-[#E1F7F2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
+                      <div className="bg-[#E1F7F2] p-2 rounded-full text-brand-primary text-[12px]">
                         <FiUserCheck />
                       </div>
                       <p className="text-[12px] font-[600] mt-1">User Login</p>
@@ -748,7 +748,7 @@ const Navbar = () => {
             {/* Toggle Button - Icon with Border */}
             <button
               onClick={() => setIsMobileSearchOpen((p) => !p)}
-              className="flex items-center justify-center w-8 h-8 rounded-full bg-[#0CBB7D] text-white hover:bg-green-50 transition"
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary text-white hover:bg-green-50 transition"
               aria-label="Open Master Search"
             >
               <FiSearch className="text-[14px]" />
@@ -762,29 +762,29 @@ const Navbar = () => {
           <div className="lg:hidden flex gap-4">
             <div className="relative">
               <div
-                className={`flex items-center justify-center space-x-2 h-8 px-3 rounded-lg shadow-sm w-fit border ${balance < 0 ? "border-red-500 bg-red-50" : "border-[#0CBB7D] bg-white"
+                className={`flex items-center justify-center space-x-2 h-8 px-3 rounded-lg shadow-sm w-fit border ${balance < 0 ? "border-red-500 bg-red-50" : "border-brand-primary bg-white"
                   }`}
               >
                 <FaWallet
-                  className={`${balance < 0 ? "text-red-500" : "text-[#0CBB7D]"
+                  className={`${balance < 0 ? "text-red-500" : "text-brand-primary"
                     } text-[10px]`}
                   title="Wallet Info"
                 />
 
                 <span
-                  className={`text-[10px] font-[600] leading-none flex items-center space-x-1 select-none cursor-pointer ${balance < 0 ? "text-red-500" : "text-[#0CBB7D]"
+                  className={`text-[10px] font-[600] leading-none flex items-center space-x-1 select-none cursor-pointer ${balance < 0 ? "text-red-500" : "text-brand-primary"
                     }`}
                   onClick={() => setIsBalanceDropdownOpen((prev) => !prev)}
                 >
                   <span>₹ {balance?.toFixed(2)}</span>
                   <FaCaretDown
                     className={`text-[10px] transition-transform ${isBalanceDropdownOpen ? "rotate-180" : "rotate-0"
-                      } ${balance < 0 ? "text-red-500" : "text-[#0CBB7D]"}`}
+                      } ${balance < 0 ? "text-red-500" : "text-brand-primary"}`}
                   />
                 </span>
 
                 <div
-                  className={`w-4 h-4 rounded-full flex justify-center items-center ${balance < 0 ? "bg-red-500" : "bg-[#0CBB7D]"
+                  className={`w-4 h-4 rounded-full flex justify-center items-center ${balance < 0 ? "bg-red-500" : "bg-brand-primary"
                     }`}
                 >
                   <FaPlus
@@ -795,7 +795,7 @@ const Navbar = () => {
                 </div>
 
                 <FaSyncAlt
-                  className={`text-[10px] cursor-pointer hover:text-gray-500 transition-transform duration-500 ${balance < 0 ? "text-red-500" : "text-[#0CBB7D]"
+                  className={`text-[10px] cursor-pointer hover:text-gray-500 transition-transform duration-500 ${balance < 0 ? "text-red-500" : "text-brand-primary"
                     }`}
                   title="Refresh balance"
                   onClick={(e) => {
@@ -855,7 +855,7 @@ const Navbar = () => {
                 setIsDropdownOpen(false);    // CLOSE Profile Dropdown
               }}
             >
-              <FaEllipsisV className="text-[14px] text-[#0CBB7D]" />
+              <FaEllipsisV className="text-[14px] text-brand-primary" />
             </button>
 
           </div>
@@ -875,10 +875,10 @@ const Navbar = () => {
               {/* Toggle Button */}
               <button
                 onClick={() => setShowActions(!showActions)}
-                className={`flex text-gray-500 items-center gap-1 px-3 h-8 rounded-lg border border-[#0CBB7D] hover:opacity-90 text-[12px] font-[600] ${showActions ? "bg-white" : "bg-transparent"
+                className={`flex text-gray-500 items-center gap-1 px-3 h-8 rounded-lg border border-brand-primary hover:opacity-90 text-[12px] font-[600] ${showActions ? "bg-white" : "bg-transparent"
                   }`}
               >
-                <FiZap className="text-[#0CBB7D]" />
+                <FiZap className="text-brand-primary" />
                 Quick Actions
               </button>
 
@@ -898,7 +898,7 @@ const Navbar = () => {
                         }}
                         className="flex flex-col items-center justify-center bg-gray-50 rounded-lg py-4 cursor-pointer hover:bg-gray-100 transition"
                       >
-                        <div className="bg-[#e1f7f2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
+                        <div className="bg-[#e1f7f2] p-2 rounded-full text-brand-primary text-[12px]">
                           <FiPlusSquare />
                         </div>
                         <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">Add an Order</span>
@@ -911,7 +911,7 @@ const Navbar = () => {
                         }}
                         className="flex flex-col items-center justify-center bg-gray-50 rounded-lg py-4 cursor-pointer hover:bg-gray-100 transition"
                       >
-                        <div className="bg-[#e1f7f2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
+                        <div className="bg-[#e1f7f2] p-2 rounded-full text-brand-primary text-[12px]">
                           <FiUploadCloud />
                         </div>
                         <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">Bulk Import</span>
@@ -921,7 +921,7 @@ const Navbar = () => {
                         onClick={() => { setShowActions(false); handleCalculateRate(); }}
                         className="flex flex-col items-center justify-center bg-gray-50 rounded-lg py-4 cursor-pointer hover:bg-gray-100 transition"
                       >
-                        <div className="bg-[#e1f7f2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
+                        <div className="bg-[#e1f7f2] p-2 rounded-full text-brand-primary text-[12px]">
                           <MdOutlineCalculate />
                         </div>
                         <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">Calculate Rate</span>
@@ -936,7 +936,7 @@ const Navbar = () => {
                           }}
                           className="flex flex-col items-center justify-center bg-gray-50 rounded-lg py-4 cursor-pointer hover:bg-gray-100 transition"
                         >
-                          <div className="bg-[#e1f7f2] p-2 rounded-full text-[#0CBB7D] text-[12px]">
+                          <div className="bg-[#e1f7f2] p-2 rounded-full text-brand-primary text-[12px]">
                             <FiUserCheck />
                           </div>
                           <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">User Login</span>
@@ -947,7 +947,7 @@ const Navbar = () => {
                       onClick={() => { setShowActions(false); handleCreateTicket(); }}
                       className="flex flex-col items-center justify-center bg-gray-50 rounded-lg py-4 cursor-pointer hover:bg-gray-100 transition"
                     >
-                      <div className="bg-[#e1f7f2] p-2 rounded-full text-[#0CBB7D] text-xl">
+                      <div className="bg-[#e1f7f2] p-2 rounded-full text-brand-primary text-xl">
                         <FaTicketAlt />
                       </div>
                       <span className="text-[12px] font-[600] text-gray-700 mt-2 text-center">Create a Ticket</span>
@@ -989,7 +989,7 @@ const Navbar = () => {
             <div className="flex items-center space-x-2">
               <div
                 className={`flex items-center justify-center space-x-2 px-3 h-[32px] rounded-lg shadow-sm w-fit 
-      ${balance < 0 ? "bg-red-500" : "bg-[#0CBB7D]"}`}
+      ${balance < 0 ? "bg-red-500" : "bg-brand-primary"}`}
               >
                 <div className="relative group flex items-center">
                   <FaWallet
@@ -1025,7 +1025,7 @@ const Navbar = () => {
                 >
                   <FaPlus
                     className={`text-[12px] font-[600] w-3 h-3 cursor-pointer transition-transform duration-500 
-          ${balance < 0 ? "text-red-500 hover:text-red-400" : "text-[#0CBB7D] hover:text-green-500"}`}
+          ${balance < 0 ? "text-red-500 hover:text-red-400" : "text-brand-primary hover:text-green-500"}`}
                     title="Recharge wallet"
                     onClick={handleRechargeWallet}
                   />
@@ -1036,7 +1036,7 @@ const Navbar = () => {
               <button
                 type="button"
                 className={`w-[32px] h-[32px] flex items-center justify-center hover:opacity-90 rounded-lg shadow-sm transition
-      ${balance < 0 ? "bg-red-500" : "bg-[#0CBB7D]"}`}
+      ${balance < 0 ? "bg-red-500" : "bg-brand-primary"}`}
                 title="Refresh balance"
                 onClick={() => {
                   setRotation((prev) => prev + 360);
@@ -1056,7 +1056,7 @@ const Navbar = () => {
 
             {/* User Initial */}
             <div
-              className="profile-icon w-8 h-8 bg-[#0CBB7D] text-white flex items-center justify-center rounded-full font-[600] cursor-pointer overflow-hidden"
+              className="profile-icon w-8 h-8 bg-brand-primary text-white flex items-center justify-center rounded-full font-[600] cursor-pointer overflow-hidden"
               onClick={(e) => {
                 e.stopPropagation();
                 setIsDropdownOpen((p) => !p);
@@ -1096,7 +1096,7 @@ const Navbar = () => {
                 className="text-gray-700 flex items-center gap-2"
                 onClick={() => setIsMobileMenuOpen(false)}
               >
-                <FiUser className="text-[#0CBB7D]" />
+                <FiUser className="text-brand-primary" />
                 Profile
               </Link>
             </li>
@@ -1110,7 +1110,7 @@ const Navbar = () => {
                 }}
                 className="text-gray-700 flex items-center gap-2"
               >
-                <FiCreditCard className="text-[#0CBB7D]" />
+                <FiCreditCard className="text-brand-primary" />
                 Recharge Wallet
               </button>
             </li>
@@ -1119,7 +1119,7 @@ const Navbar = () => {
             {userData?.isAdmin && (
               <li className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-gray-700">
-                  <FiShield className="text-[#0CBB7D]" />
+                  <FiShield className="text-brand-primary" />
                   <span>{isAdminTab ? "Admin" : "User"}</span>
                 </div>
                 <label className="relative inline-flex items-center w-11 h-6 cursor-pointer">
@@ -1129,7 +1129,7 @@ const Navbar = () => {
                     checked={isAdminTab}
                     onChange={(e) => handleToggleAdmin(e.target.checked)}
                   />
-                  <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-focus:outline-none peer-checked:bg-[#0CBB7D] transition-colors duration-300"></div>
+                  <div className="w-10 h-5 bg-gray-300 rounded-full peer peer-focus:outline-none peer-checked:bg-brand-primary transition-colors duration-300"></div>
                   <div className="absolute left-1 top-1.5 bg-white w-3 h-3 rounded-full transition-transform duration-300 transform peer-checked:translate-x-5"></div>
                 </label>
               </li>
@@ -1170,7 +1170,7 @@ const Navbar = () => {
                 className="text-gray-700 flex items-center gap-2"
                 onClick={() => setIsDropdownOpen(false)}
               >
-                <FiUser className="text-[#0CBB7D]" />
+                <FiUser className="text-brand-primary" />
                 Profile
               </Link>
             </li>
@@ -1179,7 +1179,7 @@ const Navbar = () => {
             {userData?.isAdmin && (
               <li className="hover:bg-green-100 p-2 flex items-center justify-between">
                 <div className="flex items-center gap-2 text-gray-700">
-                  <FiShield className="text-[#0CBB7D]" />
+                  <FiShield className="text-brand-primary" />
                   <span>{isAdminTab ? "Admin" : "User"}</span>
                 </div>
 
@@ -1190,7 +1190,7 @@ const Navbar = () => {
                     checked={isAdminTab}
                     onChange={(e) => handleToggleAdmin(e.target.checked)}
                   />
-                  <div className="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-[#0CBB7D] transition-all duration-300"></div>
+                  <div className="w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-brand-primary transition-all duration-300"></div>
                   <div className="absolute left-1 top-1.5 bg-white w-3 h-3 rounded-full transform transition-all duration-300 peer-checked:translate-x-5"></div>
                 </label>
               </li>
@@ -1257,7 +1257,7 @@ const Navbar = () => {
             <div className="flex items-center justify-between mb-5">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-[#E1F7F2] rounded-full flex items-center justify-center">
-                  <FiUserCheck className="text-[#0CBB7D] text-[16px]" />
+                  <FiUserCheck className="text-brand-primary text-[16px]" />
                 </div>
                 <div>
                   <h2 className="text-[14px] font-[700] text-gray-800">Login as User</h2>
@@ -1278,8 +1278,8 @@ const Navbar = () => {
 
             {/* Search Input */}
             <div className="relative" ref={userLoginSearchRef}>
-              <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 bg-gray-50 focus-within:border-[#0CBB7D] focus-within:bg-white transition">
-                <FiSearch className="text-[#0CBB7D] text-[14px] flex-shrink-0" />
+              <div className="flex items-center gap-2 border border-gray-200 rounded-xl px-3 py-2.5 bg-gray-50 focus-within:border-brand-primary focus-within:bg-white transition">
+                <FiSearch className="text-brand-primary text-[14px] flex-shrink-0" />
                 <input
                   type="text"
                   autoFocus
@@ -1289,7 +1289,7 @@ const Navbar = () => {
                   className="w-full bg-transparent text-[12px] font-[500] text-gray-700 outline-none placeholder:text-gray-400"
                 />
                 {userSearchLoading && (
-                  <svg className="animate-spin h-4 w-4 text-[#0CBB7D] flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <svg className="animate-spin h-4 w-4 text-brand-primary flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
@@ -1313,7 +1313,7 @@ const Navbar = () => {
                       className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#F0FDF9] transition text-left border-b border-gray-50 last:border-0 disabled:opacity-60"
                     >
                       {/* Avatar */}
-                      <div className="w-8 h-8 rounded-full bg-[#0CBB7D] text-white text-[12px] font-[700] flex items-center justify-center flex-shrink-0">
+                      <div className="w-8 h-8 rounded-full bg-brand-primary text-white text-[12px] font-[700] flex items-center justify-center flex-shrink-0">
                         {u.fullname?.charAt(0).toUpperCase() || "U"}
                       </div>
                       {/* Info */}
@@ -1323,13 +1323,13 @@ const Navbar = () => {
                       </div>
                       {/* Company badge */}
                       {u.company && (
-                        <span className="text-[10px] font-[600] bg-green-50 text-[#0CBB7D] px-2 py-0.5 rounded-full flex-shrink-0 truncate max-w-[90px]">
+                        <span className="text-[10px] font-[600] bg-green-50 text-brand-primary px-2 py-0.5 rounded-full flex-shrink-0 truncate max-w-[90px]">
                           {u.company}
                         </span>
                       )}
                       {/* Open icon */}
                       {userLoginLoading ? (
-                        <svg className="animate-spin h-3.5 w-3.5 text-[#0CBB7D] flex-shrink-0" fill="none" viewBox="0 0 24 24">
+                        <svg className="animate-spin h-3.5 w-3.5 text-brand-primary flex-shrink-0" fill="none" viewBox="0 0 24 24">
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                         </svg>

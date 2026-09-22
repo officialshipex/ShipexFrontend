@@ -52,9 +52,9 @@ module.exports = {
         // per company, without a rebuild. Falls back to today's Shipex
         // green/blue if a var is unset (e.g. before branding loads).
         brand: {
-          primary: "var(--brand-primary, #00A86B)",
+          primary: "var(--brand-primary, #0CBB7D)",
           secondary: "var(--brand-secondary, #0F172A)",
-          accent: "var(--brand-accent, #00A86B)",
+          accent: "var(--brand-accent, #0CBB7D)",
         },
       },
     },
