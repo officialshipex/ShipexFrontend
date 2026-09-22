@@ -78,7 +78,8 @@ import UpdateRateCardForm from "./components/RateCard/UpdateRateCard.jsx";
 import SupportPage from "./component/Support/SupportMain.jsx";
 import ShopifyIntegration from "./components/Set-up&Mannage/ShopifyIntegration.jsx";
 import StatusMaping from "./components/Set-up&Mannage/StatusMap/StatusMaping";
-import Logo from "./assets/Group.png";
+import Logo from "./assets/Group.png"; // falls back to this until the company's own favicon loads (or if it never uploaded one)
+import { useBranding } from "./context/BrandingContext";
 import PincodeInformation from "./components/Set-up&Mannage/Pincode Information/PincodeInformation";
 // Integration Pages
 
@@ -145,6 +146,7 @@ import AdminAgreement from "./agreement/AdminAgreement";
 import UserAgreement from "./agreement/UserAgreement";
 
 function App() {
+  const { faviconUrl } = useBranding();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [employeeAuthenticated, setEmployeeAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -231,7 +233,7 @@ function App() {
       <div className="flex justify-center items-center h-screen bg-white relative overflow-hidden">
         {/* Logo in center */}
         <img
-          src={Logo} // Replace with your logo path
+          src={faviconUrl || Logo}
           alt="Logo"
           className="z-10 w-10 h-10 object-contain"
         />

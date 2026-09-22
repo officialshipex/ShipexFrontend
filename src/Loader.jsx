@@ -1,5 +1,7 @@
-import icon from "./assets/Group.png"
+import icon from "./assets/Group.png" // falls back to this until the company's own favicon loads (or if it never uploaded one)
+import { useBranding } from "./context/BrandingContext";
 const SpinnerWithCompanyIcon = () => {
+    const { faviconUrl } = useBranding();
     return (
         <div className="flex justify-center items-center h-20">
             <div className="relative w-10 h-10">
@@ -8,7 +10,7 @@ const SpinnerWithCompanyIcon = () => {
 
                 {/* Company Logo in Center */}
                 <img
-                    src={icon} // ⬅️ Replace with your logo path
+                    src={faviconUrl || icon}
                     alt="Company Logo"
                     className="absolute inset-0 m-auto w-5 h-5 object-contain"
                 />
