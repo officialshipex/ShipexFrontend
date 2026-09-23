@@ -481,7 +481,7 @@ const Navbar = () => {
   const notificationDropdownPanel = showNotifications && (
     <div className="absolute right-0 top-full mt-2 w-80 max-w-[92vw] bg-white rounded-xl shadow-lg border border-gray-200 z-50 animate-popup-in">
       <div className="p-3 border-b border-gray-100">
-        <h3 className="text-[13px] font-bold text-gray-800">Notifications</h3>
+        <h3 className="text-[13px] font-bold text-brand-secondary">Notifications</h3>
       </div>
       <div className="max-h-80 overflow-y-auto">
         {pendingAgreement && (
@@ -1262,7 +1262,7 @@ const Navbar = () => {
                   <FiUserCheck className="text-brand-primary text-[16px]" />
                 </div>
                 <div>
-                  <h2 className="text-[14px] font-[700] text-gray-800">Login as User</h2>
+                  <h2 className="text-[14px] font-[700] text-brand-secondary">Login as User</h2>
                   <p className="text-[11px] text-gray-400 font-[500]">Admin access — no password required</p>
                 </div>
               </div>

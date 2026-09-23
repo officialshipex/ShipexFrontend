@@ -9,7 +9,7 @@ const PackageTypes = () => {
     <div className="p-6">
       <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start mb-8">
         <div className="w-full sm:w-auto">
-          <h1 className="text-2xl font-bold text-gray-800 mb-2 sm:mb-0">
+          <h1 className="text-2xl font-bold text-brand-secondary mb-2 sm:mb-0">
             Package Types
           </h1>
           <p className="text-gray-500 text-sm mb-4 sm:mb-0">

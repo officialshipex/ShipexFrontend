@@ -399,7 +399,7 @@ const Referral = () => {
               monthlyData.map((row, i) => (
                 <div key={i} className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm animate-popup-in">
                   <div className="flex justify-between items-center mb-2 border-b border-gray-50 pb-2">
-                    <h3 className="font-bold text-gray-800 text-[13px] leading-tight">{row.month}</h3>
+                    <h3 className="font-bold text-brand-secondary text-[13px] leading-tight">{row.month}</h3>
                     <span className="text-[9px] bg-green-50 text-brand-primary px-2 py-0.5 rounded font-bold uppercase tracking-tight border border-green-100/50">Active Period</span>
                   </div>
 

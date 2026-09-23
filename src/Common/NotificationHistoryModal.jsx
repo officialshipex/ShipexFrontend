@@ -90,7 +90,7 @@ const NotificationHistoryModal = ({ open, onClose }) => {
         <div className="fixed inset-0 z-[1050] flex items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
             <div className="bg-white rounded-xl shadow-2xl w-[700px] max-w-[94vw] max-h-[88vh] flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                    <h2 className="text-[14px] font-bold text-gray-800">All Notifications</h2>
+                    <h2 className="text-[14px] font-bold text-brand-secondary">All Notifications</h2>
                     <button
                         type="button"
                         onClick={onClose}

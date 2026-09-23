@@ -682,7 +682,7 @@ const Shippings = () => {
                               <div className="flex justify-between"><span className="text-gray-500">Freight</span><span className="font-bold">₹ {Number(row.priceBreakup?.freight ?? 0).toFixed(2)}</span></div>
                               <div className="flex justify-between"><span className="text-gray-500">COD</span><span className="font-bold">₹ {Number(row.priceBreakup?.cod ?? 0).toFixed(2)}</span></div>
                               <div className="flex justify-between"><span className="text-gray-500">GST</span><span className="font-bold">₹ {Number(row.priceBreakup?.gst ?? 0).toFixed(2)}</span></div>
-                              <div className="flex justify-between border-t pt-2 mt-1"><span className="font-bold text-gray-800">Total</span><span className="font-bold text-brand-primary">₹ {Number(row.priceBreakup?.total ?? row.totalFreightCharges ?? 0).toFixed(2)}</span></div>
+                              <div className="flex justify-between border-t pt-2 mt-1"><span className="font-bold text-brand-secondary">Total</span><span className="font-bold text-brand-primary">₹ {Number(row.priceBreakup?.total ?? row.totalFreightCharges ?? 0).toFixed(2)}</span></div>
                             </>
                           ) : (
                             <>
@@ -695,7 +695,7 @@ const Shippings = () => {
                                 ))
                                 : <p className="text-gray-400 italic text-center py-2">No breakup available</p>
                               }
-                              <div className="flex justify-between border-t pt-2 mt-1"><span className="font-bold text-gray-800">Total</span><span className="font-bold text-brand-primary">₹ {Number(row.totalFreightCharges ?? 0).toFixed(2)}</span></div>
+                              <div className="flex justify-between border-t pt-2 mt-1"><span className="font-bold text-brand-secondary">Total</span><span className="font-bold text-brand-primary">₹ {Number(row.totalFreightCharges ?? 0).toFixed(2)}</span></div>
                             </>
                           )}
                         </div>
@@ -780,14 +780,14 @@ const Shippings = () => {
           }}
         >
           <div className="sticky top-0 bg-white pb-1 mb-2 border-b z-10 flex justify-between items-center">
-            <p className="font-[700] text-gray-800">Price Breakup</p>
+            <p className="font-[700] text-brand-secondary">Price Breakup</p>
           </div>
           {pricePopupPos.order.orderType === "B2C" ? (
             <div className="space-y-1">
               <div className="flex justify-between"><span className="text-gray-500">Freight</span><span className="font-[600]">₹ {Number(pricePopupPos.order.priceBreakup?.freight ?? 0).toFixed(2)}</span></div>
               <div className="flex justify-between"><span className="text-gray-500">COD</span><span className="font-[600]">₹ {Number(pricePopupPos.order.priceBreakup?.cod ?? 0).toFixed(2)}</span></div>
               <div className="flex justify-between"><span className="text-gray-500">GST</span><span className="font-[600]">₹ {Number(pricePopupPos.order.priceBreakup?.gst ?? 0).toFixed(2)}</span></div>
-              <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-gray-800">Total</span><span className="font-[700] text-brand-primary">₹ {Number(pricePopupPos.order.priceBreakup?.total ?? pricePopupPos.order.totalFreightCharges ?? 0).toFixed(2)}</span></div>
+              <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-brand-secondary">Total</span><span className="font-[700] text-brand-primary">₹ {Number(pricePopupPos.order.priceBreakup?.total ?? pricePopupPos.order.totalFreightCharges ?? 0).toFixed(2)}</span></div>
             </div>
           ) : (
             <div className="space-y-1">
@@ -800,7 +800,7 @@ const Shippings = () => {
                 ))
                 : <p className="text-gray-400 italic">No breakup available</p>
               }
-              <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-gray-800">Total</span><span className="font-[700] text-brand-primary">₹ {Number(pricePopupPos.order.totalFreightCharges ?? 0).toFixed(2)}</span></div>
+              <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-brand-secondary">Total</span><span className="font-[700] text-brand-primary">₹ {Number(pricePopupPos.order.totalFreightCharges ?? 0).toFixed(2)}</span></div>
             </div>
           )}
         </div>

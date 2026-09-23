@@ -60,7 +60,7 @@ const Customers = () => {
     <div className="p-10 bg-gray-100 min-h-screen">
       {/* Header Section */}
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-800">Customers</h1>
+        <h1 className="text-2xl font-bold text-brand-secondary">Customers</h1>
         <p className="text-sm text-gray-500">
           Home &gt; Setup And Manage &gt; Customers
         </p>

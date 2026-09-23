@@ -235,7 +235,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
       <div className="bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-100 mb-2">
         <div className="flex items-center gap-2 mb-3 border-b border-gray-50 pb-2">
           <FaTruck className="text-brand-primary w-3.5 h-3.5" />
-          <h2 className="text-[12px] md:text-[14px] text-gray-800 font-[700]">
+          <h2 className="text-[12px] md:text-[14px] text-brand-secondary font-[700]">
             Add Courier
           </h2>
         </div>

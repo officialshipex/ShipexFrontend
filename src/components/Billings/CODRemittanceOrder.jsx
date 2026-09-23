@@ -837,7 +837,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                   <FileSpreadsheet className="w-6 h-6 text-brand-primary" />
                 </div>
                 <div>
-                  <h2 className="text-[13px] sm:text-[14px] font-bold text-gray-800">Upload Bank Response</h2>
+                  <h2 className="text-[13px] sm:text-[14px] font-bold text-brand-secondary">Upload Bank Response</h2>
                   <p className="text-[10px] sm:text-[11px] text-gray-500">Upload the Excel file received from the bank</p>
                 </div>
               </div>
@@ -849,7 +849,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                     <div className="p-2 bg-green-100 rounded-full mb-2">
                       <CheckCircle className="w-8 h-8 text-brand-primary" />
                     </div>
-                    <p className="text-[12px] text-gray-800 font-bold mb-1 break-all px-4">
+                    <p className="text-[12px] text-brand-secondary font-bold mb-1 break-all px-4">
                       {selectedBankFile.name}
                     </p>
                     <p className="text-[10px] text-gray-400 mb-3">

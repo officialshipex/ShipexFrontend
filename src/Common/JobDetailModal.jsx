@@ -76,7 +76,7 @@ const JobDetailModal = ({ notificationId, onClose }) => {
         <div className="fixed inset-0 z-[1100] flex items-center justify-center bg-black/40 backdrop-blur-sm animate-in fade-in duration-200">
             <div className="bg-white rounded-xl shadow-2xl w-[600px] max-w-[92vw] max-h-[85vh] flex flex-col overflow-hidden">
                 <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
-                    <h2 className="text-[14px] font-bold text-gray-800 truncate pr-3">
+                    <h2 className="text-[14px] font-bold text-brand-secondary truncate pr-3">
                         {data?.title || "Bulk Job Details"}
                     </h2>
                     <button

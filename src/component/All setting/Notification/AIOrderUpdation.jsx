@@ -54,7 +54,7 @@ const FeatureCard = ({ icon, title, description, enabled, onToggle, adminEnabled
           {icon}
         </div>
         <div>
-          <h3 className="text-[13px] font-[700] text-gray-800">{title}</h3>
+          <h3 className="text-[13px] font-[700] text-brand-secondary">{title}</h3>
           <p className="text-[11px] text-gray-500 mt-0.5">{description}</p>
         </div>
       </div>
@@ -251,7 +251,7 @@ const AIOrderUpdation = () => {
             <BiSolidPhoneCall className="text-brand-primary w-5 h-5" />
           </div>
           <div>
-            <h2 className="text-[13px] font-[700] text-gray-800">Smart Calling</h2>
+            <h2 className="text-[13px] font-[700] text-brand-secondary">Smart Calling</h2>
             <p className="text-[11px] text-gray-500">Automated voice calls powered by {companyDisplayName} • 1 Credit = 1 Call</p>
           </div>
         </div>
@@ -329,7 +329,7 @@ const AIOrderUpdation = () => {
         <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100 gap-2 flex-wrap">
           <div className="flex items-center gap-2">
             <FiMic className="w-4 h-4 text-brand-primary" />
-            <h3 className="text-[12px] font-[700] text-gray-800">Call Logs</h3>
+            <h3 className="text-[12px] font-[700] text-brand-secondary">Call Logs</h3>
             <span className="text-[10px] bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full font-[600]">{total} total</span>
           </div>
 

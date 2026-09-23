@@ -32,7 +32,7 @@ const SmartPopupTrigger = ({ label, children, isOpen, onToggle }) => {
       <button
         ref={triggerRef}
         onClick={handleToggle}
-        className="text-[11px] font-bold text-gray-800 hover:text-brand-primary transition-colors flex items-center gap-1"
+        className="text-[11px] font-bold text-brand-secondary hover:text-brand-primary transition-colors flex items-center gap-1"
       >
         {label}
         <span className="text-[9px] text-gray-400">{isOpen ? "▲" : "▼"}</span>

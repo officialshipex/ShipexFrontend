@@ -433,7 +433,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
               }}
               className="bg-white border border-gray-200 rounded-lg shadow-xl p-3 text-[11px] text-gray-700 min-w-[200px]"
             >
-              <p className="font-bold text-gray-800 border-b pb-1 mb-1">User Details</p>
+              <p className="font-bold text-brand-secondary border-b pb-1 mb-1">User Details</p>
               <p><span className="font-bold">Name:</span> {hoveredUser.fullname || "N/A"}</p>
               <p><span className="font-bold">Email:</span> {hoveredUser.email || "N/A"}</p>
               <p><span className="font-bold">Mobile:</span> {hoveredUser.phoneNumber || "N/A"}</p>
@@ -472,7 +472,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                 >
                   {/* Header: Sr No, Report Type, and Status */}
                   <div className="flex justify-between items-center border-b border-gray-100 pb-1.5">
-                    <div className="flex items-center space-x-1.5 font-bold text-gray-800">
+                    <div className="flex items-center space-x-1.5 font-bold text-brand-secondary">
                       <span>#{ (page - 1) * limit + idx + 1 }</span>
                       <span className="bg-gray-100 text-gray-600 px-1.5 py-0.5 rounded text-[9px] font-bold">
                         {row.reportType}

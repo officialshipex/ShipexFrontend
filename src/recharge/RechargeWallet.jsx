@@ -141,7 +141,7 @@ const RechargeWallet = () => {
         <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 w-[90%] bg-white rounded-xl shadow-lg p-4 flex justify-between items-center z-10">
           <div>
             <p className="text-gray-500 text-[10px] font-semibold uppercase tracking-wide">Current Balance</p>
-            <h3 className="sm:text-[14px] text-[12px] font-bold text-gray-800">₹ {(balance || 0).toFixed(2)}</h3>
+            <h3 className="sm:text-[14px] text-[12px] font-bold text-brand-secondary">₹ {(balance || 0).toFixed(2)}</h3>
           </div>
           <div className="bg-green-50 p-3 rounded-full">
             <FiCreditCard className="text-brand-primary sm:text-[14px] text-[12px]" />

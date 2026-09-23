@@ -5,7 +5,7 @@ import axios from 'axios';
 const StatsCard = ({ title, value, color }) => (
   <div className={`bg-white rounded-lg shadow p-4 border-l-4 ${color}`}>
     <h2 className="text-sm font-medium text-gray-500">{title}</h2>
-    <p className="text-2xl font-bold text-gray-800">{value}</p>
+    <p className="text-2xl font-bold text-brand-secondary">{value}</p>
   </div>
 );
 

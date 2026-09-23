@@ -172,7 +172,7 @@ export default function OverheadCharges({ data, mode = "view", onChange }) {
             <span className="text-[11px] font-[600] text-gray-600">
               {key.replace(/([A-Z])/g, " $1")}
             </span>
-            <span className="text-[12px] font-[700] text-gray-800">
+            <span className="text-[12px] font-[700] text-brand-secondary">
               {typeof val === "object"
                 ? `${val.value}${val.min ? ` / ₹${val.min}` : ""}`
                 : val}

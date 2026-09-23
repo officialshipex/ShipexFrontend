@@ -61,7 +61,7 @@ const EditTemplateModal = ({
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b bg-gray-50">
           <div>
-            <h2 className="text-[16px] font-bold text-gray-800">
+            <h2 className="text-[16px] font-bold text-brand-secondary">
               Edit {status?.label} Template
             </h2>
             <p className="text-[11px] text-gray-500">
