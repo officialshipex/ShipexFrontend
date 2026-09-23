@@ -111,7 +111,7 @@ const Elogin = ({ setEmployeeAuthenticated }) => {
         <div className="w-full p-4 md:p-6 flex justify-center items-center">
           <div className="w-full max-w-sm md:max-w-md p-2 rounded-lg">
             <div className="flex justify-left mb-4 md:mb-6">
-              <Logo className="h-10 md:h-12" />
+              <Logo className="h-10 md:h-12 max-w-[220px] object-contain" />
             </div>
 
             <h1 className="text-2xl md:text-3xl font-bold mb-3 text-left text-brand-primary">

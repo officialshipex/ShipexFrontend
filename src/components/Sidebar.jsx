@@ -738,12 +738,12 @@ const Sidebar = ({ isAdmin: isAdminProp, adminTab: adminTabProp }) => {
           <img
             src={faviconUrl || grouplogo}
             alt="description"
-            className="h-5 w-5"
+            className="h-5 w-5 object-contain"
           />
 
           {/* Main Logo (Visible only when expanded) */}
           <Logo
-            className={`transition-all duration-300
+            className={`transition-all duration-300 max-h-8 object-contain
       ${expanded ? "w-20 opacity-100" : "w-0 opacity-0"}
     `}
           />

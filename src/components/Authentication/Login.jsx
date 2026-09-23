@@ -179,7 +179,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
           <div className="w-full max-w-sm md:max-w-md p-4 md:p-6 rounded-lg shadow-sm bg-white">
             {/* Logo */}
             <div className="flex justify-start mb-4 md:mb-4">
-              <Logo className="h-10 md:h-12" />
+              <Logo className="h-10 md:h-12 max-w-[220px] object-contain" />
             </div>
 
             {/* Heading */}

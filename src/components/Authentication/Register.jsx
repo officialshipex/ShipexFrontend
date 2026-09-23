@@ -150,7 +150,7 @@ export default function Signup({ setIsAuthenticated }) {
       <div className="w-full flex flex-row px-2 py-6 md:p-6 justify-center items-center">
         <div className="w-full max-w-sm md:max-w-md lg:max-w-xl p-4 md:p-6 rounded-lg shadow-sm bg-white">
           <div className="flex justify-between items-center mb-2">
-            <Logo className="h-10 md:h-12" />
+            <Logo className="h-10 md:h-12 max-w-[220px] object-contain" />
             <Link to="/login" className="text-[12px] font-[600] text-brand-primary">
               &lt; <strong>Back</strong>
             </Link>

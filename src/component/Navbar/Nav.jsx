@@ -621,7 +621,7 @@ const Navbar = () => {
               <img
                 src={faviconUrl || grouplogo}
                 alt="description"
-                className="h-7 w-7 rounded-full"
+                className="h-7 w-7 rounded-full object-cover"
               />
             </button>
           </div>
@@ -629,7 +629,7 @@ const Navbar = () => {
 
           {/* Logo - Centered in Mobile, Default in Laptop */}
           <div className="sm:flex hidden sm:flex-1 justify-start lg:justify-start sm:ml-4 ml-2">
-            <Logo className="h-9" />
+            <Logo className="h-9 max-w-[180px] object-contain" />
           </div>
 
           <div className="sm:hidden">
