@@ -24,7 +24,7 @@ import MobileOrderCard from "../../Common/MobileOrderCard";
 import NdrActionModal from "../../NDR/NdrActionModal";
 import NdrStatusModal from "../../NDR/NdrStatusModal";
 import BulkNdrActionModal from "../../NDR/BulkNdrActionModal";
-import NotFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 
 // "Action Required" = orders that need attention (tab: Action_Required, status: Undelivered)
 const ActionRequired = ({ userId: selectedUserId }) => {
@@ -354,7 +354,7 @@ const ActionRequired = ({ userId: selectedUserId }) => {
             ))
           ) : (
             <div className="flex flex-col items-center justify-center py-6">
-              <img src={NotFound} alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
+              <NoDataFound alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
             </div>
           )}
         </div>

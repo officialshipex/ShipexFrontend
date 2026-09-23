@@ -23,7 +23,7 @@ import {
 } from "../Common/orderActions";
 import OrdersTable from "../Common/OrdersTable";
 import MobileOrderCard from "../Common/MobileOrderCard";
-import NotFound from "../assets/nodatafound.png";
+import NoDataFound from "../Common/NoDataFound";
 
 const DeliveredOrders = (filterOrder) => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -348,7 +348,7 @@ const DeliveredOrders = (filterOrder) => {
             ))
           ) : (
             <div className="flex flex-col items-center justify-center py-6">
-              <img src={NotFound} alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
+              <NoDataFound alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
             </div>
           )}
         </div>

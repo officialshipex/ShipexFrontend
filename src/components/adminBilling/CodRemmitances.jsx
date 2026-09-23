@@ -11,7 +11,7 @@ import { FaBars } from "react-icons/fa";
 import SellerRemittanceDatas from "../Billings/SellerRemittanceDatas";
 import PaginationFooter from "../../Common/PaginationFooter";
 import CodRemittanceFilterPanel from "../../Common/CodRemittanceFilterPanel";
-import NoDataFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 import DateFilter from "../../filter/DateFilter";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -311,7 +311,7 @@ const CodRemittances = () => {
                 <tr>
                   <td colSpan={12} className="py-10 text-center">
                     <div className="flex flex-col items-center justify-center">
-                      <img src={NoDataFound} alt="No Data Found" className="w-48 h-48 mb-2" />
+                      <NoDataFound alt="No Data Found" className="w-48 h-48 mb-2" />
                       <p className="text-gray-400 font-medium">No remittances found</p>
                     </div>
                   </td>
@@ -430,7 +430,7 @@ const CodRemittances = () => {
             </div>
           ) : transactions.length === 0 ? (
             <div className="text-center py-10 flex flex-col items-center">
-              <img src={NoDataFound} alt="No Data Found" className="w-60 h-60" />
+              <NoDataFound alt="No Data Found" className="w-60 h-60" />
             </div>
           ) : (
             transactions.map((row) => (

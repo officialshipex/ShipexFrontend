@@ -7,7 +7,7 @@ import * as XLSX from "xlsx";
 import Loader from "../../../Loader";
 import ReferralDetailsModal from "./ReferralDetailsModal";
 import ReferralFilterPanel from "../../../Common/ReferralFilterPanel";
-import NotFound from "../../../assets/nodatafound.png";
+import NoDataFound from "../../../Common/NoDataFound";
 import UserFilter from "../../../filter/UserFilter";
 import PaginationFooter from "../../../Common/PaginationFooter";
 
@@ -340,7 +340,7 @@ const AdminReferral = () => {
                     <tr>
                       <td colSpan={7} className="py-10 text-center">
                         <div className="flex flex-col items-center">
-                          <img src={NotFound} alt="No Data" className="w-60 h-60" />
+                          <NoDataFound alt="No Data" className="w-60 h-60" />
                           {/* <p className="text-gray-400 font-medium mt-2">No referral data found</p> */}
                         </div>
                       </td>
@@ -399,7 +399,7 @@ const AdminReferral = () => {
           <div className="md:hidden space-y-2">
             {data.length === 0 ? (
               <div className="bg-white rounded-lg p-10 text-center border">
-                <img src={NotFound} alt="No Data" className="w-60 h-60 mx-auto" />
+                <NoDataFound alt="No Data" className="w-60 h-60 mx-auto" />
                 {/* <p className="text-gray-400 text-[12px]">No data found</p> */}
               </div>
             ) : (

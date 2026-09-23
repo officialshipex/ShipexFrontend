@@ -6,7 +6,7 @@ import EditModal from './EditEPD';
 import DeleteModal from './DeleteEPD';
 import { getCarrierLogo } from '../../../Common/getCarrierLogo';
 import { Search } from 'lucide-react';
-import NotFound from "../../../assets/nodatafound.png";
+import NoDataFound from "../../../Common/NoDataFound";
 
 const EPDMapping = () => {
   const [data, setData] = useState([]);
@@ -113,8 +113,7 @@ const EPDMapping = () => {
                   <tr>
                     <td colSpan={4} className="py-10 text-center">
                       <div className="flex flex-col items-center justify-center">
-                        <img
-                          src={NotFound}
+                        <NoDataFound
                           alt="No Data Found"
                           className="w-60 h-60 object-contain"
                         />
@@ -175,8 +174,7 @@ const EPDMapping = () => {
             item?.serviceName?.toLowerCase().includes(searchTerm.toLowerCase())
           ).length === 0 && (
               <div className="py-10 flex flex-col items-center justify-center bg-white rounded-lg border">
-                <img
-                  src={NotFound}
+                <NoDataFound
                   alt="No Data Found"
                   className="w-60 h-60 object-contain"
                 />

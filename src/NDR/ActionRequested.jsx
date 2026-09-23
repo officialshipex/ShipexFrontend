@@ -14,7 +14,7 @@ import NdrStatusModal from "./NdrStatusModal";
 import { ChevronDown, Filter } from "lucide-react";
 import { FaBars } from "react-icons/fa";
 import ThreeDotLoader from "../Loader";
-import NotFound from "../assets/nodatafound.png";
+import NoDataFound from "../Common/NoDataFound";
 import {
   handleInvoice,
   handleLabel,
@@ -341,7 +341,7 @@ const ActionRequested = () => {
             ))
           ) : (
             <div className="flex flex-col items-center justify-center py-6">
-              <img src={NotFound} alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
+              <NoDataFound alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
             </div>
           )}
         </div>

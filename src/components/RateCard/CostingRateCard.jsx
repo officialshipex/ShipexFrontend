@@ -4,7 +4,7 @@ import { FiChevronDown, FiSearch } from "react-icons/fi";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { Notification } from "../../Notification";
 import Loader from "../../Loader";
-import NotFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -546,7 +546,7 @@ export default function CostingRateCard() {
                 <tr>
                   <td colSpan={12}>
                     <div className="flex flex-col items-center justify-center">
-                      <img src={NotFound} alt="No Data" className="w-40 h-40 object-contain" />
+                      <NoDataFound alt="No Data" className="w-40 h-40 object-contain" />
                       {/* <p className="text-gray-400 text-[12px] mt-2 font-medium">No costing rate cards found</p> */}
                     </div>
                   </td>
@@ -596,7 +596,7 @@ export default function CostingRateCard() {
             ))
           ) : (
             <div className="flex flex-col items-center py-8">
-              <img src={NotFound} alt="No Data" className="w-32 h-32 object-contain" />
+              <NoDataFound alt="No Data" className="w-32 h-32 object-contain" />
             </div>
           )}
         </div>

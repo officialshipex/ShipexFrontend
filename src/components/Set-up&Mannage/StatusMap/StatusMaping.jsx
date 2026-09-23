@@ -4,7 +4,7 @@ import { ChevronDown } from "lucide-react"; // 👈 arrow icon
 import UploadStatus from "./UploadStatus";
 import Loader from "../../../Loader"
 import PaginationFooter from "../../../Common/PaginationFooter";
-import NotFound from "../../../assets/nodatafound.png";
+import NoDataFound from "../../../Common/NoDataFound";
 
 const StatusMaping = () => {
     const [couriers, setCouriers] = useState([]);
@@ -265,8 +265,7 @@ const StatusMaping = () => {
             {/* No data */}
             {!loading && status.length === 0 && (
                 <div className="flex flex-col items-center justify-center py-10">
-                    <img
-                        src={NotFound}
+                    <NoDataFound
                         alt="No Data Found"
                         className="w-60 h-60 object-contain"
                     />

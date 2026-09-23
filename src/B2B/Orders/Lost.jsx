@@ -3,7 +3,7 @@ import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import Cookies from "js-cookie";
 import { ChevronDown, Filter } from "lucide-react";
-import NotFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 import { Notification } from "../../Notification"
 import { FaBars } from "react-icons/fa";
 import ThreeDotLoader from "../../Loader";
@@ -297,7 +297,7 @@ const Lost = (filterOrder) => {
             ))
           ) : (
             <div className="flex flex-col items-center justify-center py-6">
-              <img src={NotFound} alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
+              <NoDataFound alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
             </div>
           )}
         </div>

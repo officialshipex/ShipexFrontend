@@ -10,7 +10,7 @@ import Cookies from "js-cookie";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { FiChevronDown, FiArrowLeft, FiSearch } from "react-icons/fi";
 import { getCarrierLogo } from "../../Common/getCarrierLogo";
-import NotFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -337,7 +337,7 @@ const RateCard = ({ isSidebarAdmin }) => {
                 <tr>
                   <td colSpan="13" className="h-full">
                     <div className="flex flex-col items-center h-full justify-center">
-                      <img src={NotFound} alt="No Data Found" className="w-60 h-60 object-contain" />
+                      <NoDataFound alt="No Data Found" className="w-60 h-60 object-contain" />
                       {/* <p className="text-gray-400 font-bold text-[14px]">No rate cards found matching your search</p> */}
                     </div>
                   </td>
@@ -420,7 +420,7 @@ const RateCard = ({ isSidebarAdmin }) => {
             ))
           ) : (
             <div className="flex flex-col items-center justify-center">
-              <img src={NotFound} alt="No Data Found" className="w-60 h-60 object-contain" />
+              <NoDataFound alt="No Data Found" className="w-60 h-60 object-contain" />
               {/* <p className="text-gray-400 font-bold text-[13px]">No matching records found</p> */}
             </div>
           )}

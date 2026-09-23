@@ -10,7 +10,7 @@ import ThreeDotLoader from "../../Loader";
 import DateFilter from "../../filter/DateFilter";
 import OrderFilterPanel from "../../Common/OrderFilterPanel";
 import PaginationFooter from "../../Common/PaginationFooter";
-import NotFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 import { FaFilter, FaBars } from "react-icons/fa";
 import { handleManifest } from "../../Common/orderActions";
 
@@ -358,7 +358,7 @@ const PickupManifestOrders = () => {
                                 <tr>
                                     <td colSpan="6" className="py-10 text-center">
                                         <div className="flex flex-col items-center">
-                                            <img src={NotFound} alt="No Data" className="w-60 h-60" />
+                                            <NoDataFound alt="No Data" className="w-60 h-60" />
                                         </div>
                                     </td>
                                 </tr>
@@ -530,7 +530,7 @@ const PickupManifestOrders = () => {
                         ))
                     ) : (
                         <div className="text-center py-10">
-                            <img src={NotFound} alt="No Data" className="w-60 h-60 mx-auto" />
+                            <NoDataFound alt="No Data" className="w-60 h-60 mx-auto" />
                         </div>
                     )}
                 </div>

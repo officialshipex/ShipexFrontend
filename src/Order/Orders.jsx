@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import dayjs from "dayjs";
 import { ChevronDown, Filter } from "lucide-react";
-import NotFound from "../assets/nodatafound.png";
+import NoDataFound from "../Common/NoDataFound";
 import { Notification } from "../Notification"
 import { refreshNotifications } from "../utils/NotificationListProvider";
 import SelectPickupPopup from "./SelectPickupPopup";
@@ -449,7 +449,7 @@ const Orders = (filterOrder) => {
 
           ) : (
             <div className="flex flex-col items-center justify-center py-6">
-              <img src={NotFound} alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
+              <NoDataFound alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
             </div>
           )}
         </div>

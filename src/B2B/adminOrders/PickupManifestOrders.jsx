@@ -11,7 +11,7 @@ import ThreeDotLoader from "../../Loader";
 import DateFilter from "../../filter/DateFilter";
 import OrderFilterPanel from "../../Common/OrderFilterPanel";
 import PaginationFooter from "../../Common/PaginationFooter";
-import NotFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 import { handleManifest } from "../../Common/orderActions";
 
 const PickupManifestOrders = ({ userId: initialUserId }) => {
@@ -366,7 +366,7 @@ const PickupManifestOrders = ({ userId: initialUserId }) => {
                             ) : (
                                 <tr>
                                     <td colSpan="7" className="py-10 text-center">
-                                        <img src={NotFound} alt="No Data" className="w-60 h-60 mx-auto" />
+                                        <NoDataFound alt="No Data" className="w-60 h-60 mx-auto" />
                                     </td>
                                 </tr>
                             )}
@@ -529,7 +529,7 @@ const PickupManifestOrders = ({ userId: initialUserId }) => {
                         ))
                     ) : (
                         <div className="text-center py-10">
-                            <img src={NotFound} alt="No Data" className="w-60 h-60 mx-auto" />
+                            <NoDataFound alt="No Data" className="w-60 h-60 mx-auto" />
                         </div>
                     )}
                 </div>

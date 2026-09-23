@@ -10,7 +10,7 @@ import { FiCopy, FiCheck, FiEye, FiExternalLink } from "react-icons/fi";
 import { FaBars } from "react-icons/fa";
 import PaginationFooter from "../../Common/PaginationFooter";
 import ShippingFilterPanel from "../../Common/ShippingFilterPanel";
-import NotFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 import DateFilter from "../../filter/DateFilter";
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
@@ -350,7 +350,7 @@ const Shippings = () => {
                 <tr>
                   <td colSpan={12} className="py-10 text-center">
                     <div className="flex flex-col items-center justify-center">
-                      <img src={NotFound} alt="No Data Found" className="w-60 h-60 mb-2" />
+                      <NoDataFound alt="No Data Found" className="w-60 h-60 mb-2" />
                       {/* <p className="text-gray-400 font-medium">No shippings found</p> */}
                     </div>
                   </td>
@@ -543,7 +543,7 @@ const Shippings = () => {
             </div>
           ) : transactions.length === 0 ? (
             <div className="text-center py-10 flex flex-col items-center">
-              <img src={NotFound} alt="No Data Found" className="w-60 h-60" />
+              <NoDataFound alt="No Data Found" className="w-60 h-60" />
               {/* <p className="text-gray-400 font-medium">No records found</p> */}
             </div>
           ) : (

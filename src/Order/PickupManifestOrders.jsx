@@ -10,7 +10,7 @@ import ThreeDotLoader from "../Loader";
 import DateFilter from "../filter/DateFilter";
 import OrderFilterPanel from "../Common/OrderFilterPanel";
 import PaginationFooter from "../Common/PaginationFooter";
-import NotFound from "../assets/nodatafound.png";
+import NoDataFound from "../Common/NoDataFound";
 import { FaFilter, FaBars } from "react-icons/fa";
 import { handleManifest } from "../Common/orderActions";
 import { getCarrierLogo } from "../Common/getCarrierLogo";
@@ -338,7 +338,7 @@ const PickupManifestOrders = ({ orderType = "B2C" }) => {
                                 <tr>
                                     <td colSpan="7" className="py-10 text-center">
                                         <div className="flex flex-col items-center">
-                                            <img src={NotFound} alt="No Data" className="w-60 h-60" />
+                                            <NoDataFound alt="No Data" className="w-60 h-60" />
                                             {/* <p className="text-gray-400 text-[12px]">No manifests found</p> */}
                                         </div>
                                     </td>
@@ -486,7 +486,7 @@ const PickupManifestOrders = ({ orderType = "B2C" }) => {
                         ))
                     ) : (
                         <div className="flex flex-col items-center h-full">
-                            <img src={NotFound} alt="No Data" className="w-60 h-60 object-contain" />
+                            <NoDataFound alt="No Data" className="w-60 h-60 object-contain" />
                             {/* <p className="text-gray-400 text-[12px]">No manifests found</p> */}
                         </div>
                     )}

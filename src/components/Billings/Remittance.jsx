@@ -13,7 +13,7 @@ import PaginationFooter from "../../Common/PaginationFooter";
 import { FiCopy, FiCheck } from "react-icons/fi";
 import { FaBars } from "react-icons/fa";
 import CodRemittanceFilterPanel from "../../Common/CodRemittanceFilterPanel";
-import NoDataFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 import DateFilter from "../../filter/DateFilter";
 import { motion, AnimatePresence } from "framer-motion";
 import RemittanceDetails from "./RemittanceDetails";
@@ -345,7 +345,7 @@ const Remittance = ({
                 <tr>
                   <td colSpan={11} className="py-10 text-center">
                     <div className="flex flex-col items-center justify-center">
-                      <img src={NoDataFound} alt="No Data Found" className="w-60 h-60 mb-2" />
+                      <NoDataFound alt="No Data Found" className="w-60 h-60 mb-2" />
 
                     </div>
                   </td>
@@ -455,7 +455,7 @@ const Remittance = ({
             </div>
           ) : remitedData.length === 0 ? (
             <div className="text-center py-10 flex flex-col items-center">
-              <img src={NoDataFound} alt="No Data Found" className="w-60 h-60" />
+              <NoDataFound alt="No Data Found" className="w-60 h-60" />
             </div>
           ) : (
             remitedData.map((row) => (

@@ -17,7 +17,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import ThreeDotLoader from "../../Loader";
 import Cookies from "js-cookie";
 import PaginationFooter from "../../Common/PaginationFooter";
-import NotFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 
 const Shippings = (filterOrder) => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -795,8 +795,7 @@ const Shippings = (filterOrder) => {
                 <tr>
                   <td colSpan="12" className="text-center py-4">
                     <div className="flex flex-col items-center justify-center">
-                      <img
-                        src={NotFound}
+                      <NoDataFound
                         alt="No Data Found"
                         className="w-60 h-60 object-contain mb-2"
                       />
@@ -852,7 +851,7 @@ const Shippings = (filterOrder) => {
             </div>
           ) : orders.length === 0 ? (
             <div className="text-center py-10 flex flex-col items-center">
-              <img src={NotFound} alt="No Data Found" className="w-60 h-60" />
+              <NoDataFound alt="No Data Found" className="w-60 h-60" />
             </div>
           ) : (
             orders.map((row) => (

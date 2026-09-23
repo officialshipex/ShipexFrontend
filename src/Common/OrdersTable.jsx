@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import dayjs from "dayjs";
 import { FiCopy, FiCheck } from "react-icons/fi";
 import ThreeDotLoader from "../Loader";
-import NotFound from "../assets/nodatafound.png"
+import NoDataFound from "../Common/NoDataFound";
 import OrderRowActions from "./OrderRowActions";
 import { handleTrackingByAwb } from "./orderActions";
 
@@ -639,7 +639,7 @@ const OrdersTable = ({
                 ) : (
                     <tr>
                         <td colSpan={8 + (showShippingDetails ? 1 : 0) + (showNdrDetails ? 1 : 0) + (showNdrAction ? 1 : 0) + (showActionColumn ? 1 : 0) + (showUserDetails ? 1 : 0)} className="text-center py-6">
-                            <div className="flex flex-col items-center justify-center"><img src={NotFound} alt="No Data Found" className="w-60 h-60 object-contain mb-2" /></div>
+                            <div className="flex flex-col items-center justify-center"><NoDataFound alt="No Data Found" className="w-60 h-60 object-contain mb-2" /></div>
                         </td>
                     </tr>
                 )}

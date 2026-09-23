@@ -10,7 +10,7 @@ import { Notification } from "../../Notification";
 import PaginationFooter from "../../Common/PaginationFooter";
 import DateFilter from "../../filter/DateFilter";
 import { getCarrierLogo } from "../../Common/getCarrierLogo";
-import NotFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 import { FiCopy, FiCheck, FiBookOpen } from "react-icons/fi";
 import PassbookFilterPanel from "../../Common/PassbookFilterPanel";
 import * as XLSX from "xlsx";
@@ -332,7 +332,7 @@ const Passbooks = ({
               ) : transactions.length === 0 ? (
                 <tr>
                   <td colSpan="8" className="text-center py-10">
-                    <img src={NotFound} alt="No Data Found" className="mx-auto w-[250px]" />
+                    <NoDataFound alt="No Data Found" className="mx-auto w-[250px]" />
                   </td>
                 </tr>
               ) : (
@@ -591,7 +591,7 @@ const Passbooks = ({
             ))
           ) : (
             <div className="flex flex-col items-center justify-center py-10 bg-white rounded-xl border border-dashed border-gray-200">
-              <img src={NotFound} alt="No Data Found" className="w-[180px] opacity-60" />
+              <NoDataFound alt="No Data Found" className="w-[180px] opacity-60" />
               <p className="text-gray-400 font-[600] mt-2">No transactions found</p>
             </div>
           )}

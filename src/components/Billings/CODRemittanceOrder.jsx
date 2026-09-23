@@ -10,7 +10,7 @@ import Cookies from "js-cookie";
 import PaginationFooter from "../../Common/PaginationFooter";
 import { FiCopy, FiCheck, FiUpload, FiTrash2 } from "react-icons/fi";
 import { FaBars } from "react-icons/fa";
-import NoDataFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 import DateFilter from "../../filter/DateFilter";
 import UserFilter from "../../filter/UserFilter";
 import { motion, AnimatePresence } from "framer-motion";
@@ -576,7 +576,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
               {loading ? (
                 <tr><td colSpan={11} className="py-10"><ThreeDotLoader /></td></tr>
               ) : remitedData.length === 0 ? (
-                <tr><td colSpan={11} className="py-10 text-center"><img src={NoDataFound} alt="No Data" className="w-60 h-60 mx-auto" /></td></tr>
+                <tr><td colSpan={11} className="py-10 text-center"><NoDataFound alt="No Data" className="w-60 h-60 mx-auto" /></td></tr>
               ) : (
                 remitedData.map((row, index) => (
                   <tr key={index} className="border-t border-gray-100 hover:bg-green-50/20 transition-colors">
@@ -633,7 +633,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
         {loading ? (
           <div className="flex justify-center py-20"><ThreeDotLoader /></div>
         ) : remitedData.length === 0 ? (
-          <img src={NoDataFound} className="w-40 mx-auto mt-20 opacity-50" />
+          <NoDataFound className="w-40 mx-auto mt-20 opacity-50" />
         ) : (
           remitedData.map((row, index) => (
             <div key={index} className={`bg-white border border-gray-200 rounded-lg shadow-sm p-2 text-[10px] animate-popup-in relative ${detailsPopupId === row.remittanceId ? 'z-50' : 'z-10'}`}>

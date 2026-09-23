@@ -13,7 +13,7 @@ import PaginationFooter from "../Common/PaginationFooter";
 import { saveAs } from "file-saver";
 import { PDFDocument } from "pdf-lib";
 import * as XLSX from "xlsx";
-import NotFound from "../assets/nodatafound.png";
+import NoDataFound from "../Common/NoDataFound";
 import { handleTrackingByAwb } from "../Common/orderActions";
 import { getCarrierLogo } from "../Common/getCarrierLogo";
 import {
@@ -344,7 +344,7 @@ const RTODamaged = (filterOrder) => {
             ))
           ) : (
             <div className="flex flex-col items-center justify-center py-6">
-              <img src={NotFound} alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
+              <NoDataFound alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
             </div>
           )}
         </div>

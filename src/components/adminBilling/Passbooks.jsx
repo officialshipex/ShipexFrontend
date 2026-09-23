@@ -14,7 +14,7 @@ import UserFilter from "../../filter/UserFilter";
 import DateFilter from "../../filter/DateFilter";
 import OrderAwbFilter from "../../filter/OrderAwbFilter";
 import PaginationFooter from "../../Common/PaginationFooter";
-import NoDataFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 import { FiCopy, FiCheck, FiBookOpen } from "react-icons/fi";
 
 import PassbookFilterPanel from "../../Common/PassbookFilterPanel";
@@ -362,7 +362,7 @@ const Passbooks = () => {
               ) : transactions.length === 0 ? (
                 <tr>
                   <td colSpan="10" className="text-center py-10 text-gray-500 font-medium">
-                    <img src={NoDataFound} alt="No Data Found" className="mx-auto w-[200px]" />
+                    <NoDataFound alt="No Data Found" className="mx-auto w-[200px]" />
                   </td>
                 </tr>
               ) : (
@@ -656,7 +656,7 @@ const Passbooks = () => {
             ))
           ) : (
             <div className="text-center text-gray-500 py-10 flex flex-col items-center">
-              <img src={NoDataFound} alt="No Data Found" className="w-[150px]" />
+              <NoDataFound alt="No Data Found" className="w-[150px]" />
             </div>
           )}
         </div>

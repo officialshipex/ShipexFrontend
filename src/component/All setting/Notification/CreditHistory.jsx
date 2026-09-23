@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import dayjs from "dayjs";
-import NotFound from "../../../assets/nodatafound.png";
+import NoDataFound from "../../../Common/NoDataFound";
 import PaginationFooter from "../../../Common/PaginationFooter";
 import Loader from "../../../Loader";
 
@@ -187,7 +187,7 @@ const CreditHistory = () => {
                                 <tr>
                                     <td colSpan="6" className="text-center py-20 bg-white">
                                         <div className="flex flex-col items-center justify-center">
-                                            <img src={NotFound} alt="No Data Found" className="w-[200px] mb-4 opacity-70" />
+                                            <NoDataFound alt="No Data Found" className="w-[200px] mb-4 opacity-70" />
                                             {/* <p className="text-gray-400 font-medium">No notification transactions found</p> */}
                                         </div>
                                     </td>

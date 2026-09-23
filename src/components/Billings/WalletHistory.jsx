@@ -7,7 +7,7 @@ import Cookies from "js-cookie";
 import ThreeDotLoader from "../../Loader";
 import { Notification } from "../../Notification";
 import DateFilter from "../../filter/DateFilter";
-import NotFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 import PaginationFooter from "../../Common/PaginationFooter";
 import WalletHistoryFilterPanel from "../../Common/WalletHistoryFilterPanel";
 import { FiCopy, FiCheck } from "react-icons/fi";
@@ -285,7 +285,7 @@ const WalletHistory = ({
                 <tr>
                   <td colSpan="6" className="py-10 text-center">
                     <div className="flex flex-col items-center justify-center">
-                      <img src={NotFound} alt="No Data" className="mx-auto w-60 h-60" />
+                      <NoDataFound alt="No Data" className="mx-auto w-60 h-60" />
                     </div>
                   </td>
                 </tr>
@@ -449,7 +449,7 @@ const WalletHistory = ({
             ))
           ) : (
             <div className="flex flex-col items-center justify-center py-10 bg-white rounded-xl border border-dashed border-gray-200">
-              <img src={NotFound} alt="No Data Found" className="w-[180px] opacity-60" />
+              <NoDataFound alt="No Data Found" className="w-[180px] opacity-60" />
               <p className="text-gray-400 font-[600] mt-2">No records found</p>
             </div>
           )}

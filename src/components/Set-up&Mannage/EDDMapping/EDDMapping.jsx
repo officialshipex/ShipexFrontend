@@ -6,7 +6,7 @@ import EditModal from './EditEDD';
 import DeleteModal from './DeleteEDD';
 import { getCarrierLogo } from '../../../Common/getCarrierLogo';
 import { Search } from 'lucide-react';
-import NotFound from "../../../assets/nodatafound.png";
+import NoDataFound from "../../../Common/NoDataFound";
 
 const EDDMapping = () => {
   const [data, setData] = useState([]);
@@ -107,8 +107,7 @@ const EDDMapping = () => {
                   <tr>
                     <td colSpan={8} className="py-10 text-center">
                       <div className="flex flex-col items-center justify-center">
-                        <img
-                          src={NotFound}
+                        <NoDataFound
                           alt="No Data Found"
                           className="w-60 h-60 object-contain"
                         />
@@ -187,8 +186,7 @@ const EDDMapping = () => {
             rate?.serviceName?.toLowerCase().includes(searchTerm.toLowerCase())
           ).length === 0 && (
               <div className="py-10 flex flex-col items-center justify-center bg-white rounded-lg border">
-                <img
-                  src={NotFound}
+                <NoDataFound
                   alt="No Data Found"
                   className="w-60 h-60 object-contain"
                 />

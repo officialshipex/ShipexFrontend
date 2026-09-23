@@ -8,7 +8,7 @@ import * as XLSX from "xlsx";
 import Loader from "../../../Loader";
 import { Notification } from "../../../Notification";
 import ReferralFilterPanel from "../../../Common/ReferralFilterPanel";
-import NotFound from "../../../assets/nodatafound.png";
+import NoDataFound from "../../../Common/NoDataFound";
 import PaginationFooter from "../../../Common/PaginationFooter";
 import { useBranding } from "../../../context/BrandingContext";
 
@@ -382,7 +382,7 @@ const Referral = () => {
                     <tr>
                       <td colSpan={5} className="py-10 text-center">
                         <div className="flex flex-col items-center">
-                          <img src={NotFound} alt="No Data" className="w-40 h-40 opacity-50" />
+                          <NoDataFound alt="No Data" className="w-40 h-40 opacity-50" />
                           <p className="text-gray-400 mt-2 font-medium">No referral data found for selection</p>
                         </div>
                       </td>
@@ -426,7 +426,7 @@ const Referral = () => {
               ))
             ) : (
               <div className="bg-white rounded-lg p-10 text-center border">
-                <img src={NotFound} alt="No Data" className="w-60 h-60 mx-auto opacity-50 mb-2" />
+                <NoDataFound alt="No Data" className="w-60 h-60 mx-auto opacity-50 mb-2" />
                 {/* <p className="text-gray-400 text-[12px]">No records found</p> */}
               </div>
             )}

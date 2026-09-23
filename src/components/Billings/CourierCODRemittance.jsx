@@ -10,7 +10,7 @@ import Cookies from "js-cookie";
 import PaginationFooter from "../../Common/PaginationFooter";
 import { FaBars } from "react-icons/fa";
 import CourierCodPoopup from "./CourierCodPoopup";
-import NoDataFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 import DateFilter from "../../filter/DateFilter";
 import UserFilter from "../../filter/UserFilter";
 import { FiCopy, FiCheck, FiExternalLink, FiUpload, FiMoreHorizontal, FiTrash2 } from "react-icons/fi";
@@ -387,7 +387,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
               ) : remitedData.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="py-10 text-center">
-                    <img src={NoDataFound} alt="No Data" className="w-60 h-60 mx-auto" />
+                    <NoDataFound alt="No Data" className="w-60 h-60 mx-auto" />
                   </td>
                 </tr>
               ) : (
@@ -449,7 +449,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
           <div className="flex justify-center py-20"><ThreeDotLoader /></div>
         ) : remitedData.length === 0 ? (
           <div className="flex justify-center items-center py-20 flex-col">
-            <img src={NoDataFound} className="w-60 h-60 opacity-50" />
+            <NoDataFound className="w-60 h-60 opacity-50" />
           </div>
         ) : (
           remitedData.map((row, index) => {

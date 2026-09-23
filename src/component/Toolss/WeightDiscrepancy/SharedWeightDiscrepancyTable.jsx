@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { FiCopy, FiCheck } from "react-icons/fi";
 import { getCarrierLogo } from "../../../Common/getCarrierLogo";
 import ThreeDotLoader from "../../../Loader";
-import NotFound from "../../../assets/nodatafound.png";
+import NoDataFound from "../../../Common/NoDataFound";
 
 const SharedWeightDiscrepancyTable = ({
     orders,
@@ -62,8 +62,7 @@ const SharedWeightDiscrepancyTable = ({
                             <tr>
                                 <td colSpan={isAdmin ? (actionsColumnTitle ? 10 : 9) : (actionsColumnTitle ? 9 : 8)} className="text-center py-4">
                                     <div className="flex flex-col items-center justify-center">
-                                        <img
-                                            src={NotFound}
+                                        <NoDataFound
                                             alt="No Data Found"
                                             className="w-60 h-60 object-contain mb-2"
                                         />

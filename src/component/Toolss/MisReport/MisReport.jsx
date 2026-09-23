@@ -7,7 +7,7 @@ import UserFilter from "../../../filter/UserFilter";
 import DateFilter from "../../../filter/DateFilter";
 import ThreeDotLoader from "../../../Loader";
 import dayjs from "dayjs";
-import NotFound from "../../../assets/nodatafound.png";
+import NoDataFound from "../../../Common/NoDataFound";
 
 const PASSBOOK_DESCRIPTIONS = [
   "Freight Charges Applied",
@@ -359,7 +359,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                   <tr>
                     <td colSpan={isSidebarAdmin ? 10 : 9} className="text-center py-8">
                       <div className="flex flex-col items-center justify-center">
-                        <img src={NotFound} alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
+                        <NoDataFound alt="No Data Found" className="w-60 h-60 object-contain mb-2" />
                         <span className="text-gray-400 font-[600]">No reports generated yet.</span>
                       </div>
                     </td>
@@ -461,7 +461,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
               </div>
             ) : reports.length === 0 ? (
               <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-8 flex flex-col items-center justify-center text-center">
-                <img src={NotFound} alt="No Data Found" className="w-48 h-48 object-contain mb-2" />
+                <NoDataFound alt="No Data Found" className="w-48 h-48 object-contain mb-2" />
                 <span className="text-gray-400 font-[600]">No reports generated yet.</span>
               </div>
             ) : (

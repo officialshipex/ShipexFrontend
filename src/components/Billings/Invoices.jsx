@@ -6,7 +6,7 @@ import ThreeDotLoader from "../../Loader";
 import { HiOutlineDownload } from "react-icons/hi";
 import { FaFileExcel } from "react-icons/fa";
 import { FaBars } from "react-icons/fa";
-import NotFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 import PaginationFooter from "../../Common/PaginationFooter";
 import InvoicesFilterPanel from "../../Common/InvoicesFilterPanel";
 import dayjs from "dayjs";
@@ -306,8 +306,7 @@ const Invoices = ({
                 <tr>
                   <td colSpan={8} className="py-10 text-center">
                     <div className="flex flex-col items-center justify-center">
-                      <img
-                        src={NotFound}
+                      <NoDataFound
                         alt="No Data"
                         className="mx-auto w-60 h-60"
                       />
@@ -458,8 +457,7 @@ const Invoices = ({
             </div>
           ) : invoices.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 bg-white rounded-xl border border-dashed border-gray-200">
-              <img
-                src={NotFound}
+              <NoDataFound
                 alt="No Data Found"
                 className="w-60 h-60"
               />

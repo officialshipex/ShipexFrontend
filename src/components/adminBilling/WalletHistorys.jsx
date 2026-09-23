@@ -11,7 +11,7 @@ import { Notification } from "../../Notification";
 import DateFilter from "../../filter/DateFilter";
 import WalletHistoryFilterPanel from "../../Common/WalletHistoryFilterPanel";
 import PaginationFooter from "../../Common/PaginationFooter";
-import NotFound from "../../assets/nodatafound.png";
+import NoDataFound from "../../Common/NoDataFound";
 import { FiCopy, FiCheck } from "react-icons/fi";
 import { FaBars } from "react-icons/fa";
 
@@ -259,7 +259,7 @@ const WalletHistorys = () => {
                                 <tr>
                                     <td colSpan="7" className="py-10 text-center">
                                         <div className="flex flex-col items-center justify-center">
-                                            <img src={NotFound} alt="No Data" className="w-60 h-60 mb-2" />
+                                            <NoDataFound alt="No Data" className="w-60 h-60 mb-2" />
                                             {/* <p className="text-gray-400 font-medium">No transactions found</p> */}
                                         </div>
                                     </td>
@@ -454,7 +454,7 @@ const WalletHistorys = () => {
                         ))
                     ) : (
                         <div className="text-center py-10">
-                            <img src={NotFound} alt="No Data" className="w-60 h-60 mx-auto" />
+                            <NoDataFound alt="No Data" className="w-60 h-60 mx-auto" />
                             {/* <p className="text-gray-400 font-medium">No records found</p> */}
                         </div>
                     )}

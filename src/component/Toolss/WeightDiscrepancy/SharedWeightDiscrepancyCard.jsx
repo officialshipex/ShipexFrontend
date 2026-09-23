@@ -3,7 +3,7 @@ import dayjs from "dayjs";
 import { FiCopy, FiCheck } from "react-icons/fi";
 import { getCarrierLogo } from "../../../Common/getCarrierLogo";
 import ThreeDotLoader from "../../../Loader";
-import NotFound from "../../../assets/nodatafound.png";
+import NoDataFound from "../../../Common/NoDataFound";
 
 const SharedWeightDiscrepancyCard = ({
     orders,
@@ -25,7 +25,7 @@ const SharedWeightDiscrepancyCard = ({
                 </div>
             ) : orders.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 bg-white rounded-lg border border-gray-200 shadow-sm">
-                    <img src={NotFound} alt="No data found" className="w-60 h-60" />
+                    <NoDataFound alt="No data found" className="w-60 h-60" />
                 </div>
             ) : (
                 orders.map((order, index) => {

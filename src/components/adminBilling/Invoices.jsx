@@ -5,7 +5,7 @@ import { ChevronDown, Filter, Search } from "lucide-react";
 import ThreeDotLoader from "../../Loader"
 import { HiOutlineDownload } from "react-icons/hi";
 import { FaFileExcel } from "react-icons/fa";
-import NotFound from "../../assets/nodatafound.png"
+import NoDataFound from "../../Common/NoDataFound";
 import PaginationFooter from "../../Common/PaginationFooter"
 import InvoicesFilterPanel from "../../Common/InvoicesFilterPanel";
 import dayjs from "dayjs";
@@ -304,7 +304,7 @@ const Invoices = () => {
                 <tr>
                   <td colSpan={9} className="py-10 text-center">
                     <div className="flex flex-col items-center justify-center">
-                      <img src={NotFound} alt="No Data" className="w-60 h-60 mb-2" />
+                      <NoDataFound alt="No Data" className="w-60 h-60 mb-2" />
                       {/* <p className="text-gray-400 font-medium">No invoices found</p> */}
                     </div>
                   </td>
@@ -434,7 +434,7 @@ const Invoices = () => {
             </div>
           ) : invoices.length === 0 ? (
             <div className="text-center py-10">
-              <img src={NotFound} alt="No Data" className="w-60 h-60 mx-auto" />
+              <NoDataFound alt="No Data" className="w-60 h-60 mx-auto" />
             </div>
           ) : (
             invoices.map((inv) => {
