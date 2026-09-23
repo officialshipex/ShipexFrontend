@@ -5,6 +5,7 @@ import { BiSolidPhoneCall } from "react-icons/bi";
 import { useOutletContext } from "react-router-dom";
 import Cookies from "js-cookie";
 import dayjs from "dayjs";
+import { useBranding } from "../../../context/BrandingContext";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || process.env.REACT_APP_BACKEND_URL;
 
@@ -99,6 +100,7 @@ const FeatureCard = ({ icon, title, description, enabled, onToggle, adminEnabled
 
 // ─── Main Component ─────────────────────────────────────────
 const AIOrderUpdation = () => {
+  const { companyDisplayName } = useBranding();
   const { targetUserId, isAdmin } = useOutletContext();
   const token = Cookies.get("session");
 
@@ -250,7 +252,7 @@ const AIOrderUpdation = () => {
           </div>
           <div>
             <h2 className="text-[13px] font-[700] text-gray-800">Smart Calling</h2>
-            <p className="text-[11px] text-gray-500">Automated voice calls powered by Shipex India • 1 Credit = 1 Call</p>
+            <p className="text-[11px] text-gray-500">Automated voice calls powered by {companyDisplayName} • 1 Credit = 1 Call</p>
           </div>
         </div>
         {/* <div className="flex items-center gap-2">

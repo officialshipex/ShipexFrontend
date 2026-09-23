@@ -6,8 +6,10 @@ import { useOutletContext } from "react-router-dom";
 import { Notification } from "../../../../Notification";
 import EditTemplateModal from "../EditTemplateModal";
 import TestMessageModal from "../TestMessageModal";
+import { useBranding } from "../../../../context/BrandingContext";
 
 const SmsNotification = () => {
+  const { companyDisplayName } = useBranding();
   const { targetUserId, isAdmin } = useOutletContext();
   const [mainEnabled, setMainEnabled] = useState(true);
   const [statusToggles, setStatusToggles] = useState({});
@@ -32,7 +34,7 @@ const SmsNotification = () => {
     { key: "Delivered", label: "Delivered", defaultTemplate: "Success! Your order {order_id} has been delivered. Enjoy!" },
     { key: "Undelivered", label: "Undelivered", defaultTemplate: "Delivery attempt for {order_id} was unsuccessful. We will retry soon." },
     { key: "RTO", label: "RTO Initiated", defaultTemplate: "Order {order_id} is being returned to sender. Track: {tracking_link}" },
-    { key: "Cancelled", label: "Cancelled", defaultTemplate: "Your order {order_id} has been cancelled. Team Shipex." },
+    { key: "Cancelled", label: "Cancelled", defaultTemplate: `Your order {order_id} has been cancelled. Team ${companyDisplayName}.` },
   ];
 
   const formatDate = (dateString) => {

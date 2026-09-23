@@ -10,8 +10,10 @@ import { Notification } from "../../../Notification";
 import ReferralFilterPanel from "../../../Common/ReferralFilterPanel";
 import NotFound from "../../../assets/nodatafound.png";
 import PaginationFooter from "../../../Common/PaginationFooter";
+import { useBranding } from "../../../context/BrandingContext";
 
 const Referral = () => {
+  const { companyDisplayName } = useBranding();
   const [stats, setStats] = useState({
     referredFriends: 0,
     referralOrders: 0,
@@ -484,7 +486,7 @@ const Referral = () => {
                   onChange={(e) => setWithdrawAmount(e.target.value)}
                   className="w-full px-4 py-2 border rounded-lg text-[13px] focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary"
                 />
-                <p className="text-[10px] text-gray-400 italic">This amount will be instantly added to your Shipex wallet balance.</p>
+                <p className="text-[10px] text-gray-400 italic">This amount will be instantly added to your {companyDisplayName} wallet balance.</p>
               </div>
             </div>
 

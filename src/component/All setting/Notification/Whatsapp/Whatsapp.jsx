@@ -6,8 +6,10 @@ import { useOutletContext } from "react-router-dom";
 import { Notification } from "../../../../Notification";
 import EditTemplateModal from "../EditTemplateModal";
 import TestMessageModal from "../TestMessageModal";
+import { useBranding } from "../../../../context/BrandingContext";
 
 const Whatsapp = () => {
+  const { companyDisplayName } = useBranding();
   const { targetUserId, isAdmin } = useOutletContext();
   const [mainEnabled, setMainEnabled] = useState(true);
   const [statusToggles, setStatusToggles] = useState({});
@@ -32,7 +34,7 @@ const Whatsapp = () => {
     { key: "Delivered", label: "Delivered", defaultTemplate: "Success! Your order {order_id} has been delivered. We hope you love it!" },
     { key: "Undelivered", label: "Undelivered", defaultTemplate: "We tried to deliver your order {order_id} but were unsuccessful. We'll try again soon. Track: {tracking_link}" },
     { key: "RTO", label: "RTO Initiated", defaultTemplate: "Your order {order_id} is being returned to our warehouse. Stay tuned for updates. Track: {tracking_link}" },
-    { key: "Cancelled", label: "Cancelled", defaultTemplate: "Your order {order_id} has been cancelled as per request. Team Shipex." },
+    { key: "Cancelled", label: "Cancelled", defaultTemplate: `Your order {order_id} has been cancelled as per request. Team ${companyDisplayName}.` },
   ];
 
   const formatDate = (dateString) => {

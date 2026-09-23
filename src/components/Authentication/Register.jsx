@@ -4,10 +4,12 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { createSession, getSession } from "../../utils/session";
 import { Logo } from "../Logo";
+import { useBranding } from "../../context/BrandingContext";
 import illustrationimage from "../../assets/Login.png";
 import { Notification } from "../../Notification";
 
 export default function Signup({ setIsAuthenticated }) {
+  const { companyDisplayName } = useBranding();
   const [showPassword, setShowPassword] = useState(false);
   const [success, setSuccess] = useState(false);
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
@@ -279,7 +281,7 @@ export default function Signup({ setIsAuthenticated }) {
                 className="accent-brand-primary mt-2.5 cursor-pointer"
               />
               <label className="text-[10px] text-gray-700 font-[600] my-2">
-                By clicking this check box, you accept Shipex&apos;s{" "}
+                By clicking this check box, you accept {companyDisplayName}&apos;s{" "}
                 <a href="#" className="text-brand-primary underline">
                   Terms & Conditions
                 </a>{" "}
@@ -323,7 +325,7 @@ export default function Signup({ setIsAuthenticated }) {
       <div className="w-full bg-white">
         <footer className="w-full bg-green-50 font-[600] px-3 py-2 flex flex-col sm:flex-row sm:justify-between sm:items-center text-gray-500 text-[10px] text-center sm:text-left sm:space-y-0">
           <p className="w-full sm:w-auto font-[600]">
-            © 2025 Shipex. All rights reserved.
+            © {new Date().getFullYear()} {companyDisplayName}. All rights reserved.
           </p>
           <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-1 sm:space-y-0 w-full sm:w-auto md:block">
             <a href="#" className="text-gray-500 hover:text-gray-900">

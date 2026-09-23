@@ -5,7 +5,8 @@ import { useEffect } from "react";
 import { ChevronDown, ChevronUp, Copy, Check } from "lucide-react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import Shipex from "../../../assets/shipexNoBG.png";
+import { Logo } from "../../../components/Logo";
+import { useBranding } from "../../../context/BrandingContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBoxOpen,
@@ -24,6 +25,7 @@ function Tracing2() {
   const [loading, setLoading] = useState(false); // Loading state
   const [copiedField, setCopiedField] = useState(null); // Which field was copied
   const { awb } = useParams();
+  const { companyDisplayName } = useBranding();
   const [admin, setAdmin] = useState(false);
   const [adminTab, setAdminTab] = useState(false);
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -156,7 +158,7 @@ function Tracing2() {
     <div className="relative bg-[#f7fafc] min-h-screen py-4 px-1 sm:px-4">
       <div className="max-w-4xl mx-auto flex flex-col items-center">
         <div className="my-4 flex flex-col gap-2 w-full items-center">
-          <img className="w-40 h-14 -mt-[15px]" src={Shipex} alt="Shipex" />
+          <Logo className="w-40 h-14 -mt-[15px] object-contain" alt={companyDisplayName} />
           {admin && adminTab && (
             <div className="w-full">
               <div className="flex w-full flex-col">

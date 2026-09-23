@@ -16,6 +16,7 @@ import VerifyPhoneEmail from "./VerifyPhoneEmail";
 // import { toast } from "react-toastify";
 import { Notification } from "../Notification"
 import Aggrement from "./Aggreement";
+import { useBranding } from "../context/BrandingContext";
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const steps = [
@@ -23,6 +24,7 @@ const steps = [
   "Document Verification"
 ];
 const BusinessTypeSelection = () => {
+  const { companyDisplayName } = useBranding();
   const [selectedType, setSelectedType] = useState("individual");
   const [currentStep, setCurrentStep] = useState(0);
   const [isBankVerified, setIsBankVerified] = useState(false);
@@ -1445,7 +1447,7 @@ const BusinessTypeSelection = () => {
                   onChange={handleChecked}
                 />
                 <label htmlFor="agree" className="text-[12px] text-gray-600 font-normal leading-snug">
-                  By submitting this form, you agree to Shipex&apos;s User Privacy Statement. <span
+                  By submitting this form, you agree to {companyDisplayName}&apos;s User Privacy Statement. <span
                     className="text-brand-primary underline font-[600] cursor-pointer text-[12px]"
                     onClick={() => setShowAgreement((prev) => !prev)}
                   >

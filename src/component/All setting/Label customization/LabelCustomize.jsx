@@ -4,6 +4,7 @@ import Barcode2 from "../../../assets/barcode2.png";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Notification } from "../../../Notification";
+import { useBranding } from "../../../context/BrandingContext";
 
 // ── tiny sub-components ─────────────────────────────────────────────────────
 
@@ -54,6 +55,7 @@ function ThermalPreview() {
 // ── main component ───────────────────────────────────────────────────────────
 
 export default function LabelCustomize() {
+  const { companyDisplayName } = useBranding();
   const [activeTab, setActiveTab] = useState("customize"); // "customize" | "size"
   const [uploadedLogo, setUploadedLogo] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -265,7 +267,7 @@ export default function LabelCustomize() {
                   <p>Dimensions (cm): 10*10*10</p>
                 </div>
                 <div className="text-center" style={{ lineHeight: "1.1" }}>
-                  <p className="font-[600]">SHIPEX INDIA</p>
+                  <p className="font-[600]">{(companyDisplayName || "SHIPEX INDIA").toUpperCase()}</p>
                   <img src={Barcode2} alt="barcode2" className="h-30 w-40 mx-auto" />
                   <p>35973710008735</p>
                 </div>

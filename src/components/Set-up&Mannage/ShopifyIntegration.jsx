@@ -7,8 +7,10 @@ import Shopify from "../../assets/shopifyb.png"
 import CustomDropdown from "./Dropdown"
 import Cookies from "js-cookie";
 import {Notification} from "../../Notification"
+import { useBranding } from "../../context/BrandingContext";
 
 const ShopifyIntegration = () => {
+  const { companyDisplayName } = useBranding();
   const { id } = useParams();
   const [storeDetails, setStoreDetails] = useState({
     channel: "Shopify",
@@ -275,7 +277,7 @@ const ShopifyIntegration = () => {
             Steps to Integrate Shopify
           </h3>
           <ul className="list-decimal list-inside mt-2 text-gray-700 space-y-2 font-[400] text-[10px] sm:text-[12px]">
-            <li>Fill in your Shopify Store name, Store URL, Store Client ID and Store client secret. Enter the details and click on add Channel to connect Shopify with Shipex.</li>
+            <li>Fill in your Shopify Store name, Store URL, Store Client ID and Store client secret. Enter the details and click on add Channel to connect Shopify with {companyDisplayName}.</li>
             <li>
               If you do not have these details available, Login to your Shopify account and copy the URL link in the address bar. This is the store URL. Store name is the name of your store.
             </li>

@@ -4,9 +4,11 @@ import noPickupImage from "../assets/nopickups.svg";
 import neworders from "../assets/neworders.svg";
 import unprocessorders from "../assets/unprocessorders.svg";
 import { getSession } from "../utils/session"
+import { useBranding } from "../context/BrandingContext";
 
 
 const Home = () => {
+  const { companyDisplayName } = useBranding();
   const [kyc, setKyc] = useState(false)
 
 
@@ -74,7 +76,7 @@ const Home = () => {
     },
     {
       step: "Step 6",
-      description: "Integrate your marketplace accounts with Shipex",
+      description: `Integrate your marketplace accounts with ${companyDisplayName}`,
       title: "Manage all your accounts from one place",
       status: "Pending",
       statusColor: "bg-red-100 text-red-700",

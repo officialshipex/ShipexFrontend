@@ -5,8 +5,10 @@ import { useNavigate } from "react-router-dom";
 import EmployeeAuthModal from "../../employeeAuth/EmployeeAuthModal";
 import Cookies from "js-cookie";
 import { FiTag, FiBarChart2, FiTool } from "react-icons/fi";
+import { useBranding } from "../../context/BrandingContext";
 
 const SupportPage = ({ isSidebarAdmin }) => {
+  const { supportEmail, supportPhone } = useBranding();
   const [refresh, setRefresh] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ticketHistoryData, setTicketHistoryData] = useState([]);
@@ -132,14 +134,14 @@ const SupportPage = ({ isSidebarAdmin }) => {
         <p className="text-center text-gray-700 text-[12px] md:text-[14px] mt-2">
           For Support (24x7), Contact us through{" "}
           <span className="font-[600] text-gray-700 animate-wavy">
-            +91 9813981344
+            {supportPhone}
           </span>{" "}
           | Email:
           <a
-            href="mailto:support@shipexindia.com"
+            href={`mailto:${supportEmail}`}
             className="text-gray-700 font-[600]"
           >
-            support@shipexindia.com
+            {supportEmail}
           </a>
         </p>
 

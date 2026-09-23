@@ -4,10 +4,12 @@ import { FaEye, FaEyeSlash } from "react-icons/fa";
 import axios from "axios";
 import { createSession, getSession } from "../../utils/session";
 import { Logo } from '../Logo';
+import { useBranding } from '../../context/BrandingContext';
 import illustrationimage from '../../assets/Login.png'; // adjust path as needed
 import { Notification } from "../../Notification"
 
 const LoginPage = ({ setIsAuthenticated }) => {
+  const { companyDisplayName } = useBranding();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState({});
   const [message, setMessage] = useState(null);
@@ -282,7 +284,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
 
               {/* Signup Link */}
               <p className="text-[10px] font-[600] text-gray-500 text-left mt-3">
-                New to ShipexIndia?{" "}
+                New to {companyDisplayName}?{" "}
                 <Link
                   to="/register"
                   className="text-brand-primary underline hover:font-[600] hover:text-brand-primary"
@@ -358,7 +360,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
       <div className="w-full bg-white">
         <footer className="w-full bg-green-50 px-4 py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center text-gray-500 text-[10px] text-center sm:text-left space-y-2 sm:space-y-0 ">
           <p className="w-full sm:w-auto font-[600]">
-            © 2025 Shipex. All rights reserved.
+            © {new Date().getFullYear()} {companyDisplayName}. All rights reserved.
           </p>
 
           <div className="sm:flex flex-col font-[600] sm:flex-row sm:space-x-4 space-y-1 sm:space-y-0 w-full sm:w-auto hidden md:block">

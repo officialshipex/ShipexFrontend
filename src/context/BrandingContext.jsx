@@ -9,6 +9,8 @@ const FALLBACK_BRANDING = {
   logoUrl: null, // null means "use the bundled static logo" (see Logo.jsx)
   faviconUrl: null,
   colors: { primary: "#0CBB7D", secondary: "#0F172A", accent: "#0CBB7D" },
+  supportEmail: "support@shipexindia.com",
+  supportPhone: "+91 98139 81344",
 };
 
 const BrandingContext = createContext({ ...FALLBACK_BRANDING, loading: true });
@@ -33,6 +35,8 @@ export function BrandingProvider({ children }) {
           logoUrl: res.data.logoUrl || null,
           faviconUrl: res.data.faviconUrl || null,
           colors: { ...FALLBACK_BRANDING.colors, ...(res.data.colors || {}) },
+          supportEmail: res.data.supportEmail || FALLBACK_BRANDING.supportEmail,
+          supportPhone: res.data.supportPhone || FALLBACK_BRANDING.supportPhone,
         });
       })
       .catch(() => {
