@@ -32,6 +32,7 @@ import {
 } from "../Common/orderActions";
 import MobileOrderCard from "../Common/MobileOrderCard";
 import SchedulePickupModal from "../shipment/SchedulePickupModal";
+import { toTenantUrl } from "../utils/tenantApiDomain";
 
 // ── constant ──────────────────────────────────────────────────────────────────
 
@@ -88,7 +89,7 @@ const BookedOrders = (filterOrder) => {
     const fetchAiSettings = async () => {
       try {
         const token = Cookies.get("session");
-        const res = await fetch(`${REACT_APP_BACKEND_URL}/ai-calling/settings`, {
+        const res = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/ai-calling/settings`), {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
@@ -114,7 +115,7 @@ const BookedOrders = (filterOrder) => {
     try {
       const token = Cookies.get("session");
       setVerifyingOrders(prev => new Set([...prev, orderId]));
-      const res = await fetch(`${REACT_APP_BACKEND_URL}/ai-calling/initiate`, {
+      const res = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/ai-calling/initiate`), {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ orderId, serviceType: "order_verification" }),
@@ -142,7 +143,7 @@ const BookedOrders = (filterOrder) => {
     try {
       const token = Cookies.get("session");
       Notification(`Initiating AI verification for ${selectedOrders.length} order(s)...`, "success");
-      const res = await fetch(`${REACT_APP_BACKEND_URL}/ai-calling/initiate`, {
+      const res = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/ai-calling/initiate`), {
         method: "POST",
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({ orderIds: selectedOrders, serviceType: "order_verification" }),

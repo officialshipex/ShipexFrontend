@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { setTenantApiDomain } from "../utils/tenantApiDomain";
 
 // Today's static Shipex branding — used until the fetch resolves, and
 // permanently if it fails, so a backend hiccup never breaks the app (it
@@ -38,6 +39,9 @@ export function BrandingProvider({ children }) {
           supportEmail: res.data.supportEmail || FALLBACK_BRANDING.supportEmail,
           supportPhone: res.data.supportPhone || FALLBACK_BRANDING.supportPhone,
         });
+        // From here on, this company's OWN calls to our backend (axiosInterceptor.js)
+        // go to its branded API domain instead of the shared default, when it has one.
+        setTenantApiDomain(res.data.apiDomain || null);
       })
       .catch(() => {
         // Stay on FALLBACK_BRANDING — see comment above.

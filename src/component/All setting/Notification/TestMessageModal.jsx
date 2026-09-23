@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
 import { Notification } from "../../../Notification";
+import { toTenantUrl } from "../../../utils/tenantApiDomain";
 
 const TestMessageModal = ({ onClose, channel, channelLabel, targetUserId, initialCount = 0, onSent }) => {
     const [recipient, setRecipient] = useState("");
@@ -28,7 +29,7 @@ const TestMessageModal = ({ onClose, channel, channelLabel, targetUserId, initia
             const body = { channel, recipient: recipient.trim() };
             if (targetUserId) body.userId = targetUserId;
 
-            const response = await fetch(`${REACT_APP_BACKEND_URL}/notification/sendTestMessage`, {
+            const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/notification/sendTestMessage`), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

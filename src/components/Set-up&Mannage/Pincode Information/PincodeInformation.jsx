@@ -7,6 +7,7 @@ import Delhivery from "../../../assets/delehivery.png";
 import ShreeMaruti from "../../../assets/shreemaruti.png";
 import AmazonShipping from "../../../assets/amazon.jpg";
 import Loader from "../../../Loader"
+import { toTenantUrl } from "../../../utils/tenantApiDomain";
 
 const PincodeInformation = () => {
     const [loading, setLoading] = useState(false);
@@ -33,7 +34,7 @@ const PincodeInformation = () => {
     const fetchPincodeData = async () => {
         try {
             setLoading(true);
-            const response = await fetch(`${REACT_APP_BACKEND_URL}/serviceablePincode/summary`);
+            const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/serviceablePincode/summary`));
             const data = await response.json();
             setLoading(false);
 

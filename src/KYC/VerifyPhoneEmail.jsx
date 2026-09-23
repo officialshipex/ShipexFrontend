@@ -4,6 +4,7 @@ import { CheckCircleIcon, ClockIcon } from "lucide-react";
 import OtpModal from "./OtpModal";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { toTenantUrl } from "../utils/tenantApiDomain";
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const VerifyPhoneEmail = ({ onVerificationChange }) => {
@@ -42,7 +43,7 @@ const VerifyPhoneEmail = ({ onVerificationChange }) => {
         }
         try {
             setLoadingPhoneOtp(true);
-            const response = await fetch(`${REACT_APP_BACKEND_URL}/auth/send-otp`, {
+            const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/auth/send-otp`), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ phoneNumber: formData.phoneNumber }),
@@ -70,7 +71,7 @@ const VerifyPhoneEmail = ({ onVerificationChange }) => {
         }
         try {
             setLoadingEmailOtp(true);
-            const response = await fetch(`${REACT_APP_BACKEND_URL}/auth/send-email-otp`, {
+            const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/auth/send-email-otp`), {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email: formData.email }),
@@ -148,7 +149,7 @@ const VerifyPhoneEmail = ({ onVerificationChange }) => {
         }
         try {
             const token = Cookies.get("session")
-            const response = await fetch(`${REACT_APP_BACKEND_URL}/auth/verify-otp`, {
+            const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/auth/verify-otp`), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -181,7 +182,7 @@ const VerifyPhoneEmail = ({ onVerificationChange }) => {
             return;
         }
         try {
-            const response = await fetch(`${REACT_APP_BACKEND_URL}/auth/verify-email-otp`, {
+            const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/auth/verify-email-otp`), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

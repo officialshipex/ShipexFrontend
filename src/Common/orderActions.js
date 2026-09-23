@@ -4,6 +4,7 @@ import { PDFDocument } from "pdf-lib";
 import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
 import { Notification } from "../Notification";
+import { toTenantUrl } from "../utils/tenantApiDomain";
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 export const handleTrackingByAwb = (awb, navigate) => {
@@ -227,7 +228,7 @@ export const handleBulkDownloadLabel = async ({ selectedOrders }) => {
     let labelSize = "A4"; // default
     try {
       const token = Cookies.get("session");
-      const settingsRes = await fetch(`${REACT_APP_BACKEND_URL}/label/getLabel`, {
+      const settingsRes = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/label/getLabel`), {
         headers: { authorization: `Bearer ${token}` },
       });
       if (settingsRes.ok) {
@@ -257,7 +258,7 @@ export const handleBulkDownloadLabel = async ({ selectedOrders }) => {
     // ── 2. Fetch order info (to handle Amazon labels) ────────────────────
     const orderResponses = await Promise.all(
       selectedOrders.map((id) =>
-        fetch(`${REACT_APP_BACKEND_URL}/orders/checkCourier/${id}`).then(
+        fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/orders/checkCourier/${id}`)).then(
           (res) => res.json(),
         ),
       ),

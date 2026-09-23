@@ -3,6 +3,7 @@ import { Link, useNavigate, useLocation, Outlet } from "react-router-dom";
 import { FiChevronDown, FiRefreshCcw } from "react-icons/fi";
 import BuyCreditModal from "./BuyCreditModal";
 import Cookies from "js-cookie";
+import { toTenantUrl } from "../../../utils/tenantApiDomain";
 
 
 const Notification = ({ targetUserId = null, basePath = "/dashboard/settings/notification" }) => {
@@ -45,7 +46,7 @@ const Notification = ({ targetUserId = null, basePath = "/dashboard/settings/not
             const params = new URLSearchParams();
             if (targetUserId) params.append("userId", targetUserId);
 
-            const response = await fetch(`${REACT_APP_BACKEND_URL}/notification/getCreditBalance?${params.toString()}`, {
+            const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/notification/getCreditBalance?${params.toString()}`), {
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },

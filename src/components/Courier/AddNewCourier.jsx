@@ -9,6 +9,7 @@ import { Notification } from "../../Notification";
 import Loader from "../../Loader";
 import { FaEllipsisV, FaTrashAlt, FaUpload, FaDownload, FaTruck } from "react-icons/fa";
 import { getCarrierLogo } from "../../Common/getCarrierLogo";
+import { toTenantUrl } from "../../utils/tenantApiDomain";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -132,7 +133,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
 
         setLoading(true);
 
-        const response = await fetch(`${REACT_APP_BACKEND_URL}/serviceablePincode/${courier}/upload-pincode`, {
+        const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/serviceablePincode/${courier}/upload-pincode`), {
           method: "POST",
           body: formData,
         });

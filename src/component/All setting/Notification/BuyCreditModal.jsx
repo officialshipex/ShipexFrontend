@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Cookies from "js-cookie";
 import {Notification} from "../../../Notification"
+import { toTenantUrl } from "../../../utils/tenantApiDomain";
 const BuyCreditModal = ({ onClose, onSuccess, targetUserId }) => {
     const [amount, setAmount] = useState("");
     const [loading, setLoading] = useState(false);
@@ -11,7 +12,7 @@ const BuyCreditModal = ({ onClose, onSuccess, targetUserId }) => {
         if (!amount) return;
         try {
             setLoading(true);
-            const response = await fetch(`${REACT_APP_BACKEND_URL}/notification/buyCredits`, {
+            const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/notification/buyCredits`), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
