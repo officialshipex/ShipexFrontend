@@ -318,7 +318,7 @@ const Billing = () => {
                   key={tab}
                   className={`px-3 py-2 text-[12px] border rounded-lg font-[600] transition-all duration-200 ${selectedItem === tab
                     ? "bg-brand-primary text-white"
-                    : "bg-white text-gray-700 hover:bg-green-200"
+                    : "bg-white text-gray-700 hover:bg-brand-secondary/10"
                     }`}
                   onClick={() => setSelectedItem(tab)}
                 >
@@ -341,7 +341,7 @@ const Billing = () => {
             {tabs.map((tab) => (
               <button
                 key={tab}
-                className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${selectedItem === tab ? "bg-green-50 text-brand-primary" : "text-gray-700 hover:bg-gray-50"
+                className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${selectedItem === tab ? "bg-brand-secondary/10 text-brand-primary" : "text-gray-700 hover:bg-gray-50"
                   }`}
                 onClick={() => {
                   setSelectedItem(tab);

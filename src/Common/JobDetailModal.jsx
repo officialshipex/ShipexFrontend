@@ -122,8 +122,8 @@ const BulkShipDetail = ({ job }) => {
             <SummaryBar
                 items={[
                     isRunning
-                        ? { label: `Processing… ${doneCount}/${job.totalOrders}`, className: "bg-green-50 text-brand-primary border border-green-200" }
-                        : { label: "Completed", className: "bg-green-50 text-brand-primary border border-green-200" },
+                        ? { label: `Processing… ${doneCount}/${job.totalOrders}`, className: "bg-brand-secondary/10 text-brand-primary border border-green-200" }
+                        : { label: "Completed", className: "bg-brand-secondary/10 text-brand-primary border border-green-200" },
                     { label: `${job.successCount || 0} succeeded`, className: "bg-green-50 text-green-700 border border-green-200" },
                     { label: `${job.failureCount || 0} failed`, className: job.failureCount ? "bg-red-50 text-red-600 border border-red-200" : "bg-white text-gray-500 border border-gray-200" },
                 ]}
@@ -173,7 +173,7 @@ const BulkUploadDetail = ({ file }) => {
         <>
             <SummaryBar
                 items={[
-                    { label: file.status, className: "bg-green-50 text-brand-primary border border-green-200" },
+                    { label: file.status, className: "bg-brand-secondary/10 text-brand-primary border border-green-200" },
                     { label: `${file.noOfOrders || 0} total`, className: "bg-white text-gray-600 border border-gray-200" },
                     { label: `${file.successfullyUploaded || 0} succeeded`, className: "bg-green-50 text-green-700 border border-green-200" },
                     { label: `${file.errorOrders || 0} failed`, className: file.errorOrders ? "bg-red-50 text-red-600 border border-red-200" : "bg-white text-gray-500 border border-gray-200" },

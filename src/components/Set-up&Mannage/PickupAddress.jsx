@@ -316,7 +316,7 @@ const PickupAddress = ({ isAdminView = false }) => {
                     <td className="px-3 py-2">
                       <div className="flex items-center gap-2 justify-center">
                         <button
-                          className="p-2 rounded-full text-green-600 bg-green-100 hover:bg-green-200 transition"
+                          className="p-2 rounded-full text-green-600 bg-green-100 hover:bg-brand-secondary/10 transition"
                           onClick={() => {
                             openModal({ ...address.pickupAddress, _id: address._id });
                             setTitle("Edit Address");

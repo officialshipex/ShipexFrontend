@@ -280,7 +280,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
                   <li
                     key={value}
                     onClick={() => { setAction(value); setDropdownOpen(false); setRemarks(""); setScheduledDate(""); setAddress({ line1: "", line2: "", city: "", state: "", pincode: "", customerName: "" }); }}
-                    className={`px-3 py-2 cursor-pointer font-[600] transition-colors flex items-center gap-2 ${action === value ? "bg-green-50 text-brand-primary" : "text-gray-700 hover:bg-gray-50"}`}
+                    className={`px-3 py-2 cursor-pointer font-[600] transition-colors flex items-center gap-2 ${action === value ? "bg-brand-secondary/10 text-brand-primary" : "text-gray-700 hover:bg-gray-50"}`}
                   >
                     {value === "RE-ATTEMPT"}
                     {value === "CHANGE_ADDRESS"}

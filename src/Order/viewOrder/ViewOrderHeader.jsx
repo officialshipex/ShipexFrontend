@@ -78,7 +78,7 @@ const ViewOrderHeader = ({ order }) => {
                         <span
                             className={`hidden sm:inline-block px-2 font-[600] py-1 rounded text-[10px] ${order.status === "Cancelled"
                                 ? "bg-red-100 text-red-600"
-                                : "bg-green-100 text-brand-primary"
+                                : "bg-brand-secondary/10 text-brand-primary"
                                 }`}
                         >
                             {order.status}
@@ -111,7 +111,7 @@ const ViewOrderHeader = ({ order }) => {
                     <span
                         className={`sm:hidden px-2 font-[600] py-1 rounded text-[10px] ${order.status === "Cancelled"
                             ? "bg-red-100 text-red-600"
-                            : "bg-green-100 text-brand-primary"
+                            : "bg-brand-secondary/10 text-brand-primary"
                             }`}
                     >
                         {order.status}

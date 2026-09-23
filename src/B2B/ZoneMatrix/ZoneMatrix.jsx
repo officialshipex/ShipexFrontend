@@ -214,7 +214,7 @@ export default function ZoneAdmin() {
                       {z.locations.map((l, i) => (
                         <span
                           key={i}
-                          className="flex items-center font-[600] gap-2 bg-green-100 text-brand-primary px-3 py-1 rounded-full text-[10px]"
+                          className="flex items-center font-[600] gap-2 bg-brand-secondary/10 text-brand-primary px-3 py-1 rounded-full text-[10px]"
                         >
                           {l.name}
                           <button

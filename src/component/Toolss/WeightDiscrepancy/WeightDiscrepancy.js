@@ -210,7 +210,7 @@ const WeightDiscrepancy = () => {
             key={tab}
             className={`px-3 py-2 rounded-lg border text-[12px] font-[600] transition-all ${activeTab === tab
                 ? "bg-brand-primary text-white"
-                : "bg-white text-gray-700 hover:bg-green-200"
+                : "bg-white text-gray-700 hover:bg-brand-secondary/10"
               }`}
             onClick={() => setActiveTab(tab)}
           >

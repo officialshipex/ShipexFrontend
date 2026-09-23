@@ -303,7 +303,7 @@ const WalletHistorys = () => {
                                             ₹{Number(row.amount).toFixed(2)}
                                         </td>
                                         <td className="px-3 py-2">
-                                            <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "success" ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>
+                                            <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "success" ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-100 text-red-600"}`}>
                                                 {row.status}
                                             </span>
                                         </td>
@@ -409,7 +409,7 @@ const WalletHistorys = () => {
                                     </div>
                                     <div className="text-right">
                                         <p className="font-bold text-brand-primary text-[10px]">₹{Number(row.amount).toFixed(2)}</p>
-                                        <span className={`px-2 py-0.5 rounded text-[10px] inline-block ${row.status === "success" ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>
+                                        <span className={`px-2 py-0.5 rounded text-[10px] inline-block ${row.status === "success" ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-100 text-red-600"}`}>
                                             {row.status}
                                         </span>
                                     </div>

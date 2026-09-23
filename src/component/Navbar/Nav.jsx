@@ -1325,7 +1325,7 @@ const Navbar = () => {
                       </div>
                       {/* Company badge */}
                       {u.company && (
-                        <span className="text-[10px] font-[600] bg-green-50 text-brand-primary px-2 py-0.5 rounded-full flex-shrink-0 truncate max-w-[90px]">
+                        <span className="text-[10px] font-[600] bg-brand-secondary/10 text-brand-primary px-2 py-0.5 rounded-full flex-shrink-0 truncate max-w-[90px]">
                           {u.company}
                         </span>
                       )}

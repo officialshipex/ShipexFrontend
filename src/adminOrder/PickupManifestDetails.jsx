@@ -289,7 +289,7 @@ const PickupManifestDetails = () => {
                                 </div>
                             </div>
                         </div>
-                        <span className="px-2 font-[600] py-1 rounded text-[10px] bg-green-100 text-brand-primary uppercase">
+                        <span className="px-2 font-[600] py-1 rounded text-[10px] bg-brand-secondary/10 text-brand-primary uppercase">
                             {manifest?.status?.replace(/_/g, " ") || "Scheduled"}
                         </span>
                     </div>

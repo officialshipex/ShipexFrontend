@@ -381,7 +381,7 @@ const AdminReferral = () => {
                         <td className="py-2 px-3">
                           <button
                             onClick={() => setSelectedReferral(row)}
-                            className="px-3 py-1 bg-green-50 hover:bg-green-100 text-brand-primary rounded-lg text-[11px] font-bold transition-all"
+                            className="px-3 py-1 bg-green-50 hover:bg-brand-secondary/10 text-brand-primary rounded-lg text-[11px] font-bold transition-all"
                             title="View Details"
                           >
                             Details
@@ -412,7 +412,7 @@ const AdminReferral = () => {
                     </div>
                     <button
                       onClick={() => setSelectedReferral(row)}
-                      className="px-3 py-1 bg-green-50 text-brand-primary rounded-lg text-[11px] font-bold border border-green-100 hover:bg-green-100 transition-all ml-2 h-7 flex items-center shrink-0"
+                      className="px-3 py-1 bg-brand-secondary/10 text-brand-primary rounded-lg text-[11px] font-bold border border-green-100 hover:bg-green-100 transition-all ml-2 h-7 flex items-center shrink-0"
                     >
                       Details
                     </button>

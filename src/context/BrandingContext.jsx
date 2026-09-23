@@ -9,6 +9,7 @@ const FALLBACK_BRANDING = {
   companyDisplayName: "Shipex India",
   logoUrl: null, // null means "use the bundled static logo" (see Logo.jsx)
   faviconUrl: null,
+  emptyStateImageUrl: null, // null means "use the bundled default picture" (see Common/NoDataFound.jsx)
   colors: { primary: "#0CBB7D", secondary: "#0F172A", accent: "#0CBB7D" },
   supportEmail: "support@shipexindia.com",
   supportPhone: "+91 98139 81344",
@@ -35,6 +36,7 @@ export function BrandingProvider({ children }) {
           companyDisplayName: res.data.companyDisplayName || FALLBACK_BRANDING.companyDisplayName,
           logoUrl: res.data.logoUrl || null,
           faviconUrl: res.data.faviconUrl || null,
+          emptyStateImageUrl: res.data.emptyStateImageUrl || null,
           colors: { ...FALLBACK_BRANDING.colors, ...(res.data.colors || {}) },
           supportEmail: res.data.supportEmail || FALLBACK_BRANDING.supportEmail,
           supportPhone: res.data.supportPhone || FALLBACK_BRANDING.supportPhone,

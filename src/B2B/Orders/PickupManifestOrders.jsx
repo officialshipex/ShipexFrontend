@@ -301,7 +301,7 @@ const PickupManifestOrders = () => {
                                             </div>
                                         </td>
                                         <td className="px-3 py-2">
-                                            <span className="px-2 py-0.5 bg-green-100 text-brand-primary text-[10px] rounded">
+                                            <span className="px-2 py-0.5 bg-brand-secondary/10 text-brand-primary text-[10px] rounded">
                                                 {m.status.replace(/_/g, " ")}
                                             </span>
                                         </td>

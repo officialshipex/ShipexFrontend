@@ -189,7 +189,7 @@ const NewOrder = () => {
           <button
             type="button"
             onClick={() => navigate(-1)}
-            className="p-2 rounded-full hover:bg-green-200 transition"
+            className="p-2 rounded-full hover:bg-brand-secondary/10 transition"
           >
             <ArrowLeft className="w-4 h-4 text-gray-500" />
           </button>

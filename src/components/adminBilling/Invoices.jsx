@@ -133,7 +133,7 @@ const Invoices = () => {
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case "paid":
-        return "bg-green-100 text-brand-primary border-brand-primary/20";
+        return "bg-brand-secondary/10 text-brand-primary border-brand-primary/20";
       case "pending":
         return "bg-red-100 text-red-600 border-red-200";
       case "partially_paid":

@@ -254,7 +254,7 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
                                     key={tab}
                                     className={`px-3 py-2 rounded-lg border text-[12px] font-[600] transition-all ${activeTab === tab
                                         ? "bg-brand-primary text-white"
-                                        : "bg-white text-gray-700 hover:bg-green-200"
+                                        : "bg-white text-gray-700 hover:bg-brand-secondary/10"
                                         }`}
                                     onClick={() => setActiveTab(tab)}
                                 >
@@ -299,7 +299,7 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
                                 {tabs.map((tab) => (
                                     <button
                                         key={tab}
-                                        className={`w-full text-left px-3 py-2 text-[12px] hover:bg-green-200 ${activeTab === tab ? "bg-green-100" : "hover:bg-green-50"}`}
+                                        className={`w-full text-left px-3 py-2 text-[12px] hover:bg-brand-secondary/10 ${activeTab === tab ? "bg-green-100" : "hover:bg-green-50"}`}
                                         onClick={() => {
                                             setActiveTab(tab);
                                             setShowDropdown(false);

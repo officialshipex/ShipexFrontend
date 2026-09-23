@@ -405,7 +405,7 @@ const Remittance = ({
                     <td className="py-2 px-3 text-brand-primary">₹{(Number(row.codAvailable) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3 text-gray-500">{row.remittanceMethod}</td>
                     <td className="py-2 px-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>
+                      <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "Paid" ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-100 text-red-600"}`}>
                         {row.status}
                       </span>
                     </td>
@@ -486,7 +486,7 @@ const Remittance = ({
                             </button>
                           </div>
                         </div>
-                        <span className={`px-2 py-0.5 rounded text-[10px] whitespace-nowrap ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>
+                        <span className={`px-2 py-0.5 rounded text-[10px] whitespace-nowrap ${row.status === "Paid" ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-100 text-red-600"}`}>
                           {row.status}
                         </span>
                       </div>

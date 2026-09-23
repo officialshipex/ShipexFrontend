@@ -618,7 +618,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                     <td className="py-2 px-3 text-red-700">₹{(Number(row.earlyCodCharges) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3 text-brand-primary font-[600]">₹{(Number(row.remittanceInitiated) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] shadow-sm ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "bg-orange-100 text-orange-600"}`}>{row.status}</span>
+                      <span className={`px-2 py-0.5 rounded text-[10px] shadow-sm ${row.status === "Paid" ? "bg-brand-secondary/10 text-brand-primary" : "bg-orange-100 text-orange-600"}`}>{row.status}</span>
                     </td>
                   </tr>
                 ))
@@ -661,7 +661,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 </div>
 
                 <div className="text-right flex flex-col items-end">
-                  <span className={`px-2 py-0.5 rounded text-[10px] shadow-xs ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>
+                  <span className={`px-2 py-0.5 rounded text-[10px] shadow-xs ${row.status === "Paid" ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-100 text-red-600"}`}>
                     {row.status}
                   </span>
                   <p
@@ -965,7 +965,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                     {statusDropdownOpen && (
                       <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-[120] py-1 border border-gray-200 animate-popup-in">
                         {["Paid", "Pending"].map(s => (
-                          <div key={s} onClick={() => { setLocalFilters(prev => ({ ...prev, status: s })); setStatusDropdownOpen(false); }} className={`px-4 py-2 text-[12px] font-[600] cursor-pointer transition-colors ${localFilters.status === s ? "bg-green-50 text-brand-primary" : "text-gray-500 hover:bg-gray-50"}`}>{s}</div>
+                          <div key={s} onClick={() => { setLocalFilters(prev => ({ ...prev, status: s })); setStatusDropdownOpen(false); }} className={`px-4 py-2 text-[12px] font-[600] cursor-pointer transition-colors ${localFilters.status === s ? "bg-brand-secondary/10 text-brand-primary" : "text-gray-500 hover:bg-gray-50"}`}>{s}</div>
                         ))}
                       </div>
                     )}

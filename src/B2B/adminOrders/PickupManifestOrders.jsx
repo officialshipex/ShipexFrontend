@@ -310,7 +310,7 @@ const PickupManifestOrders = ({ userId: initialUserId }) => {
                                             {m.orderIds?.length || 0} Items
                                         </td>
                                         <td className="px-3 py-2">
-                                            <span className="px-2 py-0.5 bg-green-100 text-brand-primary text-[10px] rounded uppercase font-bold">
+                                            <span className="px-2 py-0.5 bg-brand-secondary/10 text-brand-primary text-[10px] rounded uppercase font-bold">
                                                 {m.status?.replace(/_/g, " ")}
                                             </span>
                                         </td>

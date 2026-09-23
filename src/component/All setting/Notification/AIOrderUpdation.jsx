@@ -50,7 +50,7 @@ const FeatureCard = ({ icon, title, description, enabled, onToggle, adminEnabled
     <div className="flex items-start justify-between gap-2">
       <div className="flex items-center gap-3">
         <div className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0
-          ${enabled && adminEnabled ? "bg-green-100 text-brand-primary" : "bg-gray-100 text-gray-400"}`}>
+          ${enabled && adminEnabled ? "bg-brand-secondary/10 text-brand-primary" : "bg-gray-100 text-gray-400"}`}>
           {icon}
         </div>
         <div>

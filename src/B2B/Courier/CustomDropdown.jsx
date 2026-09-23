@@ -48,7 +48,7 @@ const CustomDropdown = ({ options, selected, onChange, label, placeholder = "Sel
                   onChange(option.value);
                   setIsOpen(false);
                 }}
-                className={`px-3 py-2 text-[10px] sm:text-[12px] font-[600] transition-colors cursor-pointer ${selected === option.value ? "bg-green-50 text-brand-primary" : "text-gray-600 hover:bg-gray-50"}`}
+                className={`px-3 py-2 text-[10px] sm:text-[12px] font-[600] transition-colors cursor-pointer ${selected === option.value ? "bg-brand-secondary/10 text-brand-primary" : "text-gray-600 hover:bg-gray-50"}`}
               >
                 {option.label}
               </li>

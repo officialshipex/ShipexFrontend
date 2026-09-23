@@ -430,7 +430,7 @@ const AdminCodRemittances = ({ isSidebarAdmin }) => {
                       </td>
                       <td className="py-2 px-3 text-gray-700">₹{(Number(row.CODAmount) || 0).toFixed(2)}</td>
                       <td className="py-2 px-3">
-                        <span className={`px-2 py-0.5 rounded text-[10px] shadow-sm ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>{row.status}</span>
+                        <span className={`px-2 py-0.5 rounded text-[10px] shadow-sm ${row.status === "Paid" ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-100 text-red-600"}`}>{row.status}</span>
                       </td>
                     </tr>
                   )
@@ -484,7 +484,7 @@ const AdminCodRemittances = ({ isSidebarAdmin }) => {
                   </div>
 
                   <div className="text-right">
-                    <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>
+                    <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "Paid" ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-100 text-red-600"}`}>
                       {row.status}
                     </span>
                   </div>
@@ -645,7 +645,7 @@ const AdminCodRemittances = ({ isSidebarAdmin }) => {
                             <div
                               key={s}
                               onClick={() => { setLocalFilters(prev => ({ ...prev, status: s })); setStatusDropdownOpen(false); }}
-                              className={`px-3 py-2 text-[12px] font-[600] cursor-pointer transition-colors ${localFilters.status === s ? "bg-green-50 text-brand-primary" : "text-gray-500 hover:bg-gray-50 hover:text-brand-primary"}`}
+                              className={`px-3 py-2 text-[12px] font-[600] cursor-pointer transition-colors ${localFilters.status === s ? "bg-brand-secondary/10 text-brand-primary" : "text-gray-500 hover:bg-gray-50 hover:text-brand-primary"}`}
                             >
                               {s}
                             </div>
@@ -699,7 +699,7 @@ const AdminCodRemittances = ({ isSidebarAdmin }) => {
 
                           <div className="max-h-[160px] overflow-y-auto pr-1 space-y-1 custom-scrollbar-thin">
                             {filteredCourierOptions.length > 0 ? filteredCourierOptions.map(c => (
-                              <label key={c} className={`flex items-center gap-2.5 p-1.5 rounded-md cursor-pointer transition-all ${localFilters.couriers.includes(c) ? "bg-green-50 text-brand-primary" : "hover:bg-gray-50 text-gray-600"}`}>
+                              <label key={c} className={`flex items-center gap-2.5 p-1.5 rounded-md cursor-pointer transition-all ${localFilters.couriers.includes(c) ? "bg-brand-secondary/10 text-brand-primary" : "hover:bg-gray-50 text-gray-600"}`}>
                                 <input
                                   type="checkbox"
                                   checked={localFilters.couriers.includes(c)}

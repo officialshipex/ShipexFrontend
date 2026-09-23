@@ -377,7 +377,7 @@ const CodRemittances = () => {
                     <td className="py-2 px-3">{row.remittanceMethod}</td>
                     <td className="py-2 px-3 font-medium text-brand-primary">{row.remittanceInitiated?.toFixed(2)}</td>
                     <td className={`py-2 px-3`}>
-                      <p className={`rounded px-2 py-0.5 text-[10px] text-center ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "text-red-600 bg-red-100"}`}>{row.status}</p>
+                      <p className={`rounded px-2 py-0.5 text-[10px] text-center ${row.status === "Paid" ? "bg-brand-secondary/10 text-brand-primary" : "text-red-600 bg-red-100"}`}>{row.status}</p>
                     </td>
                   </tr>
                 ))
@@ -456,7 +456,7 @@ const CodRemittances = () => {
                             </button>
                           </div>
                         </div>
-                        <span className={`px-2 py-0.5 rounded text-[10px] whitespace-nowrap ${row.status === "Paid" ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>
+                        <span className={`px-2 py-0.5 rounded text-[10px] whitespace-nowrap ${row.status === "Paid" ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-100 text-red-600"}`}>
                           {row.status}
                         </span>
                       </div>

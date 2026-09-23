@@ -169,7 +169,7 @@ const WebhookLogs = () => {
                   </td>
                   <td className="py-2 px-3 text-center">
                     <span className={`px-2 py-0.5 rounded text-[10px] font-semibold border ${
-                      log.status === "Success" ? "bg-green-100 text-brand-primary border-green-200" : "bg-red-100 text-red-600 border-red-200"
+                      log.status === "Success" ? "bg-brand-secondary/10 text-brand-primary border-green-200" : "bg-red-100 text-red-600 border-red-200"
                     }`}>
                       {log.status}
                     </span>
@@ -220,7 +220,7 @@ const WebhookLogs = () => {
                         HTTP {log.httpStatus || "N/A"}
                       </span>
                       <span className={`px-1.5 py-0.2 rounded text-[9px] font-bold border ${
-                        log.status === "Success" ? "bg-green-50 text-brand-primary border-green-100" : "bg-red-50 text-red-600 border-red-100"
+                        log.status === "Success" ? "bg-brand-secondary/10 text-brand-primary border-green-100" : "bg-red-50 text-red-600 border-red-100"
                       }`}>
                         {log.status}
                       </span>

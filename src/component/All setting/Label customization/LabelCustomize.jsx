@@ -167,7 +167,7 @@ export default function LabelCustomize() {
             className={`px-3 py-2 text-[12px] rounded-lg font-[600] transition-all duration-200 shadow-sm border ${
               activeTab === tab.id
                 ? "bg-brand-primary text-white border-brand-primary"
-                : "bg-white text-gray-700 border-gray-200 hover:bg-green-200"
+                : "bg-white text-gray-700 border-gray-200 hover:bg-brand-secondary/10"
             }`}
           >
             {tab.label}

@@ -27,7 +27,7 @@ const OrderDetailsSection = ({ order }) => {
 
                     <div className="flex items-center gap-1">
                         {/* Channel badge */}
-                        <span className="inline-flex items-center px-2 rounded bg-green-100 text-brand-primary text-[10px] uppercase">
+                        <span className="inline-flex items-center px-2 rounded bg-brand-secondary/10 text-brand-primary text-[10px] uppercase">
                             {order.channel || "CUSTOM"}
                         </span>
 

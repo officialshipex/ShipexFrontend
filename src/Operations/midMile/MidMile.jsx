@@ -98,7 +98,7 @@ const MidMile = ({ isSidebarAdmin }) => {
               {tabs.map((tab) => (
                 <button
                   key={tab}
-                  className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${activeTab === tab ? "bg-green-50 text-brand-primary" : "text-gray-700 hover:bg-gray-50"
+                  className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${activeTab === tab ? "bg-brand-secondary/10 text-brand-primary" : "text-gray-700 hover:bg-gray-50"
                     }`}
                   onClick={() => { setActiveTab(tab); setShowDropdown(false); }}
                 >

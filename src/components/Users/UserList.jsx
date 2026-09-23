@@ -284,7 +284,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
                         </p>
                       </td>
                       <td className="border-b border-gray-300 px-3 py-2 text-center">
-                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${e.kycStatus ? "bg-green-100 text-brand-primary" : "bg-red-100 text-red-600"}`}>
+                        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${e.kycStatus ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-100 text-red-600"}`}>
                           {e.kycStatus ? "Verified" : "Pending"}
                         </span>
                       </td>
@@ -435,7 +435,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
 
                       {/* Inline compact badges — Rate Card + Wallet */}
                       <div className="ml-auto flex items-center gap-1.5 shrink-0">
-                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${e.rateCard ? "bg-green-50 text-brand-primary border-green-200" : "bg-gray-50 text-gray-500 border-gray-200"}`}>
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${e.rateCard ? "bg-brand-secondary/10 text-brand-primary border-green-200" : "bg-gray-50 text-gray-500 border-gray-200"}`}>
                           {e.rateCard || "N/A"}
                         </span>
                         <MdEdit

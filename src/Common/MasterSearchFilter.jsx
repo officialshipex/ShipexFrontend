@@ -179,7 +179,7 @@ const MasterSearchFilter = ({ isMobile = false }) => {
 
                                         {/* Right Section */}
                                         <div className="text-[10px] text-right space-y-0.5 text-gray-700">
-                                            <div className="font-[500] bg-green-100 text-brand-primary px-1 rounded">
+                                            <div className="font-[500] bg-brand-secondary/10 text-brand-primary px-1 rounded">
                                                 {order.status}
                                             </div>
 
@@ -278,7 +278,7 @@ const MasterSearchFilter = ({ isMobile = false }) => {
                                     {/* Right Section */}
                                     <div className="text-[10px] text-right space-y-0.5 text-gray-700">
 
-                                        <div className="px-2 py-0.5 bg-green-100 text-brand-primary rounded uppercase inline-block">
+                                        <div className="px-2 py-0.5 bg-brand-secondary/10 text-brand-primary rounded uppercase inline-block">
                                             {order.status}
                                         </div>
 

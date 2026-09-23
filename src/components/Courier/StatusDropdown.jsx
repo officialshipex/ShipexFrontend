@@ -46,7 +46,7 @@ const StatusDropdown = ({ Status, setStatus, label = "Status" }) => {
                 setStatus(option);
                 setIsOpen(false);
               }}
-              className={`px-3 py-2 text-[10px] sm:text-[12px] font-[600] transition-colors cursor-pointer ${Status === option ? "bg-green-50 text-brand-primary" : "text-gray-600 hover:bg-gray-50"}`}
+              className={`px-3 py-2 text-[10px] sm:text-[12px] font-[600] transition-colors cursor-pointer ${Status === option ? "bg-brand-secondary/10 text-brand-primary" : "text-gray-600 hover:bg-gray-50"}`}
             >
               {option}
             </li>

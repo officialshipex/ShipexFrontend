@@ -120,7 +120,7 @@ const OrderRowActions = ({
                 <div className="relative inline-block" ref={el => { if (dropdownRefs.current) dropdownRefs.current[index] = el }}>
                     <button
                         ref={el => { if (toggleButtonRefs.current) toggleButtonRefs.current[index] = el }}
-                        className={`text-gray-700 rounded-lg text-[10px] p-2 bg-gray-100 transition-colors ${isOpen ? 'bg-green-100 text-brand-primary' : ''}`}
+                        className={`text-gray-700 rounded-lg text-[10px] p-2 bg-gray-100 transition-colors ${isOpen ? 'bg-brand-secondary/10 text-brand-primary' : ''}`}
                         onClick={(e) => {
                             e.stopPropagation();
                             toggleDropdown(index);

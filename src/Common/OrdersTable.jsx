@@ -332,7 +332,7 @@ const OrdersTable = ({
                             {/* PAYMENT */}
                             <td className="py-2 px-3">
                                 <p>₹ {order.paymentDetails?.amount}</p>
-                                <span className="text-[10px] bg-green-100 text-brand-primary px-2 py-0.5 rounded">
+                                <span className="text-[10px] bg-brand-secondary/10 text-brand-primary px-2 py-0.5 rounded">
                                     {order.paymentDetails?.method}
                                 </span>
                             </td>
@@ -540,7 +540,7 @@ const OrdersTable = ({
 
                             )}
                             <td className="py-2 px-3 whitespace-nowrap">
-                                <span className={`px-2 py-0.5 rounded text-[10px] ${order.status === "Cancelled" ? "bg-red-100 text-red-600" : "bg-green-100 text-brand-primary"}`}>{order.status}</span>
+                                <span className={`px-2 py-0.5 rounded text-[10px] ${order.status === "Cancelled" ? "bg-red-100 text-red-600" : "bg-brand-secondary/10 text-brand-primary"}`}>{order.status}</span>
                             </td>
 
                             {/* NDR DETAILS */}

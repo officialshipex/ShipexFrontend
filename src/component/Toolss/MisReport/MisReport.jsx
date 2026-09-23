@@ -392,7 +392,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                       <td className="py-2 px-3">
                         <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                           row.status === "completed"
-                            ? "bg-green-100 text-brand-primary"
+                            ? "bg-brand-secondary/10 text-brand-primary"
                             : row.status === "pending"
                             ? "bg-yellow-100 text-yellow-800 animate-pulse"
                             : "bg-red-100 text-red-800"
@@ -480,7 +480,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                     </div>
                     <span className={`px-1.5 py-0.5 rounded text-[9px] font-bold ${
                       row.status === "completed"
-                        ? "bg-green-100 text-brand-primary"
+                        ? "bg-brand-secondary/10 text-brand-primary"
                         : row.status === "pending"
                         ? "bg-yellow-100 text-yellow-800 animate-pulse"
                         : "bg-red-100 text-red-800"

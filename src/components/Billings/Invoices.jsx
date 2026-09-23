@@ -147,7 +147,7 @@ const Invoices = ({
   const getStatusColor = (status) => {
     switch (status?.toLowerCase()) {
       case "paid":
-        return "bg-green-100 text-brand-primary border-brand-primary/20";
+        return "bg-brand-secondary/10 text-brand-primary border-brand-primary/20";
       case "pending":
         return "bg-red-100 text-red-600 border-red-200";
       case "partially_paid":
@@ -543,7 +543,7 @@ const Invoices = ({
                       href={`${inv.invoiceUrl}${inv.invoiceUrl.includes("?") ? "&" : "?"}t=${Date.now()}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="px-3 py-1.5 bg-green-50 text-brand-primary border border-green-100 rounded-lg flex items-center gap-2 font-[600] text-[10px] hover:bg-green-100 transition-colors"
+                      className="px-3 py-1.5 bg-brand-secondary/10 text-brand-primary border border-green-100 rounded-lg flex items-center gap-2 font-[600] text-[10px] hover:bg-green-100 transition-colors"
                     >
                       <HiOutlineDownload className="w-4 h-4" />
                       PDF
@@ -554,7 +554,7 @@ const Invoices = ({
                       const url = `${REACT_APP_BACKEND_URL}/invoice/export-excel?invoiceNumber=${inv.invoiceNumber}`;
                       window.open(url, "_blank");
                     }}
-                    className="px-3 py-1.5 bg-green-50 text-brand-primary border border-green-100 rounded-lg flex items-center gap-2 font-[600] text-[10px] hover:bg-green-100 transition-colors"
+                    className="px-3 py-1.5 bg-brand-secondary/10 text-brand-primary border border-green-100 rounded-lg flex items-center gap-2 font-[600] text-[10px] hover:bg-green-100 transition-colors"
                   >
                     <FaFileExcel className="w-3.5 h-3.5" />
                     Excel

@@ -409,7 +409,7 @@ const Passbooks = () => {
                       </div>
                     </td>
                     <td className="py-2 px-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] ${row.category === "debit" ? "bg-red-100 text-red-600" : "bg-green-100 text-brand-primary"}`}>
+                      <span className={`px-2 py-0.5 rounded text-[10px] ${row.category === "debit" ? "bg-red-100 text-red-600" : "bg-brand-secondary/10 text-brand-primary"}`}>
                         {row.category}
                       </span>
                     </td>
@@ -548,7 +548,7 @@ const Passbooks = () => {
                   </div>
 
                   <div className="text-right">
-                    <span className={`px-2 py-0.5 rounded text-[9px] ${row.category === "debit" ? "bg-red-100 text-red-600" : "bg-green-100 text-brand-primary"}`}>
+                    <span className={`px-2 py-0.5 rounded text-[9px] ${row.category === "debit" ? "bg-red-100 text-red-600" : "bg-brand-secondary/10 text-brand-primary"}`}>
                       {row.category}
                     </span>
                   </div>

@@ -120,7 +120,7 @@ const Notification = ({ targetUserId = null, basePath = "/dashboard/settings/not
                         to={tab.path}
                         className={`px-3 py-2 rounded-lg text-[12px] font-[600] border transition-all duration-200 ${location.pathname === tab.path
                             ? "bg-brand-primary text-white"
-                            : "text-gray-700 hover:bg-green-200 bg-white"
+                            : "text-gray-700 hover:bg-brand-secondary/10 bg-white"
                             }`}
                     >
                         {tab.label}
@@ -152,7 +152,7 @@ const Notification = ({ targetUserId = null, basePath = "/dashboard/settings/not
                             key={tab.path}
                             onClick={() => handleSelect(tab.path)}
                             className={`px-3 py-2 text-[12px] cursor-pointer font-[600] transition-all ${location.pathname === tab.path
-                                ? "bg-green-100 text-brand-primary"
+                                ? "bg-brand-secondary/10 text-brand-primary"
                                 : "text-gray-700 hover:bg-green-50"
                                 }`}
                         >

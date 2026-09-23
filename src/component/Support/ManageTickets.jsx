@@ -296,7 +296,7 @@ const ManageTickets = ({ isSidebarAdmin }) => {
               key={status.value}
               className={`px-3 py-2 rounded-lg transition-colors duration-200 ${selectedStatus === status.value
                 ? "bg-brand-primary text-white"
-                : "bg-white text-gray-700 hover:bg-green-200"
+                : "bg-white text-gray-700 hover:bg-brand-secondary/10"
                 }`}
               onClick={() => filterByStatus(status.value)}
             >

@@ -563,7 +563,7 @@ const Shippings = () => {
                     </div>
                   </div>
                   <div className="flex items-center gap-1">
-                    <span className="px-2 py-0.5 rounded text-[10px] bg-green-100 text-brand-primary">
+                    <span className="px-2 py-0.5 rounded text-[10px] bg-brand-secondary/10 text-brand-primary">
                       {row.status}
                     </span>
                     <button

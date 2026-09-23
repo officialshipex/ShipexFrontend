@@ -157,7 +157,7 @@ const UserAgreement = () => {
                   <td className="border-b border-gray-300 px-3 py-2 text-left text-gray-500">{formatDate(ag.createdAt)}</td>
                   <td className="border-b border-gray-300 px-3 py-2 text-center">
                     {ag.isRead ? (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-brand-primary">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-secondary/10 text-brand-primary">
                         Read
                       </span>
                     ) : (
@@ -171,7 +171,7 @@ const UserAgreement = () => {
                   </td>
                   <td className="border-b border-gray-300 px-3 py-2 text-center">
                     {ag.isAccepted ? (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-green-100 text-brand-primary">
+                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-secondary/10 text-brand-primary">
                         Accepted
                       </span>
                     ) : (
@@ -240,7 +240,7 @@ const UserAgreement = () => {
                 </div>
                 <div className="flex gap-2">
                   {ag.isRead ? (
-                    <span className="flex-1 text-center px-2 py-1 rounded-full text-[10px] font-bold bg-green-100 text-brand-primary">
+                    <span className="flex-1 text-center px-2 py-1 rounded-full text-[10px] font-bold bg-brand-secondary/10 text-brand-primary">
                       Read
                     </span>
                   ) : (
@@ -252,7 +252,7 @@ const UserAgreement = () => {
                     </button>
                   )}
                   {ag.isAccepted ? (
-                    <span className="flex-1 text-center px-2 py-1 rounded-full text-[10px] font-bold bg-green-100 text-brand-primary">
+                    <span className="flex-1 text-center px-2 py-1 rounded-full text-[10px] font-bold bg-brand-secondary/10 text-brand-primary">
                       Accepted
                     </span>
                   ) : (

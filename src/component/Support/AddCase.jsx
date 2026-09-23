@@ -422,7 +422,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
                       setAwbNumbers(awbs);
                     }}
                   />
-                  <div className="flex items-center gap-2 border border-dashed border-brand-primary rounded px-3 py-2 bg-green-50 text-brand-primary text-[12px] cursor-pointer hover:bg-green-100 transition">
+                  <div className="flex items-center gap-2 border border-dashed border-brand-primary rounded px-3 py-2 bg-brand-secondary/10 text-brand-primary text-[12px] cursor-pointer hover:bg-green-100 transition">
                     <svg
                       className="w-4 h-4 mr-1"
                       fill="none"
@@ -471,7 +471,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
                 className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
                 onChange={handleFileChange}
               />
-              <div className="flex items-center gap-2 border border-dashed border-brand-primary rounded px-3 py-2 bg-green-50 text-brand-primary text-[12px] cursor-pointer hover:bg-green-100 transition">
+              <div className="flex items-center gap-2 border border-dashed border-brand-primary rounded px-3 py-2 bg-brand-secondary/10 text-brand-primary text-[12px] cursor-pointer hover:bg-green-100 transition">
                 <svg
                   className="w-4 h-4 mr-1"
                   fill="none"
@@ -489,7 +489,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
                 {attachments.map((file, idx) => (
                   <span
                     key={idx}
-                    className="bg-green-100 text-brand-primary px-2 py-0.5 rounded text-[11px]"
+                    className="bg-brand-secondary/10 text-brand-primary px-2 py-0.5 rounded text-[11px]"
                   >
                     {file.name}
                   </span>

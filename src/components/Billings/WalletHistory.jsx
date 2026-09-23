@@ -320,7 +320,7 @@ const WalletHistory = ({
                       <span className="text-gray-700">₹{Number(row.paymentDetails?.amount).toFixed(2)}</span>
                     </td>
                     <td className="px-3 py-2">
-                      <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "success" ? "bg-green-50 text-brand-primary" : "bg-red-50 text-red-500"}`}>
+                      <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "success" ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-50 text-red-500"}`}>
                         {row.status}
                       </span>
                     </td>
@@ -420,7 +420,7 @@ const WalletHistory = ({
                   </div>
                   <div className="text-right">
                     <p className="font-[600] text-gray-700 text-[10px]">₹{Number(row.paymentDetails?.amount).toFixed(2)}</p>
-                    <span className={`px-2 py-0.5 rounded text-[10px] inline-block mt-1 ${row.status === "success" ? "bg-green-50 text-brand-primary" : "bg-red-50 text-red-500"}`}>
+                    <span className={`px-2 py-0.5 rounded text-[10px] inline-block mt-1 ${row.status === "success" ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-50 text-red-500"}`}>
                       {row.status}
                     </span>
                   </div>
