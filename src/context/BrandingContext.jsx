@@ -57,15 +57,40 @@ export function BrandingProvider({ children }) {
     };
   }, []);
 
-  // Repaint CSS vars + favicon + title as soon as branding resolves, so
-  // every component using the brand-* Tailwind tokens (tailwind.config.js)
-  // or the static <link rel="icon">/<title> in index.html updates without
-  // needing its own effect.
+  // Convert #HEX to "R, G, B" channels so Tailwind opacity modifiers (e.g. bg-brand-secondary/16)
+  // generate valid rgba(R, G, B, 0.16) CSS instead of invalid rgb(#HEX / 0.16) which browsers drop.
   useEffect(() => {
+    const hexToRgb = (hex) => {
+      if (!hex || typeof hex !== "string") return null;
+      let c = hex.replace("#", "").trim();
+      if (c.length === 3) {
+        c = c.split("").map((x) => x + x).join("");
+      }
+      if (c.length === 6) {
+        const num = parseInt(c, 16);
+        if (!isNaN(num)) {
+          return `${(num >> 16) & 255}, ${(num >> 8) & 255}, ${num & 255}`;
+        }
+      }
+      return null;
+    };
+
     const root = document.documentElement;
-    if (branding.colors.primary) root.style.setProperty("--brand-primary", branding.colors.primary);
-    if (branding.colors.secondary) root.style.setProperty("--brand-secondary", branding.colors.secondary);
-    if (branding.colors.accent) root.style.setProperty("--brand-accent", branding.colors.accent);
+    if (branding.colors?.primary) {
+      root.style.setProperty("--brand-primary", branding.colors.primary);
+      const rgb = hexToRgb(branding.colors.primary);
+      if (rgb) root.style.setProperty("--brand-primary-rgb", rgb);
+    }
+    if (branding.colors?.secondary) {
+      root.style.setProperty("--brand-secondary", branding.colors.secondary);
+      const rgb = hexToRgb(branding.colors.secondary);
+      if (rgb) root.style.setProperty("--brand-secondary-rgb", rgb);
+    }
+    if (branding.colors?.accent) {
+      root.style.setProperty("--brand-accent", branding.colors.accent);
+      const rgb = hexToRgb(branding.colors.accent);
+      if (rgb) root.style.setProperty("--brand-accent-rgb", rgb);
+    }
 
     document.title = branding.companyDisplayName;
 

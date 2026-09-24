@@ -49,12 +49,21 @@ module.exports = {
       colors: {
         customPink: "#e8cafe",
         // CSS-var-backed so BrandingContext can repaint these at runtime
-        // per company, without a rebuild. Falls back to today's Shipex
-        // green/blue if a var is unset (e.g. before branding loads).
+        // per company, without a rebuild. Supports Tailwind opacity modifiers (e.g. bg-brand-secondary/16)
+        // by utilizing --brand-*-rgb channel variables set by BrandingContext.
         brand: {
-          primary: "var(--brand-primary, #0CBB7D)",
-          secondary: "var(--brand-secondary, #0F172A)",
-          accent: "var(--brand-accent, #0CBB7D)",
+          primary: ({ opacityValue }) =>
+            opacityValue !== undefined
+              ? `rgba(var(--brand-primary-rgb, 12, 187, 125), ${opacityValue})`
+              : `var(--brand-primary, #0CBB7D)`,
+          secondary: ({ opacityValue }) =>
+            opacityValue !== undefined
+              ? `rgba(var(--brand-secondary-rgb, 15, 23, 42), ${opacityValue})`
+              : `var(--brand-secondary, #0F172A)`,
+          accent: ({ opacityValue }) =>
+            opacityValue !== undefined
+              ? `rgba(var(--brand-accent-rgb, 12, 187, 125), ${opacityValue})`
+              : `var(--brand-accent, #0CBB7D)`,
         },
       },
     },
