@@ -236,7 +236,7 @@ const WalletUpdateForm = ({ onClose }) => {
                             {descriptionOptions.map((desc, index) => (
                                 <div
                                     key={index}
-                                    className="px-3 py-2 text-[12px] text-gray-700 cursor-pointer hover:bg-green-100"
+                                    className="px-3 py-2 text-[12px] text-gray-700 cursor-pointer hover:bg-brand-secondary/16"
                                     onClick={() => {
                                         setFormData((prev) => ({
                                             ...prev,
@@ -278,7 +278,7 @@ const WalletUpdateForm = ({ onClose }) => {
                                 {awbSuggestions.map((awb) => (
                                     <div
                                         key={awb.awbNumber}
-                                        className="px-3 py-2 text-[12px] text-gray-700 cursor-pointer hover:bg-green-100"
+                                        className="px-3 py-2 text-[12px] text-gray-700 cursor-pointer hover:bg-brand-secondary/16"
                                         onClick={() => {
                                             setFormData((prev) => ({
                                                 ...prev,
@@ -340,7 +340,7 @@ const WalletUpdateForm = ({ onClose }) => {
                             {categoryOptions.map((opt, idx) => (
                                 <div
                                     key={idx}
-                                    className="px-3 py-2 text-[12px] capitalize text-gray-700 cursor-pointer hover:bg-green-100"
+                                    className="px-3 py-2 text-[12px] capitalize text-gray-700 cursor-pointer hover:bg-brand-secondary/16"
                                     onClick={() => {
                                         setFormData((prev) => ({ ...prev, category: opt }));
                                         setCatOpen(false);

@@ -161,7 +161,7 @@ const PassbookFilterPanel = ({
                                         <div
                                             key={cat}
                                             onClick={() => { setLocalFilters({ ...localFilters, category: cat }); setShowCategoryDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {cat.charAt(0).toUpperCase() + cat.slice(1)}
                                         </div>
@@ -190,7 +190,7 @@ const PassbookFilterPanel = ({
                                         <div
                                             key={desc}
                                             onClick={() => { setLocalFilters({ ...localFilters, description: desc }); setShowDescriptionDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {desc}
                                         </div>

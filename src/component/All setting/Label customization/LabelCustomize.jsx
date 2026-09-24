@@ -342,7 +342,7 @@ export default function LabelCustomize() {
               onClick={() => handleLabelSizeChange("A4")}
               className={`flex-1 flex items-start gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${
                 settings.labelSize === "A4"
-                  ? "border-brand-primary bg-green-50"
+                  ? "border-brand-primary bg-brand-secondary/8"
                   : "border-gray-200 hover:border-gray-300"
               }`}
             >
@@ -371,7 +371,7 @@ export default function LabelCustomize() {
               onClick={() => handleLabelSizeChange("thermal")}
               className={`flex-1 flex items-start gap-4 p-4 rounded-lg border-2 cursor-pointer transition-all ${
                 settings.labelSize === "thermal"
-                  ? "border-brand-primary bg-green-50"
+                  ? "border-brand-primary bg-brand-secondary/8"
                   : "border-gray-200 hover:border-gray-300"
               }`}
             >

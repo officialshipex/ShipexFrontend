@@ -224,7 +224,7 @@ const CourierPriority = () => {
           <button
             key={opt.label}
             onClick={() => handleSelect(opt.label)}
-            className={`flex items-center justify-between w-full p-3 rounded-lg border transition-all duration-300 ${selected === opt.label ? "border-brand-primary bg-green-50" : "border-gray-200 hover:border-gray-300"
+            className={`flex items-center justify-between w-full p-3 rounded-lg border transition-all duration-300 ${selected === opt.label ? "border-brand-primary bg-brand-secondary/8" : "border-gray-200 hover:border-gray-300"
               }`}
           >
             <div className="flex items-center gap-3">

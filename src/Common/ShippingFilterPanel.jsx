@@ -142,7 +142,7 @@ const ShippingFilterPanel = ({
                                         <div
                                             key={opt.value}
                                             onClick={() => { setLocalFilters({ ...localFilters, searchType: opt.value }); setShowSearchTypeDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {opt.label}
                                         </div>
@@ -198,7 +198,7 @@ const ShippingFilterPanel = ({
                                         <div
                                             key={s}
                                             onClick={() => { setLocalFilters({ ...localFilters, status: s }); setShowStatusDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {s}
                                         </div>
@@ -228,7 +228,7 @@ const ShippingFilterPanel = ({
                                             <div
                                                 key={opt}
                                                 onClick={() => { setLocalFilters({ ...localFilters, paymentType: opt }); setShowPaymentDropdown(false); }}
-                                                className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
+                                                className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors"
                                             >
                                                 {opt}
                                             </div>

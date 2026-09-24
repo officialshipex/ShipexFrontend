@@ -134,7 +134,7 @@ const UserFilterPanel = ({
                                         <div
                                             key={status}
                                             onClick={() => { setLocalFilters({ ...localFilters, kycStatus: status }); setShowKycDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {status.charAt(0).toUpperCase() + status.slice(1)}
                                         </div>
@@ -163,7 +163,7 @@ const UserFilterPanel = ({
                                         <div
                                             key={card}
                                             onClick={() => { setLocalFilters({ ...localFilters, rateCard: card }); setShowRateCardDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {card.charAt(0).toUpperCase() + card.slice(1)}
                                         </div>
@@ -192,7 +192,7 @@ const UserFilterPanel = ({
                                         <div
                                             key={type}
                                             onClick={() => { setLocalFilters({ ...localFilters, wallet: type }); setShowWalletDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {type.charAt(0).toUpperCase() + type.slice(1)}
                                         </div>

@@ -154,7 +154,7 @@ const MasterSearchFilter = ({ isMobile = false }) => {
                                 <div
                                     key={order._id}
                                     onClick={() => handleSuggestionClick(order._id)}
-                                    className="px-3 py-2 hover:bg-green-50 cursor-pointer border-b last:border-b-0 transition-colors"
+                                    className="px-3 py-2 hover:bg-brand-secondary/8 cursor-pointer border-b last:border-b-0 transition-colors"
                                 >
                                     <div className="flex justify-between items-start">
 
@@ -251,7 +251,7 @@ const MasterSearchFilter = ({ isMobile = false }) => {
                             <div
                                 key={order._id}
                                 onClick={() => handleSuggestionClick(order._id)}
-                                className="px-3 py-2 hover:bg-green-50 cursor-pointer border-b last:border-b-0 transition-colors"
+                                className="px-3 py-2 hover:bg-brand-secondary/8 cursor-pointer border-b last:border-b-0 transition-colors"
                             >
                                 <div className="flex justify-between items-start">
 

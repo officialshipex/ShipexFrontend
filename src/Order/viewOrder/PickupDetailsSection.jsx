@@ -53,7 +53,7 @@ const PickupDetailsSection = ({ order, onUpdate, userId }) => {
                 {/* Header */}
                 <div className="flex justify-between items-center mb-3 border-b pb-2">
                     <div className="flex items-center gap-2">
-                        <p className="p-2 bg-green-100 hidden sm:block rounded-full">
+                        <p className="p-2 bg-brand-secondary/16 hidden sm:block rounded-full">
                             <MapPin className="w-4 h-4 text-brand-primary" />
                         </p>
 
@@ -128,7 +128,7 @@ const PickupDetailsSection = ({ order, onUpdate, userId }) => {
                     </div>
 
                     {mobileOpen && (
-                        <div className="mt-2 pl-1 border-l-2 border-green-200 animate-popup-in">
+                        <div className="mt-2 pl-1 border-l-2 border-brand-secondary/26 animate-popup-in">
                             <p className="text-[12px] text-gray-500 leading-relaxed">
                                 {order.pickupAddress?.address}, {order.pickupAddress?.city},{" "}
                                 {order.pickupAddress?.state} - {order.pickupAddress?.pinCode}

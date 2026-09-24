@@ -118,7 +118,7 @@ const EditTemplateModal = ({
           </div>
 
           {/* Variables Helper */}
-          <div className="space-y-3 p-4 bg-green-50/50 rounded-2xl border border-green-100">
+          <div className="space-y-3 p-4 bg-brand-secondary/50 rounded-2xl border border-brand-secondary/16">
             <div className="flex items-center gap-2 text-brand-primary">
               <Info className="w-4 h-4" />
               <span className="text-[12px] font-bold">Dynamic Variables</span>
@@ -132,7 +132,7 @@ const EditTemplateModal = ({
                 <button
                   key={v.key}
                   onClick={() => insertVariable(v.key)}
-                  className="px-2.5 py-1.5 bg-white border border-green-200 text-brand-primary text-[11px] font-bold rounded-lg hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all shadow-sm"
+                  className="px-2.5 py-1.5 bg-white border border-brand-secondary/26 text-brand-primary text-[11px] font-bold rounded-lg hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all shadow-sm"
                   title={`Insert ${v.label}`}
                 >
                   {v.key}

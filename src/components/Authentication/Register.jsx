@@ -146,7 +146,7 @@ export default function Signup({ setIsAuthenticated }) {
   };
 
   return (
-    <div className="flex-col md:flex-row bg-green-50 flex-grow page-slide-in">
+    <div className="flex-col md:flex-row bg-brand-secondary/8 flex-grow page-slide-in">
       <div className="w-full flex flex-row px-2 py-6 md:p-6 justify-center items-center">
         <div className="w-full max-w-sm md:max-w-md lg:max-w-xl p-4 md:p-6 rounded-lg shadow-sm bg-white">
           <div className="flex justify-between items-center mb-2">
@@ -323,7 +323,7 @@ export default function Signup({ setIsAuthenticated }) {
       </div>
 
       <div className="w-full bg-white">
-        <footer className="w-full bg-green-50 font-[600] px-3 py-2 flex flex-col sm:flex-row sm:justify-between sm:items-center text-gray-500 text-[10px] text-center sm:text-left sm:space-y-0">
+        <footer className="w-full bg-brand-secondary/8 font-[600] px-3 py-2 flex flex-col sm:flex-row sm:justify-between sm:items-center text-gray-500 text-[10px] text-center sm:text-left sm:space-y-0">
           <p className="w-full sm:w-auto font-[600]">
             © {new Date().getFullYear()} {companyDisplayName}. All rights reserved.
           </p>

@@ -36,7 +36,7 @@ const ProviderFilter = ({ provider, setProvider }) => {
                     {["Delhivery", "DTDC", "EcomExpress", "Amazon"].map((s) => (
                         <li
                             key={s}
-                            className={`px-3 py-2 cursor-pointer hover:bg-green-100 ${provider === s ? "bg-gray-100 font-medium" : ""}`}
+                            className={`px-3 py-2 cursor-pointer hover:bg-brand-secondary/16 ${provider === s ? "bg-gray-100 font-medium" : ""}`}
                             onClick={() => {
                                 setProvider(s);
                                 setShowDropdown(false);
@@ -82,7 +82,7 @@ const StatusFilter = ({ status, setStatus }) => {
                     {["pending", "Accepted", "Discrepancy Raised"].map((s) => (
                         <li
                             key={s}
-                            className={`px-3 py-2 cursor-pointer hover:bg-green-100 ${status === s ? "bg-gray-100 font-medium" : ""}`}
+                            className={`px-3 py-2 cursor-pointer hover:bg-brand-secondary/16 ${status === s ? "bg-gray-100 font-medium" : ""}`}
                             onClick={() => {
                                 setStatus(s);
                                 setShowDropdown(false);
@@ -217,7 +217,7 @@ const DiscrepancyFilter = ({
                                 <div className="absolute right-0 mt-1 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-[100]">
                                     <ul className="font-[600] py-1">
                                         <li
-                                            className="px-3 py-2 text-gray-700 hover:bg-green-100 cursor-pointer text-[12px]"
+                                            className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/16 cursor-pointer text-[12px]"
                                             onClick={(e) => {
                                                 handleExport();
                                                 setActionDropdownOpen(false);
@@ -228,7 +228,7 @@ const DiscrepancyFilter = ({
                                         {customActions.map((action, idx) => (
                                             <li
                                                 key={idx}
-                                                className="px-3 py-2 text-gray-700 hover:bg-green-100 cursor-pointer text-[12px]"
+                                                className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/16 cursor-pointer text-[12px]"
                                                 onClick={(e) => {
                                                     action.onClick();
                                                     setActionDropdownOpen(false);
@@ -300,7 +300,7 @@ const DiscrepancyFilter = ({
                             <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-200 rounded-lg shadow-lg z-[60]">
                                 <ul className="py-2 font-[600]">
                                     <li
-                                        className="px-3 py-2 text-gray-700 hover:bg-green-100 cursor-pointer text-[12px]"
+                                        className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/16 cursor-pointer text-[12px]"
                                         onClick={(e) => {
                                             handleExport();
                                             setActionDropdownOpen(false);
@@ -311,7 +311,7 @@ const DiscrepancyFilter = ({
                                     {customActions.map((action, idx) => (
                                         <li
                                             key={idx}
-                                            className="px-3 py-2 text-gray-700 hover:bg-green-100 cursor-pointer text-[12px]"
+                                            className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/16 cursor-pointer text-[12px]"
                                             onClick={(e) => {
                                                 action.onClick();
                                                 setActionDropdownOpen(false);

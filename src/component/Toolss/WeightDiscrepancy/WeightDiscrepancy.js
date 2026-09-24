@@ -232,7 +232,7 @@ const WeightDiscrepancy = () => {
             {tabs.map((tab) => (
               <button
                 key={tab}
-                className={`w-full text-left px-3 py-2 text-[12px] font-[600] ${activeTab === tab ? "bg-green-100" : "hover:bg-green-50"
+                className={`w-full text-left px-3 py-2 text-[12px] font-[600] ${activeTab === tab ? "bg-brand-secondary/16" : "hover:bg-brand-secondary/8"
                   }`}
                 onClick={() => {
                   setActiveTab(tab);

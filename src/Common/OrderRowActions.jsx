@@ -155,7 +155,7 @@ const OrderRowActions = ({
                                             }}
                                             className={`px-3 py-2 transition-colors ${
                                                 aiVerifyEnabled 
-                                                    ? "text-brand-primary hover:bg-green-50 cursor-pointer" 
+                                                    ? "text-brand-primary hover:bg-brand-secondary/8 cursor-pointer" 
                                                     : "text-gray-400 cursor-not-allowed"
                                             }`}
                                         >
@@ -166,7 +166,7 @@ const OrderRowActions = ({
                                     {/* Label logic */}
                                     {showDownloadLabel && (
                                         order.provider === "Amazon Shipping" ? (
-                                            <li className="hover:bg-green-50 transition-colors">
+                                            <li className="hover:bg-brand-secondary/8 transition-colors">
                                                 <a
                                                     href={order.label}
                                                     download
@@ -185,7 +185,7 @@ const OrderRowActions = ({
                                                     if (handleLabel) handleLabel(order._id);
                                                     setDropdownOpen(null);
                                                 }}
-                                                className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer transition-colors"
+                                                className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer transition-colors"
                                             >
                                                 Download Label
                                             </li>
@@ -199,7 +199,7 @@ const OrderRowActions = ({
                                             if (handleInvoice) handleInvoice(order._id);
                                             setDropdownOpen(null);
                                         }}
-                                        className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer transition-colors"
+                                        className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer transition-colors"
                                     >
                                         Download Invoice
                                     </li>
@@ -212,7 +212,7 @@ const OrderRowActions = ({
                                                 if (handleManifest) handleManifest(order._id);
                                                 setDropdownOpen(null);
                                             }}
-                                            className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer transition-colors"
                                         >
                                             Download Manifest
                                         </li>
@@ -227,7 +227,7 @@ const OrderRowActions = ({
                                                 handleClone(order._id, navigate, userId);
                                                 setDropdownOpen(null);
                                             }}
-                                            className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer transition-colors"
                                         >
                                             Clone Order
                                         </li>
@@ -241,7 +241,7 @@ const OrderRowActions = ({
                                                 handleUpdateOrder(order);
                                                 setDropdownOpen(null);
                                             }}
-                                            className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer transition-colors"
                                         >
                                             Update Order
                                         </li>

@@ -225,7 +225,7 @@ const RTOLost = (filterOrder) => {
               disabled={selectedOrders.length === 0}
               className={`py-2 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-2 transition-all border ${selectedOrders.length === 0
                 ? "border-gray-200 text-gray-400 cursor-not-allowed bg-gray-50"
-                : "border-brand-primary text-brand-primary bg-white hover:bg-green-50 shadow-sm"
+                : "border-brand-primary text-brand-primary bg-white hover:bg-brand-secondary/8 shadow-sm"
                 }`}
               onClick={() => setDesktopDropdownOpen(!desktopDropdownOpen)}
             >
@@ -234,19 +234,19 @@ const RTOLost = (filterOrder) => {
             {desktopDropdownOpen && (
               <div className="absolute right-0 mt-1 w-48 text-[10px] bg-white border border-gray-200 shadow-sm z-[60] font-[600] overflow-hidden animate-popup-in">
                 <ul className="py-1">
-                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
+                  <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer flex items-center gap-2"
                     onClick={() => { ExportExcel({ selectedOrders, orders }); setDesktopDropdownOpen(false); }}>
                     Export Excel
                   </li>
-                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
+                  <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer flex items-center gap-2"
                     onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setDesktopDropdownOpen(false); }}>
                     Download Invoices
                   </li>
-                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
+                  <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer flex items-center gap-2"
                     onClick={() => { handleBulkDownloadManifest(); setDesktopDropdownOpen(false); }}>
                     Download Manifests
                   </li>
-                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
+                  <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer flex items-center gap-2"
                     onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setDesktopDropdownOpen(false); }}>
                     Download Labels
                   </li>
@@ -307,10 +307,10 @@ const RTOLost = (filterOrder) => {
             {mobileDropdownOpen && (
               <div className="absolute right-0 mt-2 w-40 bg-white border rounded-lg shadow-sm z-[60] text-[10px] font-[600] overflow-hidden animate-popup-in">
                 <ul className="py-1">
-                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { ExportExcel({ selectedOrders, orders }); setMobileDropdownOpen(false); }}>Export Excel</li>
-                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Invoices</li>
-                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadManifest(); setMobileDropdownOpen(false); }}>Download Manifests</li>
-                  <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Labels</li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer" onClick={() => { ExportExcel({ selectedOrders, orders }); setMobileDropdownOpen(false); }}>Export Excel</li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer" onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Invoices</li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer" onClick={() => { handleBulkDownloadManifest(); setMobileDropdownOpen(false); }}>Download Manifests</li>
+                  <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer" onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Labels</li>
                 </ul>
               </div>
             )}

@@ -170,7 +170,7 @@ const Dashboard = ({ selectedUserId, selectedDateRange }) => {
                     title="Revenue"
                     value={`₹${data?.todaysRevenue || 0}`}
                 // subtitle={`Yesterday ₹${data?.yesterdaysRevenue || 0}`}
-                // bgColor="bg-green-100"
+                // bgColor="bg-brand-secondary/16"
                 />
                 <Card
                     title="Average Shipping Cost"

@@ -135,7 +135,7 @@ const AsignPopup = ({ isOpen, onClose, initialSellerId }) => {
               {planOptions.map((plan) => (
                 <div
                   key={plan}
-                  className="px-3 py-2 hover:bg-green-50 cursor-pointer text-[12px]"
+                  className="px-3 py-2 hover:bg-brand-secondary/8 cursor-pointer text-[12px]"
                   onClick={() => {
                     setSelectedPlan(plan);
                     setPlanDropdownOpen(false);
@@ -182,7 +182,7 @@ const AsignPopup = ({ isOpen, onClose, initialSellerId }) => {
                 .map((seller) => (
                   <div
                     key={seller.id}
-                    className="px-3 py-2 hover:bg-green-50 cursor-pointer text-[12px]"
+                    className="px-3 py-2 hover:bg-brand-secondary/8 cursor-pointer text-[12px]"
                     onClick={() => {
                       setSelectedSeller(seller.id);
                       setSellerDropdownOpen(false);

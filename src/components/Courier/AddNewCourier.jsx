@@ -312,7 +312,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                       <div className="flex justify-center items-center gap-4">
                         <button
                           onClick={() => canAction && handleUpload(courier.courierName)}
-                          className={`p-1.5 rounded-full transition-all ${canAction ? "text-brand-primary hover:bg-green-50" : "text-gray-300 cursor-not-allowed"}`}
+                          className={`p-1.5 rounded-full transition-all ${canAction ? "text-brand-primary hover:bg-brand-secondary/8" : "text-gray-300 cursor-not-allowed"}`}
                           title="Upload serviceable pincode"
                           disabled={!canAction}
                         >

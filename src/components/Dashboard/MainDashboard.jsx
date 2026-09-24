@@ -36,7 +36,7 @@ const AnnouncementItem = ({ ann, idx, setAnnouncements, announcements }) => {
     }, [ann.message]);
  
     return (
-        <div className="flex items-center justify-between border-2 border-brand-primary bg-green-50 rounded-lg px-3 py-2 mb-2 shadow-sm w-full max-w-full gap-3 overflow-hidden">
+        <div className="flex items-center justify-between border-2 border-brand-primary bg-brand-secondary/8 rounded-lg px-3 py-2 mb-2 shadow-sm w-full max-w-full gap-3 overflow-hidden">
             <div className="flex items-center gap-3 flex-1 overflow-hidden">
                 <FiBell className="text-brand-primary text-[16px] sm:text-[18px] flex-shrink-0" />
                 <div ref={containerRef} className="flex-1 overflow-hidden whitespace-nowrap">

@@ -153,7 +153,7 @@ const EditEPD = ({ item, onClose }) => {
                     <li
                       key={courier._id}
                       onClick={() => handleCourierSelect(courier)}
-                      className="cursor-pointer px-3 py-2 text-[12px] font-[600] text-gray-600 hover:bg-green-50"
+                      className="cursor-pointer px-3 py-2 text-[12px] font-[600] text-gray-600 hover:bg-brand-secondary/8"
                     >
                       {courier.courierProvider}
                     </li>
@@ -184,7 +184,7 @@ const EditEPD = ({ item, onClose }) => {
                     <li
                       key={service._id}
                       onClick={() => handleServiceSelect(service.name)}
-                      className="cursor-pointer px-3 py-2 text-[12px] font-[600] text-gray-600 hover:bg-green-50"
+                      className="cursor-pointer px-3 py-2 text-[12px] font-[600] text-gray-600 hover:bg-brand-secondary/8"
                     >
                       {service.name}
                     </li>
@@ -198,7 +198,7 @@ const EditEPD = ({ item, onClose }) => {
         <div className="space-y-1">
           <div className="flex justify-between items-center mb-1">
             <label className="block text-gray-700 text-[12px] font-[600]">Cutoff Time (HH:mm)</label>
-            <span className="text-[10px] sm:text-[12px] font-[700] text-brand-primary bg-green-50 px-2 py-0.5 rounded border border-green-100 italic">
+            <span className="text-[10px] sm:text-[12px] font-[700] text-brand-primary bg-brand-secondary/8 px-2 py-0.5 rounded border border-brand-secondary/16 italic">
                {formatTo12H(form.cutoffTime)}
             </span>
           </div>

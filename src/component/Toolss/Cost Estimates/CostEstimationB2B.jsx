@@ -236,7 +236,7 @@ const CostEstimationB2B = () => {
                                                 setForm((p) => ({ ...p, rovType: v }));
                                                 setRovOpen(false);
                                             }}
-                                            className={`px-3 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-700 transition-colors ${form.rovType === v ? "bg-green-100" : ""
+                                            className={`px-3 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-700 transition-colors ${form.rovType === v ? "bg-brand-secondary/16" : ""
                                                 }`}
                                         >
                                             {v}
@@ -271,7 +271,7 @@ const CostEstimationB2B = () => {
                                                 setForm((p) => ({ ...p, paymentType: v }));
                                                 setPaymentOpen(false);
                                             }}
-                                            className={`px-3 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-700 transition-colors ${form.paymentType === v ? "bg-green-100" : ""
+                                            className={`px-3 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-700 transition-colors ${form.paymentType === v ? "bg-brand-secondary/16" : ""
                                                 }`}
                                         >
                                             {v}

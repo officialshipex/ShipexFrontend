@@ -107,7 +107,7 @@ const UpdatePackageDetails = ({ isOpen, onClose, onSave, packageDetails, setPack
                 </div>
 
                 {/* Summary Section */}
-                <div className="bg-green-50 font-[600] rounded-lg p-2 mb-4 border border-gray-100">
+                <div className="bg-brand-secondary/8 font-[600] rounded-lg p-2 mb-4 border border-gray-100">
                     <div className="flex justify-between items-center mb-2">
                         <span className="text-[10px] sm:text-[12px] text-gray-600">Volumetric Weight:</span>
                         <span className="text-[10px] sm:text-[12px] font-[600] text-gray-500">{volumetricWeight} Kg</span>

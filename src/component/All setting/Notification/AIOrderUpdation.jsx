@@ -247,7 +247,7 @@ const AIOrderUpdation = () => {
       {/* ── Header ─────────────────────────────────────── */}
       <div className="flex items-center justify-between bg-white border border-gray-200 rounded-lg px-3 py-2 shadow-sm">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-green-100 rounded-xl flex items-center justify-center">
+          <div className="w-9 h-9 bg-brand-secondary/16 rounded-xl flex items-center justify-center">
             <BiSolidPhoneCall className="text-brand-primary w-5 h-5" />
           </div>
           <div>

@@ -551,7 +551,7 @@ const CarrierSelection = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 gap-1 p-2 bg-green-50 rounded-lg font-[600] border-t border-gray-100">
+                    <div className="grid grid-cols-1 gap-1 p-2 bg-brand-secondary/8 rounded-lg font-[600] border-t border-gray-100">
                       <div className="flex justify-between">
                         <span className="text-gray-500">Estimated Pickup Date</span>
                         <div>{formatPickupDate(item?.pickupDate)}</div>

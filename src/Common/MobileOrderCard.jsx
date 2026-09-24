@@ -140,7 +140,7 @@ const MobileOrderCard = ({
                         </span>
                     </div>
 
-                    <p className={`text-[10px] px-2 rounded ${order.status === "Cancelled" ? "bg-red-100 text-red-600" : "bg-green-200 text-brand-primary"}`}>{order.status}</p>
+                    <p className={`text-[10px] px-2 rounded ${order.status === "Cancelled" ? "bg-red-100 text-red-600" : "bg-brand-secondary/26 text-brand-primary"}`}>{order.status}</p>
                 </div>
 
                 {showActionColumn && (
@@ -196,7 +196,7 @@ const MobileOrderCard = ({
                 </p>
                 <div className="flex justify-center items-center gap-2">
                     <p>{order.channelId}</p>
-                    <span className="uppercase text-brand-primary bg-green-200 px-2 rounded">
+                    <span className="uppercase text-brand-primary bg-brand-secondary/26 px-2 rounded">
                         {order.channel || "CUSTOM"}
                     </span>
                 </div>
@@ -204,7 +204,7 @@ const MobileOrderCard = ({
 
 
             {showShippingDetails && (
-                <div className="flex items-center p-2 bg-green-100 rounded-lg justify-between gap-2">
+                <div className="flex items-center p-2 bg-brand-secondary/16 rounded-lg justify-between gap-2">
                     {/* Courier Logo & Details */}
 
                     <div className="flex items-center gap-2">
@@ -364,7 +364,7 @@ const MobileOrderCard = ({
             </div >
 
             {/* FOOTER WITH SEPARATORS */}
-            <div className="flex items-center justify-between bg-green-100 px-2 py-1 rounded-lg text-[10px]" >
+            <div className="flex items-center justify-between bg-brand-secondary/16 px-2 py-1 rounded-lg text-[10px]" >
                 {/* PRODUCTS */}
                 <div className="relative" ref={openPopup === "products" ? popupRef : null}>
                     <p

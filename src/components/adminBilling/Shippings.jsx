@@ -232,7 +232,7 @@ const Shippings = () => {
             <button
               disabled={selectedOrders.length === 0}
               onClick={() => setActionOpen(!actionOpen)}
-              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedOrders.length > 0 ? "border-brand-primary text-brand-primary hover:bg-green-50" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedOrders.length > 0 ? "border-brand-primary text-brand-primary hover:bg-brand-secondary/8" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
               Actions
@@ -242,7 +242,7 @@ const Shippings = () => {
             {actionOpen && (
               <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[12px] z-[100] animate-popup-in overflow-hidden">
                 <div
-                  className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                  className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                   onClick={handleExportExcel}
                 >
                   Export
@@ -412,7 +412,7 @@ const Shippings = () => {
                       {/* <p className="text-gray-500">{row.provider || "N/A"}</p> */}
                     </td>
                     <td className="py-2 px-3">
-                      <span className="text-brand-primary bg-green-100 rounded px-2 py-0.5 text-[10px]">{row.status}</span>
+                      <span className="text-brand-primary bg-brand-secondary/16 rounded px-2 py-0.5 text-[10px]">{row.status}</span>
                     </td>
                     <td className="py-2 px-3 text-gray-700">
                       {row.orderType === "B2C" ? Number(row?.packageDetails?.deadWeight || 0).toFixed(3) : Number(row?.B2BPackageDetails?.applicableWeight || 0).toFixed(3)} Kg
@@ -526,7 +526,7 @@ const Shippings = () => {
             {actionOpen && (
               <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-36 text-[11px] z-[100] animate-popup-in overflow-hidden">
                 <div
-                  className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                  className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                   onClick={handleExportExcel}
                 >
                   Export

@@ -219,7 +219,7 @@ const OrderFilterPanel = ({
                                             setLocalFilters({ ...localFilters, searchQuery: receiver.contactName });
                                             setShowSuggestions(false);
                                         }}
-                                        className="px-3 py-2 border-b border-gray-50 last:border-0 hover:bg-green-50 cursor-pointer transition-colors"
+                                        className="px-3 py-2 border-b border-gray-50 last:border-0 hover:bg-brand-secondary/8 cursor-pointer transition-colors"
                                     >
                                         <div className="text-[12px] font-[600] text-gray-700">{receiver.contactName}</div>
                                         <div className="text-[10px] text-gray-400">
@@ -276,7 +276,7 @@ const OrderFilterPanel = ({
                                         <div
                                             key={type}
                                             onClick={() => { setLocalFilters({ ...localFilters, paymentType: type }); setShowPaymentDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {type}
                                         </div>
@@ -325,7 +325,7 @@ const OrderFilterPanel = ({
                                                 <div
                                                     key={idx}
                                                     onClick={() => handleTogglePickup(contactName)}
-                                                    className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors flex items-center gap-2"
+                                                    className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors flex items-center gap-2"
                                                 >
                                                     <input type="checkbox" checked={isSelected} readOnly className="accent-brand-primary w-3 h-3" />
                                                     <span className="truncate">{contactName}</span>
@@ -377,7 +377,7 @@ const OrderFilterPanel = ({
                                                     <div
                                                         key={idx}
                                                         onClick={() => handleToggleCourier(courier)}
-                                                        className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors flex items-center gap-2"
+                                                        className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors flex items-center gap-2"
                                                     >
                                                         <input type="checkbox" checked={isSelected} readOnly className="accent-brand-primary w-3 h-3" />
                                                         <span className="truncate">{courier}</span>

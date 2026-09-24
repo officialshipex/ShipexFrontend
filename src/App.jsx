@@ -146,7 +146,7 @@ import AdminAgreement from "./agreement/AdminAgreement";
 import UserAgreement from "./agreement/UserAgreement";
 
 function App() {
-  const { faviconUrl } = useBranding();
+  const { faviconUrl, loading: brandingLoading } = useBranding();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [employeeAuthenticated, setEmployeeAuthenticated] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -231,12 +231,16 @@ function App() {
   if (loading || ((isAuthenticated || employeeAuthenticated) && !user)) {
     return (
       <div className="flex justify-center items-center h-screen bg-white relative overflow-hidden">
-        {/* Logo in center */}
-        <img
-          src={faviconUrl || Logo}
-          alt="Logo"
-          className="z-10 w-10 h-10 object-contain"
-        />
+        {/* Logo in center — withheld until branding actually resolves, so this
+            never flashes the platform's own icon for a company that has its
+            own favicon (see Common/NoDataFound.jsx for the same pattern) */}
+        {!brandingLoading && (
+          <img
+            src={faviconUrl || Logo}
+            alt="Logo"
+            className="z-10 w-10 h-10 object-contain"
+          />
+        )}
 
         {/* Expanding ripple effect */}
         <div className="absolute w-40 h-40 rounded-full bg-brand-primary opacity-30 animate-ping" />

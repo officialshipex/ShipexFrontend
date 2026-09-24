@@ -163,7 +163,7 @@ const PackageDetails = ({
               {["B2C","B2B"].map((item) => (
                 <div
                   key={item}
-                  className={`px-3 py-2 text-[12px] cursor-pointer hover:bg-green-100 ${orderType === item ? "bg-green-100 font-[600]" : ""
+                  className={`px-3 py-2 text-[12px] cursor-pointer hover:bg-brand-secondary/16 ${orderType === item ? "bg-brand-secondary/16 font-[600]" : ""
                     }`}
                   onClick={() => {
                     setOrderType(item);
@@ -201,7 +201,7 @@ const PackageDetails = ({
                 {["ROV Owner", "ROV Carrier"].map((item) => (
                   <div
                     key={item}
-                    className={`px-3 py-2 text-[12px] cursor-pointer hover:bg-green-100 ${rovType === item ? "bg-green-100 font-[600]" : ""
+                    className={`px-3 py-2 text-[12px] cursor-pointer hover:bg-brand-secondary/16 ${rovType === item ? "bg-brand-secondary/16 font-[600]" : ""
                       }`}
                     onClick={() => {
                       setRovType(item);
@@ -273,7 +273,7 @@ const PackageDetails = ({
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-2">
-            <div className="bg-green-100 rounded-lg p-3 w-full sm:w-2/4">
+            <div className="bg-brand-secondary/16 rounded-lg p-3 w-full sm:w-2/4">
               <div className="flex sm:flex-col flex-row justify-between">
                 <h3 className="text-[12px] font-[600] text-gray-700">
                   Applicable Weight
@@ -292,7 +292,7 @@ const PackageDetails = ({
               </p>
             </div>
 
-            <div className="bg-green-100 rounded-lg p-3 w-full sm:w-1/2 flex justify-between">
+            <div className="bg-brand-secondary/16 rounded-lg p-3 w-full sm:w-1/2 flex justify-between">
               <h3 className="text-[12px] font-[600]">Volumetric Weight</h3>
               <p className="text-[12px] font-[600]">{volumetricWeight} Kg</p>
             </div>
@@ -300,7 +300,7 @@ const PackageDetails = ({
 
           <hr className="my-4" />
 
-          <div className="bg-green-100 px-3 py-2 rounded-lg mb-4 flex justify-between">
+          <div className="bg-brand-secondary/16 px-3 py-2 rounded-lg mb-4 flex justify-between">
             <p className="text-[12px] font-[600]">Total Order Value</p>
             <p className="text-[12px] font-[600]">₹{totalPrice}</p>
           </div>
@@ -391,12 +391,12 @@ const PackageDetails = ({
 
           {/* B2B RESULT SUMMARY */}
           <div className="flex flex-col sm:flex-row gap-2 mt-4">
-            <div className="bg-green-100 p-4 rounded-lg w-full sm:w-2/4">
+            <div className="bg-brand-secondary/16 p-4 rounded-lg w-full sm:w-2/4">
               <h3 className="text-[12px] font-[600]">Applicable Weight</h3>
               <p className="text-[12px] font-[600]">{applicableWeightB2B.toFixed(2)} Kg</p>
             </div>
 
-            <div className="bg-green-100 p-4 rounded-lg w-full sm:w-1/2 flex justify-between">
+            <div className="bg-brand-secondary/16 p-4 rounded-lg w-full sm:w-1/2 flex justify-between">
               <h3 className="text-[12px] font-[600]">Volumetric Weight</h3>
               <p className="text-[12px] font-[600]">{totalVolumetricWeightB2B.toFixed(2)} Kg</p>
             </div>
@@ -404,7 +404,7 @@ const PackageDetails = ({
 
           <hr className="my-4" />
 
-          <div className="bg-green-100 px-4 py-2 rounded-lg mb-4 flex justify-between">
+          <div className="bg-brand-secondary/16 px-4 py-2 rounded-lg mb-4 flex justify-between">
             <p className="text-[12px] font-[600]">Total Order Value</p>
             <p className="text-[12px] font-[600]">₹{totalPrice}</p>
           </div>

@@ -74,8 +74,8 @@ const PaginationFooter = ({
                 <div
                   key={option.value}
                   onClick={() => handleLimitChange(option.value)}
-                  className={`px-3 py-2 text-[10px] hover:bg-green-50 font-[600] cursor-pointer transition-colors ${limit === option.value
-                      ? "bg-green-100"
+                  className={`px-3 py-2 text-[10px] hover:bg-brand-secondary/8 font-[600] cursor-pointer transition-colors ${limit === option.value
+                      ? "bg-brand-secondary/16"
                       : ""
                     }`}
                 >

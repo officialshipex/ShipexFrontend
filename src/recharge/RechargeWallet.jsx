@@ -143,7 +143,7 @@ const RechargeWallet = () => {
             <p className="text-gray-500 text-[10px] font-semibold uppercase tracking-wide">Current Balance</p>
             <h3 className="sm:text-[14px] text-[12px] font-bold text-brand-secondary">₹ {(balance || 0).toFixed(2)}</h3>
           </div>
-          <div className="bg-green-50 p-3 rounded-full">
+          <div className="bg-brand-secondary/8 p-3 rounded-full">
             <FiCreditCard className="text-brand-primary sm:text-[14px] text-[12px]" />
           </div>
         </div>
@@ -182,7 +182,7 @@ const RechargeWallet = () => {
                 onClick={() => handleAmountChange(val)}
                 className={`py-2 px-1 rounded-lg sm:text-[12px] text-[10px] font-semibold transition-all duration-200 border ${Number(amount) === val
                   ? "bg-brand-primary text-white border-brand-primary shadow-md transform scale-105"
-                  : "bg-white text-gray-600 border-gray-200 hover:border-brand-primary hover:bg-green-50"
+                  : "bg-white text-gray-600 border-gray-200 hover:border-brand-primary hover:bg-brand-secondary/8"
                   }`}
               >
                 ₹ {val}

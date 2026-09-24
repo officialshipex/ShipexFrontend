@@ -168,7 +168,7 @@ const DiscrepancyFilterPanel = ({
                                                 });
                                                 setShowSearchTypeDropdown(false);
                                             }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {opt.label}
                                         </div>
@@ -253,7 +253,7 @@ const DiscrepancyFilterPanel = ({
                                                 <div
                                                     key={courier}
                                                     onClick={() => handleToggleCourier(courier)}
-                                                    className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors flex items-center gap-2"
+                                                    className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors flex items-center gap-2"
                                                 >
                                                     <input
                                                         type="checkbox"
@@ -315,7 +315,7 @@ const DiscrepancyFilterPanel = ({
                                                     });
                                                     setShowStatusDropdown(false);
                                                 }}
-                                                className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
+                                                className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors"
                                             >
                                                 {opt.label}
                                             </div>

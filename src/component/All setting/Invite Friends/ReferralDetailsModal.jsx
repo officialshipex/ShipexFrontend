@@ -27,17 +27,17 @@ const ReferralDetailsModal = ({ referral, onClose }) => {
         <div className="flex-1 overflow-y-auto p-3 space-y-2">
           {/* Referrer Information Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="bg-green-50/50 border border-green-100 rounded-xl p-4 space-y-3">
+            <div className="bg-brand-secondary/50 border border-brand-secondary/16 rounded-xl p-4 space-y-3">
               <h3 className="text-[10px] sm:text-[12px] font-bold text-brand-primary uppercase tracking-wider flex items-center gap-2">
                 <User className="w-4 h-4" />
                 Referrer Information
               </h3>
               <div className="space-y-2 text-[10px] sm:text-[12px]">
-                <div className="flex justify-between border-b border-green-100 pb-1">
+                <div className="flex justify-between border-b border-brand-secondary/16 pb-1">
                   <span className="text-gray-500">Full Name</span>
                   <span className="font-bold text-gray-700">{referral.userName || "-"}</span>
                 </div>
-                <div className="flex justify-between border-b border-green-100 pb-1">
+                <div className="flex justify-between border-b border-brand-secondary/16 pb-1">
                   <span className="text-gray-500">User ID</span>
                   <span className="font-bold text-brand-primary">{referral.userId || "-"}</span>
                 </div>

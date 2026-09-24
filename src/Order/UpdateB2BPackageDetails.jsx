@@ -200,12 +200,12 @@ const UpdateB2BPackageDetails = ({ isOpen, onClose, onSave, initialPackages = []
 
                     {/* Summary */}
                     <div className="flex flex-col sm:flex-row gap-2 mt-4">
-                        <div className="bg-green-100 p-4 rounded-lg w-full sm:w-2/4">
+                        <div className="bg-brand-secondary/16 p-4 rounded-lg w-full sm:w-2/4">
                             <h3 className="text-[12px] font-[600]">Applicable Weight</h3>
                             <p className="text-[12px] font-[600]">{applicableWeight.toFixed(2)} Kg</p>
                         </div>
 
-                        <div className="bg-green-100 p-4 rounded-lg w-full sm:w-1/2 flex justify-between">
+                        <div className="bg-brand-secondary/16 p-4 rounded-lg w-full sm:w-1/2 flex justify-between">
                             <h3 className="text-[12px] font-[600]">Volumetric Weight</h3>
                             <p className="text-[12px] font-[600]">{totalVolumetricWeight.toFixed(2)} Kg</p>
                         </div>

@@ -260,7 +260,7 @@ const Passbooks = () => {
               disabled={selectedTransactions.length === 0}
               className={`py-2 px-3 h-9 text-[12px] border rounded-lg font-[600] flex items-center gap-1 transition ${selectedTransactions.length === 0
                 ? "border-gray-300 text-gray-400 cursor-not-allowed"
-                : "text-brand-primary border-brand-primary bg-white hover:bg-green-50 shadow-sm"
+                : "text-brand-primary border-brand-primary bg-white hover:bg-brand-secondary/8 shadow-sm"
                 }`}
             >
               <span>Actions</span>
@@ -270,13 +270,13 @@ const Passbooks = () => {
               <div className="absolute right-0 mt-1 w-40 bg-white border-2 border-gray-200 rounded-lg shadow-xl z-[100] animate-popup-in overflow-hidden">
                 <ul className="font-[600] text-[12px]">
                   <li
-                    className="px-4 py-2 text-gray-700 hover:bg-green-50 cursor-pointer transition border-b border-gray-50"
+                    className="px-4 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer transition border-b border-gray-50"
                     onClick={handleExport}
                   >
                     Export Excel
                   </li>
                   <li
-                    className="px-4 py-2 text-gray-700 hover:bg-green-50 cursor-pointer transition"
+                    className="px-4 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer transition"
                     onClick={() => {
                       setShowForm(true);
                       setDesktopDropdownOpen(false);
@@ -498,10 +498,10 @@ const Passbooks = () => {
             {mobileDropdownOpen && (
               <div className="absolute right-0 mt-1 w-40 bg-white border-2 border-gray-200 rounded-lg shadow-xl z-[100] animate-popup-in overflow-hidden">
                 <ul className="font-[600] text-[11px]">
-                  <li className="px-4 py-2 text-gray-700 hover:bg-green-50 cursor-pointer border-b border-gray-50" onClick={handleExport}>
+                  <li className="px-4 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer border-b border-gray-50" onClick={handleExport}>
                     Export Excel
                   </li>
-                  <li className="px-4 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => {
+                  <li className="px-4 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer" onClick={() => {
                     setShowForm(true);
                     setMobileDropdownOpen(false);
                   }}>
@@ -520,7 +520,7 @@ const Passbooks = () => {
             transactions.map((row, index) => (
               <div key={index} className="bg-white border border-gray-200 rounded-lg shadow-sm p-2 border border-gray-100 text-[10px] animate-popup-in">
                 {/* Header Bar */}
-                <div className="flex gap-2 justify-between rounded-lg bg-green-50 py-1.5 px-2 items-center mb-1.5">
+                <div className="flex gap-2 justify-between rounded-lg bg-brand-secondary/8 py-1.5 px-2 items-center mb-1.5">
                   <div className="flex items-center gap-2">
                     <input
                       type="checkbox"
@@ -619,7 +619,7 @@ const Passbooks = () => {
                   {row.category === "debit" && (
                     <button
                       onClick={() => handleReverse(row)}
-                      className="bg-white text-brand-primary p-1.5 rounded-full shadow-sm border border-green-100 shrink-0"
+                      className="bg-white text-brand-primary p-1.5 rounded-full shadow-sm border border-brand-secondary/16 shrink-0"
                     >
                       <FaUndo size={10} />
                     </button>

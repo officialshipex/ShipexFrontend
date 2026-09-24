@@ -321,8 +321,8 @@ const ManageTickets = ({ isSidebarAdmin }) => {
               {statusOptions.map((option) => (
                 <li
                   key={option.value}
-                  className={`cursor-pointer px-3 py-2 text-gray-700 text-[12px] font-[600] hover:bg-green-50 ${selectedStatus === option.value
-                    ? "font-[600] bg-green-200"
+                  className={`cursor-pointer px-3 py-2 text-gray-700 text-[12px] font-[600] hover:bg-brand-secondary/8 ${selectedStatus === option.value
+                    ? "font-[600] bg-brand-secondary/26"
                     : ""
                     }`}
                   onClick={() => {
@@ -420,8 +420,8 @@ const ManageTickets = ({ isSidebarAdmin }) => {
                   {platformOptions.map((option) => (
                     <li
                       key={option.value}
-                      className={`cursor-pointer px-4 py-2 hover:bg-green-50 ${selectedPlatform === option.value
-                        ? "font-semibold bg-green-50"
+                      className={`cursor-pointer px-4 py-2 hover:bg-brand-secondary/8 ${selectedPlatform === option.value
+                        ? "font-semibold bg-brand-secondary/8"
                         : ""}`}
                       onClick={() => {
                         setSelectedPlatform(option.value);
@@ -459,8 +459,8 @@ const ManageTickets = ({ isSidebarAdmin }) => {
                   {categoryOptions.map((option) => (
                     <li
                       key={option.value}
-                      className={`cursor-pointer px-3 py-2 hover:bg-green-50 ${selectedCategory === option.value
-                        ? "font-semibold bg-green-50"
+                      className={`cursor-pointer px-3 py-2 hover:bg-brand-secondary/8 ${selectedCategory === option.value
+                        ? "font-semibold bg-brand-secondary/8"
                         : ""}`}
                       onClick={() => {
                         setSelectedCategory(option.value);
@@ -570,8 +570,8 @@ const ManageTickets = ({ isSidebarAdmin }) => {
                 {platformOptions.map((option) => (
                   <li
                     key={option.value}
-                    className={`cursor-pointer px-3 py-2 hover:bg-green-50 ${selectedPlatform === option.value
-                      ? "font-semibold bg-green-50"
+                    className={`cursor-pointer px-3 py-2 hover:bg-brand-secondary/8 ${selectedPlatform === option.value
+                      ? "font-semibold bg-brand-secondary/8"
                       : ""}`}
                     onClick={() => {
                       setSelectedPlatform(option.value);
@@ -609,8 +609,8 @@ const ManageTickets = ({ isSidebarAdmin }) => {
                   {categoryOptions.map((option) => (
                     <li
                       key={option.value}
-                      className={`cursor-pointer px-3 py-2 hover:bg-green-50 ${selectedCategory === option.value
-                        ? "font-semibold bg-green-50"
+                      className={`cursor-pointer px-3 py-2 hover:bg-brand-secondary/8 ${selectedCategory === option.value
+                        ? "font-semibold bg-brand-secondary/8"
                         : ""}`}
                       onClick={() => {
                         setSelectedCategory(option.value);

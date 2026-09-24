@@ -255,7 +255,7 @@ export default function RateCardForm() {
       <div className="flex items-center gap-3 border-b border-gray-100 pb-4 mb-4">
         <button
           onClick={() => navigate(-1)}
-          className="p-2 hover:bg-green-100 rounded-full transition-colors text-gray-600"
+          className="p-2 hover:bg-brand-secondary/16 rounded-full transition-colors text-gray-600"
         >
           <FiArrowLeft size={16} />
         </button>

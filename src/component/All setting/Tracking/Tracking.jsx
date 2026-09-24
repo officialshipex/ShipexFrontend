@@ -316,7 +316,7 @@ function TrackingCard({ trackingAwb, statusSteps, CopyableText }) {
           <span>
             Status :{" "}
             <span
-              className={`text-[10px] px-2 py-0.5 rounded ${isCancelled ? "bg-red-100 text-red-600" : "text-brand-primary bg-green-100"
+              className={`text-[10px] px-2 py-0.5 rounded ${isCancelled ? "bg-red-100 text-red-600" : "text-brand-primary bg-brand-secondary/16"
                 }`}
             >
               {trackingAwb.status}
@@ -478,7 +478,7 @@ function TrackingCard({ trackingAwb, statusSteps, CopyableText }) {
                           ? "bg-red-600 border-red-600"
                           : idx === 0
                             ? "bg-brand-primary border-brand-primary"
-                            : "bg-green-200 border-brand-primary"
+                            : "bg-brand-secondary/26 border-brand-primary"
                         }
                   hover:scale-110 hover:ring-2 hover:ring-brand-primary cursor-pointer`}
                     ></button>
@@ -510,7 +510,7 @@ function TrackingCard({ trackingAwb, statusSteps, CopyableText }) {
       {/* From/To Address Table */}
       <table className="w-full text-[10px] sm:text-[12px] my-2 border border-gray-200 rounded-lg">
         <thead>
-          <tr className="bg-green-50">
+          <tr className="bg-brand-secondary/8">
             <th className="font-[600] text-gray-700 px-2 py-1"></th>
             <th className="font-[600] text-gray-700 px-2 py-1">City</th>
             <th className="font-[600] text-gray-700 px-2 py-1">State</th>

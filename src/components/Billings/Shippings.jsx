@@ -463,7 +463,7 @@ const Shippings = (filterOrder) => {
             <button
               disabled={selectedOrders.length === 0}
               onClick={() => setDesktopDropdownOpen(!desktopDropdownOpen)}
-              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedOrders.length > 0 ? "border-brand-primary text-brand-primary hover:bg-green-50" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedOrders.length > 0 ? "border-brand-primary text-brand-primary hover:bg-brand-secondary/8" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
               Actions
@@ -473,7 +473,7 @@ const Shippings = (filterOrder) => {
             {desktopDropdownOpen && (
               <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[12px] z-[100] animate-popup-in overflow-hidden">
                 <div
-                  className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                  className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                   onClick={handleExportExcel}
                 >
                   Export
@@ -619,7 +619,7 @@ const Shippings = (filterOrder) => {
                         </Link>
                         <button
                           onClick={() => handleCopy(order.orderId, order._id + '_id')}
-                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-green-50 rounded"
+                          className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-brand-secondary/8 rounded"
                         >
                           {copiedOrderId === order._id + '_id' ? (
                             <FiCheck className="w-3 h-3 text-brand-primary" />
@@ -640,7 +640,7 @@ const Shippings = (filterOrder) => {
                         {order.awb_number && (
                           <button
                             onClick={() => handleCopy(order.awb_number, order._id + '_awb')}
-                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-green-50 rounded"
+                            className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-brand-secondary/8 rounded"
                           >
                             {copiedOrderId === order._id + '_awb' ? (
                               <FiCheck className="w-3 h-3 text-brand-primary" />
@@ -834,7 +834,7 @@ const Shippings = (filterOrder) => {
             {mobileDropdownOpen && (
               <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[11px] z-[100] animate-popup-in overflow-hidden">
                 <div
-                  className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                  className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                   onClick={handleExportExcel}
                 >
                   Export

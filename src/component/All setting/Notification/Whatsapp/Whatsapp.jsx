@@ -188,7 +188,7 @@ const Whatsapp = () => {
           <div className="flex items-center gap-2">
             <button
               onClick={() => setTestOpen(true)}
-              className="text-[10px] text-brand-primary font-bold hover:bg-green-50 px-3 py-1.5 border border-green-100 rounded-lg transition-all"
+              className="text-[10px] text-brand-primary font-bold hover:bg-brand-secondary/8 px-3 py-1.5 border border-brand-secondary/16 rounded-lg transition-all"
             >
               Send Test
             </button>
@@ -259,7 +259,7 @@ const Whatsapp = () => {
                   <td className="px-3 py-2 text-center">
                     <button 
                       onClick={() => openEditModal(status)}
-                      className="text-[10px] text-brand-primary font-bold hover:bg-green-50 px-3 py-2 border border-green-100 rounded-lg transition-all"
+                      className="text-[10px] text-brand-primary font-bold hover:bg-brand-secondary/8 px-3 py-2 border border-brand-secondary/16 rounded-lg transition-all"
                     >
                       Edit
                     </button>
@@ -306,7 +306,7 @@ const Whatsapp = () => {
               </span>
               <button 
                 onClick={() => openEditModal(status)}
-                className="text-brand-primary font-bold text-[12px] px-4 py-1.5 border border-green-100 rounded-lg shadow-sm"
+                className="text-brand-primary font-bold text-[12px] px-4 py-1.5 border border-brand-secondary/16 rounded-lg shadow-sm"
               >
                 Edit
               </button>

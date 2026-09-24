@@ -40,8 +40,8 @@ const CustomDropdown = ({ name, value, options, placeholder, onChange }) => {
             <li
               key={opt.value}
               onClick={() => handleOptionSelect(opt.value)}
-              className={`px-3 py-2 text-[10px] sm:text-[12px] text-gray-500 font-[600] hover:bg-green-50 cursor-pointer ${
-                opt.value === value ? "bg-green-50 font-[600] text-gray-500" : ""
+              className={`px-3 py-2 text-[10px] sm:text-[12px] text-gray-500 font-[600] hover:bg-brand-secondary/8 cursor-pointer ${
+                opt.value === value ? "bg-brand-secondary/8 font-[600] text-gray-500" : ""
               }`}
             >
               {opt.label}

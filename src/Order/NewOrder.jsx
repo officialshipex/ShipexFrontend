@@ -271,7 +271,7 @@ const NewOrder = () => {
             </button>
 
             {Pickup && (
-              <div className="mt-3 text-[12px] font-[600] bg-green-50 p-2 text-gray-500 rounded-lg">
+              <div className="mt-3 text-[12px] font-[600] bg-brand-secondary/8 p-2 text-gray-500 rounded-lg">
                 <p>
                   <span className="text-gray-700">Contact:</span>{" "}
                   {Pickup.pickupAddress?.contactName}

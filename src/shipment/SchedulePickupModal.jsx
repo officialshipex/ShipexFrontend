@@ -99,7 +99,7 @@ const SchedulePickupModal = ({ orderId, awb, pickupAddress, onClose }) => {
                 </div>
 
                 {/* Date Selection */}
-                <div className="bg-green-50 border border-green-100 rounded-lg px-3 py-2 mb-2">
+                <div className="bg-brand-secondary/8 border border-brand-secondary/16 rounded-lg px-3 py-2 mb-2">
                     <p className="font-[600] mb-2 text-[10px] sm:text-[12px] text-gray-700 flex items-center gap-1.5">
                         <Calendar className="w-3.5 h-3.5 text-brand-primary" /> Please select a suitable date for your order to be picked up
                     </p>

@@ -82,8 +82,8 @@ const Billings = () => {
                             key={tab.path}
                             onClick={() => handleSelect(tab.path)}
                             className={`px-3 py-2 text-[12px] cursor-pointer font-[600] transition-all ${location.pathname === tab.path
-                                ? "bg-green-200 text-gray-700"
-                                : "text-gray-700 hover:bg-green-50"
+                                ? "bg-brand-secondary/26 text-gray-700"
+                                : "text-gray-700 hover:bg-brand-secondary/8"
                                 }`}
                         >
                             {tab.label}

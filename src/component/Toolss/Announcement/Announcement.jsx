@@ -314,7 +314,7 @@ const Announcement = () => {
                       <div className="absolute left-0.5 top-0.5 bg-white w-3 h-3 rounded-full transition-transform peer-checked:translate-x-4 shadow-sm"></div>
                     </label>
                     <div className="flex items-center gap-1.5 border-l pl-2">
-                       <button onClick={() => handleEdit(ann)} className="p-1.5 text-brand-primary hover:bg-green-50 rounded-full transition-all">
+                       <button onClick={() => handleEdit(ann)} className="p-1.5 text-brand-primary hover:bg-brand-secondary/8 rounded-full transition-all">
                          <AiOutlineEdit size={16} />
                        </button>
                        <button onClick={() => handleDelete(ann._id)} className="p-1.5 text-red-500 hover:bg-red-50 rounded-full transition-all">

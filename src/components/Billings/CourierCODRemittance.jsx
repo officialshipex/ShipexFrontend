@@ -286,7 +286,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
           <button
             onClick={handleExport}
             disabled={selectedIds.length === 0}
-            className={`h-9 px-4 rounded-lg text-[12px] font-bold flex items-center justify-center gap-1 border transition-all ${selectedIds.length > 0 ? "border-brand-primary text-brand-primary hover:bg-green-50 shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"}`}
+            className={`h-9 px-4 rounded-lg text-[12px] font-bold flex items-center justify-center gap-1 border transition-all ${selectedIds.length > 0 ? "border-brand-primary text-brand-primary hover:bg-brand-secondary/8 shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"}`}
           >
             <Download className="w-4 h-4" />
             Export
@@ -352,7 +352,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
               <div className="absolute right-0 top-full mt-2 w-44 bg-white rounded-xl shadow-2xl border border-gray-100 z-[100] overflow-hidden animate-popup-in">
                 <button
                   onClick={() => { handleExport(); setBulkActionOpen(false); }}
-                  className="w-full px-3 py-2 text-[12px] font-bold text-gray-700 hover:bg-green-50 hover:text-brand-primary flex items-center gap-2.5 transition-colors border-b border-gray-50"
+                  className="w-full px-3 py-2 text-[12px] font-bold text-gray-700 hover:bg-brand-secondary/8 hover:text-brand-primary flex items-center gap-2.5 transition-colors border-b border-gray-50"
                 >
                   <Download className="w-3 h-3 text-brand-primary" />
                   Export
@@ -394,7 +394,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                 remitedData.map((row, index) => {
                   const rowId = row._id || row.orderID;
                   return (
-                    <tr key={index} className="border-t border-gray-200 hover:bg-green-50/30 transition-colors">
+                    <tr key={index} className="border-t border-gray-200 hover:bg-brand-secondary/30 transition-colors">
                       <td className="py-2 px-3">
                         <div className="flex justify-center items-center">
                           <input type="checkbox" checked={selectedIds.includes(rowId)} onChange={() => handleSelectRow(rowId)} className="cursor-pointer accent-brand-primary w-3 h-3" />
@@ -410,7 +410,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                           <Link to={`/dashboard/order/neworder/updateOrder/${row.orderID}`} className="text-brand-primary font-bold hover:underline transition-all">
                             {row.orderID}
                           </Link>
-                          <button onClick={() => handleCopy(row.orderID, row.orderID)} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
+                          <button onClick={() => handleCopy(row.orderID, row.orderID)} className="p-1 hover:bg-brand-secondary/16 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
                             {copiedId === row.orderID ? <FiCheck className="text-green-500 w-3 h-3" /> : <FiCopy className="w-3 h-3" />}
                           </button>
                         </div>
@@ -421,7 +421,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
                             {row.AwbNumber}
 
                           </Link>
-                          <button onClick={() => handleCopy(row.AwbNumber, row.AwbNumber + '_awb')} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
+                          <button onClick={() => handleCopy(row.AwbNumber, row.AwbNumber + '_awb')} className="p-1 hover:bg-brand-secondary/16 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
                             {copiedId === row.AwbNumber + '_awb' ? <FiCheck className="text-green-500 w-3 h-3" /> : <FiCopy className="w-3 h-3" />}
                           </button>
                         </div>
@@ -457,7 +457,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
             return (
               <div key={index} className="bg-white border border-gray-200 rounded-lg shadow-sm p-2 text-[10px] animate-popup-in">
                 {/* Header Bar */}
-                <div className="flex gap-2 justify-between rounded-lg bg-green-50 py-1.5 px-2 items-center mb-1.5">
+                <div className="flex gap-2 justify-between rounded-lg bg-brand-secondary/8 py-1.5 px-2 items-center mb-1.5">
                   <div className="flex items-center gap-2">
                     <input
                       type="checkbox"

@@ -83,7 +83,7 @@ function YourSellers() {
           {/* Desktop Table View */}
           <div className="hidden md:block overflow-x-auto">
             <table className="min-w-full bg-white rounded shadow border border-gray-200">
-              <thead className="bg-green-50 text-left text-gray-700 text-[14px] font-semibold uppercase">
+              <thead className="bg-brand-secondary/8 text-left text-gray-700 text-[14px] font-semibold uppercase">
                 <tr>
                   <th className="px-6 py-3 border-b border-gray-200">SL No.</th>
                   <th className="px-6 py-3 border-b border-gray-200">
@@ -146,13 +146,13 @@ function YourSellers() {
                         >
                           <ul className="py-2">
                             <li
-                              className="px-3 py-1 hover:bg-green-50 cursor-pointer text-[14px]"
+                              className="px-3 py-1 hover:bg-brand-secondary/8 cursor-pointer text-[14px]"
                               onClick={() => handleShowOrders(item)}
                             >
                               Show Orders
                             </li>
                             <li
-                              className="px-3 py-1 hover:bg-green-50 cursor-pointer text-[14px]"
+                              className="px-3 py-1 hover:bg-brand-secondary/8 cursor-pointer text-[14px]"
                               onClick={() => handleShowNdr(item)}
                             >
                               Show NDR
@@ -172,7 +172,7 @@ function YourSellers() {
             {allocations.map((item, idx) => (
               <div
                 key={item._id}
-                className="bg-green-50 rounded-xl shadow-md p-4 border border-gray-200 flex flex-col gap-1 relative"
+                className="bg-brand-secondary/8 rounded-xl shadow-md p-4 border border-gray-200 flex flex-col gap-1 relative"
               >
                 <div className="flex justify-between items-center">
                   <div>
@@ -196,7 +196,7 @@ function YourSellers() {
                     </div>
                   </div>
                   <button
-                    className="absolute top-3 right-3 text-[10px] bg-green-200 rounded-md px-2 py-1 seller-action-btn"
+                    className="absolute top-3 right-3 text-[10px] bg-brand-secondary/26 rounded-md px-2 py-1 seller-action-btn"
                     onClick={(e) => {
                       const rect = e.currentTarget.getBoundingClientRect();
                       setDropdownPosition({
@@ -218,13 +218,13 @@ function YourSellers() {
                     >
                       <ul className="py-2">
                         <li
-                          className="px-3 py-1 hover:bg-green-50 cursor-pointer text-[12px]"
+                          className="px-3 py-1 hover:bg-brand-secondary/8 cursor-pointer text-[12px]"
                           onClick={() => handleShowOrders(item)}
                         >
                           Show Orders
                         </li>
                         <li
-                          className="px-3 py-1 hover:bg-green-50 cursor-pointer text-[12px]"
+                          className="px-3 py-1 hover:bg-brand-secondary/8 cursor-pointer text-[12px]"
                           onClick={() => handleShowNdr(item)}
                         >
                           Show NDR

@@ -238,7 +238,7 @@ const Passbooks = ({
               disabled={selectedTransactions.length === 0}
               className={`py-2 px-3 h-9 text-[12px] border rounded-lg font-[600] flex items-center gap-1 transition ${selectedTransactions.length === 0
                 ? "border-gray-300 text-gray-400 cursor-not-allowed"
-                : "text-brand-primary border-brand-primary bg-white hover:bg-green-50 shadow-sm"
+                : "text-brand-primary border-brand-primary bg-white hover:bg-brand-secondary/8 shadow-sm"
                 }`}
             >
               <span>Actions</span>
@@ -248,7 +248,7 @@ const Passbooks = ({
               <div className="absolute right-0 mt-1 w-40 bg-white border-2 border-gray-200 rounded-lg shadow-xl z-[100] animate-popup-in overflow-hidden">
                 <ul className="font-[600] text-[12px]">
                   <li
-                    className="px-4 py-2 text-gray-700 hover:bg-green-50 cursor-pointer transition"
+                    className="px-4 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer transition"
                     onClick={() => {
                       handleExport();
                       setDesktopDropdownOpen(false);
@@ -458,7 +458,7 @@ const Passbooks = ({
               <div className="absolute right-0 mt-1 w-40 bg-white border-2 border-gray-200 rounded-lg shadow-xl z-[100] animate-popup-in overflow-hidden">
                 <ul className="font-[600] text-[12px]">
                   <li
-                    className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer"
+                    className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer"
                     onClick={() => {
                       handleExport();
                       setMobileDropdownOpen(false);
@@ -580,7 +580,7 @@ const Passbooks = ({
 
                 {/* Description Bar */}
                 {row.description && (
-                  <div className="p-2 bg-green-50 rounded-lg border border-green-100">
+                  <div className="p-2 bg-brand-secondary/8 rounded-lg border border-brand-secondary/16">
                     <p className="text-gray-700 font-[600] text-[10px] tracking-wider">Description</p>
                     <p className="text-gray-500 leading-relaxed text-[10px]">
                       {row.description}

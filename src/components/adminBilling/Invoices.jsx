@@ -207,7 +207,7 @@ const Invoices = () => {
             <button
               disabled={selectedInvoices.length === 0}
               onClick={() => setActionOpen(!actionOpen)}
-              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedInvoices.length > 0 ? "border-brand-primary text-brand-primary hover:bg-green-50" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedInvoices.length > 0 ? "border-brand-primary text-brand-primary hover:bg-brand-secondary/8" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
               Actions
@@ -217,7 +217,7 @@ const Invoices = () => {
             {actionOpen && (
               <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[12px] z-[100] animate-popup-in overflow-hidden">
                 <div
-                  className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                  className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                   onClick={() => {
                     setActionOpen(false);
                     const url = `${REACT_APP_BACKEND_URL}/invoice/bulk-download?invoiceNumbers=${selectedInvoices.join(",")}`;
@@ -413,7 +413,7 @@ const Invoices = () => {
             {actionOpen && (
               <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[11px] z-[100] animate-popup-in overflow-hidden">
                 <div
-                  className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                  className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                   onClick={() => {
                     setActionOpen(false);
                     const url = `${REACT_APP_BACKEND_URL}/invoice/bulk-download?invoiceNumbers=${selectedInvoices.join(",")}`;

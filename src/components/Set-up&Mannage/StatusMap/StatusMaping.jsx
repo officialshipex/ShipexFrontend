@@ -156,7 +156,7 @@ const StatusMaping = () => {
                                         setSelectedCourier(courier.partnerName);
                                         setIsOpen(false);
                                     }}
-                                    className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-green-100 cursor-pointer"
+                                    className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-brand-secondary/16 cursor-pointer"
                                 >
                                     {courier.partnerName}
                                 </li>

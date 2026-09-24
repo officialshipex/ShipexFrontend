@@ -164,7 +164,7 @@ const PincodeInformation = () => {
                                     pincodeData.map((courier, idx) => (
                                         <tr
                                             key={idx}
-                                            className="hover:bg-green-50 border border-gray-300 transition text-[12px]"
+                                            className="hover:bg-brand-secondary/8 border border-gray-300 transition text-[12px]"
                                         >
                                             <td className="px-3 py-2 flex items-center gap-3 font-[500] text-gray-600">
                                                 <img
@@ -195,7 +195,7 @@ const PincodeInformation = () => {
 
                                             <td className="px-3 py-2 flex justify-center items-center gap-3">
                                                 <button
-                                                    className="flex items-center justify-center gap-1 bg-green-50 border border-brand-primary text-brand-primary px-3 py-1.5 rounded-lg text-[11px] font-[600] hover:bg-green-100 transition"
+                                                    className="flex items-center justify-center gap-1 bg-brand-secondary/8 border border-brand-primary text-brand-primary px-3 py-1.5 rounded-lg text-[11px] font-[600] hover:bg-brand-secondary/16 transition"
                                                     onClick={() => handleUpload(courier.courier)}
                                                 >
                                                     <FiUpload className="w-4 h-4" /> Upload
@@ -226,7 +226,7 @@ const PincodeInformation = () => {
                     {pincodeData.map((courier, idx) => (
                         <div
                             key={idx}
-                            className="bg-green-50 border border-brand-primary p-4 rounded-lg shadow-sm"
+                            className="bg-brand-secondary/8 border border-brand-primary p-4 rounded-lg shadow-sm"
                         >
                             <div className="flex items-center justify-between mb-2">
                                 <div className="flex items-center gap-2">
@@ -265,7 +265,7 @@ const PincodeInformation = () => {
                             <div className="flex justify-end gap-2 mt-2">
                                 <button
                                     onClick={() => handleUpload(courier.courier)}
-                                    className="flex items-center font-[600] gap-1 bg-green-50 border border-brand-primary text-brand-primary px-3 py-1 rounded-lg text-[10px] hover:bg-green-100 transition"
+                                    className="flex items-center font-[600] gap-1 bg-brand-secondary/8 border border-brand-primary text-brand-primary px-3 py-1 rounded-lg text-[10px] hover:bg-brand-secondary/16 transition"
                                 >
                                     <FiUpload /> Upload
                                 </button>

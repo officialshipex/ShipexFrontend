@@ -276,7 +276,7 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
                             <label
                                 className={`cursor-pointer hidden sm:flex text-[12px] font-[600] items-center gap-2 px-3 py-2 rounded-lg border transition
       ${isSidebarAdmin || employeeAccess.canAction
-                                        ? "text-brand-primary bg-white border-brand-primary hover:bg-green-100"
+                                        ? "text-brand-primary bg-white border-brand-primary hover:bg-brand-secondary/16"
                                         : "text-gray-400 bg-gray-100 border-gray-300 cursor-not-allowed"
                                     }`}
                             >
@@ -299,7 +299,7 @@ const WeightDiscrepancy = ({ isSidebarAdmin }) => {
                                 {tabs.map((tab) => (
                                     <button
                                         key={tab}
-                                        className={`w-full text-left px-3 py-2 text-[12px] hover:bg-brand-secondary/10 ${activeTab === tab ? "bg-green-100" : "hover:bg-green-50"}`}
+                                        className={`w-full text-left px-3 py-2 text-[12px] hover:bg-brand-secondary/10 ${activeTab === tab ? "bg-brand-secondary/16" : "hover:bg-brand-secondary/8"}`}
                                         onClick={() => {
                                             setActiveTab(tab);
                                             setShowDropdown(false);

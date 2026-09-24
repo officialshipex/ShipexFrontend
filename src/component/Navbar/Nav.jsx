@@ -538,7 +538,7 @@ const Navbar = () => {
               }}
               className="p-3 border-b border-gray-50 hover:bg-gray-50 cursor-pointer transition flex items-start gap-3"
             >
-              <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+              <div className="w-8 h-8 bg-brand-secondary/16 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                 {isRunning ? (
                   <Loader2 className="w-3.5 h-3.5 text-brand-primary animate-spin" />
                 ) : isBulkShip ? (
@@ -635,7 +635,7 @@ const Navbar = () => {
           <div className="sm:hidden">
             <button
               onClick={() => setShowQuickPopup(true)}
-              className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary text-white hover:bg-green-50 transition"
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary text-white hover:bg-brand-secondary/8 transition"
             >
               <FiZap className="text-[14px]" />
             </button>
@@ -750,7 +750,7 @@ const Navbar = () => {
             {/* Toggle Button - Icon with Border */}
             <button
               onClick={() => setIsMobileSearchOpen((p) => !p)}
-              className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary text-white hover:bg-green-50 transition"
+              className="flex items-center justify-center w-8 h-8 rounded-full bg-brand-primary text-white hover:bg-brand-secondary/8 transition"
               aria-label="Open Master Search"
             >
               <FiSearch className="text-[14px]" />
@@ -1166,7 +1166,7 @@ const Navbar = () => {
           <ul>
 
             {/* Profile */}
-            <li className="hover:bg-green-100 p-2">
+            <li className="hover:bg-brand-secondary/16 p-2">
               <Link
                 to="/dashboard/settings/company-profile"
                 className="text-gray-700 flex items-center gap-2"
@@ -1179,7 +1179,7 @@ const Navbar = () => {
 
             {/* Admin/User Toggle */}
             {userData?.isAdmin && (
-              <li className="hover:bg-green-100 p-2 flex items-center justify-between">
+              <li className="hover:bg-brand-secondary/16 p-2 flex items-center justify-between">
                 <div className="flex items-center gap-2 text-gray-700">
                   <FiShield className="text-brand-primary" />
                   <span>{isAdminTab ? "Admin" : "User"}</span>

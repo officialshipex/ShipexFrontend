@@ -153,7 +153,7 @@ const Notification = ({ targetUserId = null, basePath = "/dashboard/settings/not
                             onClick={() => handleSelect(tab.path)}
                             className={`px-3 py-2 text-[12px] cursor-pointer font-[600] transition-all ${location.pathname === tab.path
                                 ? "bg-brand-secondary/10 text-brand-primary"
-                                : "text-gray-700 hover:bg-green-50"
+                                : "text-gray-700 hover:bg-brand-secondary/8"
                                 }`}
                         >
                             {tab.label}

@@ -75,7 +75,7 @@ const CourierFilter = ({
                 <div
                   key={idx}
                   className={`px-3 py-2.5 text-[12px] font-[600] flex items-center gap-2
-                             cursor-pointer transition-colors ${isSelected ? "text-brand-primary bg-green-50" : "text-gray-500 hover:bg-gray-50"}`}
+                             cursor-pointer transition-colors ${isSelected ? "text-brand-primary bg-brand-secondary/8" : "text-gray-500 hover:bg-gray-50"}`}
                   onClick={() => handleToggle(courier)}
                 >
                   <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${isSelected ? "bg-brand-primary border-brand-primary" : "border-gray-300 bg-white"}`}>

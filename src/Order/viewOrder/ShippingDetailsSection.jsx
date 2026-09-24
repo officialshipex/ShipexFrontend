@@ -30,7 +30,7 @@ const ShippingDetailsSection = ({ order }) => {
     return (
         <div className="bg-white p-4 rounded-lg shadow-sm">
             <div className="flex items-center gap-2 mb-2 border-b pb-2">
-                <p className="p-2 bg-green-100 hidden sm:block rounded-full">
+                <p className="p-2 bg-brand-secondary/16 hidden sm:block rounded-full">
                     <Truck className="w-4 h-4 text-brand-primary" />
                 </p>
 

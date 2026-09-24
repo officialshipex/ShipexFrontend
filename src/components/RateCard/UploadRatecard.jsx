@@ -108,7 +108,7 @@ const UploadRatecard = ({ isOpen, onClose, setRefresh, defaultPlanName, replaceE
                 {/* Header */}
                 <div className="mb-4">
                     <h2 className="text-[12px] sm:text-[14px] font-bold text-gray-700 flex items-center gap-2">
-                        <div className="bg-green-100 p-2 rounded-lg text-brand-primary">
+                        <div className="bg-brand-secondary/16 p-2 rounded-lg text-brand-primary">
                             <FiUploadCloud size={18} />
                         </div>
                         Upload Rate Card
@@ -134,9 +134,9 @@ const UploadRatecard = ({ isOpen, onClose, setRefresh, defaultPlanName, replaceE
                     <label className="group cursor-pointer block relative">
                         <div className={`
                             border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center transition-all duration-300
-                            ${selectedFile ? 'border-brand-primary bg-green-50/30' : 'border-gray-200 hover:border-brand-primary hover:bg-gray-50'}
+                            ${selectedFile ? 'border-brand-primary bg-brand-secondary/30' : 'border-gray-200 hover:border-brand-primary hover:bg-gray-50'}
                         `}>
-                            <div className={`p-4 rounded-full mb-3 transition-colors ${selectedFile ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-green-100 group-hover:text-brand-primary'}`}>
+                            <div className={`p-4 rounded-full mb-3 transition-colors ${selectedFile ? 'bg-brand-primary text-white' : 'bg-gray-100 text-gray-400 group-hover:bg-brand-secondary/16 group-hover:text-brand-primary'}`}>
                                 <FaUpload size={16} />
                             </div>
                             <span className="text-[10px] sm:text-[12px] font-bold text-gray-700 tracking-tight">
@@ -149,7 +149,7 @@ const UploadRatecard = ({ isOpen, onClose, setRefresh, defaultPlanName, replaceE
                     {/* Selected File Card */}
                     {selectedFile && (
                         <div className="flex items-center gap-3 bg-white p-3 rounded-xl border border-gray-200 shadow-sm animate-in slide-in-from-top-2">
-                            <div className="bg-green-100 p-2 rounded-lg text-brand-primary">
+                            <div className="bg-brand-secondary/16 p-2 rounded-lg text-brand-primary">
                                 <FiFileText size={18} />
                             </div>
                             <div className="flex-1 min-w-0">

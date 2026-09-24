@@ -135,7 +135,7 @@ const WalletHistoryFilterPanel = ({
                                         <div
                                             key={s}
                                             onClick={() => { setLocalFilters({ ...localFilters, status: s }); setShowStatusDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer transition-colors"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer transition-colors"
                                         >
                                             {s.charAt(0).toUpperCase() + s.slice(1)}
                                         </div>

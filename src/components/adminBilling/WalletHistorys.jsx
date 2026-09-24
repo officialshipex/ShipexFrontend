@@ -160,7 +160,7 @@ const WalletHistorys = () => {
                         <button
                             disabled={selectedTransactions.length === 0}
                             onClick={() => setActionOpen(!actionOpen)}
-                            className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedTransactions.length > 0 ? "border-brand-primary text-brand-primary hover:bg-green-50" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
+                            className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedTransactions.length > 0 ? "border-brand-primary text-brand-primary hover:bg-brand-secondary/8" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                                 }`}
                         >
                             Actions
@@ -170,13 +170,13 @@ const WalletHistorys = () => {
                         {actionOpen && (
                             <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-44 text-[12px] z-[100] animate-popup-in overflow-hidden">
                                 <div
-                                    className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600 border-b border-gray-50"
+                                    className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600 border-b border-gray-50"
                                     onClick={handleExport}
                                 >
                                     Export to Excel
                                 </div>
                                 <div
-                                    className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                                    className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                                     onClick={() => {
                                         setShowForm(true);
                                         setActionOpen(false);
@@ -361,13 +361,13 @@ const WalletHistorys = () => {
                         {actionOpen && (
                             <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[10px] z-[100] animate-popup-in overflow-hidden">
                                 <div
-                                    className="px-3 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600 border-b border-gray-50"
+                                    className="px-3 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600 border-b border-gray-50"
                                     onClick={handleExport}
                                 >
                                     Export Excel
                                 </div>
                                 <div
-                                    className="px-3 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                                    className="px-3 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                                     onClick={() => {
                                         setShowForm(true);
                                         setActionOpen(false);

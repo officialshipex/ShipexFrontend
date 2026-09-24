@@ -124,7 +124,7 @@ const NdrStatusModal = ({ isOpen, setIsOpen, ndrHistory }) => {
                 onClick={() => setActiveTab(tab)}
                 className={`px-3 py-2 rounded-lg text-[12px] font-[600] transition-all duration-200 border shadow-sm ${activeTab === tab
                   ? "bg-brand-primary text-white border-brand-primary"
-                  : "bg-white text-gray-700 border-gray-200 hover:bg-green-50"
+                  : "bg-white text-gray-700 border-gray-200 hover:bg-brand-secondary/8"
                   }`}
                 role="tab"
                 aria-selected={activeTab === tab}

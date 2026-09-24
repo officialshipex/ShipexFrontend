@@ -201,7 +201,7 @@ const OrdersTable = ({
 
                                 <div className="flex gap-2 items-center justify-start">
                                     {/* CHANNEL BADGE */}
-                                    <p className="uppercase text-[10px] leading-none text-brand-primary bg-green-100 py-0.5 px-2 rounded w-fit">
+                                    <p className="uppercase text-[10px] leading-none text-brand-primary bg-brand-secondary/16 py-0.5 px-2 rounded w-fit">
                                         {order?.channel === "WooCommerce" ? "Woo" : (order?.channel || "CUSTOM")}
                                     </p>
                                     {/* CHANNEL ID (Show for all channels if exists) */}

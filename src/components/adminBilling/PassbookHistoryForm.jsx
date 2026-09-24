@@ -235,7 +235,7 @@ const PassbookHistoryForm = ({ onClose }) => {
                                         key={type}
                                         role="option"
                                         aria-selected={formData.transactionType === type}
-                                        className={`py-2 px-3 text-[12px] cursor-pointer hover:bg-green-100 ${formData.transactionType === type ? "font-bold bg-green-100" : ""
+                                        className={`py-2 px-3 text-[12px] cursor-pointer hover:bg-brand-secondary/16 ${formData.transactionType === type ? "font-bold bg-brand-secondary/16" : ""
                                             }`}
                                         onClick={() => handleTransactionTypeSelect(type)}
                                     >
@@ -270,7 +270,7 @@ const PassbookHistoryForm = ({ onClose }) => {
                                 }
                                 className={`text-[10px] px-2 py-1 rounded border transition-colors ${
                                     formData.description === suggestion
-                                        ? "bg-green-100 border-brand-primary text-brand-primary font-bold"
+                                        ? "bg-brand-secondary/16 border-brand-primary text-brand-primary font-bold"
                                         : "bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100"
                                 }`}
                             >

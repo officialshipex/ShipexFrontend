@@ -99,7 +99,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
             <div className="bg-white p-4 rounded-lg shadow-sm">
                 <div className="flex justify-between items-center mb-3 border-b pb-2">
                     <div className="flex items-center gap-2">
-                        <p className="p-2 bg-green-100 hidden sm:block rounded-full">
+                        <p className="p-2 bg-brand-secondary/16 hidden sm:block rounded-full">
                             <Package className="w-4 h-4 text-brand-primary" />
                         </p>
 
@@ -372,7 +372,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                             </button>
 
                             {/* Total Display */}
-                            <div className="mt-2 px-3 py-2 bg-green-100 rounded-lg flex justify-between items-center">
+                            <div className="mt-2 px-3 py-2 bg-brand-secondary/16 rounded-lg flex justify-between items-center">
                                 <span className="sm:text-[12px] text-[10px] font-[600] text-gray-700">Total Amount</span>
                                 <span className="sm:text-[12px] text-[10px] font-[600] text-brand-primary">₹ {calculateTotal()}</span>
                             </div>

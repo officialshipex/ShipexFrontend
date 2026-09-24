@@ -137,7 +137,7 @@ const NotificationHistoryModal = ({ open, onClose }) => {
                                                     key={n._id}
                                                     type="button"
                                                     onClick={() => setOpenNotificationId(n._id)}
-                                                    className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg hover:bg-green-50 text-left transition-colors"
+                                                    className="w-full flex items-center justify-between gap-3 px-3 py-2 rounded-lg hover:bg-brand-secondary/8 text-left transition-colors"
                                                 >
                                                     <span className="text-[12px] text-gray-700 font-[600] truncate">{n.title}</span>
                                                     <span className="text-[11px] text-gray-400 flex-shrink-0">

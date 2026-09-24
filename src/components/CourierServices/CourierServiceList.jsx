@@ -40,7 +40,7 @@ const ChangeProviderModal = ({ isOpen, onClose, selectedServices, onApply }) => 
         {/* Header */}
         <div className="p-4 border-b border-gray-100">
           <h2 className="text-[14px] font-bold text-gray-700 flex items-center gap-2">
-            <div className="bg-green-100 p-2 rounded-lg text-brand-primary">
+            <div className="bg-brand-secondary/16 p-2 rounded-lg text-brand-primary">
               <FaTruck size={18} />
             </div>
             Change Provider

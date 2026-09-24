@@ -224,7 +224,7 @@ const AutoAcceptedDiscrepancy = () => {
                                 disabled={selectedOrders.length === 0}
                                 onClick={() => setDesktopDropdownOpen(!desktopDropdownOpen)}
                                 className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedOrders.length > 0
-                                    ? "border-brand-primary text-brand-primary hover:bg-green-50"
+                                    ? "border-brand-primary text-brand-primary hover:bg-brand-secondary/8"
                                     : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                                     }`}
                             >
@@ -235,7 +235,7 @@ const AutoAcceptedDiscrepancy = () => {
                             {desktopDropdownOpen && (
                                 <div className="absolute right-0 mt-1 animate-popup-in bg-white border-2 border-gray-100 rounded-lg shadow-xl w-36 text-[12px] z-[100] overflow-hidden">
                                     <div
-                                        className="px-3 py-2 hover:bg-green-100 cursor-pointer font-[600] text-gray-500"
+                                        className="px-3 py-2 hover:bg-brand-secondary/16 cursor-pointer font-[600] text-gray-500"
                                         onClick={() => { handleExportExcel(); setDesktopDropdownOpen(false); }}
                                     >
                                         Export
@@ -321,7 +321,7 @@ const AutoAcceptedDiscrepancy = () => {
                             {mobileDropdownOpen && (
                                 <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[11px] z-[100] overflow-hidden">
                                     <div
-                                        className="px-3 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                                        className="px-3 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                                         onClick={() => { handleExportExcel(); setMobileDropdownOpen(false); }}
                                     >
                                         Export

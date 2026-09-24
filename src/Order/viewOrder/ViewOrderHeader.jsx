@@ -43,7 +43,7 @@ const ViewOrderHeader = ({ order }) => {
                     <div className="flex items-center gap-2">
                         <button
                             onClick={() => navigate(-1)}
-                            className="p-1.5 rounded-full hover:bg-green-100 transition"
+                            className="p-1.5 rounded-full hover:bg-brand-secondary/16 transition"
                             title="Go Back"
                         >
                             <ArrowLeft className="w-4 h-4 text-gray-500" />

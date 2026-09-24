@@ -114,7 +114,7 @@ const SharedWeightDiscrepancyCard = ({
                             </div>
 
                             {/* SHIPMENT DETAILS */}
-                            <div className="px-3 py-1 flex justify-between items-center bg-green-50">
+                            <div className="px-3 py-1 flex justify-between items-center bg-brand-secondary/8">
                                 {/* Left Side */}
                                 <div className="flex items-center gap-2">
                                     <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center p-1 shadow-sm border">

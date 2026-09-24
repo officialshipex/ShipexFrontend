@@ -36,7 +36,7 @@ const PaymentTypeSelect = ({
           {["Prepaid", "COD"].map((type) => (
             <div
               key={type}
-              className="cursor-pointer hover:bg-green-50 px-3 py-2 text-[12px] font-[600] text-gray-500"
+              className="cursor-pointer hover:bg-brand-secondary/8 px-3 py-2 text-[12px] font-[600] text-gray-500"
               onClick={() => {
                 onChange(type);
                 setIsOpen(false);

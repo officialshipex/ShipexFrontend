@@ -175,7 +175,7 @@ const SharedWeightDiscrepancyTable = ({
                                                 </span>
                                                 <button
                                                     onClick={() => handleCopyAwb(order.awbNumber, `awbdesk-${index}`)}
-                                                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-green-50 rounded"
+                                                    className="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-brand-secondary/8 rounded"
                                                 >
                                                     {copiedAwb === `awbdesk-${index}` ? (
                                                         <FiCheck className="w-3 h-3 text-brand-primary" />

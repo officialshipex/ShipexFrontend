@@ -267,7 +267,7 @@ const PickupManifestDetails = () => {
                     <div className="flex items-center gap-2 flex-wrap">
                         <button
                             onClick={() => navigate(-1)}
-                            className="p-2 rounded-full hover:bg-green-100 transition"
+                            className="p-2 rounded-full hover:bg-brand-secondary/16 transition"
                             title="Go Back"
                         >
                             <ArrowLeft className="w-4 h-4 text-gray-500" />
@@ -333,7 +333,7 @@ const PickupManifestDetails = () => {
                             disabled={selectedOrders.length === 0}
                             className={`py-2 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-2 border ${selectedOrders.length === 0
                                 ? "border-gray-200 text-gray-400 cursor-not-allowed bg-gray-50"
-                                : "border-brand-primary text-brand-primary bg-white hover:bg-green-50 shadow-sm"
+                                : "border-brand-primary text-brand-primary bg-white hover:bg-brand-secondary/8 shadow-sm"
                                 }`}
                             onClick={() => setDesktopDropdownOpen(!desktopDropdownOpen)}
                         >
@@ -342,10 +342,10 @@ const PickupManifestDetails = () => {
                         {desktopDropdownOpen && (
                             <div className="absolute right-0 mt-1 w-48 text-[10px] bg-white border border-gray-200 shadow-xl z-[60] font-[600] overflow-hidden animate-popup-in">
                                 <ul className="">
-                                    <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { ExportExcel({ selectedOrders, orders }); setDesktopDropdownOpen(false); }}>Export Excel</li>
-                                    <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setDesktopDropdownOpen(false); }}>Download Invoices</li>
-                                    <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadManifests(selectedOrders); setDesktopDropdownOpen(false); }}>Download Manifests</li>
-                                    <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer" onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setDesktopDropdownOpen(false); }}>Download Labels</li>
+                                    <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer" onClick={() => { ExportExcel({ selectedOrders, orders }); setDesktopDropdownOpen(false); }}>Export Excel</li>
+                                    <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer" onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setDesktopDropdownOpen(false); }}>Download Invoices</li>
+                                    <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer" onClick={() => { handleBulkDownloadManifests(selectedOrders); setDesktopDropdownOpen(false); }}>Download Manifests</li>
+                                    <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer" onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setDesktopDropdownOpen(false); }}>Download Labels</li>
                                 </ul>
                             </div>
                         )}

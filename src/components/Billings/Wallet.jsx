@@ -272,7 +272,7 @@ const navigate=useNavigate()
         {currentRows.map((row, index) => (
           <div
             key={index}
-            className="bg-green-100 p-4 rounded-md shadow-lg  max-w-xl mx-auto"
+            className="bg-brand-secondary/16 p-4 rounded-md shadow-lg  max-w-xl mx-auto"
           >
             <div className="flex justify-between items-start gap-4">
               <div className="space-y-1 text-[12px] text-gray-700 w-full">

@@ -209,7 +209,7 @@ const ManageWebhooks = () => {
                   <td className="py-2 px-3">
                     <div className="flex flex-wrap gap-1">
                       {wh.topics.map((t) => (
-                        <span key={t} className="bg-brand-secondary/10 text-brand-primary text-[10px] px-2 py-0.5 rounded border border-green-200">
+                        <span key={t} className="bg-brand-secondary/10 text-brand-primary text-[10px] px-2 py-0.5 rounded border border-brand-secondary/26">
                           {t}
                         </span>
                       ))}
@@ -341,7 +341,7 @@ const ManageWebhooks = () => {
                 <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mb-2 text-[10px] text-gray-600">
                   <div className="flex items-center gap-1">
                     <span className="text-gray-400">Topic:</span>
-                    <span className="bg-brand-secondary/10 text-brand-primary font-[600] px-1.5 py-0.2 rounded border border-green-100">
+                    <span className="bg-brand-secondary/10 text-brand-primary font-[600] px-1.5 py-0.2 rounded border border-brand-secondary/16">
                       {wh.topics[0] || "track_update"}
                     </span>
                   </div>
@@ -394,7 +394,7 @@ const ManageWebhooks = () => {
                       });
                       setIsModalOpen(true);
                     }}
-                    className="flex items-center gap-1 px-2.5 py-1 border border-green-100 text-brand-primary rounded-md text-[10px] font-[600] hover:bg-green-50 transition shadow-sm"
+                    className="flex items-center gap-1 px-2.5 py-1 border border-brand-secondary/16 text-brand-primary rounded-md text-[10px] font-[600] hover:bg-brand-secondary/8 transition shadow-sm"
                   >
                     <FiEdit2 size={10} />
                     Edit

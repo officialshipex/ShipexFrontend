@@ -52,8 +52,8 @@ const CostEstimationHeader = () => {
                 <div
                   key={item}
                   onClick={() => handleSelect(item)}
-                  className={`px-3 py-2 cursor-pointer font-[600] hover:bg-green-50${
-                    selected === item ? "font-[600] bg-green-100" : ""
+                  className={`px-3 py-2 cursor-pointer font-[600] hover:bg-brand-secondary/8${
+                    selected === item ? "font-[600] bg-brand-secondary/16" : ""
                   }`}
                 >
                   {item}

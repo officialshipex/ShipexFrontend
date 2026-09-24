@@ -60,7 +60,7 @@ const OrderAwbFilter = ({
                     setShowDropdown(false);
                   }}
                   className="px-3 py-2 cursor-pointer text-gray-700
-                    hover:bg-green-100"
+                    hover:bg-brand-secondary/16"
                 >
                   {opt.label}
                 </li>

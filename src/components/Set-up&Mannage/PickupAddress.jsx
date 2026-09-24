@@ -187,7 +187,7 @@ const PickupAddress = ({ isAdminView = false }) => {
         <div className="flex gap-2 order-2 sm:order-3">
           <button
             onClick={handleDownloadExcel}
-            className="border border-brand-primary text-brand-primary hover:bg-green-50 text-[10px] sm:text-[12px] transition-all rounded-lg font-[600] px-3 py-2"
+            className="border border-brand-primary text-brand-primary hover:bg-brand-secondary/8 text-[10px] sm:text-[12px] transition-all rounded-lg font-[600] px-3 py-2"
           >
             Download Excel
           </button>
@@ -360,7 +360,7 @@ const PickupAddress = ({ isAdminView = false }) => {
                 className="bg-white shadow-sm rounded-lg text-gray-500 p-2 text-[10px] border border-gray-200 flex flex-col gap-1"
               >
                 {isAdminView && (
-                  <div className="border-b pb-1 mb-1 flex justify-between items-center bg-green-50/50 p-1.5 rounded">
+                  <div className="border-b pb-1 mb-1 flex justify-between items-center bg-brand-secondary/50 p-1.5 rounded">
                     <span className="text-[10px] font-bold text-brand-primary truncate max-w-[120px]">{address.userId?.company || "N/A"}</span>
                     <span className="text-[9px] text-gray-500 truncate max-w-[120px]">{address.userId?.fullname || "N/A"}</span>
                   </div>
@@ -423,7 +423,7 @@ const PickupAddress = ({ isAdminView = false }) => {
                 </div>
 
                 {/* Address with Copy */}
-                <div className="bg-green-50 p-1.5 rounded-md mt-1 flex justify-between items-start gap-2">
+                <div className="bg-brand-secondary/8 p-1.5 rounded-md mt-1 flex justify-between items-start gap-2">
                   <span className="text-gray-700 font-[500] leading-tight text-[10px] line-clamp-2 flex-1">
                     {address.pickupAddress.address}
                   </span>

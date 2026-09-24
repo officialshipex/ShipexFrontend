@@ -311,7 +311,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
 
           {/* Change Address Fields - shown for all couriers except Amazon */}
           {needsChangeAddressFields && (
-            <div className="border border-brand-primary/20 rounded-lg p-3 bg-green-50/30 flex flex-col gap-2.5">
+            <div className="border border-brand-primary/20 rounded-lg p-3 bg-brand-secondary/30 flex flex-col gap-2.5">
               <p className="text-[11px] font-[700] text-brand-primary flex items-center gap-1.5">
                 <MapPin className="w-3 h-3" /> New Delivery Address
               </p>

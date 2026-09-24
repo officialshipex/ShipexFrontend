@@ -178,14 +178,14 @@ const PickupManifestOrders = () => {
                         onClick={() => setDesktopActionDropdown(!desktopActionDropdown)}
                         className={`h-9 px-4 rounded-lg text-[12px] font-[600] flex items-center gap-2 transition-all border ${selectedManifests.length === 0
                             ? "border-gray-200 text-gray-400 bg-gray-50 cursor-not-allowed"
-                            : "border-brand-primary text-brand-primary bg-white hover:bg-green-50 shadow-sm"
+                            : "border-brand-primary text-brand-primary bg-white hover:bg-brand-secondary/8 shadow-sm"
                             }`}
                     >
                         Actions <ChevronDown className={`w-4 h-4 transition-transform ${desktopActionDropdown ? 'rotate-180' : ''}`} />
                     </button>
                     {desktopActionDropdown && (
                         <div className="absolute right-0 top-11 w-40 bg-white border border-gray-100 shadow-sm rounded z-[100] animate-popup-in font-[600] overflow-hidden">
-                            <div className="px-3 py-2 text-[10px] text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
+                            <div className="px-3 py-2 text-[10px] text-gray-700 hover:bg-brand-secondary/8 cursor-pointer flex items-center gap-2"
                                 onClick={() => {
                                     const allOrderIds = manifests.filter(m => selectedManifests.includes(m._id)).flatMap(m => m.orderIds?.map(o => o._id || o));
                                     import("../../Common/orderActions").then(m => m.handleBulkDownloadManifests(allOrderIds));
@@ -193,7 +193,7 @@ const PickupManifestOrders = () => {
                                 }}>
                                 Download Manifests
                             </div>
-                            <div className="px-3 py-2 text-[10px] text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
+                            <div className="px-3 py-2 text-[10px] text-gray-700 hover:bg-brand-secondary/8 cursor-pointer flex items-center gap-2"
                                 onClick={() => {
                                     const allOrderIds = manifests.filter(m => selectedManifests.includes(m._id)).flatMap(m => m.orderIds?.map(o => o._id || o));
                                     import("../../Common/orderActions").then(m => m.handleBulkDownloadLabel({ selectedOrders: allOrderIds }));
@@ -201,7 +201,7 @@ const PickupManifestOrders = () => {
                                 }}>
                                 Download Labels
                             </div>
-                            <div className="px-3 py-2 text-[10px] text-gray-700 hover:bg-green-50 cursor-pointer flex items-center gap-2"
+                            <div className="px-3 py-2 text-[10px] text-gray-700 hover:bg-brand-secondary/8 cursor-pointer flex items-center gap-2"
                                 onClick={() => {
                                     const allOrderIds = manifests.filter(m => selectedManifests.includes(m._id)).flatMap(m => m.orderIds?.map(o => o._id || o));
                                     import("../../Common/orderActions").then(m => m.handleBulkDownloadInvoice({ selectedOrders: allOrderIds }));
@@ -312,24 +312,24 @@ const PickupManifestOrders = () => {
                                                         onClick={() => setIndividualDropdown(individualDropdown === m._id ? null : m._id)}
                                                         className={`h-8 px-3 rounded-lg text-[10px] font-bold flex items-center gap-1 transition-all border ${individualDropdown === m._id
                                                             ? "border-brand-primary text-white bg-brand-primary"
-                                                            : "border-brand-primary text-brand-primary bg-white hover:bg-green-50 shadow-sm"
+                                                            : "border-brand-primary text-brand-primary bg-white hover:bg-brand-secondary/8 shadow-sm"
                                                             }`}
                                                     >
                                                         Actions <ChevronDown className={`w-3 h-3 transition-transform ${individualDropdown === m._id ? 'rotate-180' : ''}`} />
                                                     </button>
                                                     {individualDropdown === m._id && (
                                                         <div className="absolute right-0 top-9 w-44 bg-white border border-gray-100 shadow-xl rounded-lg z-[100] animate-popup-in font-[600] overflow-hidden">
-                                                            <div className="px-4 py-2 text-[10px] text-gray-700 hover:bg-green-50 cursor-pointer border-b border-gray-50 bg-green-50/30">
+                                                            <div className="px-4 py-2 text-[10px] text-gray-700 hover:bg-brand-secondary/8 cursor-pointer border-b border-gray-50 bg-brand-secondary/30">
                                                                 Options
                                                             </div>
-                                                            <div className="px-4 py-2.5 text-[10px] text-gray-700 hover:bg-green-50 cursor-pointer border-b"
+                                                            <div className="px-4 py-2.5 text-[10px] text-gray-700 hover:bg-brand-secondary/8 cursor-pointer border-b"
                                                                 onClick={() => {
                                                                     handleDownloadManifest(m);
                                                                     setIndividualDropdown(null);
                                                                 }}>
                                                                 Download Manifest
                                                             </div>
-                                                            <div className="px-4 py-2.5 text-[10px] text-gray-700 hover:bg-green-50 cursor-pointer border-b"
+                                                            <div className="px-4 py-2.5 text-[10px] text-gray-700 hover:bg-brand-secondary/8 cursor-pointer border-b"
                                                                 onClick={async () => {
                                                                     const orderIds = m.orderIds?.map(o => o._id || o) || [];
                                                                     const { handleBulkDownloadLabel } = await import("../../Common/orderActions");
@@ -338,7 +338,7 @@ const PickupManifestOrders = () => {
                                                                 }}>
                                                                 Download Labels
                                                             </div>
-                                                            <div className="px-4 py-2.5 text-[10px] text-gray-700 hover:bg-green-50 cursor-pointer text-red-600"
+                                                            <div className="px-4 py-2.5 text-[10px] text-gray-700 hover:bg-brand-secondary/8 cursor-pointer text-red-600"
                                                                 onClick={async () => {
                                                                     const orderIds = m.orderIds?.map(o => o._id || o) || [];
                                                                     const { handleBulkDownloadInvoice } = await import("../../Common/orderActions");
@@ -400,7 +400,7 @@ const PickupManifestOrders = () => {
                         {mobileDropdownOpen && (
                             <div className="absolute right-0 mt-2 w-40 bg-white border border-gray-100 rounded shadow-xl z-[100] text-[10px] font-[600] overflow-hidden animate-popup-in">
                                 <ul className="">
-                                    <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer"
+                                    <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer"
                                         onClick={() => {
                                             const allOrderIds = manifests.filter(m => selectedManifests.includes(m._id)).flatMap(m => m.orderIds?.map(o => o._id || o));
                                             import("../../Common/orderActions").then(mod => mod.handleBulkDownloadManifests(allOrderIds));
@@ -408,7 +408,7 @@ const PickupManifestOrders = () => {
                                         }}>
                                         Download Manifests
                                     </li>
-                                    <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer"
+                                    <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer"
                                         onClick={() => {
                                             const allOrderIds = manifests.filter(m => selectedManifests.includes(m._id)).flatMap(m => m.orderIds?.map(o => o._id || o));
                                             import("../../Common/orderActions").then(mod => mod.handleBulkDownloadLabel({ selectedOrders: allOrderIds }));
@@ -416,7 +416,7 @@ const PickupManifestOrders = () => {
                                         }}>
                                         Download Labels
                                     </li>
-                                    <li className="px-3 py-2 text-gray-700 hover:bg-green-50 cursor-pointer"
+                                    <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer"
                                         onClick={() => {
                                             const allOrderIds = manifests.filter(m => selectedManifests.includes(m._id)).flatMap(m => m.orderIds?.map(o => o._id || o));
                                             import("../../Common/orderActions").then(mod => mod.handleBulkDownloadInvoice({ selectedOrders: allOrderIds }));
@@ -435,7 +435,7 @@ const PickupManifestOrders = () => {
                         <div className="flex justify-center py-6"><ThreeDotLoader /></div>
                     ) : manifests.length > 0 ? (
                         manifests.map((m, index) => (
-                            <div key={m._id} className="text-gray-700 border bg-green-50 p-2 rounded-lg shadow-md space-y-1">
+                            <div key={m._id} className="text-gray-700 border bg-brand-secondary/8 p-2 rounded-lg shadow-md space-y-1">
                                 <div className="flex justify-between items-center">
                                     <div className="flex items-center gap-2">
                                         <input
@@ -456,7 +456,7 @@ const PickupManifestOrders = () => {
                                                 {m.pickupId}
                                             </h3>
                                         </div>
-                                        <span className="px-2 py-0.5 bg-green-200 text-brand-primary text-[9px] rounded font-bold uppercase">
+                                        <span className="px-2 py-0.5 bg-brand-secondary/26 text-brand-primary text-[9px] rounded font-bold uppercase">
                                             {m.status?.replace(/_/g, " ")}
                                         </span>
                                     </div>
@@ -488,14 +488,14 @@ const PickupManifestOrders = () => {
                                         </button>
                                         {individualDropdown === m._id && (
                                             <div className="absolute right-0 top-8 w-40 bg-white border border-gray-100 shadow-xl rounded-lg z-[100] animate-popup-in font-[600] overflow-hidden">
-                                                <div className="px-3 py-2 text-[10px] text-gray-700 hover:bg-green-50 cursor-pointer border-b" onClick={() => { handleDownloadManifest(m); setIndividualDropdown(null); }}>Download Manifest</div>
-                                                <div className="px-3 py-2 text-[10px] text-gray-700 hover:bg-green-50 cursor-pointer border-b" onClick={async () => {
+                                                <div className="px-3 py-2 text-[10px] text-gray-700 hover:bg-brand-secondary/8 cursor-pointer border-b" onClick={() => { handleDownloadManifest(m); setIndividualDropdown(null); }}>Download Manifest</div>
+                                                <div className="px-3 py-2 text-[10px] text-gray-700 hover:bg-brand-secondary/8 cursor-pointer border-b" onClick={async () => {
                                                     const orderIds = m.orderIds?.map(o => o._id || o) || [];
                                                     const { handleBulkDownloadLabel } = await import("../../Common/orderActions");
                                                     handleBulkDownloadLabel({ selectedOrders: orderIds });
                                                     setIndividualDropdown(null);
                                                 }}>Download Labels</div>
-                                                <div className="px-3 py-2 text-[10px] text-gray-700 hover:bg-green-50 cursor-pointer" onClick={async () => {
+                                                <div className="px-3 py-2 text-[10px] text-gray-700 hover:bg-brand-secondary/8 cursor-pointer" onClick={async () => {
                                                     const orderIds = m.orderIds?.map(o => o._id || o) || [];
                                                     const { handleBulkDownloadInvoice } = await import("../../Common/orderActions");
                                                     handleBulkDownloadInvoice({ selectedOrders: orderIds });
@@ -511,7 +511,7 @@ const PickupManifestOrders = () => {
                                     <span className="text-brand-primary font-medium">{m.orderIds?.length || 0} Shipments</span>
                                 </div>
 
-                                <div className="flex items-center p-2 bg-green-200 rounded-lg justify-between gap-4 mt-1">
+                                <div className="flex items-center p-2 bg-brand-secondary/26 rounded-lg justify-between gap-4 mt-1">
                                     <div>
                                         <p className="text-[9px] text-gray-500 uppercase tracking-wider font-bold">Pickup Date</p>
                                         <div className="flex items-center gap-1.5 mt-0.5 text-gray-700 font-bold text-[11px]">
@@ -521,7 +521,7 @@ const PickupManifestOrders = () => {
                                     </div>
                                     <button
                                         onClick={() => handleDownloadManifest(m)}
-                                        className="bg-white text-brand-primary border border-brand-primary px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-50 shadow-sm flex items-center gap-1.5"
+                                        className="bg-white text-brand-primary border border-brand-primary px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-brand-secondary/8 shadow-sm flex items-center gap-1.5"
                                     >
                                         <Download className="w-3 h-3" /> Manifest
                                     </button>

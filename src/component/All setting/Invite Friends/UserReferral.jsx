@@ -259,7 +259,7 @@ const Referral = () => {
           </div>
           <button
             onClick={handleCopy}
-            className={`p-2 rounded-lg transition-all flex-shrink-0 ${copied ? "bg-brand-primary text-white" : "bg-gray-100 text-brand-primary hover:bg-green-100"}`}
+            className={`p-2 rounded-lg transition-all flex-shrink-0 ${copied ? "bg-brand-primary text-white" : "bg-gray-100 text-brand-primary hover:bg-brand-secondary/16"}`}
           >
             {copied ? <FiCheck className="w-4 h-4" /> : <FiCopy className="w-4 h-4" />}
           </button>
@@ -272,7 +272,7 @@ const Referral = () => {
               onClick={() => setIsActionDropdownOpen(!isActionDropdownOpen)}
               className={`h-9 px-4 bg-white rounded-lg text-[12px] font-bold flex items-center gap-1 border transition-all ${
                 selectedRows.length > 0 || isAnyFilterApplied 
-                ? "border-brand-primary text-brand-primary hover:bg-green-50 shadow-sm" 
+                ? "border-brand-primary text-brand-primary hover:bg-brand-secondary/8 shadow-sm" 
                 : "border-gray-300 text-gray-600 hover:bg-gray-50"
               }`}
             >
@@ -358,7 +358,7 @@ const Referral = () => {
                 <tbody className="text-[12px] text-gray-700">
                   {monthlyData.length > 0 ? (
                     monthlyData.map((row, i) => (
-                      <tr key={i} className={`border-b border-gray-300 hover:bg-gray-50 transition-colors ${selectedRows.find(r => r._id === row._id) ? "bg-green-50/50" : ""}`}>
+                      <tr key={i} className={`border-b border-gray-300 hover:bg-gray-50 transition-colors ${selectedRows.find(r => r._id === row._id) ? "bg-brand-secondary/50" : ""}`}>
                         <td className="py-3 px-3 text-center">
                            <input 
                             type="checkbox" 
@@ -400,7 +400,7 @@ const Referral = () => {
                 <div key={i} className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm animate-popup-in">
                   <div className="flex justify-between items-center mb-2 border-b border-gray-50 pb-2">
                     <h3 className="font-bold text-brand-secondary text-[13px] leading-tight">{row.month}</h3>
-                    <span className="text-[9px] bg-brand-secondary/10 text-brand-primary px-2 py-0.5 rounded font-bold uppercase tracking-tight border border-green-100/50">Active Period</span>
+                    <span className="text-[9px] bg-brand-secondary/10 text-brand-primary px-2 py-0.5 rounded font-bold uppercase tracking-tight border border-brand-secondary/50">Active Period</span>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 mb-2">
@@ -412,7 +412,7 @@ const Referral = () => {
                       <p className="text-[9px] text-gray-400 font-bold uppercase tracking-tight">Freight</p>
                       <p className="text-[11px] font-bold text-gray-700">₹{Math.round(row.shippingCharges || 0)}</p>
                     </div>
-                    <div className="bg-green-50/30 p-1.5 rounded border border-green-100/20">
+                    <div className="bg-brand-secondary/30 p-1.5 rounded border border-brand-secondary/20">
                       <p className="text-[9px] text-gray-400 font-bold uppercase tracking-tight">Reward</p>
                       <p className="text-[11px] font-bold text-brand-primary">₹{Math.round(row.commission || 0)}</p>
                     </div>

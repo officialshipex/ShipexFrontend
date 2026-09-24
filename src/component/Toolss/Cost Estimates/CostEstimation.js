@@ -291,8 +291,8 @@ const CostEstimation = () => {
                         setFormData({ ...formData, paymentType: option });
                         setDropdownOpen(false);
                       }}
-                      className={`px-3 py-2 cursor-pointer hover:bg-green-50 transition-colors ${formData.paymentType === option
-                        ? "bg-green-100 font-[600]"
+                      className={`px-3 py-2 cursor-pointer hover:bg-brand-secondary/8 transition-colors ${formData.paymentType === option
+                        ? "bg-brand-secondary/16 font-[600]"
                         : ""
                         }`}
                     >

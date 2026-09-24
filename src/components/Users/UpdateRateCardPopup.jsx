@@ -156,7 +156,7 @@ const UpdateRateCardPopup = ({ id, userName, selectedRateCardValue, onClose, onS
                                 <div
                                     key={option}
                                     onClick={() => handleSelect(option)}
-                                    className={`px-3 py-2 cursor-pointer text-gray-500 text-[12px] hover:bg-green-100 ${selectedRateCard === option ? "bg-green-100 font-[600]" : ""
+                                    className={`px-3 py-2 cursor-pointer text-gray-500 text-[12px] hover:bg-brand-secondary/16 ${selectedRateCard === option ? "bg-brand-secondary/16 font-[600]" : ""
                                         }`}
                                 >
                                     {option}

@@ -120,7 +120,7 @@ const ReferralFilterPanel = ({
                                 <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-20 py-1 animate-popup-in max-h-48 overflow-y-auto">
                                     <div
                                         onClick={() => { setLocalFilters({ ...localFilters, selectedMonth: "" }); setShowMonthDropdown(false); }}
-                                        className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer"
+                                        className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer"
                                     >
                                         All Months
                                     </div>
@@ -128,7 +128,7 @@ const ReferralFilterPanel = ({
                                         <div
                                             key={m.value}
                                             onClick={() => { setLocalFilters({ ...localFilters, selectedMonth: m.value }); setShowMonthDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer"
                                         >
                                             {m.label}
                                         </div>
@@ -155,7 +155,7 @@ const ReferralFilterPanel = ({
                                 <div className="absolute top-[105%] left-0 w-full bg-white border border-gray-100 rounded-lg shadow-xl z-20 py-1 animate-popup-in max-h-48 overflow-y-auto">
                                     <div
                                         onClick={() => { setLocalFilters({ ...localFilters, selectedYear: "" }); setShowYearDropdown(false); }}
-                                        className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer"
+                                        className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer"
                                     >
                                         All Years
                                     </div>
@@ -163,7 +163,7 @@ const ReferralFilterPanel = ({
                                         <div
                                             key={y}
                                             onClick={() => { setLocalFilters({ ...localFilters, selectedYear: y }); setShowYearDropdown(false); }}
-                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-green-50 hover:text-brand-primary cursor-pointer"
+                                            className="px-3 py-2 text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/8 hover:text-brand-primary cursor-pointer"
                                         >
                                             {y}
                                         </div>

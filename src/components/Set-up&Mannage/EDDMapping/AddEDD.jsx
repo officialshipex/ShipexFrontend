@@ -232,7 +232,7 @@ const AddEDD = ({ show, onClose, existingData = [] }) => {
                     <div
                       key={courier._id}
                       onClick={() => handleCourierToggle(courier.courierProvider)}
-                      className="cursor-pointer px-3 py-2 text-[10px] sm:text-[12px] font-[600] text-gray-500 hover:bg-green-100 flex items-center gap-2"
+                      className="cursor-pointer px-3 py-2 text-[10px] sm:text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/16 flex items-center gap-2"
                     >
                       <input 
                         type="checkbox" 
@@ -286,7 +286,7 @@ const AddEDD = ({ show, onClose, existingData = [] }) => {
                     <div
                       key={name}
                       onClick={() => handleServiceToggle(name)}
-                      className="cursor-pointer px-3 py-2 text-[10px] sm:text-[12px] font-[600] text-gray-500 hover:bg-green-100 flex items-center gap-2"
+                      className="cursor-pointer px-3 py-2 text-[10px] sm:text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/16 flex items-center gap-2"
                     >
                       <input 
                         type="checkbox" 

@@ -251,7 +251,7 @@ const AdminReferral = () => {
             <button
               onClick={() => setIsActionDropdownOpen(!isActionDropdownOpen)}
               className={`h-9 px-4 rounded-lg bg-white text-[12px] font-bold flex items-center gap-1 border transition-all ${selectedRows.length > 0 || isAnyFilterApplied
-                  ? "border-brand-primary text-brand-primary hover:bg-green-50 shadow-sm"
+                  ? "border-brand-primary text-brand-primary hover:bg-brand-secondary/8 shadow-sm"
                   : "border-gray-300 text-gray-600 hover:bg-gray-50"
                 }`}
             >
@@ -347,7 +347,7 @@ const AdminReferral = () => {
                     </tr>
                   ) : (
                     data.map((row, i) => (
-                      <tr key={i} className={`border-b border-gray-300 hover:bg-gray-50 transition-colors ${selectedRows.find(r => r._id === row._id) ? "bg-green-50/50" : ""}`}>
+                      <tr key={i} className={`border-b border-gray-300 hover:bg-gray-50 transition-colors ${selectedRows.find(r => r._id === row._id) ? "bg-brand-secondary/50" : ""}`}>
                         <td className="py-2 px-3 text-center">
                           <input
                             type="checkbox"
@@ -381,7 +381,7 @@ const AdminReferral = () => {
                         <td className="py-2 px-3">
                           <button
                             onClick={() => setSelectedReferral(row)}
-                            className="px-3 py-1 bg-green-50 hover:bg-brand-secondary/10 text-brand-primary rounded-lg text-[11px] font-bold transition-all"
+                            className="px-3 py-1 bg-brand-secondary/8 hover:bg-brand-secondary/10 text-brand-primary rounded-lg text-[11px] font-bold transition-all"
                             title="View Details"
                           >
                             Details
@@ -412,7 +412,7 @@ const AdminReferral = () => {
                     </div>
                     <button
                       onClick={() => setSelectedReferral(row)}
-                      className="px-3 py-1 bg-brand-secondary/10 text-brand-primary rounded-lg text-[11px] font-bold border border-green-100 hover:bg-green-100 transition-all ml-2 h-7 flex items-center shrink-0"
+                      className="px-3 py-1 bg-brand-secondary/10 text-brand-primary rounded-lg text-[11px] font-bold border border-brand-secondary/16 hover:bg-brand-secondary/16 transition-all ml-2 h-7 flex items-center shrink-0"
                     >
                       Details
                     </button>
@@ -427,7 +427,7 @@ const AdminReferral = () => {
                       <p className="text-gray-400 text-[9px] font-bold uppercase tracking-tight">Freight</p>
                       <p className="font-bold text-gray-700 text-[11px]">₹{Math.round(row.totalShipping || 0)}</p>
                     </div>
-                    <div className="bg-green-50/30 p-1.5 rounded border border-green-100/20">
+                    <div className="bg-brand-secondary/30 p-1.5 rounded border border-brand-secondary/20">
                       <p className="text-gray-400 text-[9px] font-bold uppercase tracking-tight">Reward</p>
                       <p className="font-bold text-brand-primary text-[11px]">₹{Math.round(row.totalCommission || 0)}</p>
                     </div>
@@ -529,7 +529,7 @@ const AdminReferral = () => {
 
               {/* Selected User Details */}
               {selectedUser && (
-                <div className="bg-green-50/50 border border-green-100 rounded-xl p-4 animate-fade-in relative z-0">
+                <div className="bg-brand-secondary/50 border border-brand-secondary/16 rounded-xl p-4 animate-fade-in relative z-0">
                   <div className="flex justify-between items-start mb-4">
                     <div>
                       <h3 className="text-[14px] font-bold text-brand-secondary">{selectedUser.fullname}</h3>
@@ -544,15 +544,15 @@ const AdminReferral = () => {
                     </div>
                   ) : userStats ? (
                     <div className="grid grid-cols-3 gap-2">
-                      <div className="bg-white p-2 rounded-lg border border-green-100">
+                      <div className="bg-white p-2 rounded-lg border border-brand-secondary/16">
                         <p className="text-[8px] text-gray-400 font-bold uppercase">Total Earned</p>
                         <p className="text-[11px] font-bold text-gray-700">₹{userStats.totalCommission?.toFixed(2)}</p>
                       </div>
-                      <div className="bg-white p-2 rounded-lg border border-green-100">
+                      <div className="bg-white p-2 rounded-lg border border-brand-secondary/16">
                         <p className="text-[8px] text-gray-400 font-bold uppercase">Paid Out</p>
                         <p className="text-[11px] font-bold text-gray-700">₹{userStats.withdrawn?.toFixed(2)}</p>
                       </div>
-                      <div className="bg-white p-2 rounded-lg border border-green-100">
+                      <div className="bg-white p-2 rounded-lg border border-brand-secondary/16">
                         <p className="text-[8px] text-gray-400 font-bold uppercase">Remaining</p>
                         <p className="text-[12px] font-bold text-brand-primary">₹{userStats.remaining?.toFixed(2)}</p>
                       </div>
@@ -569,7 +569,7 @@ const AdminReferral = () => {
                         placeholder="Enter payout amount"
                         value={transferAmount}
                         onChange={(e) => setTransferAmount(e.target.value)}
-                        className="w-full px-4 py-2 border border-green-200 rounded-lg text-[14px] font-bold text-brand-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition-all"
+                        className="w-full px-4 py-2 border border-brand-secondary/26 rounded-lg text-[14px] font-bold text-brand-secondary focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition-all"
                       />
                       <button
                         onClick={handleGlobalTransfer}

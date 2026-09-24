@@ -290,14 +290,14 @@ const Remittance = ({
             <button
               disabled={selectedRemittances.length === 0}
               onClick={() => setActionOpen(!actionOpen)}
-              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedRemittances.length > 0 ? "border-brand-primary text-brand-primary hover:bg-green-50" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"}`}
+              className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedRemittances.length > 0 ? "border-brand-primary text-brand-primary hover:bg-brand-secondary/8" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"}`}
             >
               Actions
               <ChevronDown className={`w-4 h-4 transition-transform ${actionOpen ? "rotate-180" : ""}`} />
             </button>
             {actionOpen && (
               <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[12px] z-[100] animate-popup-in overflow-hidden">
-                <div className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600" onClick={handleExport}>
+                <div className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600" onClick={handleExport}>
                   Export
                 </div>
               </div>
@@ -440,7 +440,7 @@ const Remittance = ({
             </button>
             {actionOpen && (
               <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-36 text-[11px] z-[100] animate-popup-in overflow-hidden">
-                <div className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600" onClick={handleExport}>
+                <div className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600" onClick={handleExport}>
                   Export
                 </div>
               </div>
@@ -507,7 +507,7 @@ const Remittance = ({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 text-[10px] mb-2 p-1.5 bg-green-50 rounded-lg">
+                <div className="grid grid-cols-2 gap-2 text-[10px] mb-2 p-1.5 bg-brand-secondary/8 rounded-lg">
                   <div>
                     <p className="text-gray-400">UTR Number</p>
                     <div className="flex items-center gap-1 group">
@@ -562,7 +562,7 @@ const Remittance = ({
                             <span className="text-gray-400 font-medium font-bold italic text-left">Adjusted Amt</span>
                             <span className="text-gray-700 font-bold">₹{(Number(row.adjustedAmount) || 0).toFixed(2)}</span>
                           </div>
-                          <div className="flex justify-between border-t border-gray-50 pt-1 bg-green-50 p-1 rounded">
+                          <div className="flex justify-between border-t border-gray-50 pt-1 bg-brand-secondary/8 p-1 rounded">
                             <span className="text-gray-600 font-bold italic text-left">Final Payout</span>
                             <span className="text-brand-primary font-bold">₹{(Number(row.codAvailable) || 0).toFixed(2)}</span>
                           </div>

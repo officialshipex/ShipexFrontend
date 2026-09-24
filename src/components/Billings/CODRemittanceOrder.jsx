@@ -431,27 +431,27 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
             <button
               disabled={selectedRemittanceIds.length === 0}
               onClick={() => setBulkActionOpen(!bulkActionOpen)}
-              className={`h-9 px-4 rounded-lg text-[12px] font-bold flex items-center gap-1 border transition-all ${selectedRemittanceIds.length > 0 ? "border-brand-primary text-brand-primary hover:bg-green-50 shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"}`}
+              className={`h-9 px-4 rounded-lg text-[12px] font-bold flex items-center gap-1 border transition-all ${selectedRemittanceIds.length > 0 ? "border-brand-primary text-brand-primary hover:bg-brand-secondary/8 shadow-sm" : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"}`}
             >
               Actions
               <ChevronDown className={`w-4 h-4 transition-transform ${bulkActionOpen ? "rotate-180" : ""}`} />
             </button>
             {bulkActionOpen && (
               <div className="absolute right-0 top-full mt-1 bg-white border border-gray-100 rounded-lg shadow-xl w-52 text-[12px] z-[100] animate-popup-in overflow-hidden border">
-                <div className="px-4 py-2 hover:bg-green-50 cursor-pointer font-bold text-gray-700 flex items-center gap-2 border-b border-gray-50 transition-colors" onClick={() => { handleExport(); setBulkActionOpen(false); }}>
+                <div className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-bold text-gray-700 flex items-center gap-2 border-b border-gray-50 transition-colors" onClick={() => { handleExport(); setBulkActionOpen(false); }}>
                   <Download className="w-4 h-4 text-brand-primary" /> Export Data
                 </div>
                 <div
-                  className={`px-4 py-2 hover:bg-green-50 cursor-pointer font-bold text-gray-700 flex items-center gap-2 border-b border-gray-50 transition-colors ${bankExportLoading ? "opacity-60 cursor-not-allowed" : ""}`}
+                  className={`px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-bold text-gray-700 flex items-center gap-2 border-b border-gray-50 transition-colors ${bankExportLoading ? "opacity-60 cursor-not-allowed" : ""}`}
                   onClick={() => { if (!bankExportLoading) { handleExportBankTemplate(); setBulkActionOpen(false); } }}
                 >
                   <FileSpreadsheet className="w-4 h-4 text-blue-500" />
                   {bankExportLoading ? "Generating..." : "Export Bank Template"}
                 </div>
-                <div className="px-4 py-2 hover:bg-green-50 cursor-pointer font-bold text-gray-700 flex items-center gap-2 border-b border-gray-50 transition-colors" onClick={() => { handleOpenBankResponseUpload(); setBulkActionOpen(false); }}>
+                <div className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-bold text-gray-700 flex items-center gap-2 border-b border-gray-50 transition-colors" onClick={() => { handleOpenBankResponseUpload(); setBulkActionOpen(false); }}>
                   <Upload className="w-4 h-4 text-orange-500" /> Upload Bank Response
                 </div>
-                <div className="px-4 py-2 hover:bg-green-50 cursor-pointer font-bold text-gray-700 flex items-center gap-2 transition-colors" onClick={() => { handleTransferCOD(); setBulkActionOpen(false); }}>
+                <div className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-bold text-gray-700 flex items-center gap-2 transition-colors" onClick={() => { handleTransferCOD(); setBulkActionOpen(false); }}>
                   <Send className="w-4 h-4 text-brand-primary" /> Transfer COD
                 </div>
               </div>
@@ -518,7 +518,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
               <div className="absolute right-0 top-full mt-2 w-52 bg-white rounded-xl shadow-2xl border border-gray-100 z-[100] overflow-hidden animate-popup-in">
                 <button
                   onClick={() => { handleExport(); setBulkActionOpen(false); }}
-                  className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-green-50 hover:text-brand-primary flex items-center gap-2.5 transition-colors border-b border-gray-50"
+                  className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-brand-secondary/8 hover:text-brand-primary flex items-center gap-2.5 transition-colors border-b border-gray-50"
                 >
                   <Download className="w-3 h-3 text-brand-primary" /> Export Data
                 </button>
@@ -539,7 +539,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 </button>
                 <button
                   onClick={() => { handleTransferCOD(); setBulkActionOpen(false); }}
-                  className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-green-50 hover:text-brand-primary flex items-center gap-2.5 transition-colors"
+                  className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-brand-secondary/8 hover:text-brand-primary flex items-center gap-2.5 transition-colors"
                 >
                   <Send className="w-3 h-3 text-brand-primary" /> Transfer COD
                 </button>
@@ -579,7 +579,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 <tr><td colSpan={11} className="py-10 text-center"><NoDataFound alt="No Data" className="w-60 h-60 mx-auto" /></td></tr>
               ) : (
                 remitedData.map((row, index) => (
-                  <tr key={index} className="border-t border-gray-100 hover:bg-green-50/20 transition-colors">
+                  <tr key={index} className="border-t border-gray-100 hover:bg-brand-secondary/20 transition-colors">
                     <td className="py-2 px-3">
                       <div className="flex justify-center items-center">
                         <input type="checkbox" checked={selectedRemittanceIds.includes(row.remittanceId)} onChange={() => handleCheckboxChange(row.remittanceId)} className="accent-brand-primary cursor-pointer w-3 h-3" />
@@ -597,7 +597,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                         <button onClick={() => openRemittanceDetails(row.remittanceId)} className="text-brand-primary font-bold hover:underline transition-all">
                           {row.remittanceId}
                         </button>
-                        <button onClick={() => handleCopy(row.remittanceId, row.remittanceId)} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
+                        <button onClick={() => handleCopy(row.remittanceId, row.remittanceId)} className="p-1 hover:bg-brand-secondary/16 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
                           {copiedId === row.remittanceId ? <FiCheck className="text-green-500 w-3 h-3" /> : <FiCopy className="w-3 h-3" />}
                         </button>
                       </div>
@@ -606,7 +606,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                       <div className="flex items-center justify-center gap-1 group">
                         <span>{row.utr || "N/A"}</span>
                         {row.utr && (
-                          <button onClick={() => handleCopy(row.utr, row.remittanceId + '_utr')} className="p-1 hover:bg-green-100 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
+                          <button onClick={() => handleCopy(row.utr, row.remittanceId + '_utr')} className="p-1 hover:bg-brand-secondary/16 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
                             {copiedId === row.remittanceId + '_utr' ? <FiCheck className="text-green-500 w-3 h-3" /> : <FiCopy className="w-3 h-3" />}
                           </button>
                         )}
@@ -638,7 +638,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
           remitedData.map((row, index) => (
             <div key={index} className={`bg-white border border-gray-200 rounded-lg shadow-sm p-2 text-[10px] animate-popup-in relative ${detailsPopupId === row.remittanceId ? 'z-50' : 'z-10'}`}>
               {/* Header Bar - Consistent with Admin UI */}
-              <div className="flex gap-2 justify-between rounded-lg bg-green-50 py-1.5 px-2 items-center mb-1.5">
+              <div className="flex gap-2 justify-between rounded-lg bg-brand-secondary/8 py-1.5 px-2 items-center mb-1.5">
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -773,7 +773,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                           <span className="text-gray-500 text-[10px]">Adjusted Amt</span>
                           <span className="text-gray-700 font-bold">₹{(Number(row.adjustedAmount) || 0).toFixed(2)}</span>
                         </div>
-                        <div className="flex justify-between items-center bg-green-50/50 p-2 rounded-lg border border-green-100 mt-1">
+                        <div className="flex justify-between items-center bg-brand-secondary/50 p-2 rounded-lg border border-brand-secondary/16 mt-1">
                           <span className="text-brand-primary font-bold">Net Payout</span>
                           <span className="text-brand-primary font-[600] text-[10px]">₹{(Number(row.remittanceInitiated) || 0).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</span>
                         </div>
@@ -833,7 +833,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
 
               {/* Header */}
               <div className="flex items-center gap-3 mb-4">
-                <div className="p-2 bg-green-50 rounded-xl border border-green-100">
+                <div className="p-2 bg-brand-secondary/8 rounded-xl border border-brand-secondary/16">
                   <FileSpreadsheet className="w-6 h-6 text-brand-primary" />
                 </div>
                 <div>
@@ -846,7 +846,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
               <div className="bg-gray-50 border border-dashed border-gray-300 rounded-xl p-5 text-center mb-4 transition-all">
                 {selectedBankFile ? (
                   <div className="flex flex-col items-center">
-                    <div className="p-2 bg-green-100 rounded-full mb-2">
+                    <div className="p-2 bg-brand-secondary/16 rounded-full mb-2">
                       <CheckCircle className="w-8 h-8 text-brand-primary" />
                     </div>
                     <p className="text-[12px] text-brand-secondary font-bold mb-1 break-all px-4">

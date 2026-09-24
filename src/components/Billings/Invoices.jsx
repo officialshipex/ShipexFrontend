@@ -199,7 +199,7 @@ const Invoices = ({
               disabled={selectedInvoices.length === 0}
               onClick={() => setActionOpen(!actionOpen)}
               className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedInvoices.length > 0
-                ? "border-brand-primary text-brand-primary hover:bg-green-50 shadow-sm"
+                ? "border-brand-primary text-brand-primary hover:bg-brand-secondary/8 shadow-sm"
                 : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                 }`}
             >
@@ -213,7 +213,7 @@ const Invoices = ({
             {actionOpen && (
               <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[12px] z-[100] animate-popup-in overflow-hidden">
                 <div
-                  className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                  className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                   onClick={() => {
                     setActionOpen(false);
                     if (!selectedInvoices.length) return;
@@ -434,7 +434,7 @@ const Invoices = ({
             {actionOpen && (
               <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[11px] z-[100] animate-popup-in overflow-hidden">
                 <div
-                  className="px-4 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                  className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                   onClick={() => {
                     setActionOpen(false);
                     if (!selectedInvoices.length) return;
@@ -518,7 +518,7 @@ const Invoices = ({
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 mb-2 bg-green-50/50 p-2 rounded-lg border border-gray-100">
+                <div className="grid grid-cols-2 gap-2 mb-2 bg-brand-secondary/50 p-2 rounded-lg border border-gray-100">
                   <div className="space-y-0.5">
                     <p className="text-gray-700 text-[10px] tracking-wider">
                       Shipments
@@ -543,7 +543,7 @@ const Invoices = ({
                       href={`${inv.invoiceUrl}${inv.invoiceUrl.includes("?") ? "&" : "?"}t=${Date.now()}`}
                       target="_blank"
                       rel="noreferrer"
-                      className="px-3 py-1.5 bg-brand-secondary/10 text-brand-primary border border-green-100 rounded-lg flex items-center gap-2 font-[600] text-[10px] hover:bg-green-100 transition-colors"
+                      className="px-3 py-1.5 bg-brand-secondary/10 text-brand-primary border border-brand-secondary/16 rounded-lg flex items-center gap-2 font-[600] text-[10px] hover:bg-brand-secondary/16 transition-colors"
                     >
                       <HiOutlineDownload className="w-4 h-4" />
                       PDF
@@ -554,7 +554,7 @@ const Invoices = ({
                       const url = `${REACT_APP_BACKEND_URL}/invoice/export-excel?invoiceNumber=${inv.invoiceNumber}`;
                       window.open(url, "_blank");
                     }}
-                    className="px-3 py-1.5 bg-brand-secondary/10 text-brand-primary border border-green-100 rounded-lg flex items-center gap-2 font-[600] text-[10px] hover:bg-green-100 transition-colors"
+                    className="px-3 py-1.5 bg-brand-secondary/10 text-brand-primary border border-brand-secondary/16 rounded-lg flex items-center gap-2 font-[600] text-[10px] hover:bg-brand-secondary/16 transition-colors"
                   >
                     <FaFileExcel className="w-3.5 h-3.5" />
                     Excel

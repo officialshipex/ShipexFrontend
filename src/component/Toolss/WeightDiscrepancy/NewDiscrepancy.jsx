@@ -337,7 +337,7 @@ const NewDiscrepancy = ({ refresh, setRefresh }) => {
                                 disabled={selectedOrders.length === 0}
                                 onClick={() => setDesktopDropdownOpen(!desktopDropdownOpen)}
                                 className={`h-9 px-3 rounded-lg text-[12px] font-[600] flex items-center gap-1 border transition-all ${selectedOrders.length > 0
-                                    ? "border-brand-primary text-brand-primary hover:bg-green-50"
+                                    ? "border-brand-primary text-brand-primary hover:bg-brand-secondary/8"
                                     : "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed"
                                     }`}
                             >
@@ -348,13 +348,13 @@ const NewDiscrepancy = ({ refresh, setRefresh }) => {
                             {desktopDropdownOpen && (
                                 <div className="absolute right-0 mt-1 animate-popup-in bg-white border-2 border-gray-100 rounded-lg shadow-xl w-36 text-[12px] z-[100] overflow-hidden">
                                     <div
-                                        className="px-3 py-2 hover:bg-green-100 cursor-pointer font-[600] text-gray-500"
+                                        className="px-3 py-2 hover:bg-brand-secondary/16 cursor-pointer font-[600] text-gray-500"
                                         onClick={() => { handleExportExcel(); setDesktopDropdownOpen(false); }}
                                     >
                                         Export
                                     </div>
                                     <div
-                                        className="px-3 py-2 hover:bg-green-100 cursor-pointer font-[600] text-gray-500"
+                                        className="px-3 py-2 hover:bg-brand-secondary/16 cursor-pointer font-[600] text-gray-500"
                                         onClick={() => { setIsModalOpen(true); setDesktopDropdownOpen(false); }}
                                     >
                                         Accept
@@ -417,7 +417,7 @@ const NewDiscrepancy = ({ refresh, setRefresh }) => {
                                 ref={(el) => {
                                     if (el) toggleButtonRefs.current[index] = el;
                                 }}
-                                className={`text-gray-700 rounded-lg text-[10px] p-2 bg-gray-100 transition-colors ${dropdownOpen === index ? 'bg-green-100' : ''}`}
+                                className={`text-gray-700 rounded-lg text-[10px] p-2 bg-gray-100 transition-colors ${dropdownOpen === index ? 'bg-brand-secondary/16' : ''}`}
                                 onClick={() => toggleDropdown(index)}
                             >
                                 <FiMoreHorizontal size={16} className={dropdownOpen === index ? "text-brand-primary" : "text-gray-700"} />
@@ -426,18 +426,18 @@ const NewDiscrepancy = ({ refresh, setRefresh }) => {
                             {dropdownOpen === index && (
                                 <div className="absolute right-6 animate-popup-in mt-2 w-32 bg-white border border-gray-200 rounded-lg shadow-lg z-10">
                                     <ul className="text-[10px] font-[600]">
-                                        <li className={`px-3 py-2 text-gray-500 hover:bg-green-100 cursor-pointer ${loading ? "cursor-not-allowed" : ""}`}>
+                                        <li className={`px-3 py-2 text-gray-500 hover:bg-brand-secondary/16 cursor-pointer ${loading ? "cursor-not-allowed" : ""}`}>
                                             <button onClick={(e) => { handleDiscrepancy(order.awbNumber); e.stopPropagation(); setDropdownOpen(null) }} disabled={loading}>
                                                 {loading ? "Processing..." : "Accept Discrepancy"}
                                             </button>
                                         </li>
-                                        <li className="px-3 py-2 text-gray-500 hover:bg-green-100 cursor-pointer">
+                                        <li className="px-3 py-2 text-gray-500 hover:bg-brand-secondary/16 cursor-pointer">
                                             <button onClick={(e) => { handleOpenPopup(order.awbNumber); e.stopPropagation(); setDropdownOpen(null) }}>
                                                 Raise Discrepancy
                                             </button>
                                         </li>
                                         {order.adminStatus === "Discrepancy Declined" && (
-                                            <li className="px-3 py-2 text-gray-500 hover:bg-green-100 cursor-pointer">
+                                            <li className="px-3 py-2 text-gray-500 hover:bg-brand-secondary/16 cursor-pointer">
                                                 <button onClick={(e) => { handleDeclinedPopup(order.awbNumber, order.discrepancyDeclinedReason); e.stopPropagation(); setDropdownOpen(null) }}>
                                                     Declined Reason
                                                 </button>
@@ -477,13 +477,13 @@ const NewDiscrepancy = ({ refresh, setRefresh }) => {
                             {mobileDropdownOpen && (
                                 <div className="absolute right-0 mt-1 bg-white border-2 border-gray-100 rounded-lg shadow-xl w-40 text-[11px] z-[100] overflow-hidden">
                                     <div
-                                        className="px-3 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                                        className="px-3 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                                         onClick={() => { handleExportExcel(); setMobileDropdownOpen(false); }}
                                     >
                                         Export
                                     </div>
                                     <div
-                                        className="px-3 py-2 hover:bg-green-50 cursor-pointer font-[600] text-gray-600"
+                                        className="px-3 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                                         onClick={() => { setIsModalOpen(true); setMobileDropdownOpen(false); }}
                                     >
                                         Accept
@@ -512,7 +512,7 @@ const NewDiscrepancy = ({ refresh, setRefresh }) => {
                                         <div className="absolute animate-popup-in right-0 top-6 w-[130px] bg-white border rounded-lg shadow-lg z-50">
                                             <ul className="text-[10px] font-[600] text-gray-600">
                                                 <li
-                                                    className="px-3 py-2 hover:bg-green-50 cursor-pointer"
+                                                    className="px-3 py-2 hover:bg-brand-secondary/8 cursor-pointer"
                                                     onClick={() => {
                                                         handleDiscrepancy(order.awbNumber);
                                                         setDropdownOpen(null);
@@ -521,7 +521,7 @@ const NewDiscrepancy = ({ refresh, setRefresh }) => {
                                                     Accept Discrepancy
                                                 </li>
                                                 <li
-                                                    className="px-3 py-2 hover:bg-green-50 cursor-pointer border-t"
+                                                    className="px-3 py-2 hover:bg-brand-secondary/8 cursor-pointer border-t"
                                                     onClick={() => {
                                                         handleOpenPopup(order.awbNumber);
                                                         setDropdownOpen(null);

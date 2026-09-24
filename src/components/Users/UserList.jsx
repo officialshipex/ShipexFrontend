@@ -290,7 +290,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
                       </td>
                       <td className="border-b border-gray-300 px-3 py-2">
                         <div className="flex items-center justify-center gap-2">
-                          <span className="px-2 py-0.5 bg-green-50 text-[10px] text-brand-primary rounded border border-green-100 font-bold">
+                          <span className="px-2 py-0.5 bg-brand-secondary/8 text-[10px] text-brand-primary rounded border border-brand-secondary/16 font-bold">
                             {e.rateCard || "bronze"}
                           </span>
                           <MdEdit className="text-brand-primary cursor-pointer hover:scale-110 transition-transform" onClick={() => { setSelectedRateCardValue(e.rateCard); setSelectedItemId(e.id); setSelectedItemName(e.fullname); setShowPopup(true); }} />
@@ -435,14 +435,14 @@ const UserList2 = ({ isSidebarAdmin }) => {
 
                       {/* Inline compact badges — Rate Card + Wallet */}
                       <div className="ml-auto flex items-center gap-1.5 shrink-0">
-                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${e.rateCard ? "bg-brand-secondary/10 text-brand-primary border-green-200" : "bg-gray-50 text-gray-500 border-gray-200"}`}>
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded border ${e.rateCard ? "bg-brand-secondary/10 text-brand-primary border-brand-secondary/26" : "bg-gray-50 text-gray-500 border-gray-200"}`}>
                           {e.rateCard || "N/A"}
                         </span>
                         <MdEdit
                           className="w-3.5 h-3.5 text-brand-primary cursor-pointer shrink-0"
                           onClick={() => { setSelectedRateCardValue(e.rateCard); setSelectedItemId(e.id); setSelectedItemName(e.fullname); setShowPopup(true); }}
                         />
-                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${e.walletAmount < 0 ? "text-red-500 bg-red-50" : "text-brand-primary bg-green-50"}`}>
+                        <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${e.walletAmount < 0 ? "text-red-500 bg-red-50" : "text-brand-primary bg-brand-secondary/8"}`}>
                           ₹{e.walletAmount?.toFixed(0) || "0"}
                         </span>
                       </div>

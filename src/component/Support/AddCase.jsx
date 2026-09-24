@@ -33,8 +33,8 @@ function CustomDropdown({
       <button
         type="button"
         className={`w-full flex justify-between items-center border rounded px-2 py-2 text-[12px] bg-white transition-all duration-200
-          ${open ? "ring-2 ring-brand-primary bg-green-50" : ""}
-          ${disabled ? "bg-gray-100 cursor-not-allowed" : "hover:bg-green-50"}
+          ${open ? "ring-2 ring-brand-primary bg-brand-secondary/8" : ""}
+          ${disabled ? "bg-gray-100 cursor-not-allowed" : "hover:bg-brand-secondary/8"}
           focus:outline-none focus:ring-2 focus:ring-brand-primary
         `}
         onClick={() => !disabled && setOpen((o) => !o)}
@@ -69,9 +69,9 @@ function CustomDropdown({
         {options.map((opt) => (
           <div
             key={opt}
-            className={`px-3 py-2 text-[12px] cursor-pointer hover:bg-green-50 transition-colors
+            className={`px-3 py-2 text-[12px] cursor-pointer hover:bg-brand-secondary/8 transition-colors
               ${
-                opt === value ? "bg-green-100 font-semibold text-brand-primary" : ""
+                opt === value ? "bg-brand-secondary/16 font-semibold text-brand-primary" : ""
               }
             `}
             onClick={() => {
@@ -247,7 +247,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
         <button
           type="button"
           onClick={onClose}
-          className="absolute top-2 right-2 text-gray-400 hover:text-brand-primary bg-gray-100 hover:bg-green-50 rounded-full p-1 transition z-10"
+          className="absolute top-2 right-2 text-gray-400 hover:text-brand-primary bg-gray-100 hover:bg-brand-secondary/8 rounded-full p-1 transition z-10"
           aria-label="Close"
         >
           <svg
@@ -422,7 +422,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
                       setAwbNumbers(awbs);
                     }}
                   />
-                  <div className="flex items-center gap-2 border border-dashed border-brand-primary rounded px-3 py-2 bg-brand-secondary/10 text-brand-primary text-[12px] cursor-pointer hover:bg-green-100 transition">
+                  <div className="flex items-center gap-2 border border-dashed border-brand-primary rounded px-3 py-2 bg-brand-secondary/10 text-brand-primary text-[12px] cursor-pointer hover:bg-brand-secondary/16 transition">
                     <svg
                       className="w-4 h-4 mr-1"
                       fill="none"
@@ -471,7 +471,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
                 className="opacity-0 absolute inset-0 w-full h-full cursor-pointer"
                 onChange={handleFileChange}
               />
-              <div className="flex items-center gap-2 border border-dashed border-brand-primary rounded px-3 py-2 bg-brand-secondary/10 text-brand-primary text-[12px] cursor-pointer hover:bg-green-100 transition">
+              <div className="flex items-center gap-2 border border-dashed border-brand-primary rounded px-3 py-2 bg-brand-secondary/10 text-brand-primary text-[12px] cursor-pointer hover:bg-brand-secondary/16 transition">
                 <svg
                   className="w-4 h-4 mr-1"
                   fill="none"
@@ -505,7 +505,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
           <button
             type="button"
             onClick={resetForm}
-            className="border border-gray-300 text-gray-500 px-3 py-2 rounded-lg bg-gray-200 font-semibold text-[12px] hover:bg-green-50 transition w-1/2 md:w-auto"
+            className="border border-gray-300 text-gray-500 px-3 py-2 rounded-lg bg-gray-200 font-semibold text-[12px] hover:bg-brand-secondary/8 transition w-1/2 md:w-auto"
           >
             Cancel
           </button>

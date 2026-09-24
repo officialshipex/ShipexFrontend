@@ -249,7 +249,7 @@ const CarrierSelection = () => {
           <div className="flex-1 flex flex-col items-center justify-center relative border-r last:border-r-0">
             {/* Floating Icon */}
             <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
-              <span className="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full shadow p-1">
+              <span className="w-12 h-12 flex items-center justify-center bg-brand-secondary/16 rounded-full shadow p-1">
                 <i className="fa-solid fa-location-dot text-brand-primary text-[18px]"></i>
               </span>
             </div>
@@ -265,7 +265,7 @@ const CarrierSelection = () => {
           <div className="flex-1 flex flex-col items-center justify-center relative border-r last:border-r-0">
             {/* Floating Icon */}
             <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
-              <span className="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full shadow p-1">
+              <span className="w-12 h-12 flex items-center justify-center bg-brand-secondary/16 rounded-full shadow p-1">
                 <i className="fa-solid fa-indian-rupee-sign text-brand-primary text-[18px]"></i>
               </span>
             </div>
@@ -279,7 +279,7 @@ const CarrierSelection = () => {
           <div className="flex-1 flex flex-col items-center justify-center relative">
             {/* Floating Icon */}
             <div className="absolute -top-8 left-1/2 -translate-x-1/2 flex flex-col items-center z-10">
-              <span className="w-12 h-12 flex items-center justify-center bg-green-100 rounded-full shadow p-1">
+              <span className="w-12 h-12 flex items-center justify-center bg-brand-secondary/16 rounded-full shadow p-1">
                 <i className="fa-solid fa-weight-hanging text-brand-primary text-[18px]"></i>
               </span>
             </div>
@@ -355,7 +355,7 @@ const CarrierSelection = () => {
                         </div>
                       </div>
                     </div>
-                    <div className="grid grid-cols-1 gap-2 p-2 bg-green-50 rounded-lg font-[600] border-t border-gray-100">
+                    <div className="grid grid-cols-1 gap-2 p-2 bg-brand-secondary/8 rounded-lg font-[600] border-t border-gray-100">
                       <div className="flex justify-between">
                         <span className="text-gray-500">Estimated Delivery Date</span>
                         <div>
@@ -413,7 +413,7 @@ const CarrierSelection = () => {
 
               <div className="overflow-x-auto rounded-lg shadow bg-white max-h-[550px] overflow-y-auto">
                 <table className="w-full border rounded-lg overflow-hidden text-[14px] bg-white table-fixed">
-                  <thead className="bg-green-100 text-gray-700 font-[600] sticky top-0 z-10">
+                  <thead className="bg-brand-secondary/16 text-gray-700 font-[600] sticky top-0 z-10">
                     <tr>
                       <th className="py-3 pl-3 text-left">Courier Partner</th>
                       <th className="py-3 text-center">Mode</th>

@@ -173,7 +173,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
   return (
     <div className="flex flex-col min-h-screen overflow-hidden page-slide-in">
       {/* Main Content */}
-      <div className="flex flex-col md:flex-row bg-green-50 flex-grow">
+      <div className="flex flex-col md:flex-row bg-brand-secondary/8 flex-grow">
         {/* Left Section */}
         <div className="w-full px-4 py-6 md:p-6 flex justify-center items-center">
           <div className="w-full max-w-sm md:max-w-md p-4 md:p-6 rounded-lg shadow-sm bg-white">
@@ -358,7 +358,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
 
       {/* Footer */}
       <div className="w-full bg-white">
-        <footer className="w-full bg-green-50 px-4 py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center text-gray-500 text-[10px] text-center sm:text-left space-y-2 sm:space-y-0 ">
+        <footer className="w-full bg-brand-secondary/8 px-4 py-4 flex flex-col sm:flex-row sm:justify-between sm:items-center text-gray-500 text-[10px] text-center sm:text-left space-y-2 sm:space-y-0 ">
           <p className="w-full sm:w-auto font-[600]">
             © {new Date().getFullYear()} {companyDisplayName}. All rights reserved.
           </p>

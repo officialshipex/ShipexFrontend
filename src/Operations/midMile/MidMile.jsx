@@ -76,7 +76,7 @@ const MidMile = ({ isSidebarAdmin }) => {
               key={tab}
               className={`px-3 py-2 text-[12px] rounded-lg font-[600] transition-all duration-200 shadow-sm border ${activeTab === tab
                   ? "bg-brand-primary text-white border-brand-primary"
-                  : "bg-white text-gray-700 border-gray-200 hover:bg-green-50"
+                  : "bg-white text-gray-700 border-gray-200 hover:bg-brand-secondary/8"
                 }`}
               onClick={() => setActiveTab(tab)}
             >

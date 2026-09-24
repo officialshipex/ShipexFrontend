@@ -65,7 +65,7 @@ export default function CustomDropdown({
                   onChange(opt.value);
                   setOpen(false);
                 }}
-                className={`px-3 py-2 cursor-pointer hover:bg-green-100 ${
+                className={`px-3 py-2 cursor-pointer hover:bg-brand-secondary/16 ${
                   opt.value === value
                     ? "bg-brand-secondary/10 text-brand-primary"
                     : "text-gray-600"

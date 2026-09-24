@@ -34,7 +34,7 @@ const PickupAddressFilter = ({
             <div
               key={index}
               className="px-3 py-2 text-[12px] font-[600] text-gray-500
-                         cursor-pointer hover:bg-green-50"
+                         cursor-pointer hover:bg-brand-secondary/8"
               onClick={() => {
                 setSelectedPickupAddress(location.contactName);
                 setShowDropdown(false);

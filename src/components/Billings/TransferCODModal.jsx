@@ -295,7 +295,7 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
   // UI REMAINS EXACTLY THE SAME AS BEFORE
   // ======================================================================
   const boxClass = (isPositive) =>
-    `p-3 rounded-lg shadow-sm flex items-center gap-3 ${isPositive ? "bg-green-50" : "bg-red-50"
+    `p-3 rounded-lg shadow-sm flex items-center gap-3 ${isPositive ? "bg-brand-secondary/8" : "bg-red-50"
     }`;
 
   return (
@@ -537,7 +537,7 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
               </h3>
               {/* Bank Details (unchanged) */}
               {bankDetails && (
-                <div className="mb-2 px-3 py-2 border border-gray-200 rounded-lg bg-green-50 shadow-sm">
+                <div className="mb-2 px-3 py-2 border border-gray-200 rounded-lg bg-brand-secondary/8 shadow-sm">
                   <div className="grid sm:grid-cols-2 grid-cols-1 gap-2 text-[11px] text-gray-700">
                     <div>
                       <span className="font-[600]">Account Holder:</span>{" "}
@@ -570,7 +570,7 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
                 Remittance Details
               </h3>
               {/* Summary Section — unchanged */}
-              <section className="mb-2 grid sm:grid-cols-2 grid-cols-1 font-[600] px-3 py-2 gap-2 text-[11px] border border-gray-200 rounded-lg bg-green-50 shadow-sm text-gray-700">
+              <section className="mb-2 grid sm:grid-cols-2 grid-cols-1 font-[600] px-3 py-2 gap-2 text-[11px] border border-gray-200 rounded-lg bg-brand-secondary/8 shadow-sm text-gray-700">
                 <div className="text-brand-primary">
                   <span>Remittance Initiated:</span>{" "}
                   ₹{remittance.RemittanceInitiated.toFixed(2)}
@@ -587,7 +587,7 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
 
                 <div className="overflow-x-auto rounded-lg border border-gray-200 max-h-60 overflow-y-auto">
                   <table className="sm:w-full min-w-[700px] text-left border-collapse text-[11px]">
-                    <thead className="bg-green-50 sticky top-0">
+                    <thead className="bg-brand-secondary/8 sticky top-0">
                       <tr>
                         <th className="px-3 py-2 border-b">Remittance ID</th>
                         <th className="px-3 py-2 border-b">Total COD Amount</th>

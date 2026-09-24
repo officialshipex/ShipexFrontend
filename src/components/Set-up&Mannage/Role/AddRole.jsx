@@ -475,7 +475,7 @@ export default function AddRole() {
                 {roles.map((role, index) => (
                   <li
                     key={index}
-                    className="px-4 py-2 hover:bg-green-50 cursor-pointer"
+                    className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer"
                     onClick={() => {
                       setSelectedRole(role);
                       setIsOpen(false);

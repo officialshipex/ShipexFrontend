@@ -38,7 +38,7 @@ const CustomDropdown = ({ label, options, selected, setSelected }) => {
                                 setSelected(option);
                                 setOpen(false);
                             }}
-                            className="px-3 py-2 hover:bg-green-100 cursor-pointer text-[12px] text-gray-500"
+                            className="px-3 py-2 hover:bg-brand-secondary/16 cursor-pointer text-[12px] text-gray-500"
                         >
                             {option}
                         </div>
@@ -185,7 +185,7 @@ const FilterBar = ({ filters, setFilters }) => {
                                 {dateOptions.map((option, idx) => (
                                     <li
                                         key={idx}
-                                        className="cursor-pointer hover:bg-green-50 px-3 py-2 text-[12px] font-[500] text-gray-500"
+                                        className="cursor-pointer hover:bg-brand-secondary/8 px-3 py-2 text-[12px] font-[500] text-gray-500"
                                         onClick={(e) => {
                                             e.preventDefault();
                                             handleDateOptionClick(option);

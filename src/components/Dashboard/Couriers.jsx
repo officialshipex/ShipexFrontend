@@ -203,7 +203,7 @@ const CourierComparisonSwapped = ({ selectedUserId, refresh, selectedDateRange }
               className="bg-white rounded-lg shadow-sm border border-gray-100 p-2 w-full box-border"
             >
               {/* Header: Logo + Name */}
-              <div className="flex items-center bg-green-100 rounded-lg p-2 gap-2 mb-2">
+              <div className="flex items-center bg-brand-secondary/16 rounded-lg p-2 gap-2 mb-2">
                 <img
                   src={getCarrierLogo(courier.courier) || "https://via.placeholder.com/40"}
                   alt={courier.courier}

@@ -866,7 +866,7 @@ const BusinessTypeSelection = () => {
                     <label
                       key={option.value}
                       className={`flex items-center gap-3 border-2 rounded-lg px-4 py-2 w-full sm:w-60 cursor-pointer transition duration-150 ${selectedType === option.value
-                        ? "border-brand-primary bg-green-50"
+                        ? "border-brand-primary bg-brand-secondary/8"
                         : "border-gray-300 hover:border-brand-primary"
                         }`}
                       onClick={() => setSelectedType(option.value)}

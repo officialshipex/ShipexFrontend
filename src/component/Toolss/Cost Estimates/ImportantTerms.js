@@ -22,7 +22,7 @@ const ImportantTerms = () => {
   ];
 
   return (
-  <div className="bg-green-50 p-4 md:p-4 lg:p-4 rounded-lg shadow-md mx-auto lg:shadow-[0_2px_8px_rgba(12,187,125,0.3)]">
+  <div className="bg-brand-secondary/8 p-4 md:p-4 lg:p-4 rounded-lg shadow-md mx-auto lg:shadow-[0_2px_8px_rgba(12,187,125,0.3)]">
   <h2 className="text-[14px] font-[600] text-gray-700 mb-2">Important Terms</h2>
   <ol className="list-decimal pl-4 space-y-2 text-gray-700 text-[12px]">
     {terms.map((term, index) => (

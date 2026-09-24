@@ -184,7 +184,7 @@ const EditEDD = ({ item, onClose, existingServices = [] }) => {
                                         <li
                                             key={courier._id}
                                             onClick={() => handleCourierSelect(courier)}
-                                            className="cursor-pointer px-3 py-2 text-[10px] sm:text-[12px] font-[600] text-gray-500 hover:bg-green-100"
+                                            className="cursor-pointer px-3 py-2 text-[10px] sm:text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/16"
                                         >
                                             {courier.courierProvider}
                                         </li>
@@ -216,7 +216,7 @@ const EditEDD = ({ item, onClose, existingServices = [] }) => {
                                         <li
                                             key={service._id}
                                             onClick={() => handleServiceSelect(service.name)}
-                                            className="cursor-pointer px-3 py-2 text-[10px] sm:text-[12px] font-[600] text-gray-500 hover:bg-green-100"
+                                            className="cursor-pointer px-3 py-2 text-[10px] sm:text-[12px] font-[600] text-gray-500 hover:bg-brand-secondary/16"
                                         >
                                             {service.name}
                                         </li>
