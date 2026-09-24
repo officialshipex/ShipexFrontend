@@ -273,12 +273,12 @@ const PackageDetails = ({
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 mt-2">
-            <div className="bg-brand-secondary/16 rounded-lg p-3 w-full sm:w-2/4">
+            <div className="bg-brand-primary/10 border border-brand-primary/20 rounded-lg p-3 w-full sm:w-2/4">
               <div className="flex sm:flex-col flex-row justify-between">
                 <h3 className="text-[12px] font-[600] text-gray-700">
                   Applicable Weight
                 </h3>
-                <p className="text-[12px] font-[600] text-gray-700">
+                <p className="text-[12px] font-[600] text-brand-primary">
                   {applicableWeight} Kg
                 </p>
               </div>
@@ -292,17 +292,17 @@ const PackageDetails = ({
               </p>
             </div>
 
-            <div className="bg-brand-secondary/16 rounded-lg p-3 w-full sm:w-1/2 flex justify-between">
-              <h3 className="text-[12px] font-[600]">Volumetric Weight</h3>
-              <p className="text-[12px] font-[600]">{volumetricWeight} Kg</p>
+            <div className="bg-brand-primary/10 border border-brand-primary/20 rounded-lg p-3 w-full sm:w-1/2 flex justify-between items-center">
+              <h3 className="text-[12px] font-[600] text-gray-700">Volumetric Weight</h3>
+              <p className="text-[12px] font-[600] text-brand-primary">{volumetricWeight} Kg</p>
             </div>
           </div>
 
           <hr className="my-4" />
 
-          <div className="bg-brand-secondary/16 px-3 py-2 rounded-lg mb-4 flex justify-between">
-            <p className="text-[12px] font-[600]">Total Order Value</p>
-            <p className="text-[12px] font-[600]">₹{totalPrice}</p>
+          <div className="bg-brand-primary/10 border border-brand-primary/20 px-3 py-2 rounded-lg mb-4 flex justify-between items-center">
+            <p className="text-[12px] font-[600] text-gray-700">Total Order Value</p>
+            <p className="text-[12px] font-[600] text-brand-primary">₹{totalPrice}</p>
           </div>
         </>
       )}
@@ -391,22 +391,22 @@ const PackageDetails = ({
 
           {/* B2B RESULT SUMMARY */}
           <div className="flex flex-col sm:flex-row gap-2 mt-4">
-            <div className="bg-brand-secondary/16 p-4 rounded-lg w-full sm:w-2/4">
-              <h3 className="text-[12px] font-[600]">Applicable Weight</h3>
-              <p className="text-[12px] font-[600]">{applicableWeightB2B.toFixed(2)} Kg</p>
+            <div className="bg-brand-primary/10 border border-brand-primary/20 p-4 rounded-lg w-full sm:w-2/4">
+              <h3 className="text-[12px] font-[600] text-gray-700">Applicable Weight</h3>
+              <p className="text-[12px] font-[600] text-brand-primary">{applicableWeightB2B.toFixed(2)} Kg</p>
             </div>
 
-            <div className="bg-brand-secondary/16 p-4 rounded-lg w-full sm:w-1/2 flex justify-between">
-              <h3 className="text-[12px] font-[600]">Volumetric Weight</h3>
-              <p className="text-[12px] font-[600]">{totalVolumetricWeightB2B.toFixed(2)} Kg</p>
+            <div className="bg-brand-primary/10 border border-brand-primary/20 p-4 rounded-lg w-full sm:w-1/2 flex justify-between items-center">
+              <h3 className="text-[12px] font-[600] text-gray-700">Volumetric Weight</h3>
+              <p className="text-[12px] font-[600] text-brand-primary">{totalVolumetricWeightB2B.toFixed(2)} Kg</p>
             </div>
           </div>
 
           <hr className="my-4" />
 
-          <div className="bg-brand-secondary/16 px-4 py-2 rounded-lg mb-4 flex justify-between">
-            <p className="text-[12px] font-[600]">Total Order Value</p>
-            <p className="text-[12px] font-[600]">₹{totalPrice}</p>
+          <div className="bg-brand-primary/10 border border-brand-primary/20 px-4 py-2 rounded-lg mb-4 flex justify-between items-center">
+            <p className="text-[12px] font-[600] text-gray-700">Total Order Value</p>
+            <p className="text-[12px] font-[600] text-brand-primary">₹{totalPrice}</p>
           </div>
         </>
       )}
