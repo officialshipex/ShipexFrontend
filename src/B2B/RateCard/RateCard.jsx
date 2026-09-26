@@ -245,7 +245,7 @@ export default function RateCardAdmin() {
             <>
               <button
                 onClick={() => setMode("edit")}
-                className="bg-brand-primary text-white px-3 py-2 text-[12px] font-[600] rounded-lg
+                className="bg-[#0192ED] text-white px-3 py-2 text-[12px] font-[600] rounded-lg
              flex items-center justify-center gap-2"
               >
                 <FiEdit className="text-[14px]" />
@@ -267,7 +267,7 @@ export default function RateCardAdmin() {
           {(mode === "create" || mode === "edit") && (
             <button
               onClick={handleSave}
-              className="bg-brand-primary text-white px-3 py-2 font-[600] text-[12px] rounded-lg
+              className="bg-[#0192ED] text-white px-3 py-2 font-[600] text-[12px] rounded-lg
              flex items-center justify-center gap-2"
             >
               <FiPlus className="text-[14px]" />
@@ -276,7 +276,7 @@ export default function RateCardAdmin() {
           )}
 
           <button
-            className={`bg-brand-primary font-[600] text-[10px] sm:w-auto w-full h-9 sm:text-[12px] text-white px-3 py-2 rounded-lg`}
+            className={`bg-[#0192ED] font-[600] text-[10px] sm:w-auto w-full h-9 sm:text-[12px] text-white px-3 py-2 rounded-lg`}
             onClick={openPlanForm}
           // disabled={!canAction}
           >Add Plan</button>
@@ -298,8 +298,8 @@ export default function RateCardAdmin() {
       {/* ================= DESKTOP TABLE ================= */}
       <div className="hidden md:block overflow-auto bg-white">
         <table className="min-w-full text-center text-[12px] font-[600]">
-          <thead className="bg-brand-primary text-white">
-            <tr className="border border-brand-primary">
+          <thead className="bg-[#0192ED] text-white">
+            <tr className="border border-[#0192ED]">
               <th className="p-2">Zone</th>
               {meta.zones.map((z) => (
                 <th key={z} className="p-2">
@@ -334,7 +334,7 @@ export default function RateCardAdmin() {
                       ) : (
                         <input
                           type="text"
-                          className="w-12 border text-center text-[12px] focus:outline-brand-primary"
+                          className="w-12 border text-center text-[12px] focus:outline-[#0192ED]"
                           value={matrix[i]?.[j]?.price ?? ""}
                           onChange={(e) =>
                             updateCell(i, j, e.target.value)
@@ -379,7 +379,7 @@ export default function RateCardAdmin() {
                       </span>
                     ) : (
                       <input
-                        className="w-12 border focus:outline-brand-primary text-center text-[12px]"
+                        className="w-12 border focus:outline-[#0192ED] text-center text-[12px]"
                         value={cell?.price ?? ""}
                         onChange={(e) =>
                           updateCell(i, j, e.target.value)
@@ -414,7 +414,7 @@ export default function RateCardAdmin() {
         {(mode === "create" || mode === "edit") && (
           <button
             onClick={handleSave}
-            className="bg-brand-primary text-white px-3 py-2 font-[600] text-[12px] rounded-lg
+            className="bg-[#0192ED] text-white px-3 py-2 font-[600] text-[12px] rounded-lg
              flex items-center justify-center gap-2"
           >
             <FiPlus className="text-[14px]" />

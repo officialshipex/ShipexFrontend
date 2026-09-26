@@ -1,6 +1,5 @@
 import axios from "axios";
 import Cookies from "js-cookie";
-import { toTenantUrl } from "../../utils/tenantApiDomain";
 
 const API = process.env.REACT_APP_BACKEND_URL;
 
@@ -16,10 +15,6 @@ api.interceptors.request.use(
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    // This instance has its own baseURL set once at module load, before this
-    // company's apiDomain is known — resolved dynamically here instead, same
-    // as the global interceptor in utils/axiosInterceptor.js.
-    config.baseURL = toTenantUrl(config.baseURL);
     return config;
   },
   (error) => Promise.reject(error)
@@ -40,3 +35,6 @@ export const deleteZone = (id) =>
 
 export const lookupPincode = (pincode) =>
   api.get(`/lookup/pincode?pincode=${pincode}`);
+
+export const searchLocations = (q) =>
+  api.get(`/search`, { params: { q } });

@@ -97,7 +97,7 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
             placeholder="Search B2B Courier Service..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-brand-primary shadow-sm font-[600] text-gray-700 transition-all"
+            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-[#0192ED] shadow-sm font-[600] text-gray-700 transition-all"
           />
         </div>
         <div className="w-full sm:w-48">
@@ -115,7 +115,7 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
         <div className="max-h-[calc(100vh-350px)] overflow-y-auto overflow-x-auto">
           <table className="min-w-full">
             <thead className="sticky top-0 z-10">
-              <tr className="text-white bg-brand-primary font-[600] text-[12px]">
+              <tr className="text-white bg-[#0192ED] font-[600] text-[12px]">
                 <th className="py-2 px-3 text-center">Sr.</th>
                 <th className="py-2 px-3 text-left">Courier Service</th>
                 <th className="py-2 px-3 text-center">Mode</th>
@@ -142,7 +142,7 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
                       </div>
                     </td>
                     <td className="py-2 px-3">
-                      <span className="text-brand-primary font-[500]">{courier.provider}</span>
+                      <span className="text-[#0192ED] font-[500]">{courier.provider}</span>
                     </td>
                     <td className="py-2 px-3 whitespace-nowrap">
                       <span className="text-gray-600 font-[500]">{courier.courier || "-"}</span>
@@ -158,12 +158,12 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
                           checked={courier.status === "Enable"}
                           onChange={() => toggleStatus(index, courier._id, courier.status)}
                         />
-                        <div className="w-10 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-primary"></div>
+                        <div className="w-10 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#0192ED]"></div>
                       </label>
                     </td>
                     <td className="py-2 px-3">
                       <button
-                        className={`text-brand-primary transition-all ${canUpdate ? "hover:scale-110 active:scale-95" : "opacity-50 cursor-not-allowed"}`}
+                        className={`text-[#0192ED] transition-all ${canUpdate ? "hover:scale-110 active:scale-95" : "opacity-50 cursor-not-allowed"}`}
                         onClick={() => canUpdate && editHandler(courier)}
                         disabled={!canUpdate}
                         title="Edit B2B Courier"
@@ -229,7 +229,7 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
                   </div>
                 </div>
                 <button
-                  className={`p-2 rounded-full transition-all ${canUpdate ? "text-brand-primary active:scale-90" : "text-gray-300 cursor-not-allowed"}`}
+                  className={`p-2 rounded-full transition-all ${canUpdate ? "text-[#0192ED] active:scale-90" : "text-gray-300 cursor-not-allowed"}`}
                   onClick={() => canUpdate && editHandler(courier)}
                   disabled={!canUpdate}
                 >
@@ -240,12 +240,12 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
               <div className="grid grid-cols-2 text-[10px]">
                 <div className="flex flex-col">
                   <span className="text-gray-700">Provider</span>
-                  <span className="text-brand-primary font-[600]">{courier.provider}</span>
+                  <span className="text-[#0192ED] font-[600]">{courier.provider}</span>
                 </div>
                 <div className="flex flex-col items-end">
                   <span className="text-gray-700">Status</span>
                   <div className="flex items-center gap-2">
-                    <span className={`font-[700] ${courier.status === "Enable" ? "text-green-500" : "text-gray-400"}`}>
+                    <span className={`font-[700] ${courier.status === "Enable" ? "text-blue-500" : "text-gray-400"}`}>
                       {courier.status}
                     </span>
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -255,7 +255,7 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
                         checked={courier.status === "Enable"}
                         onChange={() => toggleStatus(index, courier._id, courier.status)}
                       />
-                      <div className="w-7 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-brand-primary"></div>
+                      <div className="w-7 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3 after:w-3 after:transition-all peer-checked:bg-[#0192ED]"></div>
                     </label>
                   </div>
                 </div>

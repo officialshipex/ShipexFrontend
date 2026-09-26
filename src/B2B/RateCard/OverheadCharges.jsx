@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { FiInfo } from "react-icons/fi";
 
 export default function OverheadCharges({ data, mode = "view", onChange }) {
   const valuesRef = useRef(JSON.parse(JSON.stringify(data)));
@@ -11,14 +12,16 @@ export default function OverheadCharges({ data, mode = "view", onChange }) {
     onChange({ ...valuesRef.current });
   };
 
-  const Input = ({ path, width = "w-16" }) => {
+  const Input = ({ path, width = "w-16", placeholder = "" }) => {
     const [key, field] = path;
     return (
       <input
-        defaultValue={valuesRef.current[key][field]}
+        defaultValue={valuesRef.current[key]?.[field] ?? ""}
+        placeholder={placeholder}
         className={`${width} border rounded px-2 py-1 text-[12px]
-        focus:outline-none focus:ring-1 focus:ring-brand-primary`}
+        focus:outline-none focus:ring-1 focus:ring-[#0192ED] text-gray-800`}
         onChange={(e) => {
+          if (!valuesRef.current[key]) valuesRef.current[key] = {};
           valuesRef.current[key][field] = e.target.value;
         }}
         onBlur={commit}
@@ -26,12 +29,19 @@ export default function OverheadCharges({ data, mode = "view", onChange }) {
     );
   };
 
-  const Row = ({ label, children }) => (
-    <div className="flex justify-between items-center gap-3 px-3 py-2 last:border-b-0">
-      <span className="text-[12px] font-[600] text-gray-600">
-        {label}
-      </span>
-      <div className="text-[12px] font-[600] text-gray-800">
+  const Row = ({ label, description, children }) => (
+    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 px-3 py-2.5 last:border-b-0 hover:bg-gray-50/50 transition-colors">
+      <div className="flex flex-col">
+        <span className="text-[12px] font-[600] text-gray-700">
+          {label}
+        </span>
+        {description && (
+          <span className="text-[10px] text-gray-400 font-[400] leading-tight mt-0.5">
+            {description}
+          </span>
+        )}
+      </div>
+      <div className="text-[12px] font-[600] text-gray-800 flex-shrink-0 self-start sm:self-auto mt-1 sm:mt-0">
         {children}
       </div>
     </div>
@@ -39,147 +49,264 @@ export default function OverheadCharges({ data, mode = "view", onChange }) {
 
   return (
     <div className="bg-white rounded-xl border mt-4 shadow-sm">
-      <div className="px-4 py-3 border-b bg-gray-50 rounded-t-xl">
-        <h3 className="text-[13px] font-[700] text-gray-700">
-          Overhead Charges
-        </h3>
+      <div className="px-4 py-3 border-b bg-gray-50 rounded-t-xl flex justify-between items-center">
+        <div>
+          <h3 className="text-[13px] font-[700] text-gray-700">
+            Overhead Charges & Calculation Rules
+          </h3>
+          <p className="text-[11px] text-gray-500 font-[400] mt-0.5">
+            Define percentages, flat amounts, and minimum floor thresholds for B2B cargo calculation.
+          </p>
+        </div>
       </div>
 
-      {/* ================= DESKTOP ================= */}
-      <div className="hidden md:grid grid-cols-2 gap-4 p-4">
+      {/* Info Banner for Admins */}
+      <div className="mx-3 sm:mx-4 mt-3 p-2.5 bg-blue-50/70 border border-blue-100 rounded-lg flex items-start gap-2 text-[11px] text-blue-800">
+        <FiInfo className="mt-0.5 text-blue-600 text-sm flex-shrink-0" />
+        <div>
+          <span className="font-[600]">Calculation Breakdown: </span>
+          <span className="text-blue-700">
+            When both <strong>% (or ₹/Kg)</strong> and <strong>Min ₹</strong> are set, the system charges <strong>WHICHEVER IS HIGHER</strong>.{" "}
+            <strong>Percentage (%)</strong> is computed on Base Freight (Fuel/Pickup) or Invoice Value (COD/ROV).
+          </span>
+        </div>
+      </div>
+
+      {/* ================= RESPONSIVE GRID (MOBILE & DESKTOP) ================= */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-3 sm:p-4">
         {/* LEFT */}
-        <div className="border rounded-lg divide-y">
-          <Row label="Pickup Charge">
+        <div className="border rounded-lg divide-y bg-white">
+          <Row 
+            label="Pickup Charge" 
+            description="% of Freight or Min ₹ Floor (Whichever is higher)"
+          >
             {mode === "view"
-              ? `₹${data.pickupCharge.min} OR ${data.pickupCharge.value}%`
+              ? `${data.pickupCharge?.value}% OR Min ₹${data.pickupCharge?.min} (Whichever is higher)`
               : (
-                <div className="flex items-center gap-2">
-                  <Input path={["pickupCharge", "value"]} />
-                  <span className="text-gray-500">%</span>
-                  <Input path={["pickupCharge", "min"]} />
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <div className="flex items-center gap-1">
+                    <Input path={["pickupCharge", "value"]} placeholder="%" />
+                    <span className="text-gray-500 text-[11px]">%</span>
+                  </div>
+                  <span className="text-gray-400 text-[11px]">|</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-gray-500 text-[11px]">Min ₹</span>
+                    <Input path={["pickupCharge", "min"]} placeholder="Min ₹" />
+                  </div>
                 </div>
               )}
           </Row>
 
-          <Row label="Handling Charge">
+          <Row 
+            label="Handling Charge" 
+            description="Flat ₹ fee per shipment for cargo handling"
+          >
             {mode === "view"
-              ? `₹${data.handlingCharge.value}`
-              : <Input path={["handlingCharge", "value"]} />}
-          </Row>
-
-          <Row label="COD Charges">
-            {mode === "view"
-              ? `${data.codCharges.value}% OR ₹${data.codCharges.min}`
+              ? `₹${data.handlingCharge?.value}`
               : (
-                <div className="flex items-center gap-2">
-                  <Input path={["codCharges", "value"]} />
-                  <span className="text-gray-500">%</span>
-                  <Input path={["codCharges", "min"]} />
+                <div className="flex items-center gap-1">
+                  <span className="text-gray-500 text-[11px]">₹</span>
+                  <Input path={["handlingCharge", "value"]} placeholder="Flat ₹" />
                 </div>
               )}
           </Row>
 
-          <Row label="To Pay Charges (FOD)">
+          <Row 
+            label="COD Charges" 
+            description="% of Order Invoice Value or Min ₹ Floor (Whichever is higher)"
+          >
             {mode === "view"
-              ? `₹${data.fodCharges.value}`
-              : <Input path={["fodCharges", "value"]} />}
-          </Row>
-
-          <Row label="ROV Owner">
-            {mode === "view"
-              ? `${data.rovOwner.value}% OR ₹${data.rovOwner.min}`
+              ? `${data.codCharges?.value}% OR Min ₹${data.codCharges?.min} (Whichever is higher)`
               : (
-                <div className="flex items-center gap-2">
-                  <Input path={["rovOwner", "value"]} />
-                  <span className="text-gray-500">%</span>
-                  <Input path={["rovOwner", "min"]} />
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <div className="flex items-center gap-1">
+                    <Input path={["codCharges", "value"]} placeholder="%" />
+                    <span className="text-gray-500 text-[11px]">%</span>
+                  </div>
+                  <span className="text-gray-400 text-[11px]">|</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-gray-500 text-[11px]">Min ₹</span>
+                    <Input path={["codCharges", "min"]} placeholder="Min ₹" />
+                  </div>
                 </div>
               )}
           </Row>
 
-          <Row label="ROV Carrier">
+          <Row 
+            label="To Pay Charges (FOD)" 
+            description="Flat ₹ fee when freight is collected at destination"
+          >
             {mode === "view"
-              ? `${data.rovCarrier.value}% OR ₹${data.rovCarrier.min}`
+              ? `₹${data.fodCharges?.value}`
               : (
-                <div className="flex items-center gap-2">
-                  <Input path={["rovCarrier", "value"]} />
-                  <span className="text-gray-500">%</span>
-                  <Input path={["rovCarrier", "min"]} />
+                <div className="flex items-center gap-1">
+                  <span className="text-gray-500 text-[11px]">₹</span>
+                  <Input path={["fodCharges", "value"]} placeholder="Flat ₹" />
+                </div>
+              )}
+          </Row>
+
+          <Row 
+            label="ROV Owner Risk" 
+            description="% of Declared Value or Min ₹ Floor (Whichever is higher)"
+          >
+            {mode === "view"
+              ? `${data.rovOwner?.value}% OR Min ₹${data.rovOwner?.min} (Whichever is higher)`
+              : (
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <div className="flex items-center gap-1">
+                    <Input path={["rovOwner", "value"]} placeholder="%" />
+                    <span className="text-gray-500 text-[11px]">%</span>
+                  </div>
+                  <span className="text-gray-400 text-[11px]">|</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-gray-500 text-[11px]">Min ₹</span>
+                    <Input path={["rovOwner", "min"]} placeholder="Min ₹" />
+                  </div>
+                </div>
+              )}
+          </Row>
+
+          <Row 
+            label="ROV Carrier Risk" 
+            description="% of Declared Value or Min ₹ Floor (Whichever is higher)"
+          >
+            {mode === "view"
+              ? `${data.rovCarrier?.value}% OR Min ₹${data.rovCarrier?.min} (Whichever is higher)`
+              : (
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <div className="flex items-center gap-1">
+                    <Input path={["rovCarrier", "value"]} placeholder="%" />
+                    <span className="text-gray-500 text-[11px]">%</span>
+                  </div>
+                  <span className="text-gray-400 text-[11px]">|</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-gray-500 text-[11px]">Min ₹</span>
+                    <Input path={["rovCarrier", "min"]} placeholder="Min ₹" />
+                  </div>
                 </div>
               )}
           </Row>
         </div>
 
         {/* RIGHT */}
-        <div className="border rounded-lg divide-y">
-          <Row label="ODA Charge">
+        <div className="border rounded-lg divide-y bg-white">
+          <Row 
+            label="ODA Charge (Out of Area)" 
+            description="₹/Kg on Billable Weight or Min ₹ Floor (Whichever is higher)"
+          >
             {mode === "view"
-              ? `₹${data.odaCharges.value}/Kg OR ₹${data.odaCharges.min}`
+              ? `₹${data.odaCharges?.value}/Kg OR Min ₹${data.odaCharges?.min} (Whichever is higher)`
               : (
-                <div className="flex items-center gap-2">
-                  <Input path={["odaCharges", "value"]} />
-                  <span className="text-gray-500">/Kg</span>
-                  <Input path={["odaCharges", "min"]} />
+                <div className="flex flex-wrap items-center gap-1.5">
+                  <div className="flex items-center gap-1">
+                    <Input path={["odaCharges", "value"]} placeholder="₹/Kg" />
+                    <span className="text-gray-500 text-[11px]">/Kg</span>
+                  </div>
+                  <span className="text-gray-400 text-[11px]">|</span>
+                  <div className="flex items-center gap-1">
+                    <span className="text-gray-500 text-[11px]">Min ₹</span>
+                    <Input path={["odaCharges", "min"]} placeholder="Min ₹" />
+                  </div>
                 </div>
               )}
           </Row>
 
-          <Row label="Fuel Charge">
+          <Row 
+            label="Fuel Surcharge (FSC)" 
+            description="% of Base Freight (Fuel adjustment fee)"
+          >
             {mode === "view"
-              ? `${data.fuelCharge.value}%`
-              : <Input path={["fuelCharge", "value"]} />}
+              ? `${data.fuelCharge?.value}%`
+              : (
+                <div className="flex items-center gap-1">
+                  <Input path={["fuelCharge", "value"]} placeholder="%" />
+                  <span className="text-gray-500 text-[11px]">%</span>
+                </div>
+              )}
           </Row>
 
-          <Row label="Docket Charge">
+          <Row 
+            label="Docket Charge" 
+            description="Flat ₹ fee per LR / Waybill document"
+          >
             {mode === "view"
-              ? `₹${data.docketCharge.value}`
-              : <Input path={["docketCharge", "value"]} />}
+              ? `₹${data.docketCharge?.value}`
+              : (
+                <div className="flex items-center gap-1">
+                  <span className="text-gray-500 text-[11px]">₹</span>
+                  <Input path={["docketCharge", "value"]} placeholder="Flat ₹" />
+                </div>
+              )}
           </Row>
 
-          <Row label="Appointment Delivery">
+          <Row 
+            label="Appointment Delivery" 
+            description="Flat ₹ fee for time-slot scheduled delivery"
+          >
             {mode === "view"
-              ? `₹${data.appointmentDelivery.value}`
-              : <Input path={["appointmentDelivery", "value"]} />}
+              ? `₹${data.appointmentDelivery?.value}`
+              : (
+                <div className="flex items-center gap-1">
+                  <span className="text-gray-500 text-[11px]">₹</span>
+                  <Input path={["appointmentDelivery", "value"]} placeholder="Flat ₹" />
+                </div>
+              )}
           </Row>
 
-          <Row label="Green Tax">
+          <Row 
+            label="Green Tax" 
+            description="Flat ₹ eco/environmental state surcharge"
+          >
             {mode === "view"
-              ? `₹${data.greenTax.value}`
-              : <Input path={["greenTax", "value"]} />}
+              ? `₹${data.greenTax?.value}`
+              : (
+                <div className="flex items-center gap-1">
+                  <span className="text-gray-500 text-[11px]">₹</span>
+                  <Input path={["greenTax", "value"]} placeholder="Flat ₹" />
+                </div>
+              )}
           </Row>
 
-          <Row label="Divisor">
+          <Row 
+            label="Volumetric Divisor" 
+            description="Divisor for volumetric weight: (L×W×H / Divisor)"
+          >
             {mode === "view"
-              ? data.divisor.value
-              : <Input width="w-20" path={["divisor", "value"]} />}
+              ? data.divisor?.value
+              : <Input width="w-24" path={["divisor", "value"]} placeholder="e.g. 5000" />}
           </Row>
 
-          <Row label="Minimum Freight">
+          <Row 
+            label="Minimum Freight" 
+            description="Minimum base freight threshold per booking"
+          >
             {mode === "view"
-              ? `₹${data.minimumFreight.value}`
-              : <Input path={["minimumFreight", "value"]} />}
+              ? `₹${data.minimumFreight?.value}`
+              : (
+                <div className="flex items-center gap-1">
+                  <span className="text-gray-500 text-[11px]">₹</span>
+                  <Input path={["minimumFreight", "value"]} placeholder="Min ₹" />
+                </div>
+              )}
+          </Row>
+
+          <Row 
+            label="GST Rate" 
+            description="GST percentage applied on final subtotal (default 18%)"
+          >
+            {mode === "view"
+              ? `${data.gst?.value ?? 18}%`
+              : (
+                <div className="flex items-center gap-1">
+                  <Input path={["gst", "value"]} placeholder="18" />
+                  <span className="text-gray-500 text-[11px]">%</span>
+                </div>
+              )}
           </Row>
         </div>
-      </div>
-
-      {/* ================= MOBILE ================= */}
-      <div className="md:hidden p-3 space-y-2">
-        {Object.entries(valuesRef.current).map(([key, val], i) => (
-          <div
-            key={i}
-            className="bg-gray-50 rounded-lg px-3 py-2 flex justify-between items-center"
-          >
-            <span className="text-[11px] font-[600] text-gray-600">
-              {key.replace(/([A-Z])/g, " $1")}
-            </span>
-            <span className="text-[12px] font-[700] text-brand-secondary">
-              {typeof val === "object"
-                ? `${val.value}${val.min ? ` / ₹${val.min}` : ""}`
-                : val}
-            </span>
-          </div>
-        ))}
       </div>
     </div>
   );
 }
+

@@ -41,12 +41,12 @@ export default function B2BPackageTable({ packages, meta, status, onEdit }) {
       </table>
 
       <div className="flex gap-4 mt-4">
-        <div className="bg-brand-secondary/16 p-3 font-[600] text-[12px] rounded-lg w-1/2">
+        <div className="bg-blue-100 p-3 font-[600] text-[12px] rounded-lg w-1/2">
           <p className="text-gray-700">Applicable Weight</p>
           <p className="text-gray-500">{meta.applicableWeight} Kg</p>
         </div>
 
-        <div className="bg-brand-secondary/16 font-[600] p-3 text-[12px] rounded-lg w-1/2">
+        <div className="bg-blue-100 font-[600] p-3 text-[12px] rounded-lg w-1/2">
           <p className="text-gray-700">Volumetric Weight</p>
           <p className="text-gray-500">{meta.volumetricWeight} Kg</p>
         </div>

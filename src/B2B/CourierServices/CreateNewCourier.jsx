@@ -32,25 +32,34 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
   const [providerServices, setProviderServices] = useState([]);
   const [selectedProvider, setSelectedProvider] = useState("");
   const [refresh, setRefresh] = useState(false);
+  const [loadingServices, setLoadingServices] = useState(false);
 
   const fetchServicesForProvider = async (providerName) => {
+    setLoadingServices(true);
     try {
       let services = [];
-      switch (providerName) {
-        case "NimbusPost":
+      switch (providerName?.toLowerCase()) {
+        case "nimbuspost":
           const nimbusRes = await axios.get(`${REACT_APP_BACKEND_URL}/NimbusPost/getCourierServices`);
           services = nimbusRes.data.map((item) => item.service);
           break;
-        case "Xpressbees":
+        case "xpressbees":
           const xpressRes = await axios.get(`${REACT_APP_BACKEND_URL}/Xpressbees/getCourierList`);
           services = xpressRes.data.map((item) => item.service);
           break;
-        case "Shiprocket":
+        case "shiprocket":
           const shipRes = await axios.get(`${REACT_APP_BACKEND_URL}/b2b/couriers/getShiprocketCourierServices`);
-          services = shipRes?.data?.data?.map((item) => item.service) || [];
+          services = shipRes?.data?.data?.flatMap((item) => item.service) || [];
           break;
-        case "Dtdc":
+        case "bigship":
+          const bigshipRes = await axios.get(`${REACT_APP_BACKEND_URL}/b2b/couriers/getBigShipCourierServices`);
+          services = bigshipRes?.data?.data?.flatMap((item) => item.service) || [];
+          break;
+        case "dtdc":
           services = ["B2C SMART EXPRESS", "B2C PRIORITY", "B2C GROUND ECONOMY"];
+          break;
+        case "delhivery":
+          services = ["Delhivery-surface", "Delhivery-air"];
           break;
         default:
           services = [];
@@ -60,6 +69,8 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
     } catch (error) {
       console.error(`Error fetching ${providerName} services:`, error);
       setProviderServices([]);
+    } finally {
+      setLoadingServices(false);
     }
   };
 
@@ -194,9 +205,9 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         <div className="bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-100 mb-2">
           <div className="flex items-center gap-2 mb-3 border-b border-gray-50">
             {formData._id ? (
-              <FaEdit className="text-brand-primary w-3.5 h-3.5" />
+              <FaEdit className="text-[#0192ED] w-3.5 h-3.5" />
             ) : (
-              <FaPlus className="text-brand-primary w-3.5 h-3.5" />
+              <FaPlus className="text-[#0192ED] w-3.5 h-3.5" />
             )}
 
             <h2 className="text-[12px] md:text-[14px] text-gray-700 font-[600]">
@@ -218,12 +229,13 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
 
               {/* Courier */}
               <CustomDropdown
-                label={selectedProvider === "Dtdc" ? "Service Type" : "Courier"}
+                label={selectedProvider?.toLowerCase() === "dtdc" ? "Service Type" : "Courier"}
                 name="courier"
                 value={formData.courier}
                 onChange={handleChange}
                 options={providerServices}
-                placeholder={selectedProvider ? `Select ${selectedProvider === "Dtdc" ? "Service Type" : "Courier"}` : "Select Provider first"}
+                loading={loadingServices}
+                placeholder={selectedProvider ? `Select ${selectedProvider?.toLowerCase() === "dtdc" ? "Service Type" : "Courier"}` : "Select Provider first"}
               />
 
               {/* Courier Type */}
@@ -255,7 +267,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                   placeholder="Enter name"
                   value={formData.name}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-brand-primary transition-all font-[600] text-gray-700"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-[#0192ED] transition-all font-[600] text-gray-700"
                 />
               </div>
 
@@ -268,7 +280,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                   placeholder="Weight"
                   value={formData.weight}
                   onChange={handleChange}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-brand-primary transition-all font-[600] text-gray-700"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-[#0192ED] transition-all font-[600] text-gray-700"
                 />
               </div>
             </div>
@@ -276,7 +288,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
             <div className="flex justify-end">
               <button
                 type="submit"
-                className={`bg-brand-primary font-[700] text-white py-2 px-3 text-[10px] sm:text-[12px] rounded-lg shadow-sm transition-all hover:bg-opacity-90 active:scale-95 ${!canSave ? "opacity-50 cursor-not-allowed" : ""}`}
+                className={`bg-[#0192ED] font-[700] text-white py-2 px-3 text-[10px] sm:text-[12px] rounded-lg shadow-sm transition-all hover:bg-opacity-90 active:scale-95 ${!canSave ? "opacity-50 cursor-not-allowed" : ""}`}
                 disabled={!canSave}
               >
                 {formData._id ? "Update B2B Courier" : "Save B2B Courier"}

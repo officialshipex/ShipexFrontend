@@ -8,13 +8,13 @@ import { Notification } from "../../Notification";
 import Loader from "../../Loader";
 import { FaEllipsisV, FaTrashAlt, FaUpload, FaDownload, FaTruck } from "react-icons/fa";
 import { getCarrierLogo } from "../../Common/getCarrierLogo";
-import { toTenantUrl } from "../../utils/tenantApiDomain";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const courierOptions = [
   { value: "NimbusPost", label: "NimbusPost" },
   { value: "Shiprocket", label: "Shiprocket" },
+  { value: "BigShip", label: "BigShip" },
   { value: "Dtdc", label: "Dtdc" },
   { value: "Delhivery", label: "Delhivery" },
   { value: "ShreeMaruti", label: "Shree Maruti" },
@@ -122,7 +122,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
 
         setLoading(true);
 
-        const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/b2b/couriers/${courier}/uploadPincode`), {
+        const response = await fetch(`${REACT_APP_BACKEND_URL}/b2b/couriers/${courier}/uploadPincode`, {
           method: "POST",
           body: formData,
         });
@@ -204,6 +204,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
         provider={selectedOption}
         onCourierSaved={handleCourierSaved}
         canAction={canAction}
+        isB2B={true}
       />
     );
   };
@@ -226,8 +227,8 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
       {/* Add Courier Section */}
       <div className="bg-white px-3 py-2 rounded-lg shadow-sm border border-gray-100 mb-2">
         <div className="flex items-center gap-2 mb-3 border-b border-gray-50 pb-2">
-          <FaTruck className="text-brand-primary w-3.5 h-3.5" />
-          <h2 className="text-[12px] md:text-[14px] text-brand-secondary font-[700]">
+          <FaTruck className="text-[#0192ED] w-3.5 h-3.5" />
+          <h2 className="text-[12px] md:text-[14px] text-gray-800 font-[700]">
             Add B2B Courier
           </h2>
         </div>
@@ -250,7 +251,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
         <div className="h-[520px] overflow-y-auto custom-scrollbar">
           <table className="min-w-full border-collapse">
             <thead className="sticky top-0 z-10">
-              <tr className="text-white bg-brand-primary font-[600] text-[12px]">
+              <tr className="text-white bg-[#0192ED] font-[600] text-[12px]">
                 <th className="py-2 px-3 text-center">Sr.</th>
                 <th className="py-2 px-3 text-left">Courier Name</th>
                 <th className="py-2 px-3 text-left">Provider</th>
@@ -271,7 +272,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                     <td className="py-2.5 px-3">
                       <div className="flex items-center gap-2">
                         <img src={getCarrierLogo(courier.courierProvider)} alt="" className="w-6 h-6 object-contain" />
-                        <span className="text-brand-primary font-[600]">{courier.courierProvider}</span>
+                        <span className="text-[#0192ED] font-[600]">{courier.courierProvider}</span>
                       </div>
                     </td>
                     <td className="py-2.5 px-3 text-center">{courier.CODDays} Days</td>
@@ -285,7 +286,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                             onChange={() => toggleStatus(index)}
                             disabled={!canAction}
                           />
-                          <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-brand-primary"></div>
+                          <div className="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-[#0192ED]"></div>
                         </label>
                       </div>
                     </td>
@@ -293,7 +294,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                       <div className="flex justify-center items-center gap-4">
                         <button
                           onClick={() => canAction && handleUpload(courier.courierName)}
-                          className={`p-1.5 rounded-full transition-all ${canAction ? "text-brand-primary hover:bg-brand-secondary/8" : "text-gray-300 cursor-not-allowed"}`}
+                          className={`p-1.5 rounded-full transition-all ${canAction ? "text-[#0192ED] hover:bg-blue-50" : "text-gray-300 cursor-not-allowed"}`}
                           title="Upload serviceable pincode"
                           disabled={!canAction}
                         >
@@ -344,7 +345,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                 <div className="flex items-center justify-between border-b border-gray-50 pb-2">
                   <div className="flex items-center gap-3">
                     <div className="relative">
-                      <span className="absolute -top-1 -left-1 w-4 h-4 bg-brand-primary text-white rounded-full flex items-center justify-center text-[8px] font-bold border border-white z-10">
+                      <span className="absolute -top-1 -left-1 w-4 h-4 bg-[#0192ED] text-white rounded-full flex items-center justify-center text-[8px] font-bold border border-white z-10">
                         {index + 1}
                       </span>
                       <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center border border-gray-100 p-1">
@@ -355,7 +356,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                       <span className="text-[10px] font-[600] text-gray-700">
                         {courier.courierName}
                       </span>
-                      <span className="text-[10px] text-brand-primary font-[600]">
+                      <span className="text-[10px] text-[#0192ED] font-[600]">
                         {courier.courierProvider}
                       </span>
                     </div>
@@ -380,7 +381,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                           disabled={!canAction}
                           className="w-full flex items-center gap-2 px-3 py-2 text-[10px] font-[600] text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors"
                         >
-                          <FaUpload className="text-brand-primary" size={12} /> Upload Pincodes
+                          <FaUpload className="text-[#0192ED]" size={12} /> Upload Pincodes
                         </button>
                         <button
                           onClick={() => {
@@ -416,7 +417,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                   <div className="flex flex-col items-end gap-1">
                     <span className="text-gray-700">Status</span>
                     <div className="flex items-center gap-2">
-                      <span className={`font-[700] ${courier.status === "Enable" ? "text-brand-primary" : "text-gray-400"}`}>
+                      <span className={`font-[700] ${courier.status === "Enable" ? "text-[#0192ED]" : "text-gray-400"}`}>
                         {courier.status}
                       </span>
                       <label className="relative inline-flex items-center cursor-pointer">
@@ -427,7 +428,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                           onChange={() => toggleStatus(index)}
                           disabled={!canAction}
                         />
-                        <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-brand-primary"></div>
+                        <div className="w-8 h-4 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[1px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-[#0192ED]"></div>
                       </label>
                     </div>
                   </div>
