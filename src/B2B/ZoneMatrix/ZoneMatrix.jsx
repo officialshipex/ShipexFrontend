@@ -14,11 +14,17 @@ import Loader from "../../Loader";
 export default function ZoneAdmin() {
   const [zones, setZones] = useState([]);
   const [zone, setZone] = useState("");
+
+  // Locations picked for the zone currently being built — nothing is sent
+  // to the backend until "Submit" is clicked, so you can search and add
+  // several cities/states first and save them all in one go.
+  const [staged, setStaged] = useState([]); // [{ name, label, detail }]
+
   const [searchQuery, setSearchQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
-  const [addingName, setAddingName] = useState(null); // which suggestion is being added right now
+  const [submitting, setSubmitting] = useState(false);
   const [tableLoading, setTableLoading] = useState(false);   // table reload
   const searchBoxRef = useRef(null);
 
@@ -75,27 +81,50 @@ export default function ZoneAdmin() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  /* ➕ ADD LOCATION — adds immediately on click, no staging/batch step */
-  const handleAddLocation = async (name) => {
-    if (!zone || !name) {
-      Notification("Zone and location required", "info");
+  /* ➕ STAGE a suggestion (local only — not sent to the backend yet) */
+  const handleStage = (suggestion) => {
+    setStaged((prev) => {
+      if (prev.some((s) => s.name.toLowerCase() === suggestion.name.toLowerCase())) {
+        Notification(`"${suggestion.name}" is already added`, "info");
+        return prev;
+      }
+      return [...prev, suggestion];
+    });
+    setSearchQuery("");
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
+
+  const handleUnstage = (name) => {
+    setStaged((prev) => prev.filter((s) => s.name !== name));
+  };
+
+  /* ✅ SUBMIT — one call with every staged location, added to the zone (existing or new) */
+  const handleSubmit = async () => {
+    if (!zone.trim()) {
+      Notification("Zone is required", "info");
+      return;
+    }
+    if (staged.length === 0) {
+      Notification("Add at least one city or state first", "info");
       return;
     }
 
     try {
-      setAddingName(name);
-      setTableLoading(true);
-      await addLocation({ zone: zone.trim().toUpperCase(), locations: [{ name }] });
-      Notification("Location added successfully", "success");
+      setSubmitting(true);
+      await addLocation({
+        zone: zone.trim().toUpperCase(),
+        locations: staged.map((s) => ({ name: s.name })),
+      });
+      Notification("Locations added successfully", "success");
+      setZone("");
+      setStaged([]);
       setSearchQuery("");
-      setSuggestions([]);
-      setShowSuggestions(false);
       await loadZones();
     } catch (err) {
       Notification(err.response?.data?.message || "Failed", "error");
     } finally {
-      setAddingName(null);
-      setTableLoading(false);
+      setSubmitting(false);
     }
   };
 
@@ -165,9 +194,8 @@ export default function ZoneAdmin() {
                     <button
                       key={`${s.label}-${s.name}-${i}`}
                       type="button"
-                      disabled={addingName === s.name}
-                      onClick={() => handleAddLocation(s.name)}
-                      className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left hover:bg-brand-primary/8 border-b last:border-0 disabled:opacity-50"
+                      onClick={() => handleStage(s)}
+                      className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left hover:bg-brand-primary/8 border-b last:border-0"
                     >
                       <div className="min-w-0">
                         <span className="text-[9px] font-[600] uppercase text-brand-primary bg-brand-primary/16 rounded px-1.5 py-0.5 mr-2">
@@ -178,9 +206,7 @@ export default function ZoneAdmin() {
                           <span className="text-[10px] text-gray-400 ml-1">({s.detail})</span>
                         )}
                       </div>
-                      <span className="text-brand-primary text-[10px] font-[600] shrink-0">
-                        {addingName === s.name ? "Adding..." : "+ Add"}
-                      </span>
+                      <span className="text-brand-primary text-[10px] font-[600] shrink-0">+ Add</span>
                     </button>
                   ))
                 ) : (
@@ -190,6 +216,41 @@ export default function ZoneAdmin() {
             )}
           </div>
         </div>
+
+        {/* STAGED LOCATIONS — nothing saved yet, click Submit to save them all */}
+        {staged.length > 0 && (
+          <div className="mt-3">
+            <p className="text-[10px] font-[600] text-gray-500 mb-1">
+              Locations to add ({staged.length}):
+            </p>
+            <div className="flex flex-wrap gap-2">
+              {staged.map((s) => (
+                <span
+                  key={s.name}
+                  className="flex items-center font-[600] gap-2 bg-brand-primary/12 text-brand-primary px-3 py-1 rounded-full text-[10px]"
+                >
+                  {s.name}
+                  <button
+                    type="button"
+                    onClick={() => handleUnstage(s.name)}
+                    className="text-red-500"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+
+        <button
+          type="button"
+          disabled={submitting}
+          onClick={handleSubmit}
+          className="mt-3 bg-brand-primary font-[600] text-white px-4 py-2 rounded-lg text-[12px] disabled:opacity-50"
+        >
+          {submitting ? "Submitting..." : "Submit"}
+        </button>
       </div>
 
       {/* ================= DESKTOP TABLE ================= */}
