@@ -78,8 +78,6 @@ const ShippingFilterPanel = ({
             searchType: "awbNumber",
             selectedCourier: [],
             status: "",
-            paymentType: "",
-            status: "",
             paymentType: ""
         };
         setLocalFilters(cleared);

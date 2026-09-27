@@ -35,6 +35,12 @@ export function setupAxiosInterceptors() {
       config.headers.Authorization = `Bearer ${token}`;
     }
 
+    const devTenant = localStorage.getItem("dev_tenant_key") || localStorage.getItem("dev_tenant");
+    if (devTenant && isBackendRequest(config)) {
+      config.headers = config.headers || {};
+      config.headers["x-tenant-key"] = devTenant;
+    }
+
     // Every call site builds its URL as `${REACT_APP_BACKEND_URL}/...`, so this one
     // rewrite point is what makes the current company's own branded API domain (if it
     // has one) apply everywhere, instead of editing all ~250 of those call sites.

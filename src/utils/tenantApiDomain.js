@@ -25,6 +25,9 @@ export function toTenantUrl(url) {
   if (!backend) return url;
 
   try {
+    const backendHost = new URL(backend).hostname.toLowerCase();
+    if (backendHost === "localhost" || backendHost === "127.0.0.1") return url; // Keep local requests on localhost!
+
     const backendOrigin = new URL(backend).origin;
     const target = new URL(url, backend);
     if (target.origin !== backendOrigin) return url; // not our backend — leave alone

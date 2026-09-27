@@ -390,8 +390,6 @@ export const BulkCancel = async ({ selectedOrders, setRefresh }) => {
     allSuccess = false;
   }
 
-  setRefresh((prev) => !prev);
-
   if (allSuccess) {
     Notification("All selected orders cancelled successfully.", "success");
   } else {
@@ -401,6 +399,8 @@ export const BulkCancel = async ({ selectedOrders, setRefresh }) => {
     );
   }
 };
+
+export const BulkCancelB2B = BulkCancel;
 
 export const cancelOrder = async ({ orderId, refresh, setRefresh }) => {
   try {
