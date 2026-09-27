@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import {
   getZones,
   addLocation,
   removeLocation,
   deleteZone,
-  searchLocations,
+  lookupPincode,
 } from "./zoneApi";
 import { FiTrash2 } from "react-icons/fi";
 import { Notification } from "../../Notification";
@@ -13,20 +13,11 @@ import Loader from "../../Loader";
 
 export default function ZoneAdmin() {
   const [zones, setZones] = useState([]);
-  const [zoneName, setZoneName] = useState("");
-
-  // Locations staged for the zone currently being built — nothing is sent
-  // to the backend until "Create Zone" is clicked, so the admin can
-  // search + add repeatedly and commit the whole zone in one go.
-  const [staged, setStaged] = useState([]); // [{ name, label, detail }]
-
-  const [searchQuery, setSearchQuery] = useState("");
-  const [suggestions, setSuggestions] = useState([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [searchLoading, setSearchLoading] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [zone, setZone] = useState("");
+  const [pincode, setPincode] = useState("");
+  const [lookup, setLookup] = useState(null);
+  const [lookupLoading, setLookupLoading] = useState(false); // search button
   const [tableLoading, setTableLoading] = useState(false);   // table reload
-  const searchBoxRef = useRef(null);
 
 
   const loadZones = async () => {
@@ -46,85 +37,48 @@ export default function ZoneAdmin() {
     loadZones();
   }, []);
 
-  /* 🔍 DEBOUNCED SEARCH — by city, state, or pincode, whichever it looks like */
-  useEffect(() => {
-    const q = searchQuery.trim();
-    if (q.length < 2) {
-      setSuggestions([]);
-      return;
-    }
-
-    const timer = setTimeout(async () => {
-      try {
-        setSearchLoading(true);
-        const res = await searchLocations(q);
-        setSuggestions(res.data?.results || []);
-        setShowSuggestions(true);
-      } catch {
-        setSuggestions([]);
-      } finally {
-        setSearchLoading(false);
-      }
-    }, 300);
-
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
-
-  // Close the suggestion dropdown on outside click
-  useEffect(() => {
-    const handleClickOutside = (e) => {
-      if (searchBoxRef.current && !searchBoxRef.current.contains(e.target)) {
-        setShowSuggestions(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
-
-  /* ➕ STAGE a suggestion (local only — not sent to the backend yet) */
-  const handleStage = (suggestion) => {
-    setStaged((prev) => {
-      if (prev.some((s) => s.name.toLowerCase() === suggestion.name.toLowerCase())) {
-        Notification(`"${suggestion.name}" is already added to this zone`, "info");
-        return prev;
-      }
-      return [...prev, suggestion];
-    });
-    setSearchQuery("");
-    setSuggestions([]);
-    setShowSuggestions(false);
-  };
-
-  const handleUnstage = (name) => {
-    setStaged((prev) => prev.filter((s) => s.name !== name));
-  };
-
-  /* ✅ CREATE ZONE — one call with every staged location */
-  const handleCreateZone = async () => {
-    if (!zoneName.trim()) {
-      Notification("Zone name is required", "info");
-      return;
-    }
-    if (staged.length === 0) {
-      Notification("Add at least one city or state to this zone", "info");
+  /* 🔍 PINCODE LOOKUP */
+  const handleLookup = async () => {
+    if (!pincode) {
+      Notification("Please enter pincode", "info");
       return;
     }
 
     try {
-      setSubmitting(true);
-      await addLocation({
-        zone: zoneName.trim().toUpperCase(),
-        locations: staged.map((s) => ({ name: s.name })),
-      });
-      Notification("Zone created successfully", "success");
-      setZoneName("");
-      setStaged([]);
-      setSearchQuery("");
+      setLookupLoading(true);
+      const res = await lookupPincode(pincode);
+      if (res.data.found) {
+        setLookup(res.data);
+      } else {
+        setLookup(null);
+        Notification("Pincode not found", "error");
+      }
+    } catch {
+      Notification("Failed to lookup pincode", "error");
+    } finally {
+      setLookupLoading(false);
+    }
+  };
+
+  /* ➕ ADD LOCATION */
+  const handleAddLocation = async (name) => {
+    if (!zone || !name) {
+      Notification("Zone and location required", "info");
+      return;
+    }
+
+    try {
+      setTableLoading(true);
+      await addLocation({ zone, locations: [{ name }] });
+      Notification("Location added successfully", "success");
+      setLookup(null);
+      setZone("");
+      setPincode("");
       await loadZones();
     } catch (err) {
-      Notification(err.response?.data?.message || "Failed to create zone", "error");
+      Notification(err.response?.data?.message || "Failed", "error");
     } finally {
-      setSubmitting(false);
+      setTableLoading(false);
     }
   };
 
@@ -159,99 +113,68 @@ export default function ZoneAdmin() {
   return (
     <div className="sm:p-2 px-1 space-y-4 relative">
 
-      {/* ================= CREATE ZONE SECTION ================= */}
+      {/* ================= ADD SECTION ================= */}
       <div className="bg-white rounded-lg p-4 shadow">
-        <h2 className="text-[12px] font-[600] text-gray-700 mb-2">
-          Create Zone
-        </h2>
-
-        <div className="flex flex-col sm:flex-row w-full gap-2">
-          <input
-            className="border px-3 py-2 font-[600] text-gray-500 rounded-md w-full sm:w-40 text-[12px] focus:outline-[#0192ED]"
-            placeholder="Zone name (N1)"
-            value={zoneName}
-            onChange={(e) => setZoneName(e.target.value.toUpperCase())}
-          />
-
-          {/* Search box + suggestion dropdown — capped so it doesn't stretch
-              across the whole card on wide screens */}
-          <div className="relative w-full sm:max-w-xs" ref={searchBoxRef}>
-            <input
-              className="border px-3 py-2 font-[600] text-gray-500 rounded-md w-full text-[12px] focus:outline-[#0192ED]"
-              placeholder="Search city, state or pincode..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
-            />
-
-            {showSuggestions && (
-              <div className="absolute z-20 mt-1 w-full bg-white border rounded-lg shadow-lg max-h-64 overflow-y-auto">
-                {searchLoading ? (
-                  <div className="flex justify-center py-4">
-                    <Loader />
-                  </div>
-                ) : suggestions.length > 0 ? (
-                  suggestions.map((s, i) => (
-                    <button
-                      key={`${s.label}-${s.name}-${i}`}
-                      type="button"
-                      onClick={() => handleStage(s)}
-                      className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left hover:bg-blue-50 border-b last:border-0"
-                    >
-                      <div className="min-w-0">
-                        <span className="text-[9px] font-[600] uppercase text-[#0192ED] bg-blue-100 rounded px-1.5 py-0.5 mr-2">
-                          {s.label}
-                        </span>
-                        <span className="text-[12px] font-[600] text-gray-700">{s.name}</span>
-                        {s.detail && (
-                          <span className="text-[10px] text-gray-400 ml-1">({s.detail})</span>
-                        )}
-                      </div>
-                      <span className="text-[#0192ED] text-[10px] font-[600] shrink-0">+ Add</span>
-                    </button>
-                  ))
-                ) : (
-                  <p className="text-gray-400 text-[11px] italic text-center py-3">No matches found</p>
-                )}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* STAGED LOCATIONS for the zone being built */}
-        {staged.length > 0 && (
-          <div className="mt-3">
-            <p className="text-[10px] font-[600] text-gray-500 mb-1">
-              Locations for this zone ({staged.length}):
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {staged.map((s) => (
-                <span
-                  key={s.name}
-                  className="flex items-center font-[600] gap-2 bg-blue-100 text-[#0192ED] px-3 py-1 rounded-full text-[10px]"
-                >
-                  {s.name}
-                  <button
-                    type="button"
-                    onClick={() => handleUnstage(s.name)}
-                    className="text-red-500"
-                  >
-                    ×
-                  </button>
-                </span>
-              ))}
-            </div>
+        {lookupLoading && (
+          <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-lg">
+            <Loader />
           </div>
         )}
 
-        <button
-          type="button"
-          disabled={submitting}
-          onClick={handleCreateZone}
-          className="mt-3 bg-[#0192ED] font-[600] text-white px-4 py-2 rounded-lg text-[12px] disabled:opacity-50"
-        >
-          {submitting ? "Creating..." : "Create Zone"}
-        </button>
+        <h2 className="text-[12px] font-[600] text-gray-700 mb-2">
+          Add Location to Zone
+        </h2>
+
+        <div className="flex w-full gap-2">
+          <input
+            className="border px-3 py-2 font-[600] text-gray-500 rounded-md w-full text-[12px] sm:w-32 focus:outline-[#0192ED]"
+            placeholder="Zone (N1)"
+            value={zone}
+            onChange={(e) => setZone(e.target.value.toUpperCase())}
+          />
+
+          <input
+            className="border px-3 py-2 font-[600] text-gray-500 rounded-md w-full text-[12px] sm:w-32 focus:outline-[#0192ED]"
+            placeholder="Pincode"
+            value={pincode}
+            onChange={(e) => setPincode(e.target.value)}
+          />
+
+          <button
+            onClick={handleLookup}
+            className="bg-[#0192ED] font-[600] text-white px-3 py-2 rounded-lg text-[10px] sm:text-[12px]"
+          >
+            Search
+          </button>
+        </div>
+
+        {/* LOOKUP RESULT */}
+        {lookup && (
+          <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 mt-4">
+            {["state", "city"].map((type) => (
+              <div
+                key={type}
+                className="border rounded-lg flex justify-between items-center p-3 text-gray-700"
+              >
+                <div className="flex gap-2 justify-center items-center">
+                  <p className="text-[10px] text-gray-500 font-[600] uppercase">
+                    {type} :
+                  </p>
+                  <p className="text-[12px] text-gray-700 font-[600]">
+                    {lookup[type]}
+                  </p>
+                </div>
+                <button
+                  disabled={lookupLoading}
+                  onClick={() => handleAddLocation(lookup[type])}
+                  className="bg-[#0192ED] text-white px-3 py-1 rounded font-[600] text-[10px]"
+                >
+                  Add {type}
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* ================= DESKTOP TABLE ================= */}
