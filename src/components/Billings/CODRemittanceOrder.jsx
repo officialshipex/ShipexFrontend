@@ -445,7 +445,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                   className={`px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-bold text-gray-700 flex items-center gap-2 border-b border-gray-50 transition-colors ${bankExportLoading ? "opacity-60 cursor-not-allowed" : ""}`}
                   onClick={() => { if (!bankExportLoading) { handleExportBankTemplate(); setBulkActionOpen(false); } }}
                 >
-                  <FileSpreadsheet className="w-4 h-4 text-blue-500" />
+                  <FileSpreadsheet className="w-4 h-4 text-brand-primary" />
                   {bankExportLoading ? "Generating..." : "Export Bank Template"}
                 </div>
                 <div className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-bold text-gray-700 flex items-center gap-2 border-b border-gray-50 transition-colors" onClick={() => { handleOpenBankResponseUpload(); setBulkActionOpen(false); }}>
@@ -524,9 +524,9 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 </button>
                 <button
                   onClick={() => { if (!bankExportLoading) { handleExportBankTemplate(); setBulkActionOpen(false); } }}
-                  className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-blue-50 hover:text-blue-600 flex items-center gap-2.5 transition-colors border-b border-gray-50"
+                  className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-brand-primary/8 hover:text-brand-primary flex items-center gap-2.5 transition-colors border-b border-gray-50"
                 >
-                  <FileSpreadsheet className="w-3 h-3 text-blue-500" /> {bankExportLoading ? "Generating..." : "Bank Template"}
+                  <FileSpreadsheet className="w-3 h-3 text-brand-primary" /> {bankExportLoading ? "Generating..." : "Bank Template"}
                 </button>
                 <button
                   onClick={() => {
@@ -903,7 +903,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
               </div>
 
               {/* Info Box */}
-              <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 text-[10px] sm:text-[11px] text-blue-700">
+              <div className="bg-brand-primary/8 border border-brand-primary/16 rounded-lg p-3 text-[10px] sm:text-[11px] text-brand-primary">
                 <p className="font-bold mb-1">ℹ️ How it works:</p>
                 <ul className="list-disc list-inside space-y-0.5">
                   <li>Only rows with <strong>Status = "Successful"</strong> will be processed.</li>

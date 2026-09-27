@@ -433,7 +433,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
 
           {/* Ekart notice */}
           {isEkart && (
-            <div className="bg-blue-50 border border-blue-100 rounded-lg p-3 text-[11px] text-blue-700 font-[500]">
+            <div className="bg-brand-primary/8 border border-brand-primary/16 rounded-lg p-3 text-[11px] text-brand-primary font-[500]">
               ℹ️ Ekart NDR actions are processed internally and tracked via order history.
             </div>
           )}

@@ -138,8 +138,8 @@ const OrderTab = ({ isSidebarAdmin }) => {
                         <button
                             key={tab}
                             className={`px-3 py-2 text-[12px] rounded-lg font-[600] transition-all duration-200 shadow-sm border ${activeTab === tab
-                                ? "bg-[#0192ED] text-white border-[#0192ED]"
-                                : "bg-white text-gray-700 border-gray-200 hover:bg-blue-100"
+                                ? "bg-brand-primary text-white border-brand-primary"
+                                : "bg-white text-gray-700 border-gray-200 hover:bg-brand-primary/16"
                                 }`}
                             onClick={() => setActiveTab(tab)}
                         >
@@ -151,8 +151,8 @@ const OrderTab = ({ isSidebarAdmin }) => {
                         <button
                             onClick={() => setShowMoreTabs((prev) => !prev)}
                             className={`px-3 py-2 text-[12px] rounded-lg font-[600] transition-all duration-200 shadow-sm border flex items-center gap-1 ${moreTabs.includes(activeTab)
-                                ? "bg-[#0192ED] text-white border-[#0192ED]"
-                                : "bg-white text-gray-700 border-gray-200 hover:bg-blue-100"
+                                ? "bg-brand-primary text-white border-brand-primary"
+                                : "bg-white text-gray-700 border-gray-200 hover:bg-brand-primary/16"
                                 }`}
                         >
                             {moreTabs.includes(activeTab) ? activeTab : "More"}
@@ -169,8 +169,8 @@ const OrderTab = ({ isSidebarAdmin }) => {
                                             setShowMoreTabs(false);
                                         }}
                                         className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${activeTab === tab
-                                            ? "bg-blue-50 text-[#0192ED]"
-                                            : "text-gray-700 hover:bg-blue-100"
+                                            ? "bg-brand-primary/8 text-brand-primary"
+                                            : "text-gray-700 hover:bg-brand-primary/16"
                                             }`}
                                     >
                                         {tab}
@@ -194,7 +194,7 @@ const OrderTab = ({ isSidebarAdmin }) => {
                             {allTabs.map((tab) => (
                                 <button
                                     key={tab}
-                                    className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${activeTab === tab ? "bg-blue-50 text-[#0192ED]" : "text-gray-700 hover:bg-gray-50"
+                                    className={`w-full text-left px-4 py-2 text-[12px] font-[600] transition-colors ${activeTab === tab ? "bg-brand-primary/8 text-brand-primary" : "text-gray-700 hover:bg-gray-50"
                                         }`}
                                     onClick={() => {
                                         setActiveTab(tab);

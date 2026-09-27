@@ -255,7 +255,7 @@ const ManageWebhooks = () => {
                         onClick={() => handleTest(wh._id)}
                         disabled={testingId === wh._id}
                         title="Send test event to this webhook"
-                        className={`text-gray-400 hover:text-blue-500 transition-all ${testingId === wh._id ? 'animate-pulse text-blue-400' : ''}`}
+                        className={`text-gray-400 hover:text-brand-primary transition-all ${testingId === wh._id ? 'animate-pulse text-brand-primary' : ''}`}
                       >
                         {testingId === wh._id ? <FiRefreshCw size={14} className="animate-spin" /> : <FiZap size={14} />}
                       </button>
@@ -376,8 +376,8 @@ const ManageWebhooks = () => {
                   <button
                     onClick={() => handleTest(wh._id)}
                     disabled={testingId === wh._id}
-                    className={`flex items-center gap-1 px-2.5 py-1 border border-blue-100 text-blue-600 rounded-md text-[10px] font-[600] hover:bg-blue-50 transition shadow-sm ${
-                      testingId === wh._id ? 'animate-pulse text-blue-400' : ''
+                    className={`flex items-center gap-1 px-2.5 py-1 border border-brand-primary/16 text-brand-primary rounded-md text-[10px] font-[600] hover:bg-brand-primary/8 transition shadow-sm ${
+                      testingId === wh._id ? 'animate-pulse text-brand-primary' : ''
                     }`}
                   >
                     {testingId === wh._id ? <FiRefreshCw size={10} className="animate-spin" /> : <FiZap size={10} />}

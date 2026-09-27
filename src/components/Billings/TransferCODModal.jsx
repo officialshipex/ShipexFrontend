@@ -525,7 +525,7 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
                       </div>
                     )}
                     {adjustMode === "negative_only" && walletNegativeOnly.sourceId && (
-                      <div className="text-blue-600 text-[11px]">
+                      <div className="text-brand-primary text-[11px]">
                         ₹{walletNegativeOnly.needed.toFixed(2)} will be deducted from Remittance ID: {walletNegativeOnly.sourceId}
                       </div>
                     )}
@@ -642,7 +642,7 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
                                   Frozen
                                 </span>
                               ) : isTopUp && adjustMode === "full" ? (
-                                <span className="text-blue-600 font-semibold">
+                                <span className="text-brand-primary font-semibold">
                                   TopUp
                                 </span>
                               ) : adjustMode === "negative_only" && idStr === walletNegativeOnly.sourceId ? (

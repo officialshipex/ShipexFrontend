@@ -298,7 +298,7 @@ const Referral = () => {
                   disabled={selectedRows.length === 0}
                   className="w-full text-left px-4 py-2 text-[12px] text-gray-700 hover:bg-gray-50 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed border-t"
                 >
-                  <Download className="w-4 h-4 text-blue-500" />
+                  <Download className="w-4 h-4 text-brand-primary" />
                   Export Selected (Excel)
                 </button>
               </div>

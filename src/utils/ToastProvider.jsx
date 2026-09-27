@@ -34,8 +34,8 @@ export const ToastProvider = ({ children }) => {
             icon: <AlertTriangle className="w-5 h-5 text-yellow-600" />,
         },
         info: {
-            bg: "bg-blue-100 border-blue-300 text-blue-800",
-            icon: <Info className="w-5 h-5 text-blue-600" />,
+            bg: "bg-brand-primary/16 border-brand-primary/26 text-brand-primary",
+            icon: <Info className="w-5 h-5 text-brand-primary" />,
         },
     };
 

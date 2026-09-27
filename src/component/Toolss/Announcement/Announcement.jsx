@@ -233,7 +233,7 @@ const Announcement = () => {
                       </td>
                       <td className="px-3 py-2">
                         <div className="flex flex-col gap-1">
-                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold w-fit ${ann.disableType === "manual" ? "bg-blue-100 text-blue-600" : "bg-purple-100 text-purple-600"}`}>
+                          <span className={`px-2 py-0.5 rounded text-[10px] font-bold w-fit ${ann.disableType === "manual" ? "bg-brand-primary/16 text-brand-primary" : "bg-purple-100 text-purple-600"}`}>
                             {ann.disableType === "manual" ? "Manual" : "Automated"}
                           </span>
                           {ann.disableType === "automated" && (
@@ -334,7 +334,7 @@ const Announcement = () => {
                 {/* Compact Footer Details */}
                 <div className="flex items-center justify-between pt-1.5 border-t border-gray-50">
                   <div className="flex items-center gap-2">
-                    <span className={`px-2 py-0.5 rounded-[4px] text-[9px] font-bold ${ann.disableType === "manual" ? "bg-blue-50 text-blue-600" : "bg-purple-50 text-purple-600"}`}>
+                    <span className={`px-2 py-0.5 rounded-[4px] text-[9px] font-bold ${ann.disableType === "manual" ? "bg-brand-primary/8 text-brand-primary" : "bg-purple-50 text-purple-600"}`}>
                       {ann.disableType === "manual" ? "Manual" : "Automated"}
                     </span>
                     {ann.disableType === "automated" && (

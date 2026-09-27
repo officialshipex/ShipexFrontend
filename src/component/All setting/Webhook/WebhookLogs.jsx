@@ -158,7 +158,7 @@ const WebhookLogs = () => {
                   <td className="py-2 px-3 font-mono text-[11px]">{log.webhookId}</td>
                   <td className="py-2 px-3 max-w-xs truncate text-brand-primary" title={log.url}>{log.url}</td>
                   <td className="py-2 px-3">
-                    <span className="bg-blue-100 text-blue-600 text-[10px] px-2 py-0.5 rounded border border-blue-200">
+                    <span className="bg-brand-primary/16 text-brand-primary text-[10px] px-2 py-0.5 rounded border border-brand-primary/26">
                       {log.eventTopic}
                     </span>
                   </td>
@@ -234,7 +234,7 @@ const WebhookLogs = () => {
 
                   {/* Third Row: Topic & Details Button */}
                   <div className="flex justify-between items-center">
-                    <span className="bg-blue-50 text-blue-600 text-[9px] px-1.5 py-0.2 rounded border border-blue-100 font-semibold">
+                    <span className="bg-brand-primary/8 text-brand-primary text-[9px] px-1.5 py-0.2 rounded border border-brand-primary/16 font-semibold">
                       {log.eventTopic}
                     </span>
                     <button 
@@ -279,7 +279,7 @@ const WebhookLogs = () => {
                 </div>
                 <div className="bg-gray-50 p-2 rounded border">
                   <p className="text-gray-400 text-[10px] uppercase font-bold">Topic</p>
-                  <span className="text-blue-600 font-semibold">{selectedLog.eventTopic}</span>
+                  <span className="text-brand-primary font-semibold">{selectedLog.eventTopic}</span>
                 </div>
                 <div className="bg-gray-50 p-2 rounded border col-span-2">
                   <p className="text-gray-400 text-[10px] uppercase font-bold">Destination URL</p>

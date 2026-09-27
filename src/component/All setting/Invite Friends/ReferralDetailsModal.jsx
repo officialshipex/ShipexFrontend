@@ -52,23 +52,23 @@ const ReferralDetailsModal = ({ referral, onClose }) => {
               </div>
             </div>
 
-            <div className="bg-blue-50/50 border border-blue-100 rounded-xl p-4 space-y-3">
-              <h3 className="text-[10px] sm:text-[12px] font-bold text-blue-600 uppercase tracking-wider flex items-center gap-2">
+            <div className="bg-brand-primary/50 border border-brand-primary/16 rounded-xl p-4 space-y-3">
+              <h3 className="text-[10px] sm:text-[12px] font-bold text-brand-primary uppercase tracking-wider flex items-center gap-2">
                 <FileText className="w-4 h-4" />
                 Monthly Summary
               </h3>
               <div className="grid grid-cols-3 gap-2">
-                <div className="text-center p-2 bg-white rounded-lg border border-blue-100">
+                <div className="text-center p-2 bg-white rounded-lg border border-brand-primary/16">
                   <p className="text-[9px] sm:text-[10px] text-gray-500 font-bold">Orders</p>
                   <p className="text-[10px] sm:text-[12px] font-bold text-gray-700">{referral.totalOrderCount || 0}</p>
                 </div>
-                <div className="text-center p-2 bg-white rounded-lg border border-blue-100">
+                <div className="text-center p-2 bg-white rounded-lg border border-brand-primary/16">
                   <p className="text-[9px] sm:text-[10px] text-gray-500 font-bold">Freight</p>
                   <p className="text-[10px] sm:text-[12px] font-bold text-brand-primary">₹{Math.round(referral.totalShipping || 0)}</p>
                 </div>
-                <div className="text-center p-2 bg-white rounded-lg border border-blue-100">
+                <div className="text-center p-2 bg-white rounded-lg border border-brand-primary/16">
                   <p className="text-[9px] sm:text-[10px] text-gray-500 font-bold">Reward</p>
-                  <p className="text-[10px] sm:text-[12px] font-bold text-blue-600">₹{Math.round(referral.totalCommission || 0)}</p>
+                  <p className="text-[10px] sm:text-[12px] font-bold text-brand-primary">₹{Math.round(referral.totalCommission || 0)}</p>
                 </div>
               </div>
             </div>

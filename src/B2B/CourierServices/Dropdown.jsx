@@ -25,17 +25,17 @@ export default function CustomDropdown({ label, options = [], value, onChange, n
         <div ref={dropdownRef} className="relative w-full text-[10px] sm:text-[12px] flex flex-col gap-1.5">
             {label && <label className="block text-[10px] sm:text-[12px] font-[600] text-gray-700">{label}</label>}
             <div
-                className={`border bg-white px-3 sm:h-[35px] h-[33px] font-[600] rounded-lg flex justify-between items-center transition-all ${loading ? "cursor-wait bg-gray-50" : "cursor-pointer"} ${isOpen ? "border-[#0192ED] ring-1 ring-[#0192ED]/20" : "border-gray-300 hover:border-gray-300"}`}
+                className={`border bg-white px-3 sm:h-[35px] h-[33px] font-[600] rounded-lg flex justify-between items-center transition-all ${loading ? "cursor-wait bg-gray-50" : "cursor-pointer"} ${isOpen ? "border-brand-primary ring-1 ring-brand-primary/20" : "border-gray-300 hover:border-gray-300"}`}
                 onClick={() => !loading && setIsOpen(!isOpen)}
             >
                 <span className={`truncate ${value ? "text-gray-700 font-[600]" : "text-gray-400"}`}>
                     {loading ? "Loading..." : (value || placeholder)}
                 </span>
                 {loading ? (
-                    <div className="w-3.5 h-3.5 border-2 border-gray-300 border-t-[#0192ED] rounded-full animate-spin flex-shrink-0" />
+                    <div className="w-3.5 h-3.5 border-2 border-gray-300 border-t-brand-primary rounded-full animate-spin flex-shrink-0" />
                 ) : (
                     <ChevronDown
-                        className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180 text-[#0192ED]" : ""}`}
+                        className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180 text-brand-primary" : ""}`}
                     />
                 )}
             </div>
@@ -47,7 +47,7 @@ export default function CustomDropdown({ label, options = [], value, onChange, n
                             <li
                                 key={option}
                                 onClick={() => handleSelect(option)}
-                                className={`px-3 py-2 text-[12px] font-[600] transition-colors cursor-pointer ${value === option ? "bg-blue-50 text-[#0192ED]" : "text-gray-600 hover:bg-gray-50"}`}
+                                className={`px-3 py-2 text-[12px] font-[600] transition-colors cursor-pointer ${value === option ? "bg-brand-primary/8 text-brand-primary" : "text-gray-600 hover:bg-gray-50"}`}
                             >
                                 {option}
                             </li>

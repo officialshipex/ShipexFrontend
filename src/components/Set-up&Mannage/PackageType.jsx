@@ -53,9 +53,9 @@ const PackageTypes = () => {
               className="border border-gray-300 rounded px-4 py-3 w-full pl-10 focus:outline-none focus:ring"
             />
           </div>
-          <div className="flex items-center bg-blue-50 p-6 rounded-lg shadow-lg border border-blue-300 w-full sm:w-auto flex-col sm:flex-row">
+          <div className="flex items-center bg-brand-primary/8 p-6 rounded-lg shadow-lg border border-brand-primary/26 w-full sm:w-auto flex-col sm:flex-row">
   {/* + Icon - First on Mobile */}
-  <div className="flex items-center justify-center mr-3 p-2 rounded-full bg-blue-500 order-1 sm:order-none mb-4 sm:mb-0">
+  <div className="flex items-center justify-center mr-3 p-2 rounded-full bg-brand-primary order-1 sm:order-none mb-4 sm:mb-0">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       className="h-5 w-5 text-white"
@@ -91,7 +91,7 @@ const PackageTypes = () => {
       onChange={() => setIsChecked(!isChecked)}
     />
     <div
-      className={`w-10 h-5 ${isChecked ? "bg-blue-500" : "bg-gray-200"} rounded-full relative transition duration-200`}
+      className={`w-10 h-5 ${isChecked ? "bg-brand-primary" : "bg-gray-200"} rounded-full relative transition duration-200`}
     >
       <div
         className={`absolute top-0 h-5 w-5 ${isChecked ? "left-5" : "left-0"} bg-white rounded-full shadow transform transition-all duration-200 ease-in-out`}

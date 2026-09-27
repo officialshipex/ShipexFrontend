@@ -314,9 +314,9 @@ const AIOrderUpdation = () => {
       )}
 
       {/* ── Info Banner ──────────────────────────────────── */}
-      <div className="flex items-start gap-2 bg-blue-50 border border-blue-100 rounded-xl px-4 py-3">
-        <FiAlertCircle className="w-4 h-4 text-blue-500 flex-shrink-0 mt-0.5" />
-        <p className="text-[11px] text-blue-700 leading-relaxed">
+      <div className="flex items-start gap-2 bg-brand-primary/8 border border-brand-primary/16 rounded-xl px-4 py-3">
+        <FiAlertCircle className="w-4 h-4 text-brand-primary flex-shrink-0 mt-0.5" />
+        <p className="text-[11px] text-brand-primary leading-relaxed">
           <strong>Credit Policy:</strong> Credits are deducted <strong>only when the customer answers the call</strong>.
           Unanswered or failed calls are free. 1 Credit = 1 successful answered call.
           Buy credits from the Notification section above.
@@ -428,7 +428,7 @@ const AIOrderUpdation = () => {
                       <td className="py-2 px-3 whitespace-nowrap">
                         <span className={`px-2 py-0.5 rounded-full text-[10px] font-[600] ${
                           log.serviceType === "order_verification"
-                            ? "bg-blue-100 text-blue-700"
+                            ? "bg-brand-primary/16 text-brand-primary"
                             : "bg-purple-100 text-purple-700"
                         }`}>
                           {serviceLabels[log.serviceType] || log.serviceType}

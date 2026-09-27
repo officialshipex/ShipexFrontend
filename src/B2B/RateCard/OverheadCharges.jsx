@@ -19,7 +19,7 @@ export default function OverheadCharges({ data, mode = "view", onChange }) {
         defaultValue={valuesRef.current[key]?.[field] ?? ""}
         placeholder={placeholder}
         className={`${width} border rounded px-2 py-1 text-[12px]
-        focus:outline-none focus:ring-1 focus:ring-[#0192ED] text-gray-800`}
+        focus:outline-none focus:ring-1 focus:ring-brand-primary text-gray-800`}
         onChange={(e) => {
           if (!valuesRef.current[key]) valuesRef.current[key] = {};
           valuesRef.current[key][field] = e.target.value;
@@ -61,11 +61,11 @@ export default function OverheadCharges({ data, mode = "view", onChange }) {
       </div>
 
       {/* Info Banner for Admins */}
-      <div className="mx-3 sm:mx-4 mt-3 p-2.5 bg-blue-50/70 border border-blue-100 rounded-lg flex items-start gap-2 text-[11px] text-blue-800">
-        <FiInfo className="mt-0.5 text-blue-600 text-sm flex-shrink-0" />
+      <div className="mx-3 sm:mx-4 mt-3 p-2.5 bg-brand-primary/70 border border-brand-primary/16 rounded-lg flex items-start gap-2 text-[11px] text-brand-primary">
+        <FiInfo className="mt-0.5 text-brand-primary text-sm flex-shrink-0" />
         <div>
           <span className="font-[600]">Calculation Breakdown: </span>
-          <span className="text-blue-700">
+          <span className="text-brand-primary">
             When both <strong>% (or ₹/Kg)</strong> and <strong>Min ₹</strong> are set, the system charges <strong>WHICHEVER IS HIGHER</strong>.{" "}
             <strong>Percentage (%)</strong> is computed on Base Freight (Fuel/Pickup) or Invoice Value (COD/ROV).
           </span>

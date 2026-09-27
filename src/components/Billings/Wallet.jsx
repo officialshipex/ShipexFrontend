@@ -277,7 +277,7 @@ const navigate=useNavigate()
             <div className="flex justify-between items-start gap-4">
               <div className="space-y-1 text-[12px] text-gray-700 w-full">
                 <div className="flex items-center gap-2">
-                  {/* <FaCalendarAlt className="text-blue-600" /> */}
+                  {/* <FaCalendarAlt className="text-brand-primary" /> */}
                   <span className="font-semibold text-xs text-gray-900">
                     Date:
                   </span>
