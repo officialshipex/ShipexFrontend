@@ -127,14 +127,14 @@ export default function ZoneAdmin() {
 
         <div className="flex w-full gap-2">
           <input
-            className="border px-3 py-2 font-[600] text-gray-500 rounded-md w-full text-[12px] sm:w-32 focus:outline-[#0192ED]"
+            className="border px-3 py-2 font-[600] text-gray-500 rounded-md w-full text-[12px] sm:w-32 focus:outline-brand-primary"
             placeholder="Zone (N1)"
             value={zone}
             onChange={(e) => setZone(e.target.value.toUpperCase())}
           />
 
           <input
-            className="border px-3 py-2 font-[600] text-gray-500 rounded-md w-full text-[12px] sm:w-32 focus:outline-[#0192ED]"
+            className="border px-3 py-2 font-[600] text-gray-500 rounded-md w-full text-[12px] sm:w-32 focus:outline-brand-primary"
             placeholder="Pincode"
             value={pincode}
             onChange={(e) => setPincode(e.target.value)}
@@ -142,7 +142,7 @@ export default function ZoneAdmin() {
 
           <button
             onClick={handleLookup}
-            className="bg-[#0192ED] font-[600] text-white px-3 py-2 rounded-lg text-[10px] sm:text-[12px]"
+            className="bg-brand-primary font-[600] text-white px-3 py-2 rounded-lg text-[10px] sm:text-[12px]"
           >
             Search
           </button>
@@ -167,7 +167,7 @@ export default function ZoneAdmin() {
                 <button
                   disabled={lookupLoading}
                   onClick={() => handleAddLocation(lookup[type])}
-                  className="bg-[#0192ED] text-white px-3 py-1 rounded font-[600] text-[10px]"
+                  className="bg-brand-primary text-white px-3 py-1 rounded font-[600] text-[10px]"
                 >
                   Add {type}
                 </button>
@@ -180,7 +180,7 @@ export default function ZoneAdmin() {
       {/* ================= DESKTOP TABLE ================= */}
       <div className="hidden md:block bg-white overflow-hidden">
         <table className="w-full text-left">
-          <thead className="bg-[#0192ED] border border-[#0192ED] text-white text-[12px]">
+          <thead className="bg-brand-primary border border-brand-primary text-white text-[12px]">
             <tr>
               <th className="px-3 py-2">Zone</th>
               <th className="px-3 py-2">Cities / States</th>
@@ -210,7 +210,7 @@ export default function ZoneAdmin() {
                       {z.locations.map((l, i) => (
                         <span
                           key={i}
-                          className="flex items-center font-[600] gap-2 bg-blue-100 text-[#0192ED] px-3 py-1 rounded-full text-[10px]"
+                          className="flex items-center font-[600] gap-2 bg-brand-primary/12 text-brand-primary px-3 py-1 rounded-full text-[10px]"
                         >
                           {l.name}
                           <button
@@ -269,7 +269,7 @@ export default function ZoneAdmin() {
                 {z.locations.map((l, i) => (
                   <span
                     key={i}
-                    className="flex items-center gap-2 bg-blue-100 font-[600] text-[#0192ED] px-3 py-1 rounded-full text-[10px]"
+                    className="flex items-center gap-2 bg-brand-primary/12 font-[600] text-brand-primary px-3 py-1 rounded-full text-[10px]"
                   >
                     {l.name}
                     <button
