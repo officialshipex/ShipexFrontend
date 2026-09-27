@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   getZones,
   addLocation,
   removeLocation,
   deleteZone,
-  lookupPincode,
+  searchLocations,
 } from "./zoneApi";
 import { FiTrash2 } from "react-icons/fi";
 import { Notification } from "../../Notification";
@@ -14,10 +14,13 @@ import Loader from "../../Loader";
 export default function ZoneAdmin() {
   const [zones, setZones] = useState([]);
   const [zone, setZone] = useState("");
-  const [pincode, setPincode] = useState("");
-  const [lookup, setLookup] = useState(null);
-  const [lookupLoading, setLookupLoading] = useState(false); // search button
+  const [searchQuery, setSearchQuery] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [searchLoading, setSearchLoading] = useState(false);
+  const [addingName, setAddingName] = useState(null); // which suggestion is being added right now
   const [tableLoading, setTableLoading] = useState(false);   // table reload
+  const searchBoxRef = useRef(null);
 
 
   const loadZones = async () => {
@@ -37,30 +40,42 @@ export default function ZoneAdmin() {
     loadZones();
   }, []);
 
-  /* 🔍 PINCODE LOOKUP */
-  const handleLookup = async () => {
-    if (!pincode) {
-      Notification("Please enter pincode", "info");
+  /* 🔍 DEBOUNCED SEARCH — by city, state, or pincode, whichever it looks like */
+  useEffect(() => {
+    const q = searchQuery.trim();
+    if (q.length < 2) {
+      setSuggestions([]);
       return;
     }
 
-    try {
-      setLookupLoading(true);
-      const res = await lookupPincode(pincode);
-      if (res.data.found) {
-        setLookup(res.data);
-      } else {
-        setLookup(null);
-        Notification("Pincode not found", "error");
+    const timer = setTimeout(async () => {
+      try {
+        setSearchLoading(true);
+        const res = await searchLocations(q);
+        setSuggestions(res.data?.results || []);
+        setShowSuggestions(true);
+      } catch {
+        setSuggestions([]);
+      } finally {
+        setSearchLoading(false);
       }
-    } catch {
-      Notification("Failed to lookup pincode", "error");
-    } finally {
-      setLookupLoading(false);
-    }
-  };
+    }, 300);
 
-  /* ➕ ADD LOCATION */
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Close the suggestion dropdown on outside click
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (searchBoxRef.current && !searchBoxRef.current.contains(e.target)) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  /* ➕ ADD LOCATION — adds immediately on click, no staging/batch step */
   const handleAddLocation = async (name) => {
     if (!zone || !name) {
       Notification("Zone and location required", "info");
@@ -68,16 +83,18 @@ export default function ZoneAdmin() {
     }
 
     try {
+      setAddingName(name);
       setTableLoading(true);
-      await addLocation({ zone, locations: [{ name }] });
+      await addLocation({ zone: zone.trim().toUpperCase(), locations: [{ name }] });
       Notification("Location added successfully", "success");
-      setLookup(null);
-      setZone("");
-      setPincode("");
+      setSearchQuery("");
+      setSuggestions([]);
+      setShowSuggestions(false);
       await loadZones();
     } catch (err) {
       Notification(err.response?.data?.message || "Failed", "error");
     } finally {
+      setAddingName(null);
       setTableLoading(false);
     }
   };
@@ -115,66 +132,64 @@ export default function ZoneAdmin() {
 
       {/* ================= ADD SECTION ================= */}
       <div className="bg-white rounded-lg p-4 shadow">
-        {lookupLoading && (
-          <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-lg">
-            <Loader />
-          </div>
-        )}
-
         <h2 className="text-[12px] font-[600] text-gray-700 mb-2">
           Add Location to Zone
         </h2>
 
-        <div className="flex w-full gap-2">
+        <div className="flex flex-col sm:flex-row w-full gap-2">
           <input
-            className="border px-3 py-2 font-[600] text-gray-500 rounded-md w-full text-[12px] sm:w-32 focus:outline-brand-primary"
+            className="border px-3 py-2 font-[600] text-gray-500 rounded-md w-full sm:w-40 text-[12px] focus:outline-brand-primary"
             placeholder="Zone (N1)"
             value={zone}
             onChange={(e) => setZone(e.target.value.toUpperCase())}
           />
 
-          <input
-            className="border px-3 py-2 font-[600] text-gray-500 rounded-md w-full text-[12px] sm:w-32 focus:outline-brand-primary"
-            placeholder="Pincode"
-            value={pincode}
-            onChange={(e) => setPincode(e.target.value)}
-          />
+          {/* Search box + suggestion dropdown — type a city, state, or pincode */}
+          <div className="relative w-full sm:max-w-xs" ref={searchBoxRef}>
+            <input
+              className="border px-3 py-2 font-[600] text-gray-500 rounded-md w-full text-[12px] focus:outline-brand-primary"
+              placeholder="Search city, state or pincode..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+            />
 
-          <button
-            onClick={handleLookup}
-            className="bg-brand-primary font-[600] text-white px-3 py-2 rounded-lg text-[10px] sm:text-[12px]"
-          >
-            Search
-          </button>
-        </div>
-
-        {/* LOOKUP RESULT */}
-        {lookup && (
-          <div className="grid grid-cols-1 sm:grid-cols-4 gap-2 mt-4">
-            {["state", "city"].map((type) => (
-              <div
-                key={type}
-                className="border rounded-lg flex justify-between items-center p-3 text-gray-700"
-              >
-                <div className="flex gap-2 justify-center items-center">
-                  <p className="text-[10px] text-gray-500 font-[600] uppercase">
-                    {type} :
-                  </p>
-                  <p className="text-[12px] text-gray-700 font-[600]">
-                    {lookup[type]}
-                  </p>
-                </div>
-                <button
-                  disabled={lookupLoading}
-                  onClick={() => handleAddLocation(lookup[type])}
-                  className="bg-brand-primary text-white px-3 py-1 rounded font-[600] text-[10px]"
-                >
-                  Add {type}
-                </button>
+            {showSuggestions && (
+              <div className="absolute z-20 mt-1 w-full bg-white border rounded-lg shadow-lg max-h-64 overflow-y-auto">
+                {searchLoading ? (
+                  <div className="flex justify-center py-4">
+                    <Loader />
+                  </div>
+                ) : suggestions.length > 0 ? (
+                  suggestions.map((s, i) => (
+                    <button
+                      key={`${s.label}-${s.name}-${i}`}
+                      type="button"
+                      disabled={addingName === s.name}
+                      onClick={() => handleAddLocation(s.name)}
+                      className="w-full flex items-center justify-between gap-2 px-3 py-2 text-left hover:bg-brand-primary/8 border-b last:border-0 disabled:opacity-50"
+                    >
+                      <div className="min-w-0">
+                        <span className="text-[9px] font-[600] uppercase text-brand-primary bg-brand-primary/16 rounded px-1.5 py-0.5 mr-2">
+                          {s.label}
+                        </span>
+                        <span className="text-[12px] font-[600] text-gray-700">{s.name}</span>
+                        {s.detail && (
+                          <span className="text-[10px] text-gray-400 ml-1">({s.detail})</span>
+                        )}
+                      </div>
+                      <span className="text-brand-primary text-[10px] font-[600] shrink-0">
+                        {addingName === s.name ? "Adding..." : "+ Add"}
+                      </span>
+                    </button>
+                  ))
+                ) : (
+                  <p className="text-gray-400 text-[11px] italic text-center py-3">No matches found</p>
+                )}
               </div>
-            ))}
+            )}
           </div>
-        )}
+        </div>
       </div>
 
       {/* ================= DESKTOP TABLE ================= */}
