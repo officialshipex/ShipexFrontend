@@ -124,7 +124,40 @@ const courierConfigs = {
   },
 };
 
-const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) => {
+// B2B (Setup > B2B Courier) has its own backend routes and credential store
+// (B2BallCourier). Only couriers with a real B2B integration are listed; the
+// B2C configs above must never be used from the B2B screen, or the courier is
+// saved as a B2C account and B2B keeps running without its own credentials.
+const b2bCourierConfigs = {
+  Shiprocket: {
+    endpoint: "/b2b/shiprocket/getToken",
+    provider: "Shiprocket",
+    fields: [
+      { name: "clientId", label: "Client ID", placeholder: "Shiprocket Cargo Client ID", type: "text" },
+      { name: "refreshToken", label: "Refresh Token", placeholder: "Refresh Token", type: "password" },
+      { name: "authToken", label: "Auth Token", placeholder: "Auth Token", type: "password" },
+    ],
+  },
+  Delhivery: {
+    endpoint: "/b2b/delhivery/getToken",
+    provider: "Delhivery",
+    fields: [
+      { name: "username", label: "User", placeholder: "B2B Username", type: "text" },
+      { name: "password", label: "Password", placeholder: "Password", type: "password" },
+    ],
+  },
+  BigShip: {
+    endpoint: "/b2b/bigship/getToken",
+    provider: "BigShip",
+    fields: [
+      { name: "username", label: "User/Email", placeholder: "API Username", type: "text" },
+      { name: "password", label: "Password", placeholder: "Password", type: "password" },
+      { name: "accessKey", label: "Access Key", placeholder: "API Access Key", type: "text" },
+    ],
+  },
+};
+
+const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers, isB2B = false }) => {
   const [courierName, setCourierName] = useState("");
   const [codDays, setCodDays] = useState("");
   const [status, setStatus] = useState("");
@@ -133,7 +166,7 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
   const [credentials, setCredentials] = useState({});
   const [loading, setLoading] = useState(false);
 
-  const config = courierConfigs[provider] || {};
+  const config = (isB2B ? b2bCourierConfigs[provider] : courierConfigs[provider]) || {};
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
   // Reset fields when provider changes
@@ -204,9 +237,15 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
         courierProvider: config.provider || provider,
         CODDays: codDays,
         status: status,
-        liabilityCharge: liabilityCharge ? parseFloat(liabilityCharge) : 0,
-        liabilityPercent: liabilityPercent ? parseFloat(liabilityPercent) : 0,
-        credentials: { ...credentials },
+        ...(isB2B
+          ? {}
+          : {
+              liabilityCharge: liabilityCharge ? parseFloat(liabilityCharge) : 0,
+              liabilityPercent: liabilityPercent ? parseFloat(liabilityPercent) : 0,
+            }),
+        credentials: Object.fromEntries(
+          Object.entries(credentials).map(([k, v]) => [k, typeof v === "string" ? v.trim() : v])
+        ),
       };
 
       const response = await axios.post(
@@ -239,7 +278,13 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
     }
   };
 
-  if (!config.endpoint) return null;
+  if (!config.endpoint) {
+    return isB2B && provider ? (
+      <p className="text-[11px] font-[600] text-gray-500 py-2">
+        {provider} does not have a B2B integration yet.
+      </p>
+    ) : null;
+  }
 
   return (
     <div className="w-full animate-fadeIn">
@@ -277,6 +322,8 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
           <StatusDropdown Status={status} setStatus={setStatus} />
         </div>
 
+        {/* Liability fields: B2C only (the B2B courier record has none) */}
+        {!isB2B && (<>
         {/* Liability Amount Field */}
         <div className="w-full xl:w-32 flex flex-col gap-1">
           <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700 tracking-tight">
@@ -304,6 +351,7 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers }) =
             onChange={(e) => setLiabilityPercent(e.target.value)}
           />
         </div>
+        </>)}
 
         {/* Dynamic Credentials Fields */}
         {config.fields?.map((field) => (

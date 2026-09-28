@@ -11,26 +11,17 @@ import { getCarrierLogo } from "../../Common/getCarrierLogo";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-const courierOptions = [
-  { value: "NimbusPost", label: "NimbusPost" },
+const b2bDefaultOptions = [
   { value: "Shiprocket", label: "Shiprocket" },
-  { value: "BigShip", label: "BigShip" },
-  { value: "Dtdc", label: "Dtdc" },
   { value: "Delhivery", label: "Delhivery" },
-  { value: "ShreeMaruti", label: "Shree Maruti" },
-  { value: "Xpressbees", label: "Xpressbees" },
-  { value: "SmartShip", label: "SmartShip" },
-  { value: "EcomExpress", label: "EcomExpress" },
-  { value: "Amazon", label: "Amazon Shipping" },
-  { value: "Ekart", label: "Ekart" },
-  { value: "Vamaship", label: "Vamaship" },
-  { value: "ZipyPost", label: "ZipyPost" },
-  { value: "BoxdLogistics", label: "Boxd Logistics" }
+  { value: "BigShip", label: "BigShip" },
 ];
 
 const AddNewCourier = ({ isSidebarAdmin }) => {
-  const [selectedOption, setSelectedOption] = useState("NimbusPost");
+  const [selectedOption, setSelectedOption] = useState("");
   const [couriers, setCouriers] = useState([]);
+  const [enabledB2BOptions, setEnabledB2BOptions] = useState([]);
+  const [loadingProviders, setLoadingProviders] = useState(true);
   const [refresh, setRefresh] = useState(false);
   const [showEmployeeAuthModal, setShowEmployeeAuthModal] = useState(false);
   const [employeeAccess, setEmployeeAccess] = useState({ canView: false, canAction: false });
@@ -63,16 +54,23 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
           }
         }
 
-        const response = await axios.get(`${REACT_APP_BACKEND_URL}/b2b/couriers/getAllCouriers`);
-        const updatedCouriers = response.data.map((courier) => ({
+        const [courierRes, providersRes] = await Promise.all([
+          axios.get(`${REACT_APP_BACKEND_URL}/b2b/couriers/getAllCouriers`),
+          axios.get(`${REACT_APP_BACKEND_URL}/allCourier/enabled-providers?type=b2b`),
+        ]);
+        const updatedCouriers = (courierRes.data || []).map((courier) => ({
           ...courier,
           isActive: courier.isActive ?? true
         }));
-        // console.log("courier", updatedCouriers)
         setCouriers(updatedCouriers);
+
+        const fetchedOptions = providersRes.data?.options || providersRes.data?.b2b || [];
+        setEnabledB2BOptions(fetchedOptions);
         setRefresh(false);
       } catch (error) {
         setShowEmployeeAuthModal(true);
+      } finally {
+        setLoadingProviders(false);
       }
     };
 
@@ -194,9 +192,19 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
   }, []);
 
   const existingCourierProviders = couriers.map((courier) => courier.courierProvider);
-  const availableOptions = courierOptions.filter(
+  const availableOptions = enabledB2BOptions.filter(
     (option) => !existingCourierProviders.includes(option.value)
   );
+
+  useEffect(() => {
+    if (availableOptions.length > 0) {
+      if (!availableOptions.some((opt) => opt.value === selectedOption)) {
+        setSelectedOption(availableOptions[0].value);
+      }
+    } else {
+      setSelectedOption("");
+    }
+  }, [availableOptions, selectedOption]);
 
   const getInputField = () => {
     return (
@@ -233,17 +241,29 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
           </h2>
         </div>
 
-        <div className="flex flex-col lg:flex-row items-center gap-2">
-          <div className="w-full lg:w-1/4">
-            <CustomDropdown
-              label="Select B2B Courier"
-              options={availableOptions}
-              selected={selectedOption}
-              onChange={setSelectedOption}
-            />
+        {loadingProviders ? (
+          <div className="py-4 text-center text-xs text-gray-500">Loading enabled B2B couriers...</div>
+        ) : enabledB2BOptions.length === 0 ? (
+          <div className="p-3 text-xs bg-amber-50 border border-amber-200 text-amber-800 rounded-lg">
+            No B2B couriers are currently enabled for your company. Please contact your platform administrator to enable B2B couriers.
           </div>
-          <div className="w-full lg:flex-1">{getInputField()}</div>
-        </div>
+        ) : availableOptions.length === 0 ? (
+          <div className="p-3 text-xs bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg">
+            All enabled B2B couriers for your company have already been added.
+          </div>
+        ) : (
+          <div className="flex flex-col lg:flex-row items-center gap-2">
+            <div className="w-full lg:w-1/4">
+              <CustomDropdown
+                label="Select B2B Courier"
+                options={availableOptions}
+                selected={selectedOption}
+                onChange={setSelectedOption}
+              />
+            </div>
+            <div className="w-full lg:flex-1">{getInputField()}</div>
+          </div>
+        )}
       </div>
 
       {/* Desktop Table */}

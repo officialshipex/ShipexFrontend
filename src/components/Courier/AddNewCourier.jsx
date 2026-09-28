@@ -33,8 +33,10 @@ const courierOptions = [
 ];
 
 const AddNewCourier = ({ isSidebarAdmin }) => {
-  const [selectedOption, setSelectedOption] = useState("NimbusPost");
+  const [selectedOption, setSelectedOption] = useState("");
   const [couriers, setCouriers] = useState([]);
+  const [enabledOptions, setEnabledOptions] = useState([]);
+  const [loadingProviders, setLoadingProviders] = useState(true);
   const navigate = useNavigate();
   const [refresh, setRefresh] = useState(false);
   const [showEmployeeAuthModal, setShowEmployeeAuthModal] = useState(false);
@@ -68,15 +70,31 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
           }
         }
 
-        const response = await axios.get(`${REACT_APP_BACKEND_URL}/allCourier/couriers`);
-        const updatedCouriers = response.data.map((courier) => ({
+        const [courierRes, providersRes] = await Promise.all([
+          axios.get(`${REACT_APP_BACKEND_URL}/allCourier/couriers`),
+          axios.get(`${REACT_APP_BACKEND_URL}/allCourier/enabled-providers?type=b2c`),
+        ]);
+        const updatedCouriers = (courierRes.data || []).map((courier) => ({
           ...courier,
           isActive: courier.isActive ?? true
         }));
         setCouriers(updatedCouriers);
+
+        const fetchedOptions = providersRes.data?.options || providersRes.data?.b2c || [];
+        setEnabledOptions(fetchedOptions);
+        if (fetchedOptions.length > 0) {
+          setSelectedOption((prev) => {
+            const match = fetchedOptions.some((opt) => opt.value === prev);
+            return match ? prev : fetchedOptions[0].value;
+          });
+        } else {
+          setSelectedOption("");
+        }
         setRefresh(false);
       } catch (error) {
         setShowEmployeeAuthModal(true);
+      } finally {
+        setLoadingProviders(false);
       }
     };
 
@@ -197,7 +215,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  const availableOptions = courierOptions;
+  const availableOptions = enabledOptions;
 
   const getInputField = () => {
     return (
@@ -234,17 +252,25 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
           </h2>
         </div>
 
-        <div className="flex flex-col lg:flex-row items-center gap-2">
-          <div className="w-full lg:w-1/4">
-            <CustomDropdown
-              label="Select Courier Provider"
-              options={availableOptions}
-              selected={selectedOption}
-              onChange={setSelectedOption}
-            />
+        {loadingProviders ? (
+          <div className="py-4 text-center text-xs text-gray-500">Loading enabled couriers...</div>
+        ) : availableOptions.length === 0 ? (
+          <div className="p-3 text-xs bg-amber-50 border border-amber-200 text-amber-800 rounded-lg">
+            No couriers are currently enabled for your company. Please contact your platform administrator to enable couriers.
           </div>
-          <div className="w-full lg:flex-1">{getInputField()}</div>
-        </div>
+        ) : (
+          <div className="flex flex-col lg:flex-row items-center gap-2">
+            <div className="w-full lg:w-1/4">
+              <CustomDropdown
+                label="Select Courier Provider"
+                options={availableOptions}
+                selected={selectedOption}
+                onChange={setSelectedOption}
+              />
+            </div>
+            <div className="w-full lg:flex-1">{getInputField()}</div>
+          </div>
+        )}
       </div>
 
       {/* Desktop Table */}
