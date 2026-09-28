@@ -75,6 +75,10 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
   const isEkart = provider === "Ekart";
   const isShreeMaruti = provider === "Shree Maruti";
   const isLosung360 = partner === "Losung360" || provider === "Losung360";
+  // Xpressbees shipments are identified by partner.
+  const isXpressbees = partner === "Xpressbees";
+  // Xpressbees' API has no RTO request: re-attempt / change address / phone only.
+  const actionOptions = isXpressbees ? ACTIONS.filter((a) => a.value !== "RTO") : ACTIONS;
 
   const isChangeAddress = action === "CHANGE_ADDRESS";
   const isReattempt = action === "RE-ATTEMPT";
@@ -200,6 +204,18 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
         payload.new_pincode = address.pincode;
         payload.customer_name = address.customerName;
       }
+    } else if (isXpressbees) {
+      payload.action = action; // RE-ATTEMPT / CHANGE_ADDRESS
+      payload.remarks = remarks;
+      if (scheduledDate) payload.scheduledDate = scheduledDate;
+      if (mobile) payload.phone = mobile;
+      if (isChangeAddress) {
+        payload.customer_name = address.customerName;
+        payload.address1 = address.line1;
+        payload.address2 = address.line2;
+        payload.city = address.city;
+        payload.state = address.state;
+      }
     } else if (isLosung360) {
       payload.action = isChangeAddress ? "RE-ATTEMPT" : action;
       payload.comments = remarks;
@@ -235,7 +251,8 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
   // EcomExpress + Change Address also needs date/slot
   const needsScheduledDate =
     (isEcomExpress && (isReattempt || isChangeAddress)) ||
-    (isSmartship && (isReattempt || isChangeAddress));
+    (isSmartship && (isReattempt || isChangeAddress)) ||
+    (isXpressbees && isReattempt);
 
   const needsChangeAddressFields = isChangeAddress && !isAmazon;
 
@@ -276,7 +293,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
             </button>
             {dropdownOpen && (
               <ul className="absolute z-30 mt-16 bg-white border border-gray-200 rounded-lg shadow-md overflow-hidden animate-popup-in text-[12px] w-[calc(100%-2rem)] max-w-[calc(28rem-2rem)]">
-                {ACTIONS.map(({ label, value }) => (
+                {actionOptions.map(({ label, value }) => (
                   <li
                     key={value}
                     onClick={() => { setAction(value); setDropdownOpen(false); setRemarks(""); setScheduledDate(""); setAddress({ line1: "", line2: "", city: "", state: "", pincode: "", customerName: "" }); }}
@@ -371,7 +388,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
           )}
 
           {/* Mobile number field */}
-          {action && (isChangeAddress || isSmartship || isShreeMaruti || isBoxdLogistics || (isEcomExpress && isReattempt)) && (
+          {action && (isChangeAddress || isSmartship || isShreeMaruti || isBoxdLogistics || isXpressbees || (isEcomExpress && isReattempt)) && (
             <InputField
               label={isChangeAddress ? "New Contact Number" : "Contact Number"}
               icon={Phone}
@@ -388,7 +405,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
             <div className="flex flex-col gap-1">
               <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700 flex items-center gap-1.5">
                 <Calendar className="w-3 h-3 text-brand-primary" />
-                {isSmartship ? "Next Attempt Date *" : "Scheduled Delivery Date *"}
+                {isSmartship ? "Next Attempt Date *" : isXpressbees ? "Re-attempt Date (default: tomorrow)" : "Scheduled Delivery Date *"}
               </label>
               <input
                 type="date"

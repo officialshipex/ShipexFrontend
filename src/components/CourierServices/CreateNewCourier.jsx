@@ -43,8 +43,11 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
           services = nimbusRes.data.map((item) => item.service);
           break;
         case "Xpressbees":
+        case "XpressBees":
+          // Keep Xpressbees' own courier id with each service: bookings send
+          // it so Xpressbees ships exactly the service that was priced.
           const xpressRes = await axios.get(`${REACT_APP_BACKEND_URL}/Xpressbees/getCourierList`);
-          services = xpressRes.data.map((item) => item.service);
+          services = xpressRes.data.map((item) => ({ service: item.service, courier_id: item.courier_id || item.provider_courier_id }));
           break;
         case "Shiprocket":
           const shipRes = await axios.get(`${REACT_APP_BACKEND_URL}/Shiprocket/getAllActiveCourierServices`);
@@ -136,7 +139,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
       fetchServicesForProvider(value);
     }
     
-    if (name === "courier" && selectedProvider === "Shiprocket") {
+    if (name === "courier" && (selectedProvider === "Shiprocket" || /^xpress\s*bees$/i.test(selectedProvider))) {
       const selectedService = providerServices.find(s => s.service === value);
       if (selectedService) {
         setFormData(prev => ({ ...prev, courier_id: selectedService.courier_id }));

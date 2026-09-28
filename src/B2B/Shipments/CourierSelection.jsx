@@ -429,14 +429,14 @@ const CarrierSelection = () => {
 
               <div className="overflow-x-auto rounded-lg shadow bg-white max-h-[550px] overflow-y-auto">
                 <table className="w-full border rounded-lg overflow-hidden text-[14px] bg-white table-fixed">
-                  <thead className="bg-brand-primary/16 text-gray-700 font-[600] sticky top-0 z-10">
-                    <tr>
-                      <th className="py-3 pl-3 text-left">Courier Partner</th>
-                      <th className="py-3 text-center">Mode</th>
-                      <th className="py-3 text-center">Estimated Delivery Date</th>
-                      <th className="py-3 text-center">Chargeable Weight</th>
-                      <th className="py-3 text-center">Charges</th>
-                      <th className="py-3 text-center">Action</th>
+                  <thead className="sticky top-0 z-10">
+                    <tr className="bg-brand-primary text-white font-[600]">
+                      <th className="py-3 pl-3 text-left bg-brand-primary">Courier Partner</th>
+                      <th className="py-3 text-center bg-brand-primary">Mode</th>
+                      <th className="py-3 text-center bg-brand-primary">Estimated Delivery Date</th>
+                      <th className="py-3 text-center bg-brand-primary">Chargeable Weight</th>
+                      <th className="py-3 text-center bg-brand-primary">Charges</th>
+                      <th className="py-3 text-center bg-brand-primary">Action</th>
                     </tr>
                   </thead>
                   <tbody>
