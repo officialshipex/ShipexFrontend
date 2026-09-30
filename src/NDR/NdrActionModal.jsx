@@ -444,7 +444,7 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
           {/* Losung360 notice for Change Address */}
           {isLosung360 && isChangeAddress && (
             <div className="bg-amber-50 border border-amber-200 rounded-lg p-3 text-[11px] text-amber-700 font-[500]">
-              ⚠️ Losung360 does not support address changes. This will be submitted as a Re-Attempt request.
+              ⚠️ This courier does not support address changes. This will be submitted as a Re-Attempt request.
             </div>
           )}
 

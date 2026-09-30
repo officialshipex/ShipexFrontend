@@ -33,8 +33,11 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
   const [selectedProvider, setSelectedProvider] = useState("");
   const [refresh, setRefresh] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [servicesLoading, setServicesLoading] = useState(false);
 
   const fetchServicesForProvider = async (providerName) => {
+    setProviderServices([]);
+    setServicesLoading(true);
     try {
       let services = [];
       switch (providerName) {
@@ -53,6 +56,11 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
           const shipRes = await axios.get(`${REACT_APP_BACKEND_URL}/Shiprocket/getAllActiveCourierServices`);
           services = shipRes.data; // Store full objects [{service, provider_courier_id}]
           break;
+        case "ShipexIndia":
+        case "ShipxIndia":
+          const shipexRes = await axios.get(`${REACT_APP_BACKEND_URL}/ShipexIndia/getCourierServices`);
+          services = shipexRes.data; // [{service}] — the exact courierServiceName that booking sends
+          break;
         case "Dtdc":
           services = ["B2C SMART EXPRESS", "B2C PRIORITY", "B2C GROUND ECONOMY"];
           break;
@@ -64,6 +72,8 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
     } catch (error) {
       console.error(`Error fetching ${providerName} services:`, error);
       setProviderServices([]);
+    } finally {
+      setServicesLoading(false);
     }
   };
 
@@ -258,7 +268,15 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
               />
 
               {/* Courier / Service ID */}
-              {(providerServices.length > 0 || selectedProvider === "BoxdLogistics" || selectedProvider === "Losung360") && (
+              {servicesLoading ? (
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700">Courier</label>
+                  <div className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] font-[600] text-gray-500 flex items-center gap-2">
+                    <span className="inline-block w-3 h-3 border-2 border-gray-300 border-t-brand-primary rounded-full animate-spin" />
+                    Loading services, please wait...
+                  </div>
+                </div>
+              ) : (providerServices.length > 0 || selectedProvider === "BoxdLogistics" || selectedProvider === "Losung360") && (
                 selectedProvider === "BoxdLogistics" ? (
                   <div className="flex flex-col gap-1.5">
                     <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700">Courier Service ID</label>
