@@ -1,13 +1,247 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
-import { FaTruck, FaPlane, FaSearch, FaEdit, FaChevronDown, FaCheck, FaExclamationTriangle, FaTimes } from "react-icons/fa";
+import { FaTruck, FaPlane, FaSearch, FaEdit, FaChevronDown, FaCheck, FaExclamationTriangle, FaTimes, FaTrashAlt } from "react-icons/fa";
 import { Notification } from "../../Notification";
 import CustomDropdown from "./Dropdown";
 import { getCarrierLogo } from "../../Common/getCarrierLogo";
 import Cookies from "js-cookie";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
+// --- Delete Warning & Confirmation Modal ---
+const DeleteServiceModal = ({ isOpen, onClose, servicesToDelete, onDeleted }) => {
+  const [stats, setStats] = useState(null);
+  const [loadingPreview, setLoadingPreview] = useState(false);
+  const [deleting, setDeleting] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (isOpen && servicesToDelete && servicesToDelete.length > 0) {
+      fetchPreview();
+    } else {
+      setStats(null);
+      setError(null);
+    }
+  }, [isOpen, servicesToDelete]);
+
+  const fetchPreview = async () => {
+    setLoadingPreview(true);
+    setError(null);
+    try {
+      const response = await axios.post(`${REACT_APP_BACKEND_URL}/courierServices/previewDelete`, {
+        serviceIds: servicesToDelete.map((s) => s._id),
+      });
+      if (response.data.success) {
+        setStats(response.data);
+      } else {
+        setError(response.data.message || "Failed to calculate matching rates");
+      }
+    } catch (err) {
+      console.error("Error fetching delete preview:", err);
+      setError(err.response?.data?.message || "Failed to fetch rate match preview");
+    } finally {
+      setLoadingPreview(false);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    setDeleting(true);
+    try {
+      let res;
+      if (servicesToDelete.length === 1) {
+        res = await axios.delete(
+          `${REACT_APP_BACKEND_URL}/courierServices/couriers/${servicesToDelete[0]._id}`
+        );
+      } else {
+        res = await axios.post(`${REACT_APP_BACKEND_URL}/courierServices/bulkDelete`, {
+          serviceIds: servicesToDelete.map((s) => s._id),
+        });
+      }
+
+      if (res.data.success) {
+        Notification(
+          res.data.message || "Courier service(s) and matching rates deleted successfully",
+          "success"
+        );
+        onDeleted();
+        onClose();
+      } else {
+        Notification(res.data.message || "Failed to delete courier service", "error");
+      }
+    } catch (err) {
+      console.error("Error deleting service:", err);
+      Notification(
+        err.response?.data?.error || err.response?.data?.message || "Failed to delete service",
+        "error"
+      );
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  if (!isOpen || !servicesToDelete || servicesToDelete.length === 0) return null;
+
+  const isBulk = servicesToDelete.length > 1;
+
+  return (
+    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm animate-in fade-in duration-300">
+      <div className="bg-white rounded-xl shadow-2xl w-full max-w-lg overflow-hidden transform transition-all animate-popup-in border border-gray-100 relative">
+        {/* Header */}
+        <div className="p-4 bg-red-50/80 border-b border-red-100 flex items-center gap-3">
+          <div className="bg-red-500/10 p-2.5 rounded-xl text-red-600 shrink-0">
+            <FaExclamationTriangle size={20} />
+          </div>
+          <div>
+            <h2 className="text-[14px] font-bold text-gray-800">
+              {isBulk
+                ? `Delete ${servicesToDelete.length} Courier Services`
+                : `Delete Courier Service`}
+            </h2>
+            <p className="text-[11px] text-red-600 font-medium mt-0.5">
+              Warning: Rates in all user plans will be removed
+            </p>
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
+          {loadingPreview ? (
+            <div className="py-8 flex flex-col items-center justify-center gap-3 text-gray-500">
+              <div className="w-8 h-8 border-3 border-red-500 border-t-transparent rounded-full animate-spin"></div>
+              <p className="text-[12px] font-semibold">Calculating matching rates across all user plans...</p>
+            </div>
+          ) : error ? (
+            <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-[12px]">
+              {error}
+            </div>
+          ) : (
+            <>
+              {/* Highlight Warning Alert */}
+              <div className="bg-amber-50/90 border border-amber-200 rounded-xl p-3.5 space-y-1.5">
+                <div className="flex items-start gap-2.5">
+                  <FaExclamationTriangle className="text-amber-600 shrink-0 mt-0.5" size={14} />
+                  <div className="text-[12px] text-amber-900 leading-relaxed font-medium">
+                    Are you sure you want to permanently delete{" "}
+                    <span className="font-bold text-gray-900">
+                      {isBulk
+                        ? `${servicesToDelete.length} courier services`
+                        : `"${servicesToDelete[0].name}" (${servicesToDelete[0].provider})`}
+                    </span>
+                    ? All matching rate cards will be{" "}
+                    <span className="font-bold text-red-600">deleted from all user plans</span>.
+                  </div>
+                </div>
+              </div>
+
+              {/* Rate Match Counts Summary */}
+              {stats && (
+                <div className="bg-gray-50 rounded-xl p-4 border border-gray-200 space-y-2.5">
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-gray-500">
+                    Impact & Rate Match Summary
+                  </div>
+                  <div className="grid grid-cols-3 gap-2 text-center">
+                    <div className="bg-white p-2.5 rounded-lg border border-gray-200 shadow-2xs">
+                      <div className="text-[18px] font-bold text-red-600">{stats.totalRates}</div>
+                      <div className="text-[10px] font-semibold text-gray-600">Total Matching Rates</div>
+                    </div>
+                    <div className="bg-white p-2.5 rounded-lg border border-gray-200 shadow-2xs">
+                      <div className="text-[18px] font-bold text-brand-primary">{stats.totalGlobalRates}</div>
+                      <div className="text-[10px] font-semibold text-gray-600">Global Rate Cards</div>
+                    </div>
+                    <div className="bg-white p-2.5 rounded-lg border border-gray-200 shadow-2xs">
+                      <div className="text-[18px] font-bold text-orange-600">{stats.affectedUserPlans}</div>
+                      <div className="text-[10px] font-semibold text-gray-600">User Plans Affected</div>
+                    </div>
+                  </div>
+                  <p className="text-[11px] text-gray-500 italic text-center pt-1">
+                    Matching service name & provider: {stats.totalUserPlanRates} rate entries across{" "}
+                    {stats.affectedUserPlans} user plans will be stripped.
+                  </p>
+                </div>
+              )}
+
+              {/* Services Breakdown */}
+              <div className="space-y-1.5">
+                <label className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">
+                  Service{isBulk ? "s" : ""} to be deleted:
+                </label>
+                <div className="max-h-44 overflow-y-auto divide-y divide-gray-100 border border-gray-200 rounded-lg bg-white">
+                  {servicesToDelete.map((svc) => {
+                    const svcStat = stats?.services?.find((s) => s.id === svc._id);
+                    return (
+                      <div
+                        key={svc._id}
+                        className="p-2.5 flex items-center justify-between text-[12px] hover:bg-gray-50"
+                      >
+                        <div className="flex flex-col">
+                          <span className="font-bold text-gray-800">{svc.name}</span>
+                          <span className="text-[10px] text-gray-500">{svc.courierType}</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[10px] font-bold bg-brand-primary/10 text-brand-primary px-2 py-0.5 rounded border border-brand-primary/20">
+                            {svc.provider}
+                          </span>
+                          {svcStat && (
+                            <span className="text-[10px] font-semibold bg-red-50 text-red-600 px-2 py-0.5 rounded border border-red-200">
+                              {svcStat.totalRateCount} rates
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-2.5">
+          <button
+            onClick={onClose}
+            disabled={deleting}
+            className="px-4 py-2 rounded-lg text-[12px] font-bold text-gray-600 hover:bg-gray-200 transition-colors disabled:opacity-50"
+          >
+            Cancel
+          </button>
+          <button
+            onClick={handleConfirmDelete}
+            disabled={loadingPreview || deleting}
+            className={`px-4 py-2 rounded-lg text-[12px] font-bold text-white transition-all shadow-sm flex items-center gap-2
+              ${
+                loadingPreview || deleting
+                  ? "bg-red-300 cursor-not-allowed"
+                  : "bg-red-600 hover:bg-red-700 active:scale-95 cursor-pointer"
+              }`}
+          >
+            {deleting ? (
+              <>
+                <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                <span>Deleting Service & Rates...</span>
+              </>
+            ) : (
+              <>
+                <FaTrashAlt size={11} />
+                <span>Confirm & Delete</span>
+              </>
+            )}
+          </button>
+        </div>
+
+        {/* Close Button */}
+        <button
+          className="absolute top-4 right-4 text-gray-400 hover:text-gray-600 transition-all cursor-pointer"
+          onClick={onClose}
+          disabled={deleting}
+        >
+          <FaTimes size={16} />
+        </button>
+      </div>
+    </div>
+  );
+};
 
 // --- Modal Component ---
 const ChangeProviderModal = ({ isOpen, onClose, selectedServices, onApply }) => {
@@ -99,7 +333,7 @@ const ChangeProviderModal = ({ isOpen, onClose, selectedServices, onApply }) => 
   );
 };
 
-const CourierServiceList = ({ refresh, canUpdate }) => {
+const CourierServiceList = ({ refresh, canUpdate = true }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [couriers, setCouriers] = useState([]);
@@ -108,6 +342,8 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
   const [statusFilter, setStatusFilter] = useState("All");
   const [selectedIds, setSelectedIds] = useState([]);
   const [isChangeProviderModalOpen, setIsChangeProviderModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [servicesToDelete, setServicesToDelete] = useState([]);
   const [isActionMenuOpen, setIsActionMenuOpen] = useState(false);
   const [serviceToChangeProvider, setServiceToChangeProvider] = useState(null);
 
@@ -179,6 +415,29 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
     navigate("/dashboard/setup/courier-services/create", {
       state: { courierToEdit: courier },
     });
+  };
+
+  const handleDeleteClick = (courier) => {
+    setServicesToDelete([courier]);
+    setIsDeleteModalOpen(true);
+  };
+
+  const handleBulkDeleteClick = () => {
+    const selected = filteredCouriers.filter(c => selectedIds.includes(c._id));
+    if (selected.length === 0) return;
+    setServicesToDelete(selected);
+    setIsDeleteModalOpen(true);
+    setIsActionMenuOpen(false);
+  };
+
+  const onServiceDeleted = async () => {
+    setSelectedIds([]);
+    try {
+      const res = await axios.get(`${REACT_APP_BACKEND_URL}/courierServices/couriers`);
+      setCouriers(res.data);
+    } catch (err) {
+      console.error("Error refreshing couriers:", err);
+    }
   };
 
   const handleSelectAll = (e) => {
@@ -265,22 +524,32 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
             className={`flex items-center gap-2 px-4 py-2 rounded-lg text-[11px] font-bold transition-all shadow-sm border
               ${selectedIds.length === 0 
                 ? "bg-gray-50 text-gray-400 border-gray-200 cursor-not-allowed" 
-                : "bg-brand-primary text-white border-brand-primary hover:bg-green-600 active:scale-95"}`}
+                : "bg-brand-primary text-white border-brand-primary hover:bg-green-600 active:scale-95 cursor-pointer"}`}
           >
-            <span>Actions</span>
+            <span>Actions ({selectedIds.length})</span>
             <FaChevronDown className={`transition-transform duration-200 ${isActionMenuOpen ? "rotate-180" : ""}`} size={10} />
           </button>
 
           {isActionMenuOpen && selectedIds.length > 0 && (
-            <div className="absolute top-full right-0 mt-1 w-48 bg-white border border-gray-200 rounded-xl shadow-xl z-[100] py-1 animate-popup-in">
+            <div className="absolute top-full right-0 mt-1 w-52 bg-white border border-gray-200 rounded-xl shadow-xl z-[100] py-1 animate-popup-in">
               <button
                 onClick={handleChangeProviderAction}
-                className="w-full text-left px-4 py-2 text-[11px] font-bold text-gray-600 hover:bg-brand-primary/10 hover:text-brand-primary flex items-center gap-2"
+                className="w-full text-left px-4 py-2.5 text-[11px] font-bold text-gray-700 hover:bg-brand-primary/10 hover:text-brand-primary flex items-center gap-2.5 transition-colors cursor-pointer"
               >
-                <div className="w-6 h-6 rounded-lg bg-brand-primary/10 flex items-center justify-center">
+                <div className="w-6 h-6 rounded-lg bg-brand-primary/10 flex items-center justify-center text-brand-primary">
                   <FaTruck size={12} />
                 </div>
-                Change Provider
+                <span>Change Provider</span>
+              </button>
+              <div className="h-px bg-gray-100 my-1" />
+              <button
+                onClick={handleBulkDeleteClick}
+                className="w-full text-left px-4 py-2.5 text-[11px] font-bold text-red-600 hover:bg-red-50 flex items-center gap-2.5 transition-colors cursor-pointer"
+              >
+                <div className="w-6 h-6 rounded-lg bg-red-100 flex items-center justify-center text-red-600">
+                  <FaTrashAlt size={11} />
+                </div>
+                <span>Delete Selected ({selectedIds.length})</span>
               </button>
             </div>
           )}
@@ -355,12 +624,20 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
                     <td className="py-2 px-3">
                       <div className="flex items-center gap-2">
                         <button
-                          className={`p-1.5 rounded-lg text-brand-primary bg-brand-primary/5 hover:bg-brand-primary/20 transition-all ${canUpdate ? "active:scale-90" : "opacity-50 cursor-not-allowed"}`}
+                          className={`p-1.5 rounded-lg text-brand-primary bg-brand-primary/5 hover:bg-brand-primary/20 transition-all ${canUpdate ? "active:scale-90 cursor-pointer" : "opacity-50 cursor-not-allowed"}`}
                           onClick={() => canUpdate && editHandler(courier)}
                           disabled={!canUpdate}
                           title="Edit Service"
                         >
                           <FaEdit size={14} />
+                        </button>
+                        <button
+                          className={`p-1.5 rounded-lg text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-700 transition-all ${canUpdate ? "active:scale-90 cursor-pointer" : "opacity-50 cursor-not-allowed"}`}
+                          onClick={() => canUpdate && handleDeleteClick(courier)}
+                          disabled={!canUpdate}
+                          title="Delete Service & Associated Rates"
+                        >
+                          <FaTrashAlt size={13} />
                         </button>
                       </div>
                     </td>
@@ -368,7 +645,7 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="7" className="text-center py-10 text-gray-400 text-[12px] font-[500]">
+                  <td colSpan="8" className="text-center py-10 text-gray-400 text-[12px] font-[500]">
                     No couriers found matching your filters.
                   </td>
                 </tr>
@@ -388,6 +665,12 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
             >
               <div className="flex items-center justify-between border-b border-gray-50 pb-2">
                 <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    className="rounded border-gray-300 text-brand-primary accent-brand-primary focus:ring-brand-primary/20 cursor-pointer w-3.5 h-3.5"
+                    checked={selectedIds.includes(courier._id)}
+                    onChange={() => handleSelectRow(courier._id)}
+                  />
                   <div className="relative">
                     <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center border border-gray-100">
                       {getCarrierLogo(courier.name || courier.provider) ? (
@@ -421,13 +704,24 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
                     </div>
                   </div>
                 </div>
-                <button
-                  className={`p-2 rounded-full transition-all ${canUpdate ? "text-brand-primary active:scale-90" : "text-gray-300 cursor-not-allowed"}`}
-                  onClick={() => canUpdate && editHandler(courier)}
-                  disabled={!canUpdate}
-                >
-                  <FaEdit size={14} />
-                </button>
+                <div className="flex items-center gap-1">
+                  <button
+                    className={`p-2 rounded-full transition-all ${canUpdate ? "text-brand-primary active:scale-90 cursor-pointer" : "text-gray-300 cursor-not-allowed"}`}
+                    onClick={() => canUpdate && editHandler(courier)}
+                    disabled={!canUpdate}
+                    title="Edit Service"
+                  >
+                    <FaEdit size={14} />
+                  </button>
+                  <button
+                    className={`p-2 rounded-full transition-all ${canUpdate ? "text-red-500 active:scale-90 cursor-pointer" : "text-gray-300 cursor-not-allowed"}`}
+                    onClick={() => canUpdate && handleDeleteClick(courier)}
+                    disabled={!canUpdate}
+                    title="Delete Service"
+                  >
+                    <FaTrashAlt size={14} />
+                  </button>
+                </div>
               </div>
 
               <div className="grid grid-cols-2 text-[10px]">
@@ -470,6 +764,16 @@ const CourierServiceList = ({ refresh, canUpdate }) => {
         }}
         selectedServices={filteredCouriers.filter(c => selectedIds.includes(c._id))}
         onApply={handleChangeProvider}
+      />
+
+      <DeleteServiceModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => {
+          setIsDeleteModalOpen(false);
+          setServicesToDelete([]);
+        }}
+        servicesToDelete={servicesToDelete}
+        onDeleted={onServiceDeleted}
       />
     </div>
   );
