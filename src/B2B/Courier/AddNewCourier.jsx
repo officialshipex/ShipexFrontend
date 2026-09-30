@@ -6,8 +6,11 @@ import CustomDropdown from "./CustomDropdown";
 import Cookies from "js-cookie";
 import { Notification } from "../../Notification";
 import Loader from "../../Loader";
-import { FaEllipsisV, FaTrashAlt, FaUpload, FaDownload, FaTruck } from "react-icons/fa";
+import { FaEllipsisV, FaTrashAlt, FaUpload, FaDownload, FaTruck, FaEdit } from "react-icons/fa";
 import { getCarrierLogo } from "../../Common/getCarrierLogo";
+import CourierDeleteRejectionModal from "../../components/Courier/CourierDeleteRejectionModal";
+import ConfirmDeleteCourierModal from "../../components/Courier/ConfirmDeleteCourierModal";
+import EditB2BCourierModal from "./EditB2BCourierModal";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -27,6 +30,11 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
   const [employeeAccess, setEmployeeAccess] = useState({ canView: false, canAction: false });
   const [menuOpen, setMenuOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  const [editingCourier, setEditingCourier] = useState(null);
+  const [courierToDelete, setCourierToDelete] = useState(null);
+  const [rejectionModalData, setRejectionModalData] = useState(null);
+  const [deleting, setDeleting] = useState(false);
 
   const handleCourierSaved = () => {
     setRefresh(true);
@@ -167,16 +175,47 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
     }
   };
 
-  const handleDelete = async (id) => {
+  const handleInitiateDelete = async (courier) => {
     try {
       setLoading(true);
-      await axios.delete(`${REACT_APP_BACKEND_URL}/b2b/couriers/deleteCourier/${id}`);
-      setCouriers((prevCouriers) => prevCouriers.filter((courier) => courier._id !== id));
-      Notification("Courier deleted successfully!", "success");
-    } catch (error) {
-      Notification("Failed to delete courier.", "error");
-    } finally {
+      const res = await axios.get(`${REACT_APP_BACKEND_URL}/b2b/couriers/checkDelete/${courier._id}`);
       setLoading(false);
+
+      if (res.data?.canDelete === false || (res.data?.serviceCount && res.data.serviceCount > 0)) {
+        setRejectionModalData({
+          courier,
+          services: res.data.services || [],
+        });
+      } else {
+        setCourierToDelete(courier);
+      }
+    } catch (error) {
+      setLoading(false);
+      console.error("B2B Check delete error:", error);
+      setCourierToDelete(courier);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!courierToDelete) return;
+    try {
+      setDeleting(true);
+      await axios.delete(`${REACT_APP_BACKEND_URL}/b2b/couriers/deleteCourier/${courierToDelete._id}`);
+      setCouriers((prevCouriers) => prevCouriers.filter((courier) => courier._id !== courierToDelete._id));
+      Notification("B2B Courier deleted successfully!", "success");
+      setCourierToDelete(null);
+    } catch (error) {
+      if (error.response?.data?.rejected) {
+        setCourierToDelete(null);
+        setRejectionModalData({
+          courier: courierToDelete,
+          services: error.response?.data?.services || [],
+        });
+      } else {
+        Notification(error.response?.data?.message || "Failed to delete B2B courier.", "error");
+      }
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -311,7 +350,15 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                       </div>
                     </td>
                     <td className="px-3 py-2.5">
-                      <div className="flex justify-center items-center gap-4">
+                      <div className="flex justify-center items-center gap-3">
+                        <button
+                          onClick={() => canAction && setEditingCourier(courier)}
+                          className={`p-1.5 rounded-full transition-all ${canAction ? "text-brand-primary hover:bg-brand-primary/10" : "text-gray-300 cursor-not-allowed"}`}
+                          title="Edit B2B courier credentials"
+                          disabled={!canAction}
+                        >
+                          <FaEdit size={14} />
+                        </button>
                         <button
                           onClick={() => canAction && handleUpload(courier.courierName)}
                           className={`p-1.5 rounded-full transition-all ${canAction ? "text-brand-primary hover:bg-brand-primary/8" : "text-gray-300 cursor-not-allowed"}`}
@@ -329,7 +376,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                           <FaDownload size={14} />
                         </button>
                         <button
-                          onClick={() => canAction && handleDelete(courier._id)}
+                          onClick={() => canAction && handleInitiateDelete(courier)}
                           className={`p-1.5 rounded-full transition-all ${canAction ? "text-red-500 hover:bg-red-50" : "text-gray-300 cursor-not-allowed"}`}
                           title="Delete courier"
                           disabled={!canAction}
@@ -395,6 +442,16 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                       <div className="absolute right-0 top-full mt-1 bg-white border border-gray-100 rounded-lg shadow-lg z-50 w-48 py-1 animate-popup-in menu-popup">
                         <button
                           onClick={() => {
+                            setEditingCourier(courier);
+                            setMenuOpen(null);
+                          }}
+                          disabled={!canAction}
+                          className="w-full flex items-center gap-2 px-3 py-2 text-[10px] font-[600] text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                        >
+                          <FaEdit className="text-brand-primary" size={12} /> Edit B2B Courier
+                        </button>
+                        <button
+                          onClick={() => {
                             handleUpload(courier.courierName);
                             setMenuOpen(null);
                           }}
@@ -416,7 +473,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                         <div className="border-t border-gray-50 my-1"></div>
                         <button
                           onClick={() => {
-                            handleDelete(courier._id);
+                            handleInitiateDelete(courier);
                             setMenuOpen(null);
                           }}
                           disabled={!canAction}
@@ -468,6 +525,36 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
           <Loader />
         </div>
       )}
+
+      {/* Rejection Modal for Deletion Blocked by Linked Services */}
+      <CourierDeleteRejectionModal
+        isOpen={!!rejectionModalData}
+        onClose={() => setRejectionModalData(null)}
+        courier={rejectionModalData?.courier}
+        services={rejectionModalData?.services || []}
+        isB2B={true}
+      />
+
+      {/* Confirmation Modal for Safe Deletion (No Linked Services) */}
+      <ConfirmDeleteCourierModal
+        isOpen={!!courierToDelete}
+        onClose={() => setCourierToDelete(null)}
+        courier={courierToDelete}
+        onConfirm={handleConfirmDelete}
+        deleting={deleting}
+      />
+
+      {/* Edit B2B Courier Modal (provider and courierName locked) */}
+      <EditB2BCourierModal
+        isOpen={!!editingCourier}
+        onClose={() => setEditingCourier(null)}
+        courier={editingCourier}
+        onCourierUpdated={(updated) => {
+          setCouriers((prev) =>
+            prev.map((c) => (c._id === updated._id ? { ...c, ...updated } : c))
+          );
+        }}
+      />
     </div>
   );
 };

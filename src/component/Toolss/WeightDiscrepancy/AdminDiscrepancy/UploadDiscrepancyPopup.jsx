@@ -42,8 +42,12 @@ const UploadDiscrepancyPopup = ({ onClose, setRefresh }) => {
         }
       );
 
-      console.log("Upload success:", response);
-      Notification(response.data.message, "success");
+      console.log("Upload response:", response);
+      const isSuccess = (response.data.uploadedCount ?? 1) > 0;
+      Notification(
+        response.data.message || (isSuccess ? "Discrepancies uploaded successfully" : "No discrepancies uploaded"),
+        isSuccess ? "success" : "warning"
+      );
 
       setRefresh((prev) => !prev); // Toggle state for parent refresh ✅
       onClose(); // Close the modal AFTER state change ✅
