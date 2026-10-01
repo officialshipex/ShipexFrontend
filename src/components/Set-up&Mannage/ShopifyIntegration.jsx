@@ -8,6 +8,7 @@ import CustomDropdown from "./Dropdown"
 import Cookies from "js-cookie";
 import {Notification} from "../../Notification"
 import { useBranding } from "../../context/BrandingContext";
+import ShopifyGuideSteps from "./ShopifyGuideSteps";
 
 const ShopifyIntegration = () => {
   const { companyDisplayName } = useBranding();
@@ -276,19 +277,10 @@ const ShopifyIntegration = () => {
           <h3 className="text-[10px] sm:text-[14px] font-[600] text-gray-700">
             Steps to Integrate Shopify
           </h3>
-          <ul className="list-decimal list-inside mt-2 text-gray-700 space-y-2 font-[400] text-[10px] sm:text-[12px]">
-            <li>Fill in your Shopify Store name, Store URL, Store Client ID and Store client secret. Enter the details and click on add Channel to connect Shopify with {companyDisplayName}.</li>
-            <li>
-              If you do not have these details available, Login to your Shopify account and copy the URL link in the address bar. This is the store URL. Store name is the name of your store.
-            </li>
-            <li>Click on settings and in the left menu choose apps and sales channels.</li>
-            <li>
-              Click on develop apps and in the new page, click on Create an App.
-            </li>
-            <li>Enter the App name and choose the app developer and click on Create.</li>
-            <li>Click on API credentials. The API key is the Client ID, and the API secret is the client secret. Use the details provided to enter in the Carrier application and connect Shopify.</li>
-            <li><span className="font-bold">Note:</span> If you have any questions regarding the instructions, feel free to reach out to us. We are always happy to help.</li>
-          </ul>
+          <p className="mt-1 text-[10px] sm:text-[12px] text-gray-500">
+            Follow these steps to connect your Shopify store with {companyDisplayName}.
+          </p>
+          <ShopifyGuideSteps />
         </div>
 
       </div>
