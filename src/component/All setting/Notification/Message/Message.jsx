@@ -27,7 +27,6 @@ const SmsNotification = () => {
 
   // Modern Order Statuses matching the system
   const statuses = [
-    { key: "Booked", label: "Booked", defaultTemplate: "Your order {order_id} has been successfully booked. Track: {tracking_link}" },
     { key: "PickupPending", label: "Ready To Ship", defaultTemplate: "Your order {order_id} is ready to ship. Track: {tracking_link}" },
     { key: "In-transit", label: "In Transit", defaultTemplate: "Your order {order_id} is on the way. Track your package: {tracking_link}" },
     { key: "OutForDelivery", label: "Out for Delivery", defaultTemplate: "Your order {order_id} is out for delivery today. Be available to receive it." },

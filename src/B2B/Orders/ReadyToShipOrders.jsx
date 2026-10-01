@@ -104,7 +104,7 @@ const ReadyToShipOrders = (filterOrder) => {
         id,
         page,
         limit,
-        status: ["Not Picked", "Ready To Ship"],
+        status: ["Ready To Ship"],
         searchQuery,
         orderId: orderId || undefined,
         awbNumber: awbNumber || undefined,

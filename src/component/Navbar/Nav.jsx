@@ -28,7 +28,7 @@ import { FaTicketAlt } from "react-icons/fa";
 import AddCase from "../Support/AddCase";
 import { Notification } from "../../Notification"
 import MasterSearchFilter from "../../Common/MasterSearchFilter";
-import { X as XIcon, Package, UploadCloud, Loader2 } from "lucide-react";
+import { X as XIcon, Package, PackageX, UploadCloud, Loader2 } from "lucide-react";
 import { useNotificationList } from "../../utils/NotificationListProvider";
 import JobDetailModal from "../../Common/JobDetailModal";
 import NotificationHistoryModal from "../../Common/NotificationHistoryModal";
@@ -517,14 +517,16 @@ const Navbar = () => {
         {notifications.map((n) => {
           const ref = n.refId;
           const isBulkShip = n.refModel === "BulkShipJob";
+          // A Bulk Cancel is a BulkShipJob underneath, flagged by jobType
+          const isBulkCancel = isBulkShip && (n.jobType === "cancel" || ref?.jobType === "cancel");
           const isRunning = isBulkShip && ref?.status === "running";
           let summary = "";
           if (ref) {
             if (isBulkShip) {
               const done = (ref.successCount || 0) + (ref.failureCount || 0);
               summary = isRunning
-                ? `Processing… ${done}/${ref.totalOrders}`
-                : `${ref.successCount || 0} succeeded, ${ref.failureCount || 0} failed`;
+                ? `${isBulkCancel ? "Cancelling" : "Processing"}… ${done}/${ref.totalOrders}`
+                : `${ref.successCount || 0} ${isBulkCancel ? "cancelled" : "succeeded"}, ${ref.failureCount || 0} failed`;
             } else {
               summary = `${ref.successfullyUploaded || 0}/${ref.noOfOrders || 0} rows uploaded${ref.errorOrders ? `, ${ref.errorOrders} failed` : ""}`;
             }
@@ -541,6 +543,8 @@ const Navbar = () => {
               <div className="w-8 h-8 bg-brand-secondary/16 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
                 {isRunning ? (
                   <Loader2 className="w-3.5 h-3.5 text-brand-primary animate-spin" />
+                ) : isBulkCancel ? (
+                  <PackageX className="w-3.5 h-3.5 text-brand-primary" />
                 ) : isBulkShip ? (
                   <Package className="w-3.5 h-3.5 text-brand-primary" />
                 ) : (

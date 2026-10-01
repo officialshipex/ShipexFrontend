@@ -21,7 +21,7 @@ const statusIcon = (status) => {
     }
 };
 
-// Big centered detail view for a single Bulk Ship job or Bulk Upload file,
+// Big centered detail view for a single Bulk Ship / Bulk Cancel job or Bulk Upload file,
 // reached from a notification click (or from NotificationHistoryModal's
 // "Show All" list).
 const JobDetailModal = ({ notificationId, onClose }) => {
@@ -93,7 +93,7 @@ const JobDetailModal = ({ notificationId, onClose }) => {
                 ) : !data ? (
                     <div className="flex-1 p-10 text-center text-gray-400 text-[12px]">Could not load this notification.</div>
                 ) : isBulkShip ? (
-                    <BulkShipDetail job={job} />
+                    <BulkShipDetail job={job} isCancel={job?.jobType === "cancel"} />
                 ) : (
                     <BulkUploadDetail file={file} />
                 )}
@@ -112,7 +112,7 @@ const SummaryBar = ({ items }) => (
     </div>
 );
 
-const BulkShipDetail = ({ job }) => {
+const BulkShipDetail = ({ job, isCancel = false }) => {
     if (!job) return null;
     const isRunning = job.status === "running";
     const doneCount = (job.successCount || 0) + (job.failureCount || 0);
@@ -122,9 +122,9 @@ const BulkShipDetail = ({ job }) => {
             <SummaryBar
                 items={[
                     isRunning
-                        ? { label: `Processing… ${doneCount}/${job.totalOrders}`, className: "bg-brand-secondary/10 text-brand-primary border border-brand-secondary/26" }
+                        ? { label: `${isCancel ? "Cancelling" : "Processing"}… ${doneCount}/${job.totalOrders}`, className: "bg-brand-secondary/10 text-brand-primary border border-brand-secondary/26" }
                         : { label: "Completed", className: "bg-brand-secondary/10 text-brand-primary border border-brand-secondary/26" },
-                    { label: `${job.successCount || 0} succeeded`, className: "bg-green-50 text-green-700 border border-green-200" },
+                    { label: `${job.successCount || 0} ${isCancel ? "cancelled" : "succeeded"}`, className: "bg-green-50 text-green-700 border border-green-200" },
                     { label: `${job.failureCount || 0} failed`, className: job.failureCount ? "bg-red-50 text-red-600 border border-red-200" : "bg-white text-gray-500 border border-gray-200" },
                 ]}
             />
@@ -134,10 +134,19 @@ const BulkShipDetail = ({ job }) => {
                         <div key={idx} className="flex items-start gap-3 px-5 py-3">
                             {statusIcon(r.status)}
                             <div className="flex-1 min-w-0 text-[12px]">
-                                <div className="text-gray-700 font-[600]">Order {r.displayOrderId ?? "—"}</div>
-                                {r.status === "success" && r.courierServiceName && (
+                                <div className="text-gray-700 font-[600]">
+                                    Order {r.displayOrderId ?? "—"}
+                                    {isCancel && r.awbNumber && (
+                                        <span className="text-gray-400 font-[500]"> · AWB {r.awbNumber}</span>
+                                    )}
+                                </div>
+                                {r.status === "success" && (isCancel ? (
+                                    <div className="text-[11px] text-brand-primary mt-0.5">
+                                        Cancelled{r.courierServiceName ? ` (${r.courierServiceName})` : ""} and the freight refunded to the wallet
+                                    </div>
+                                ) : r.courierServiceName && (
                                     <div className="text-[11px] text-brand-primary mt-0.5">Shipped via {r.courierServiceName}</div>
-                                )}
+                                ))}
                                 {r.status === "failed" && r.failureReason && (
                                     <div className="text-[11px] text-red-500 mt-0.5 whitespace-pre-wrap break-words">{r.failureReason}</div>
                                 )}

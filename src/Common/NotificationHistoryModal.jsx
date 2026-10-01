@@ -2,18 +2,23 @@ import React, { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import dayjs from "dayjs";
-import { X, Package, UploadCloud, ChevronDown } from "lucide-react";
+import { X, Package, PackageX, UploadCloud, ChevronDown } from "lucide-react";
 import DateFilter from "../filter/DateFilter";
 import JobDetailModal from "./JobDetailModal";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const authHeaders = () => ({ headers: { authorization: `Bearer ${Cookies.get("session")}` } });
 
+// value is "<refModel>" or "<refModel>:<jobType>" — a Bulk Cancel is a BulkShipJob of jobType "cancel".
 const TYPE_OPTIONS = [
     { value: "", label: "All" },
-    { value: "BulkShipJob", label: "Bulk Ship" },
+    { value: "BulkShipJob:ship", label: "Bulk Ship" },
+    { value: "BulkShipJob:cancel", label: "Bulk Cancel" },
     { value: "BulkOrderFiles", label: "Bulk Upload" },
 ];
+
+const isCancelNotification = (notification) =>
+    notification.refModel === "BulkShipJob" && (notification.jobType === "cancel" || notification.refId?.jobType === "cancel");
 
 const summaryFor = (notification) => {
     const ref = notification.refId;
@@ -21,9 +26,9 @@ const summaryFor = (notification) => {
     if (notification.refModel === "BulkShipJob") {
         if (ref.status === "running") {
             const done = (ref.successCount || 0) + (ref.failureCount || 0);
-            return `Processing… ${done}/${ref.totalOrders}`;
+            return `${isCancelNotification(notification) ? "Cancelling" : "Processing"}… ${done}/${ref.totalOrders}`;
         }
-        return `${ref.successCount || 0} succeeded, ${ref.failureCount || 0} failed`;
+        return `${ref.successCount || 0} ${isCancelNotification(notification) ? "cancelled" : "succeeded"}, ${ref.failureCount || 0} failed`;
     }
     return `${ref.successfullyUploaded || 0}/${ref.noOfOrders || 0} rows uploaded${ref.errorOrders ? `, ${ref.errorOrders} failed` : ""}`;
 };
@@ -42,7 +47,12 @@ const NotificationHistoryModal = ({ open, onClose }) => {
         setLoading(true);
         try {
             const params = { limit: 200 };
-            if (typeFilter) params.refModel = typeFilter;
+            if (typeFilter) {
+                // "BulkShipJob:cancel" -> refModel + jobType
+                const [refModel, jobType] = typeFilter.split(":");
+                params.refModel = refModel;
+                if (jobType) params.jobType = jobType;
+            }
             if (dateRange?.[0]?.startDate) params.fromDate = dateRange[0].startDate.toISOString();
             if (dateRange?.[0]?.endDate) params.toDate = dateRange[0].endDate.toISOString();
             const response = await axios.get(`${REACT_APP_BACKEND_URL}/app-notifications/history`, {
@@ -74,13 +84,17 @@ const NotificationHistoryModal = ({ open, onClose }) => {
             groups.push(group);
         }
         const group = dayIndex.get(dayKey);
-        if (!group.types.has(n.refModel)) group.types.set(n.refModel, []);
-        group.types.get(n.refModel).push(n);
+        // a Bulk Cancel is a BulkShipJob underneath: give it its own group
+        const typeKey = isCancelNotification(n) ? "BulkCancel" : n.refModel;
+        if (!group.types.has(typeKey)) group.types.set(typeKey, []);
+        group.types.get(typeKey).push(n);
     });
 
-    const typeLabel = (refModel) => (refModel === "BulkShipJob" ? "Bulk Ship" : "Bulk Upload");
+    const typeLabel = (refModel) => (refModel === "BulkCancel" ? "Bulk Cancel" : refModel === "BulkShipJob" ? "Bulk Ship" : "Bulk Upload");
     const typeIcon = (refModel) =>
-        refModel === "BulkShipJob" ? (
+        refModel === "BulkCancel" ? (
+            <PackageX className="w-3.5 h-3.5 text-brand-primary" />
+        ) : refModel === "BulkShipJob" ? (
             <Package className="w-3.5 h-3.5 text-brand-primary" />
         ) : (
             <UploadCloud className="w-3.5 h-3.5 text-brand-primary" />

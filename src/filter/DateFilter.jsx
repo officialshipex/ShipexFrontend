@@ -3,7 +3,10 @@ import { Calendar } from "lucide-react";
 import dayjs from "dayjs";
 import { DateRange } from "react-date-range";
 
-const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter, className }) => {
+// A dashboard status box can deep-link to an orders tab with the date range it
+// was showing; pass it as initialDateRange so the list covers the same dates.
+// Pages that don't pass it keep the "last 30 days" default.
+const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter, className, initialDateRange }) => {
     const dateRef = useRef(null);
     const [showCustom, setShowCustom] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
@@ -11,7 +14,7 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter, className }) 
     const calendarRef = useRef(null);
     const [popupPosition, setPopupPosition] = useState("left-0");
 
-    const initialDateRange = [
+    const DEFAULT_DATE_RANGE = [
         {
             startDate: dayjs().subtract(29, "day").startOf("day").toDate(),
             endDate: dayjs().endOf("day").toDate(),
@@ -20,13 +23,23 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter, className }) 
     ];
 
 
-    const [dateRange, setDateRange] = useState(initialDateRange);
+    const startingRange = initialDateRange || DEFAULT_DATE_RANGE;
 
-    const [tempDateRange, setTempDateRange] = useState(initialDateRange);
+    const [dateRange, setDateRange] = useState(startingRange);
 
+    const [tempDateRange, setTempDateRange] = useState(startingRange);
+
+    // "Clear All Filters" goes back to the normal default, not the deep link.
+    // Skipped on mount: the state is already seeded from startingRange.
+    const isFirstClearRun = useRef(true);
     useEffect(() => {
-        setDateRange(initialDateRange);
-        setTempDateRange(initialDateRange);
+        if (isFirstClearRun.current) {
+            isFirstClearRun.current = false;
+            return;
+        }
+        setDateRange(DEFAULT_DATE_RANGE);
+        setTempDateRange(DEFAULT_DATE_RANGE);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [clearTrigger]);
 
     // ✅ Dynamic Positioning for Custom Calendar
@@ -99,7 +112,7 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter, className }) 
 
     useEffect(() => {
         if (!noInitialFilter) {
-            onDateChange && onDateChange(initialDateRange);
+            onDateChange && onDateChange(startingRange);
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
@@ -214,10 +227,19 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter, className }) 
                                 className="bg-brand-primary text-white px-3 py-1 text-xs rounded"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    setDateRange(tempDateRange);
+                                    // react-date-range returns midnight for both ends, so a
+                                    // single day is a zero-width window; stretch to full days.
+                                    const normalizedRange = [
+                                        {
+                                            ...tempDateRange[0],
+                                            startDate: dayjs(tempDateRange[0].startDate).startOf("day").toDate(),
+                                            endDate: dayjs(tempDateRange[0].endDate).endOf("day").toDate(),
+                                        },
+                                    ];
+                                    setDateRange(normalizedRange);
                                     setShowCustom(false);
                                     setShowDropdown(false);
-                                    onDateChange && onDateChange(tempDateRange); // ✅ send to parent
+                                    onDateChange && onDateChange(normalizedRange); // ✅ send to parent
                                 }}
                             >
                                 Apply

@@ -205,8 +205,13 @@ const OrdersTable = ({
                                         {order?.channel === "WooCommerce" ? "Woo" : (order?.channel || "CUSTOM")}
                                     </p>
                                     {/* CHANNEL ID (Show for all channels if exists) */}
-                                    {order?.channelId && (
-                                        <p className="text-gray-500 text-[10px]">({order.channelId})</p>
+                                    {/* CHANNEL ORDER REFERENCE — the seller's own channel order
+                                        number/name (e.g. Shopify's "#VN55038") so it matches what they
+                                        see in that channel's own admin panel. Older synced orders may
+                                        not have channelOrderName yet, so fall back to the raw channelId
+                                        rather than showing nothing. */}
+                                    {(order?.channelOrderName || order?.channelId) && (
+                                        <p className="text-gray-500 text-[10px]">({order.channelOrderName || order.channelId})</p>
                                     )}
                                 </div>
                             </td>

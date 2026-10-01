@@ -1,8 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import ReadyToShipOrders from "./ReadyToShipOrders";
-import BookedOrders from "./BookedOrders";
-import NotPickedOrders from "./NotPickedOrders";
 import axios from "axios";
 import Cookies from "js-cookie";
 import EmployeeAuthModal from "../../employeeAuth/EmployeeAuthModal";
@@ -18,11 +16,13 @@ const FirstMile = ({ isSidebarAdmin }) => {
   const navigate = useNavigate();
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
-  const tabs = ["Booked", "Not Picked", "Ready To Ship"];
+  const tabs = ["Ready To Ship"];
   const tabStorageKey = "activeOperationFirstMileTab";
 
   const [activeTab, setActiveTab] = useState(() => {
-    return localStorage.getItem(tabStorageKey) || "Booked";
+    // a tab remembered from before "Booked" / "Not Picked" were retired is no longer a tab
+    const stored = localStorage.getItem(tabStorageKey);
+    return tabs.includes(stored) ? stored : "Ready To Ship";
   });
 
   const params = new URLSearchParams(location.search);
@@ -60,10 +60,8 @@ const FirstMile = ({ isSidebarAdmin }) => {
 
   const renderTabContent = () => {
     switch (activeTab) {
-      case "Booked": return <BookedOrders userId={userId} />;
-      case "Not Picked": return <NotPickedOrders userId={userId} />;
       case "Ready To Ship": return <ReadyToShipOrders userId={userId} />;
-      default: return <div className="p-4 text-center text-gray-500">Select a tab to view orders.</div>;
+      default: return <ReadyToShipOrders userId={userId} />;
     }
   };
 

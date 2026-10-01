@@ -5,7 +5,43 @@ import { saveAs } from "file-saver";
 import * as XLSX from "xlsx";
 import { Notification } from "../Notification";
 import { toTenantUrl } from "../utils/tenantApiDomain";
+import { refreshNotifications } from "../utils/NotificationListProvider";
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+
+// Amazon's shipments aren't only booked directly (provider "Amazon
+// Shipping") — they're also booked through aggregator providers like
+// Shiprocket and Jiffy, where the CourierService is created under that
+// aggregator's provider name but its service name carries "ATS" (Amazon's
+// own carrier code) as the admin-set naming convention marking it as an
+// Amazon-fulfilled service. Either signal means the order should get
+// Amazon's original label instead of the generated one.
+export const isAmazonAtsOrder = (order) =>
+  order?.provider === "Amazon Shipping" || /ats/i.test(order?.courierServiceName || "");
+
+// Kicks off the backend bulk-ship job; progress/results surface via the navbar
+// notification bell (JobDetailModal), not an inline popup — the server's
+// partial-unique index on BulkShipJob.activeSlot is the sole duplicate-
+// prevention mechanism (409 below), no client-side tracking needed.
+export const submitBulkShip = async ({ selectedOrders, fetchOrders }) => {
+  try {
+    const token = Cookies.get("session");
+    const response = await axios.post(
+      `${REACT_APP_BACKEND_URL}/bulk/create-bulk-order`,
+      { selectedOrders },
+      { headers: { authorization: `Bearer ${token}` } }
+    );
+    if (response.data?.jobId) refreshNotifications();
+    fetchOrders && fetchOrders();
+  } catch (error) {
+    if (error.response?.status === 409) {
+      const { message } = error.response.data || {};
+      refreshNotifications();
+      Notification(message || "A bulk shipment is already in progress.", "info");
+    } else {
+      Notification(error.response?.data?.message || "Something went wrong while processing bulk shipment.", "error");
+    }
+  }
+};
 
 export const handleTrackingByAwb = (awb, navigate) => {
   navigate(`/dashboard/order/tracking/${awb}`);
@@ -267,7 +303,7 @@ export const handleBulkDownloadLabel = async ({ selectedOrders }) => {
     // ── 3. Download and assemble each label ──────────────────────────────
     for (const orderData of orderResponses) {
       let response;
-      if (orderData.provider === "Amazon Shipping" && orderData.label) {
+      if (isAmazonAtsOrder(orderData) && orderData.label) {
         response = await fetch(
           `${REACT_APP_BACKEND_URL}/printlabel/proxy-label?url=${encodeURIComponent(orderData.label)}`,
         );

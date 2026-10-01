@@ -4,7 +4,6 @@ import { FaClipboardList } from "react-icons/fa";
 import { FiBarChart2 } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import {
-    FaBox,
     FaTruckLoading,
     FaShippingFast,
     FaMapMarkedAlt,
@@ -33,11 +32,11 @@ const Dashboard = ({ selectedUserId, selectedDateRange }) => {
     const [isAdmin, setIsAdmin] = useState();
     const [adminTab, setAdminTab] = useState();
 
-    const handleShipmentClick = () => {
+    const handleShipmentClick = (tab) => {
         if (!isAdmin || (isAdmin && !adminTab)) {
-            navigate("/dashboard/b2c/order");
+            navigate("/dashboard/b2c/order", { state: { tab, dateRange: selectedDateRange } });
         } else {
-            navigate("/adminDashboard/b2c/order");
+            navigate("/adminDashboard/b2c/order", { state: { tab, dateRange: selectedDateRange } });
         }
     };
 
@@ -193,13 +192,12 @@ const Dashboard = ({ selectedUserId, selectedDateRange }) => {
                     <h2 className="text-[14px] text-gray-700 font-[600] mb-2">Shipments Details</h2>
                     {/* <p className="text-[10px] sm:text-[12px] text-gray-500">Last 30 days</p> */}
                 </div>
-                <div className="grid grid-cols-2 text-[14px] sm:grid-cols-3 md:grid-cols-6 gap-2">
-                    <StatBox label="Booked" value={data?.shipmentStats?.booked || 0} icon={FaBox} onClick={handleShipmentClick} />
-                    <StatBox label="Ready To Ship" value={data?.shipmentStats?.readyToShip || 0} icon={FaTruckLoading} onClick={handleShipmentClick} />
-                    <StatBox label="In-Transit" value={data?.shipmentStats?.inTransit || 0} icon={FaShippingFast} onClick={handleShipmentClick} />
-                    <StatBox label="Out for Delivery" value={data?.shipmentStats?.outForDelivery || 0} icon={FaMapMarkedAlt} onClick={handleShipmentClick} />
-                    <StatBox label="Delivered" value={data?.shipmentStats?.delivered || 0} icon={FaCheckCircle} onClick={handleShipmentClick} />
-                    <StatBox label="RTO Delivered" value={data?.shipmentStats?.rto || 0} icon={FaUndo} />
+                <div className="grid grid-cols-2 text-[14px] sm:grid-cols-3 md:grid-cols-5 gap-2">
+                    <StatBox label="Ready To Ship" value={data?.shipmentStats?.readyToShip || 0} icon={FaTruckLoading} onClick={() => handleShipmentClick("Ready to Ship")} />
+                    <StatBox label="In-Transit" value={data?.shipmentStats?.inTransit || 0} icon={FaShippingFast} onClick={() => handleShipmentClick("In Transit")} />
+                    <StatBox label="Out for Delivery" value={data?.shipmentStats?.outForDelivery || 0} icon={FaMapMarkedAlt} onClick={() => handleShipmentClick("Out for Delivery")} />
+                    <StatBox label="Delivered" value={data?.shipmentStats?.delivered || 0} icon={FaCheckCircle} onClick={() => handleShipmentClick("Delivered")} />
+                    <StatBox label="RTO Delivered" value={data?.shipmentStats?.rto || 0} icon={FaUndo} onClick={() => handleShipmentClick("RTO Delivered")} />
                 </div>
 
             </div>

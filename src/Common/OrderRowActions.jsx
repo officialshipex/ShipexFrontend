@@ -2,6 +2,7 @@ import React, { useState, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
+import { isAmazonAtsOrder } from "./orderActions";
 
 const OrderRowActions = ({
     index,
@@ -74,7 +75,7 @@ const OrderRowActions = ({
     const action = getStatusAction(order)[order.status];
 
     // Status-based visibility logic
-    const showCancel = ["Ready To Ship", "Booked", "Not Picked"].includes(order.status);
+    const showCancel = ["Ready To Ship"].includes(order.status);
     const cancelLabel = isNewOrder ? "Delete Order" : "Cancel Order";
     const restrictedForManifest = ["new", "Cancelled"];
     const showDownloadManifest = !restrictedForManifest.includes(order.status);
@@ -146,7 +147,7 @@ const OrderRowActions = ({
                             >
                                 <ul className="text-[10px] font-[600]">
                                     {/* Verify Order logic */}
-                                    {onVerifyOrder && ["Booked", "Not Picked", "Ready To Ship"].includes(order.status) && (
+                                    {onVerifyOrder && ["Ready To Ship"].includes(order.status) && (
                                         <li
                                             onClick={(e) => {
                                                 e.stopPropagation();
@@ -165,7 +166,7 @@ const OrderRowActions = ({
 
                                     {/* Label logic */}
                                     {showDownloadLabel && (
-                                        order.provider === "Amazon Shipping" ? (
+                                        isAmazonAtsOrder(order) && order.label ? (
                                             <li className="hover:bg-brand-secondary/8 transition-colors">
                                                 <a
                                                     href={order.label}

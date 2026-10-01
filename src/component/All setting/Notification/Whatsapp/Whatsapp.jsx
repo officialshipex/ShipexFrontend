@@ -27,7 +27,6 @@ const Whatsapp = () => {
 
   // Modern Order Statuses matching the system
   const statuses = [
-    { key: "Booked", label: "Booked", defaultTemplate: "Your order {order_id} has been successfully booked. Track: {tracking_link}" },
     { key: "PickupPending", label: "Ready To Ship", defaultTemplate: "Hi! Your order {order_id} is ready to ship. We'll notify you once it's picked up. Track: {tracking_link}" },
     { key: "In-transit", label: "In Transit", defaultTemplate: "Good news! Your order {order_id} is on its way. Track your package here: {tracking_link}" },
     { key: "OutForDelivery", label: "Out for Delivery", defaultTemplate: "Your order {order_id} is out for delivery today. Please keep your phone available. Track: {tracking_link}" },

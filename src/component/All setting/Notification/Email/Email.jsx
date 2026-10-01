@@ -26,7 +26,6 @@ const Email = () => {
 
   // Modern Order Statuses
   const statuses = [
-    { key: "Booked", label: "Booked", defaultTemplate: "Your order {order_id} has been successfully booked. Track: {tracking_link}", defaultSubject: "Your Order has been Booked" },
     { key: "PickupPending", label: "Ready To Ship", defaultTemplate: "Dear Customer, your order is ready to ship. We'll notify you once it's picked up. Track here: {tracking_link}", defaultSubject: "Your Order is Ready to ship from {company_name}" },
     { key: "In-transit", label: "In Transit", defaultTemplate: "Your order is currently in transit. You can track your shipment: {tracking_link}", defaultSubject: "Your Order is In Transit" },
     { key: "OutForDelivery", label: "Out for Delivery", defaultTemplate: "Your order is out for delivery. Please ensure availability to receive it. Track: {tracking_link}", defaultSubject: "Your Order is Out for Delivery" },

@@ -18,7 +18,6 @@ import RTOLost from "./RTOLost";
 import RTODamaged from "./RTODamaged";
 import Lost from "./Lost";
 import Damaged from "./Damaged";
-import BookedOrders from "./BookedOrders";
 
 const OrdersPage = () => {
   const [showDropdown, setShowDropdown] = useState(false);
@@ -33,7 +32,6 @@ const OrdersPage = () => {
 
   const tabs = [
     "New",
-    "Booked",
     "Pickup & Manifest",
     "Ready to Ship",
     "In Transit",
@@ -51,8 +49,27 @@ const OrdersPage = () => {
   const tabStorageKey = isNdrRoute ? "activeNdrTab" : "activeOrderTab";
 
   const [activeTab, setActiveTab] = useState(() => {
-    return localStorage.getItem(tabStorageKey) || "New";
+    if (location.state?.tab && allTabs.includes(location.state.tab)) {
+      return location.state.tab;
+    }
+    const stored = localStorage.getItem(tabStorageKey);
+    // a tab remembered from before "Booked" was retired lands on Ready to Ship
+    return stored === "Booked" ? "Ready to Ship" : stored || "New";
   });
+
+  // A dashboard status box navigates here with { tab, dateRange } in location.state
+  // (covers navigating again while this page is already mounted).
+  useEffect(() => {
+    if (location.state?.tab && allTabs.includes(location.state.tab)) {
+      setActiveTab(location.state.tab);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [location.state]);
+
+  // the dashboard's date range only applies to the tab that was clicked
+  const dashboardDateRange =
+    location.state?.tab === activeTab ? location.state?.dateRange : undefined;
+
 
   useEffect(() => {
     localStorage.setItem(tabStorageKey, activeTab);
@@ -91,16 +108,15 @@ const OrdersPage = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "New": return <Orders />;
-      case "Booked": return <BookedOrders />;
       case "Pickup & Manifest": return <PickupManifestOrders />;
-      case "Ready to Ship": return <ReadyToShipOrders />;
-      case "In Transit": return <InTransitOrders />;
-      case "Out for Delivery": return <OutForDelivery />;
-      case "Delivered": return <DeliveredOrders />;
+      case "Ready to Ship": return <ReadyToShipOrders initialDateRange={dashboardDateRange} />;
+      case "In Transit": return <InTransitOrders initialDateRange={dashboardDateRange} />;
+      case "Out for Delivery": return <OutForDelivery initialDateRange={dashboardDateRange} />;
+      case "Delivered": return <DeliveredOrders initialDateRange={dashboardDateRange} />;
       case "Cancelled": return <CancelledOrder />;
       case "RTO Initiated": return <RTO />;
       case "RTO In Transit": return <RTOIntransit />;
-      case "RTO Delivered": return <RTODelivered />;
+      case "RTO Delivered": return <RTODelivered initialDateRange={dashboardDateRange} />;
       case "RTO Lost": return <RTOLost />;
       case "RTO Damaged": return <RTODamaged />;
       case "Lost": return <Lost />;

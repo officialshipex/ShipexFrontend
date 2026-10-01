@@ -19,8 +19,10 @@ import {
   SavePackageDetails,
   BulkCancelB2B,
   cancelOrder,
-  handleClone
+  handleClone,
+  submitBulkShip,
 } from "../../Common/orderActions";
+import { refreshNotifications } from "../../utils/NotificationListProvider";
 import OrdersTable from "../../Common/OrdersTable";
 import MobileOrderCard from "../../Common/MobileOrderCard";
 
@@ -207,6 +209,7 @@ const NewOrders = (filterOrder) => {
         } else {
           Notification(shipResponse.data.message || "Failed to create bulk shipment.", "error");
         }
+        refreshNotifications();
         fetchOrders();
         return;
       }
@@ -435,8 +438,13 @@ const NewOrders = (filterOrder) => {
           setRefresh={setRefresh}
           refresh={refresh}
           userId={id}
-          onPickupSelected={async (formData) => {
-            // Bulk ship logic...
+          onPickupSelected={async () => {
+            setShowBulkShipModal(false);
+            if (title === "Bulk Ship") {
+              await submitBulkShip({ selectedOrders, fetchOrders });
+            } else {
+              setRefresh((prev) => !prev);
+            }
           }}
         />
       )}

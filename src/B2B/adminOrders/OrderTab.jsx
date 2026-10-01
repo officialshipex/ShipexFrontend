@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Orders from "./NewOrder";
-import BookedOrders from "./BookedOrders";
 import ReadyToShipOrders from "./ReadyToShipOrders";
 import InTransitOrders from "./InTransitOrders";
 import DeliveredOrders from "./DeliveredOrders";
@@ -38,7 +37,9 @@ const OrderTab = ({ isSidebarAdmin }) => {
     const tabStorageKey = "activeOrderTab";
 
     const [activeTab, setActiveTab] = useState(() => {
-        return localStorage.getItem(tabStorageKey) || "New";
+        const stored = localStorage.getItem(tabStorageKey);
+        // a tab remembered from before "Booked" was retired lands on Ready to Ship
+        return stored === "Booked" ? "Ready to Ship" : stored || "New";
     });
 
     const params = new URLSearchParams(location.search);
@@ -50,7 +51,6 @@ const OrderTab = ({ isSidebarAdmin }) => {
 
     const tabs = [
         "New",
-        "Booked",
         // "Pickup & Manifest",
         "Ready to Ship",
         "In Transit",
@@ -106,7 +106,6 @@ const OrderTab = ({ isSidebarAdmin }) => {
     const renderTabContent = () => {
         switch (activeTab) {
             case "New": return <Orders userId={userId} />;
-            case "Booked": return <BookedOrders userId={userId} />;
             case "Pickup & Manifest": return <PickupManifestOrders userId={userId} />;
             case "Ready to Ship": return <ReadyToShipOrders userId={userId} />;
             case "In Transit": return <InTransitOrders userId={userId} />;

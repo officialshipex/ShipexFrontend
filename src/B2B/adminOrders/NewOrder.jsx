@@ -24,6 +24,7 @@ import {
   cancelOrder,
   BulkCancelB2B
 } from "../../Common/orderActions";
+import { refreshNotifications } from "../../utils/NotificationListProvider";
 import OrdersTable from "../../Common/OrdersTable";
 import MobileOrderCard from "../../Common/MobileOrderCard";
 import NotFound from "../../assets/nodatafound.png";
@@ -238,6 +239,7 @@ const NewOrder = ({ userId: initialUserId }) => {
           Notification(message || "Failed to create bulk shipment.", "error");
         }
 
+        refreshNotifications();
         setRefresh(prev => !prev);
         return;
       }

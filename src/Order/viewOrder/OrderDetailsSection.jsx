@@ -32,9 +32,9 @@ const OrderDetailsSection = ({ order }) => {
                         </span>
 
                         {/* Channel ID (no background) */}
-                        {order.channelId && (
+                        {(order.channelOrderName || order.channelId) && (
                             <span className="text-[10px] font-[600] text-gray-500">
-                                ({order.channelId})
+                                ({order.channelOrderName || order.channelId})
                             </span>
                         )}
                     </div>

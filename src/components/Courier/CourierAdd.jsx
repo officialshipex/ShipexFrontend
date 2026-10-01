@@ -115,11 +115,20 @@ const courierConfigs = {
       { name: "apiKey", label: "API Token", placeholder: "Enter Shadowfax Production Token", type: "text" },
     ],
   },
-  Losung360: {
+  // Admins only ever see "ShipMaxx"; the backend talks to Losung360 internally.
+  ShipMaxx: {
     endpoint: "/Losung360/getAuthToken",
     fields: [
       { name: "username", label: "User/Email", placeholder: "Username/Email", type: "text" },
       { name: "password", label: "Password", placeholder: "Password", type: "password" },
+      { name: "channelId", label: "Channel ID", placeholder: "Channel ID given for this account", type: "text" },
+    ],
+  },
+  Jiffy: {
+    endpoint: "/Jiffy/addCourier",
+    fields: [
+      { name: "email", label: "Email", placeholder: "API Email", type: "email" },
+      { name: "password", label: "Password", placeholder: "API Password", type: "password" },
     ],
   },
 };

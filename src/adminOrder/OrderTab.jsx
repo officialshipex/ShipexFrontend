@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Orders from "./NewOrder";
-import BookedOrders from "./BookedOrders";
 import ReadyToShipOrders from "./ReadyToShipOrders";
 import InTransitOrders from "./InTransitOrders";
 import DeliveredOrders from "./DeliveredOrders";
@@ -38,7 +37,10 @@ const OrderTab = ({ isSidebarAdmin }) => {
     const tabStorageKey = "activeOrderTab";
 
     const [activeTab, setActiveTab] = useState(() => {
-        return localStorage.getItem(tabStorageKey) || "New";
+        if (location.state?.tab) return location.state.tab; // from a dashboard status box
+        const stored = localStorage.getItem(tabStorageKey);
+        // a tab remembered from before "Booked" was retired lands on Ready to Ship
+        return stored === "Booked" ? "Ready to Ship" : stored || "New";
     });
 
     const params = new URLSearchParams(location.search);
@@ -50,7 +52,6 @@ const OrderTab = ({ isSidebarAdmin }) => {
 
     const tabs = [
         "New",
-        "Booked",
         "Pickup & Manifest",
         "Ready to Ship",
         "In Transit",
@@ -60,6 +61,19 @@ const OrderTab = ({ isSidebarAdmin }) => {
 
     const moreTabs = ["Cancelled", "Lost", "Damaged", "RTO Initiated", "RTO In Transit", "RTO Delivered", "RTO Lost", "RTO Damaged", "All"];
     const allTabs = [...tabs, ...moreTabs];
+
+    // A dashboard status box navigates here with { tab, dateRange } in location.state
+    // (covers navigating again while this page is already mounted).
+    useEffect(() => {
+        if (location.state?.tab && allTabs.includes(location.state.tab)) {
+            setActiveTab(location.state.tab);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [location.state]);
+
+    // the dashboard's date range only applies to the tab that was clicked
+    const dashboardDateRange =
+        location.state?.tab === activeTab ? location.state?.dateRange : undefined;
 
     useEffect(() => {
         function handleClickOutside(event) {
@@ -106,16 +120,15 @@ const OrderTab = ({ isSidebarAdmin }) => {
     const renderTabContent = () => {
         switch (activeTab) {
             case "New": return <Orders userId={userId} />;
-            case "Booked": return <BookedOrders userId={userId} />;
-            case "Ready to Ship": return <ReadyToShipOrders userId={userId} />;
+            case "Ready to Ship": return <ReadyToShipOrders userId={userId} initialDateRange={dashboardDateRange} />;
             case "Pickup & Manifest": return <PickupManifestOrders userId={userId} />;
-            case "In Transit": return <InTransitOrders userId={userId} />;
-            case "Out for Delivery": return <OutForDelivery userId={userId} />;
-            case "Delivered": return <DeliveredOrders userId={userId} />;
+            case "In Transit": return <InTransitOrders userId={userId} initialDateRange={dashboardDateRange} />;
+            case "Out for Delivery": return <OutForDelivery userId={userId} initialDateRange={dashboardDateRange} />;
+            case "Delivered": return <DeliveredOrders userId={userId} initialDateRange={dashboardDateRange} />;
             case "Cancelled": return <CancelledOrder userId={userId} />;
             case "RTO Initiated": return <RTO userId={userId} />;
             case "RTO In Transit": return <RTOIntransit userId={userId} />;
-            case "RTO Delivered": return <RTODelivered userId={userId} />;
+            case "RTO Delivered": return <RTODelivered userId={userId} initialDateRange={dashboardDateRange} />;
             case "RTO Lost": return <RTOLost userId={userId} />;
             case "RTO Damaged": return <RTODamaged userId={userId} />;
             case "Lost": return <Lost userId={userId} />;

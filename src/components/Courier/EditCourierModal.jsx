@@ -71,6 +71,12 @@ const FIELD_META = {
     placeholder: "Carrier ID override",
     colSpan: "sm:col-span-1",
   },
+  channelId: {
+    label: "Channel ID",
+    type: "text",
+    placeholder: "ShipMaxx channel ID",
+    colSpan: "sm:col-span-1",
+  },
   carrierName: {
     label: "Carrier Name",
     type: "text",

@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useLocation, useParams } from "react-router-dom";
 import Orders from "./NewOrders";
-import BookedOrders from "./BookedOrders";
 import ReadyToShipOrders from "./ReadyToShipOrders";
 import InTransitOrders from "./InTransitOrders";
 import DeliveredOrders from "./DeliveredOrders";
@@ -36,7 +35,6 @@ const OrdersPage = () => {
 
   const tabs = [
     "New",
-    "Booked",
     // "Pickup & Manifest",
     "Ready to Ship",
     "In Transit",
@@ -54,7 +52,9 @@ const OrdersPage = () => {
   const tabStorageKey = isNdrRoute ? "activeNdrTab" : "activeOrderTab";
 
   const [activeTab, setActiveTab] = useState(() => {
-    return localStorage.getItem(tabStorageKey) || "New";
+    const stored = localStorage.getItem(tabStorageKey);
+    // a tab remembered from before "Booked" was retired lands on Ready to Ship
+    return stored === "Booked" ? "Ready to Ship" : stored || "New";
   });
 
   useEffect(() => {
@@ -94,7 +94,6 @@ const OrdersPage = () => {
   const renderTabContent = () => {
     switch (activeTab) {
       case "New": return <Orders />;
-      case "Booked": return <BookedOrders />;
       case "Pickup & Manifest": return <PickupManifestOrders />;
       case "Ready to Ship": return <ReadyToShipOrders />;
       case "In Transit": return <InTransitOrders />;
