@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Cookies from "js-cookie"
 
 
-const UserFilter = ({ onUserSelect, clearTrigger }) => {
+const UserFilter = ({ onUserSelect, clearTrigger, disabled = false }) => {
     const [searchUser, setSearchUser] = useState("");
     const [userSuggestions, setUserSuggestions] = useState([]);
     const [selectedUserId, setSelectedUserId] = useState(null);
@@ -104,7 +104,8 @@ const UserFilter = ({ onUserSelect, clearTrigger }) => {
                 <input
                     type="text"
                     placeholder="Search by Name, Email, or Contact"
-                    className="w-full h-9 py-2 px-3 text-[12px] font-[600] border border-gray-300 rounded-lg placeholder:text-gray-400 placeholder:font-[600] focus:outline-none focus:border-brand-primary transition-colors"
+                    disabled={disabled}
+                    className={`w-full h-9 py-2 px-3 text-[12px] font-[600] border border-gray-300 rounded-lg placeholder:text-gray-400 placeholder:font-[600] focus:outline-none focus:border-brand-primary transition-colors ${disabled ? "bg-gray-100 cursor-not-allowed text-gray-400" : ""}`}
                     onChange={(e) => {
                         const value = e.target.value;
                         setSearchUser(value);

@@ -25,6 +25,8 @@ import {
   handleManifest,
   handleBulkDownloadManifests
 } from "../Common/orderActions";
+import QuickActionButtons from "../Common/QuickActionButtons";
+import SelectedCountBadge from "../Common/SelectedCountBadge";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -183,6 +185,12 @@ const ActionRequired = () => {
     }
   };
 
+  const quickActions = [
+    { label: "Export", onClick: () => ExportExcel({ selectedOrders, orders }) },
+    { label: "Download Label", onClick: () => handleBulkDownloadLabel({ selectedOrders }) },
+    { label: "Bulk NDR", onClick: () => setIsBulkNdrModalOpen(true) },
+  ];
+
   return (
     <div className="w-full">
       <div className="flex w-full sm:mb-2 md:flex-row flex-col sm:mt-2 justify-between items-center gap-1">
@@ -215,6 +223,8 @@ const ActionRequired = () => {
         </div>
 
         <div className="flex items-center gap-2 w-auto justify-end">
+          <SelectedCountBadge count={selectedOrders.length} className="hidden md:inline-flex items-center bg-gray-100 px-2 py-1.5 rounded-lg" />
+          <QuickActionButtons selectedCount={selectedOrders.length} className="hidden md:flex" actions={quickActions} />
           <div className="hidden md:block relative" ref={desktopActionRef}>
             <button
               disabled={selectedOrders.length === 0}
@@ -292,7 +302,9 @@ const ActionRequired = () => {
           <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border flex-1">
             <input type="checkbox" checked={selectedOrders.length === orders.length && orders.length > 0} onChange={handleSelectAll} className="cursor-pointer accent-brand-primary w-3 h-3" />
             <span className="text-[10px] font-[600]">Select All</span>
+            <SelectedCountBadge count={selectedOrders.length} />
           </div>
+          <QuickActionButtons selectedCount={selectedOrders.length} actions={quickActions} />
           <div className="relative" ref={mobileActionRef}>
             <button
               disabled={selectedOrders.length === 0}

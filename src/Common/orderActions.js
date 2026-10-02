@@ -426,6 +426,9 @@ export const BulkCancel = async ({ selectedOrders, setRefresh }) => {
     allSuccess = false;
   }
 
+  // refresh the list either way (some of the orders may have been deleted before one failed)
+  if (typeof setRefresh === "function") setRefresh((prev) => !prev);
+
   if (allSuccess) {
     Notification("All selected orders cancelled successfully.", "success");
   } else {

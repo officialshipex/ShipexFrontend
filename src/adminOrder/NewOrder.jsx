@@ -30,6 +30,8 @@ import NoDataFound from "../Common/NoDataFound";
 import SelectPickupPopup from "../Order/SelectPickupPopup";
 import UpdatePackageDetails from "../Order/UpdatePackageDetails";
 
+import QuickActionButtons from "../Common/QuickActionButtons";
+import SelectedCountBadge from "../Common/SelectedCountBadge";
 const NewOrder = (filterOrder) => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
   const [orders, setOrders] = useState([]);
@@ -233,21 +235,8 @@ const NewOrder = (filterOrder) => {
         params: { orderIds: selectedOrders },
         headers: { Authorization: `Bearer ${token}` },
       });
-      const { showPopup, orders: popupOrders } = checkResponse.data;
-      if (!showPopup) {
-        Notification("Processing bulk shipment. Please wait...", "success");
-        const shipResponse = await axios.post(`${REACT_APP_BACKEND_URL}/bulk/create-bulk-order`, { selectedOrders }, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (shipResponse.data.success) {
-          Notification(shipResponse.data.message || "Bulk shipment successful.", "success");
-        } else {
-          Notification(shipResponse.data.message || "Failed to create bulk shipment.", "error");
-        }
-        refreshNotifications();
-        fetchOrders();
-        return;
-      }
+      const { orders: popupOrders } = checkResponse.data;
+      // always open the popup: pickup address + courier priority are chosen there
       setTitle("Bulk Ship");
       setShowBulkShipModal(true);
       setSelectedData(popupOrders);
@@ -255,6 +244,13 @@ const NewOrder = (filterOrder) => {
       Notification("Something went wrong while processing bulk shipment.", "error");
     }
   };
+
+  const quickActions = [
+    { label: "Bulk Ship", onClick: handleBulkShip },
+    { label: "Export", onClick: () => ExportExcel({ selectedOrders, orders }) },
+    { label: "Download Invoice", onClick: () => handleBulkDownloadInvoice({ selectedOrders }) },
+    { label: "Bulk Delete", onClick: () => BulkCancel({ selectedOrders, setRefresh }) },
+  ];
 
   return (
     <div className="w-full">
@@ -289,6 +285,8 @@ const NewOrder = (filterOrder) => {
         </div>
 
         <div className="flex items-center gap-2 w-auto justify-end">
+          <SelectedCountBadge count={selectedOrders.length} className="hidden md:inline-flex items-center bg-gray-100 px-2 py-1.5 rounded-lg" />
+          <QuickActionButtons selectedCount={selectedOrders.length} className="hidden md:flex" actions={quickActions} />
           <div className="hidden md:block relative" ref={desktopActionRef}>
             <button
               disabled={selectedOrders.length === 0}
@@ -383,8 +381,10 @@ const NewOrder = (filterOrder) => {
           <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border flex-1">
             <input type="checkbox" checked={selectedOrders.length === orders.length && orders.length > 0} onChange={handleSelectAll} className="cursor-pointer accent-brand-primary w-3 h-3" />
             <span className="text-[10px] font-[600]">Select All</span>
+            <SelectedCountBadge count={selectedOrders.length} />
           </div>
 
+          <QuickActionButtons selectedCount={selectedOrders.length} actions={quickActions} />
           <div className="relative" ref={mobileActionRef}>
             <button
               disabled={selectedOrders.length === 0}
@@ -515,7 +515,7 @@ const NewOrder = (filterOrder) => {
               setShowBulkShipModal(false);
               Notification("Processing bulk shipment. Please wait...", "info");
               const token = Cookies.get("session");
-              const shipResponse = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/bulk/create-bulk-order`, { selectedOrders, wh: formData }, {
+              const shipResponse = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/bulk/create-bulk-order`, { selectedOrders, wh: formData?.address ? formData : undefined }, {
                 headers: { Authorization: `Bearer ${token}` }
               });
               if (shipResponse.data.success) Notification(shipResponse.data.message || `${shipResponse.data.successCount} orders shipped.`, "success");

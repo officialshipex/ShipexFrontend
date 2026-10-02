@@ -28,6 +28,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
   const [toDate, setToDate] = useState("");
   const [email, setEmail] = useState("");
   const [targetUserId, setTargetUserId] = useState(null);
+  const [allUsers, setAllUsers] = useState(false); // admin: one report for every user
   
   const [selectedDescriptions, setSelectedDescriptions] = useState([]);
   const [descDropdownOpen, setDescDropdownOpen] = useState(false);
@@ -60,6 +61,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
   const tableRef = useRef(null);
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  const effectiveUserId = allUsers ? "ALL" : targetUserId;
 
   useEffect(() => {
     const updateHeight = () => {
@@ -87,7 +89,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
         params: {
           page,
           limit,
-          userSearch: targetUserId || ""
+          userSearch: effectiveUserId || ""
         }
       });
       setReports(res.data.results || []);
@@ -101,7 +103,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
 
   useEffect(() => {
     fetchReports();
-  }, [page, limit, targetUserId]);
+  }, [page, limit, effectiveUserId]);
 
   const handleGenerate = async (e) => {
     if (e && typeof e.preventDefault === "function") {
@@ -121,7 +123,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
         fromDate,
         toDate,
         email,
-        userSearch: targetUserId,
+        userSearch: effectiveUserId,
         selectedDescriptions: reportType === "Passbook" ? selectedDescriptions : []
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -141,6 +143,13 @@ const MisReportPage = ({ isSidebarAdmin }) => {
 
   const handleUserSelect = (userId) => {
     setTargetUserId(userId);
+    setAllUsers(false);
+    setPage(1);
+  };
+
+  const handleAllUsersToggle = (checked) => {
+    setAllUsers(checked);
+    if (checked) setTargetUserId(null);
     setPage(1);
   };
 
@@ -161,6 +170,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
     setToDate("");
     setEmail("");
     setTargetUserId(null);
+    setAllUsers(false);
     setSelectedDescriptions([]);
     setClearTrigger(prev => !prev);
     setPage(1);
@@ -187,7 +197,10 @@ const MisReportPage = ({ isSidebarAdmin }) => {
               <select
                 className="w-full h-9 px-3 border border-gray-300 rounded-lg focus:outline-none focus:border-brand-primary transition-colors"
                 value={reportType}
-                onChange={(e) => setReportType(e.target.value)}
+                onChange={(e) => {
+                  setReportType(e.target.value);
+                  if (e.target.value === "Passbook") setAllUsers(false); // a passbook is one user's wallet
+                }}
               >
                 <option value="All">All</option>
                 <option value="Delivered">Delivered</option>
@@ -291,8 +304,21 @@ const MisReportPage = ({ isSidebarAdmin }) => {
 
             {isSidebarAdmin && (
               <div className="col-span-1 w-full">
-                <label className="block text-gray-600 mb-1">Search User</label>
-                <UserFilter onUserSelect={handleUserSelect} clearTrigger={clearTrigger} />
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-gray-600">Search User</label>
+                  {reportType !== "Passbook" && (
+                    <label className="flex items-center gap-1 text-[11px] font-[500] text-gray-600 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={allUsers}
+                        onChange={(e) => handleAllUsersToggle(e.target.checked)}
+                        className="cursor-pointer accent-brand-primary w-3 h-3"
+                      />
+                      All Users
+                    </label>
+                  )}
+                </div>
+                <UserFilter onUserSelect={handleUserSelect} clearTrigger={clearTrigger} disabled={allUsers} />
               </div>
             )}
 
@@ -370,6 +396,9 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                       <td className="py-2 px-3">{(page - 1) * limit + idx + 1}</td>
                       {isSidebarAdmin && (
                         <td className="py-2 px-3">
+                          {row.isAllUsers ? (
+                            <span className="text-gray-500 font-bold">All Users</span>
+                          ) : (
                           <span
                             className="text-brand-primary font-bold cursor-pointer hover:underline"
                             onMouseEnter={(e) => {
@@ -381,6 +410,7 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                           >
                             {row.user?.userId || "N/A"}
                           </span>
+                          )}
                         </td>
                       )}
                       <td className="py-2 px-3">{row.reportType}</td>
@@ -514,7 +544,11 @@ const MisReportPage = ({ isSidebarAdmin }) => {
                   </div>
 
                   {/* Admin User info */}
-                  {isSidebarAdmin && row.user && (
+                  {isSidebarAdmin && row.isAllUsers ? (
+                    <div className="bg-gray-50 rounded p-1.5 border border-gray-100 text-[9.5px] text-gray-600">
+                      <p className="font-bold text-gray-700 leading-tight">User: All Users</p>
+                    </div>
+                  ) : isSidebarAdmin && row.user && (
                     <div className="bg-gray-50 rounded p-1.5 border border-gray-100 text-[9.5px] text-gray-600 space-y-0.5">
                       <p className="font-bold text-gray-700 leading-tight">
                         User: {row.user.fullname || "N/A"} ({row.user.userId || "N/A"})
