@@ -513,17 +513,23 @@ const CarrierSelection = () => {
       {ratePopup && (
         <div
           className="rate-popup fixed z-[9999] bg-white border shadow-lg rounded-lg p-3 text-[12px]"
-          style={{ top: popupPos.top, left: popupPos.left, width: "220px" }}
+          style={{ top: popupPos.top, left: popupPos.left, width: "260px" }}
         >
           {[
-            ["Freight", `₹${ratePopup.freight}`],
+            ["Zone", ratePopup.zone || "—"],
+            ["Chargeable Weight", `${ratePopup.billable_weight || 0} kg`],
+            ["Freight / Kg", `₹${ratePopup.rate ?? 0}`],
+            ["Freight Charges", `₹${ratePopup.freight}`],
             ["Docket Charges", `₹${ratePopup.docket_charges}`],
             ["Pickup Charges", `₹${ratePopup.pickup_charge}`],
             ["Handling Charges", `₹${ratePopup.handling_charge}`],
             ["Appointment Charges", `₹${ratePopup.appointment_charge}`],
             ["COD Charges", `₹${ratePopup.cod_charges}`],
             ["ROV", `₹${ratePopup.rov}`],
-            ["FSC", `₹${ratePopup.fsc}`],
+            [
+              ratePopup.fsc_percent != null ? `FSC (${ratePopup.fsc_percent}%)` : "FSC",
+              `₹${ratePopup.fsc}`,
+            ],
             ["ODA", `₹${ratePopup.oda}`],
             ["Green Tax", `₹${ratePopup.green_tax}`],
             ["GST", `₹${ratePopup.gst}`],
