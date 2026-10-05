@@ -35,7 +35,9 @@ const Elogin = ({ setEmployeeAuthenticated }) => {
         if (token) createSession(token);
 
         const response = await getSession("employee");
-        if (response?.success) {
+        // /verify also accepts an owner's token (shared cookie, other tab): only an actual
+        // employee session skips the login form
+        if (response?.success && response?.employee) {
           setEmployeeAuthenticated(true);
           // Only navigate if not already on adminDashboard
           if (location.pathname !== "/adminDashboard") {
@@ -68,11 +70,10 @@ const Elogin = ({ setEmployeeAuthenticated }) => {
     setMessage(null);
 
     const newErrors = {};
-    if (!email) newErrors.email = "Email is required";
-    if (!validateEmail(email)) newErrors.email = "Invalid email address";
+    if (!email.trim()) newErrors.email = "Email is required";
+    else if (!validateEmail(email.trim())) newErrors.email = "Invalid email address";
+    // Password length is the server's call: employees created earlier may have shorter ones
     if (!password) newErrors.password = "Password is required";
-    if (password.length < 8)
-      newErrors.password = "At least 8 characters required";
 
     if (Object.keys(newErrors).length > 0) {
       setError(newErrors);
@@ -82,7 +83,7 @@ const Elogin = ({ setEmployeeAuthenticated }) => {
     try {
       const response = await axios.post(
         `${REACT_APP_BACKEND_URL}/staffRole/e-login`,
-        { email, password }
+        { email: email.trim(), password }
       );
       
 

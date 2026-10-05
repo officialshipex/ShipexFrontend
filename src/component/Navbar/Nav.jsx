@@ -292,7 +292,9 @@ const Navbar = () => {
           );
           if (response.data.employee) {
             setUserData(response.data.employee);
-            setBalance(response.data.employee.Wallet?.balance || 0);
+            // An employee works on the owner's account, so the wallet shown is the owner's
+            setBalance(response.data.user?.Wallet?.balance || 0);
+            setHoldAmount(response.data.user?.Wallet?.holdAmount || 0);
             setIsAdminTab(response.data.employee.adminTab);
             setRefresh(false)
           }

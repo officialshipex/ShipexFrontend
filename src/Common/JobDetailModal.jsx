@@ -193,9 +193,12 @@ const BulkUploadDetail = ({ file }) => {
                 {rowResults.length > 0 ? (
                     rowResults.map((r, idx) => {
                         const isSuccess = r.status === "success";
+                        const isSkipped = r.status === "skipped";
                         return (
                             <div key={idx} className="flex items-start gap-3 px-5 py-3">
-                                {isSuccess ? (
+                                {isSkipped ? (
+                                    <Circle className="w-4 h-4 text-gray-300 flex-shrink-0" />
+                                ) : isSuccess ? (
                                     <CheckCircle2 className="w-4 h-4 text-brand-primary flex-shrink-0" />
                                 ) : (
                                     <XCircle className="w-4 h-4 text-red-500 flex-shrink-0" />
@@ -207,8 +210,8 @@ const BulkUploadDetail = ({ file }) => {
                                             <span className="text-brand-primary"> — Order #{r.orderId}</span>
                                         )}
                                     </div>
-                                    {isSuccess ? (
-                                        <div className="text-[11px] text-gray-400 mt-0.5">Uploaded successfully</div>
+                                    {isSuccess || isSkipped ? (
+                                        <div className="text-[11px] text-gray-400 mt-0.5">{r.message || "Uploaded successfully"}</div>
                                     ) : (
                                         <div className="text-[11px] text-red-500 mt-0.5 whitespace-pre-wrap break-words">{r.message}</div>
                                     )}

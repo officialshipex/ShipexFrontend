@@ -8,7 +8,8 @@ import {
 } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import "./index.css"; // Tailwind CSS
-import { getUserInfoFromToken } from "./utils/session.js";
+import { getUserInfoFromToken, deleteSession } from "./utils/session.js";
+import { canAccessRoute, employeePanel } from "./utils/employeeAccess.js";
 // import { Toaster } from "react-hot-toast";
 import { ToastProvider } from "./utils/ToastProvider";
 import { ToastRegister } from "./Notification";
@@ -149,6 +150,8 @@ function App() {
   const { faviconUrl, loading: brandingLoading } = useBranding();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [employeeAuthenticated, setEmployeeAuthenticated] = useState(false);
+  // Full employee record from /staffRole/verify (carries accessRights); null for owners
+  const [employee, setEmployee] = useState(null);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null); // State for user
   const [refresh, setRefresh] = useState(false);
@@ -163,11 +166,21 @@ function App() {
         const userInfo = getUserInfoFromToken();
         if (userInfo) {
           if (userInfo.type === "employee") {
+            // Rights are never trusted from the token: always read the live record, so a
+            // deactivated employee or a changed permission takes effect on the next load
+            const res = await axios.get(
+              `${REACT_APP_BACKEND_URL}/staffRole/verify`,
+              { headers: { Authorization: `Bearer ${Cookies.get("session")}` } }
+            );
+            const emp = res.data?.employee;
+            if (!emp) throw new Error("Employee record not found");
+            setEmployee(emp);
             setEmployeeAuthenticated(true);
             setIsAuthenticated(false);
-            setUser(userInfo);
+            setUser({ ...userInfo, isAdmin: emp.isAdmin, adminTab: emp.adminTab });
             setLoading(false);
           } else {
+            setEmployee(null);
             setIsAuthenticated(true);
             setEmployeeAuthenticated(false);
             const res = await axios.get(
@@ -186,12 +199,18 @@ function App() {
         } else {
           setIsAuthenticated(false);
           setEmployeeAuthenticated(false);
+          setEmployee(null);
           setUser(null);
           setLoading(false);
         }
       } catch (error) {
+        // A rejected employee token (deactivated, deleted, expired) must not keep the session alive
+        if (error?.response?.status === 401 || error?.response?.status === 404) {
+          if (getUserInfoFromToken()?.type === "employee") deleteSession();
+        }
         setIsAuthenticated(false);
         setEmployeeAuthenticated(false);
+        setEmployee(null);
         setUser(null);
         setLoading(false);
       }
@@ -200,6 +219,18 @@ function App() {
     // Only run on mount
     // eslint-disable-next-line
   }, [isAuthenticated, employeeAuthenticated, refresh]);
+
+  // Which panel this employee works in, and the page they land on
+  const employeeSide = employee ? employeePanel(employee) : null;
+  const employeeHome = employeeSide === "user" ? "/dashboard" : "/adminDashboard";
+
+  // Employees may only open what their rights allow; everything else shows the "no access" popup
+  const employeeBlocked =
+    !!employee &&
+    location.pathname !== "/e-login" &&
+    location.pathname !== "/adminDashboard" &&
+    location.pathname !== "/dashboard" &&
+    !canAccessRoute(employee.accessRights, employeeSide, location.pathname);
 
   useEffect(() => {
     if (
@@ -212,13 +243,15 @@ function App() {
       });
     }
 
-    if (employeeAuthenticated && location.pathname === "/e-login") {
-      navigate("/adminDashboard", { replace: true });
+    if (employeeAuthenticated && employee && location.pathname === "/e-login") {
+      navigate(employeeHome, { replace: true });
     }
   }, [
     isAuthenticated,
     user,
     employeeAuthenticated,
+    employee,
+    employeeHome,
     location.pathname,
     navigate,
   ]);
@@ -265,6 +298,7 @@ function App() {
             <Sidebar
               isAdmin={user?.isAdmin || false}
               adminTab={user?.adminTab || false}
+              employee={employee}
             />
           )}{" "}
           {/* Pass isAdmin from user */}
@@ -277,7 +311,14 @@ function App() {
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.2 }}
               >
-                <Routes location={location}>
+                {employeeBlocked && (
+                  <EmployeeAuthModal
+                    employeeModalShow
+                    employeeModalClose={() => navigate(employeeHome, { replace: true })}
+                  />
+                )}
+                {/* When blocked, route to an empty placeholder so the forbidden page never mounts (or fetches) */}
+                <Routes location={employeeBlocked ? { ...location, pathname: "/employeeAuthentication" } : location}>
                   {/* Public Routes */}
                   <Route
                     path="/login"
@@ -309,7 +350,7 @@ function App() {
                       isAuthenticated ? (
                         <DashboardCards />
                       ) : employeeAuthenticated ? (
-                        <Navigate to="/adminDashboard" />
+                        employeeSide === "user" ? <DashboardCards /> : <Navigate to="/adminDashboard" />
                       ) : (
                         <Navigate to="/login" />
                       )
@@ -319,7 +360,9 @@ function App() {
                   <Route
                     path="/adminDashboard"
                     element={
-                      employeeAuthenticated ||
+                      (employeeAuthenticated && employeeSide === "user") ? (
+                        <Navigate to="/dashboard" replace />
+                      ) : employeeAuthenticated ||
                         (isAuthenticated && (user?.isAdmin && user?.adminTab)) ? (
                         <AdminDashboard
                           isSidebarAdmin={
@@ -336,7 +379,7 @@ function App() {
                     path="/employeeAuthentication"
                     element={
                       employeeAuthenticated ? (
-                        <EmployeeAuthModal />
+                        <div />
                       ) : (
                         <Navigate to="/e-login" />
                       )
@@ -960,7 +1003,8 @@ function App() {
                     element={
                       isAuthenticated || employeeAuthenticated ? (
                         <RoleList
-                          isSidebarAdmin={isAuthenticated && user?.adminTab && user?.isAdmin}
+                          isSidebarAdmin={isAuthenticated}
+                          panel={user?.isAdmin && user?.adminTab ? "admin" : "user"}
                         />
                       ) : (
                         <Navigate to="/login" />
@@ -971,7 +1015,9 @@ function App() {
                     path="/dashboard/Setup&Manage/Role_List/AddRole"
                     element={
                       isAuthenticated || employeeAuthenticated ? (
-                        <AddRole />
+                        <AddRole
+                          panel={user?.isAdmin && user?.adminTab ? "admin" : "user"}
+                        />
                       ) : (
                         <Navigate to="/login" />
                       )

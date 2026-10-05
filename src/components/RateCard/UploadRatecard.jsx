@@ -6,6 +6,7 @@ import Cookies from "js-cookie";
 import { FaUpload, FaTimes } from "react-icons/fa";
 import { FiUploadCloud, FiDownload, FiFileText } from "react-icons/fi";
 import { Notification } from "../../Notification"
+import { refreshNotifications } from "../../utils/NotificationListProvider"
 
 const UploadRatecard = ({ isOpen, onClose, setRefresh, defaultPlanName, replaceExisting, hidePlan, userId }) => {
 
@@ -56,11 +57,13 @@ const UploadRatecard = ({ isOpen, onClose, setRefresh, defaultPlanName, replaceE
             }
             
             setRefresh(true);
+            refreshNotifications();
             onClose();
         } catch (err) {
             const errorMsg = err.response?.data?.error || err.response?.data?.message || "Upload failed";
             Notification(errorMsg, "error");
             console.log(err.response || "Upload failed");
+            refreshNotifications();
         }
     };
 

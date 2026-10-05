@@ -46,7 +46,7 @@ const FirstMile = ({ isSidebarAdmin }) => {
             { headers: { Authorization: `Bearer ${token}` } }
           );
           const employeeInfo = employeeResponse.data.employee;
-          const canView = !!employeeInfo?.accessRights?.ndr?.['All NDR']?.view;
+          const canView = !!employeeInfo?.accessRights?.operation?.['First Mile']?.view;
           setEmployeeAccess({ canView });
           if (!canView) setShowEmployeeAuthModal(true);
         }

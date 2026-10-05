@@ -1,81 +1,18 @@
-import { useState, useEffect } from "react";
-import { FaEye, FaEyeSlash, FaChevronDown } from "react-icons/fa";
+import { useState } from "react";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { Notification } from "../../../Notification"
+import { Notification } from "../../../Notification";
+import {
+  PERMISSION_FLAGS,
+  getPermissionCatalog,
+  emptyAccessRights,
+  toFormRights,
+} from "../../../utils/employeeAccess";
 
-export default function AddRole() {
-  const [isActive, setIsActive] = useState(false);
-  const [ndrChecked, setNdrChecked] = useState(false);
-  const [toolsChecked, setToolsChecked] = useState(false);
-
-  const [financeChecked, setFinanceChecked] = useState(false);
-  const [setupAndManageChecked, setSetupAndManageChecked] = useState(false);
-  const [courierChecked, setCourierChecked] = useState(false);
-  const [ordersChecked, setOrdersChecked] = useState(false);
-  const [supportChecked, setSupportChecked] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
-  const [selectedRole, setSelectedRole] = useState("Choose Role");
-  const [operationChecked, setOperationChecked] = useState(false);
-
-  const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-
-  const navigate = useNavigate();
-  const { state } = useLocation();
-  const { role } = state || {};
-
-  useEffect(() => {
-    if (role) {
-      // Set initial values from role into state variables
-      setIsActive(role.isActive || false); // Assuming isActive is a boolean
-      setSelectedRole(role.role || "Choose Role");
-
-      // Set permissions checkboxes
-      setNdrChecked(role.accessRights?.ndr?.enabled || false);
-      setToolsChecked(role.accessRights?.tools?.enabled || false);
-
-      setFinanceChecked(role.accessRights?.finance?.enabled || false);
-      setSetupAndManageChecked(
-        role.accessRights?.setupAndManage?.enabled || false
-      );
-      setCourierChecked(role.accessRights?.courier?.enabled || false);
-      setOrdersChecked(role.accessRights?.orders?.enabled || false);
-      setSupportChecked(role.accessRights?.support?.enabled || false);
-
-      // Set permissions rights
-      setNdrRights(
-        role.accessRights?.ndr || initializePermissions(ndrPermissions)
-      );
-      setToolsRights(
-        role.accessRights?.tools || initializePermissions(toolsPermissions)
-      );
-
-      setFinanceRights(
-        role.accessRights?.finance || initializePermissions(financePermissions)
-      );
-      setSetupAndManageRights(
-        role.accessRights?.setupAndManage ||
-        initializePermissions(setupAndManagePermissions)
-      );
-      setCourierRights(
-        role.accessRights?.courier || initializePermissions(courierPermissions)
-      );
-      setOrderRights(
-        role.accessRights?.orders || initializePermissions(ordersPermissions)
-      );
-      setOperationChecked(role.accessRights?.operation?.enabled || false);
-      setOperationRights(
-        role.accessRights?.operation || initializePermissions(operationPermissions)
-      );
-      setSupportRights(
-        role.accessRights?.support || initializePermissions(supportPermissions)
-      );
-    }
-  }, [role]);
-
-  const roles = [
+const ROLE_OPTIONS = {
+  admin: [
     "Admin",
     "Sub Admin",
     "Finance",
@@ -84,307 +21,137 @@ export default function AddRole() {
     "Key Account Manager",
     "Operations",
     "Customer Support",
-  ];
+  ],
+  user: ["Manager", "Operations", "Accounts", "Customer Support", "Staff"],
+};
 
-  const ndrPermissions = ["All NDR"];
-  const toolsPermissions = ["Admin Weight Discrepancy"];
+const MIN_PASSWORD_LENGTH = 8;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  const financePermissions = [
-    "COD Remittance Order",
-    "Seller COD Remittance",
-    "Courier COD Remittance",
-  ];
+// Add / edit an employee. `panel` is the side the employee will work in:
+//   "admin" – created by an admin, sees the admin panel
+//   "user"  – created by a merchant, sees the user panel
+export default function AddRole({ panel = "admin" }) {
+  const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
+  const navigate = useNavigate();
+  const { state } = useLocation();
+  const role = state?.role;
+  const isEdit = !!role;
 
-  const setupAndManagePermissions = ["Users", "Roles"];
+  const catalog = getPermissionCatalog(panel);
+  const roleOptions = ROLE_OPTIONS[panel] || ROLE_OPTIONS.admin;
 
-  const courierPermissions = ["courier", "courier service", "Rate Cards"];
-
-  const ordersPermissions = ["All Orders"];
-  const operationPermissions = ["First Mile", "Mid Mile", "Last Mile"];
-
-  const supportPermissions = ["Create Ticket", "Feedbacks", "Manage ticket"];
-
-  const permissionOrder = [
-    { key: "view", label: "View" },
-    { key: "update", label: "Update" },
-    { key: "action", label: "Action" },
-  ];
-
-  const initializePermissions = (items) =>
-    items.reduce((acc, item) => {
-      acc[item] = { view: false, update: false, action: false };
-      return acc;
-    }, {});
-
-  const [ndrRights, setNdrRights] = useState(
-    initializePermissions(ndrPermissions)
+  const [form, setForm] = useState({
+    fullName: role?.fullName || "",
+    email: role?.email || "",
+    contactNumber: role?.contactNumber || "",
+    password: "",
+  });
+  const [isActive, setIsActive] = useState(role ? role.isEmpActive !== false : true);
+  const [selectedRole, setSelectedRole] = useState(role?.role || "");
+  const [rights, setRights] = useState(() =>
+    role ? toFormRights(role.accessRights, panel) : emptyAccessRights(panel)
   );
-  const [toolsRights, setToolsRights] = useState(
-    initializePermissions(toolsPermissions)
-  );
+  const [showPassword, setShowPassword] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
 
-  const [financeRights, setFinanceRights] = useState(
-    initializePermissions(financePermissions)
-  );
-  const [setupAndManageRights, setSetupAndManageRights] = useState(
-    initializePermissions(setupAndManagePermissions)
-  );
-  const [courierRights, setCourierRights] = useState(
-    initializePermissions(courierPermissions)
-  );
-  const [orderRights, setOrderRights] = useState(
-    initializePermissions(ordersPermissions)
-  );
-  const [operationRights, setOperationRights] = useState(
-    initializePermissions(operationPermissions)
-  );
+  const setField = (name) => (e) => setForm((prev) => ({ ...prev, [name]: e.target.value }));
 
-  const [supportRights, setSupportRights] = useState(
-    initializePermissions(supportPermissions)
-  );
-
-  const handlePermissionChange = (section, item, permissionType) => {
-    const updater = {
-      NDR: setNdrRights,
-      Tools: setToolsRights,
-      Finance: setFinanceRights,
-      setupAndManage: setSetupAndManageRights,
-      Courier: setCourierRights,
-      Orders: setOrderRights,
-      Operation: setOperationRights,
-      Support: setSupportRights,
-    };
-    const current = {
-      NDR: ndrRights,
-      Tools: toolsRights,
-      Finance: financeRights,
-      setupAndManage: setupAndManageRights,
-      Courier: courierRights,
-      Orders: orderRights,
-      Operation: operationRights,
-      Support: supportRights,
-    };
-
-    // Ensure the permission object exists for this item
-    const prevSection = current[section] || {};
-    const prevItem = prevSection[item] || {
-      view: false,
-      update: false,
-      action: false,
-    };
-
-    updater[section]({
-      ...prevSection,
-      [item]: {
-        ...prevItem,
-        [permissionType]: !prevItem[permissionType],
-      },
+  // Section master switch: turns every flag of every item on / off.
+  const toggleSection = (section, items, enabled) => {
+    setRights((prev) => {
+      const next = { ...prev[section], enabled };
+      items.forEach(({ key }) => {
+        next[key] = { view: enabled, update: enabled, action: enabled };
+      });
+      return { ...prev, [section]: next };
     });
   };
 
-  const sections = [
-    {
-      title: "NDR",
-      checked: ndrChecked,
-      setChecked: setNdrChecked,
-      permissions: ndrPermissions,
-      state: ndrRights,
-      setState: setNdrRights,
-    },
-    {
-      title: "Tools",
-      checked: toolsChecked,
-      setChecked: setToolsChecked,
-      permissions: toolsPermissions,
-      state: toolsRights,
-      setState: setToolsRights,
-    },
-    {
-      title: "Finance",
-      checked: financeChecked,
-      setChecked: setFinanceChecked,
-      permissions: financePermissions,
-      state: financeRights,
-      setState: setFinanceRights,
-    },
-    {
-      title: "setupAndManage",
-      checked: setupAndManageChecked,
-      setChecked: setSetupAndManageChecked,
-      permissions: setupAndManagePermissions,
-      state: setupAndManageRights,
-      setState: setSetupAndManageRights,
-    },
-    {
-      title: "Courier",
-      checked: courierChecked,
-      setChecked: setCourierChecked,
-      permissions: courierPermissions,
-      state: courierRights,
-      setState: setCourierRights,
-    },
-    {
-      title: "Orders",
-      checked: ordersChecked,
-      setChecked: setOrdersChecked,
-      permissions: ordersPermissions,
-      state: orderRights,
-      setState: setOrderRights,
-    },
-    {
-      title: "Operation",
-      checked: operationChecked,
-      setChecked: setOperationChecked,
-      permissions: operationPermissions,
-      state: operationRights,
-      setState: setOperationRights,
-    },
+  // update / action only make sense on a page the employee can open, so they imply view,
+  // and removing view removes them.
+  const toggleFlag = (section, itemKey, flag) => {
+    setRights((prev) => {
+      const current = prev[section][itemKey] || { view: false, update: false, action: false };
+      const next = { ...current, [flag]: !current[flag] };
+      if (flag === "view" && !next.view) {
+        next.update = false;
+        next.action = false;
+      } else if (flag !== "view" && next[flag]) {
+        next.view = true;
+      }
+      const section_ = { ...prev[section], [itemKey]: next };
+      section_.enabled = Object.entries(section_).some(([k, v]) => k !== "enabled" && v?.view);
+      return { ...prev, [section]: section_ };
+    });
+  };
 
-    {
-      title: "Support",
-      checked: supportChecked,
-      setChecked: setSupportChecked,
-      permissions: supportPermissions,
-      state: supportRights,
-      setState: setSupportRights,
-    },
-  ];
-
-  const handleCheckboxChange = (section) => {
-    switch (section) {
-      case "ndr":
-        setNdrChecked(!ndrChecked);
-        break;
-      case "tools":
-        setToolsChecked(!toolsChecked);
-        break;
-      case "finance":
-        setFinanceChecked(!financeChecked);
-        break;
-      case "setupAndManage":
-        setSetupAndManageChecked(!setupAndManageChecked);
-        break;
-      case "courier":
-        setCourierChecked(!courierChecked);
-        break;
-      case "orders":
-        setOrdersChecked(!ordersChecked);
-        break;
-      case "operation":
-        setOperationChecked(!operationChecked);
-        break;
-
-      case "support":
-        setSupportChecked(!supportChecked);
-        break;
-
-      default:
-        break;
+  const validate = () => {
+    if (!form.fullName.trim()) return "Full name is required";
+    if (!EMAIL_PATTERN.test(form.email.trim())) return "Enter a valid email address";
+    if (!form.contactNumber.trim()) return "Contact number is required";
+    if (!isEdit && form.password.length < MIN_PASSWORD_LENGTH) {
+      return `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
     }
+    if (isEdit && form.password && form.password.length < MIN_PASSWORD_LENGTH) {
+      return `Password must be at least ${MIN_PASSWORD_LENGTH} characters`;
+    }
+    if (!selectedRole.trim()) return "Role / designation is required";
+    return null;
   };
 
   const handleSubmit = async () => {
-    const token = Cookies.get("session");
+    const problem = validate();
+    if (problem) {
+      Notification(problem, "error");
+      return;
+    }
 
     const payload = {
-      fullName: document.querySelector("input[placeholder='Enter Full Name']")
-        .value,
-      email: document.querySelector("input[placeholder='Enter Email ID']")
-        .value,
-      contactNumber: document.querySelector(
-        "input[placeholder='Enter Mobile No.']"
-      ).value,
-      password: document.querySelector("input[placeholder='Enter Password']")
-        .value,
-      role: selectedRole,
+      fullName: form.fullName.trim(),
+      email: form.email.trim(),
+      contactNumber: form.contactNumber.trim(),
+      role: selectedRole.trim(),
       isActive,
-      accessRights: {
-        ndr: {
-          ...ndrRights,
-          enabled: ndrChecked,
-        },
-        tools: {
-          ...toolsRights,
-          enabled: toolsChecked,
-        },
-
-        finance: {
-          ...financeRights,
-          enabled: financeChecked,
-        },
-        setupAndManage: {
-          ...setupAndManageRights,
-          enabled: setupAndManageChecked,
-        },
-        courier: {
-          ...courierRights,
-          enabled: courierChecked,
-        },
-        orders: {
-          ...orderRights,
-          enabled: ordersChecked,
-        },
-        operation: {
-          ...operationRights,
-          enabled: operationChecked,
-        },
-        support: {
-          ...supportRights,
-          enabled: supportChecked,
-        },
-      },
+      accessRights: rights,
+      // tells the server which panel's employees this belongs to (an admin can use both panels)
+      mode: panel,
     };
+    // Editing: a blank password keeps the current one
+    if (form.password) payload.password = form.password;
 
+    const token = Cookies.get("session");
+    const config = { headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` } };
+
+    setSubmitting(true);
     try {
-      let response;
-      if (role) {
-        // Update existing role
-        response = await axios.put(
-          `${REACT_APP_BACKEND_URL}/staffRole/updateRole/${role._id}`,
-          payload,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+      if (isEdit) {
+        await axios.put(`${REACT_APP_BACKEND_URL}/staffRole/updateRole/${role._id}`, payload, config);
+        Notification("Employee updated successfully!", "success");
       } else {
-        // Create new role
-        response = await axios.post(
-          `${REACT_APP_BACKEND_URL}/staffRole/createRole`,
-          payload,
-          {
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        await axios.post(`${REACT_APP_BACKEND_URL}/staffRole/createRole`, payload, config);
+        Notification("Employee created successfully!", "success");
       }
-
-      if (response.status === 201 || response.status === 200) {
-        Notification("Role updated successfully!", "success");
-        navigate("/dashboard/Setup&Manage/Role_List");
-      } else {
-        Notification(response.data.message || "Something went wrong!", "error");
-        // alert(response.data.message || "Something went wrong!");
-      }
+      navigate("/dashboard/Setup&Manage/Role_List");
     } catch (error) {
-      console.error("Submission Error:", error);
       Notification(error?.response?.data?.message || "Failed to submit. Please try again.", "error");
-      // alert(
-      //   error?.response?.data?.message || "Failed to submit. Please try again."
-      // );
+    } finally {
+      setSubmitting(false);
     }
   };
+
+  const inputClass =
+    "border-2 border-gray-300 text-gray-500 focus:outline-none px-3 py-2 rounded-lg w-full text-[12px] placeholder:text-[12px]";
 
   return (
     <div className="min-h-screen flex justify-center sm:px-2 p-1">
       <div className="rounded-lg w-full max-w-full">
         <div className="flex justify-between items-center mb-2">
-          <h2 className="text-[12px] sm:text-[18px] text-gray-700 font-[600]">Basic</h2>
+          <h2 className="text-[12px] sm:text-[18px] text-gray-700 font-[600]">
+            {isEdit ? "Edit Employee" : "Add Employee"}
+          </h2>
           <div className="flex items-center gap-2">
+            <span className="text-[12px] text-gray-500">{isActive ? "Active" : "Inactive"}</span>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
                 type="checkbox"
@@ -394,8 +161,7 @@ export default function AddRole() {
               />
               <div className="sm:w-12 sm:h-6 w-10 h-5 bg-gray-300 rounded-full peer-checked:bg-brand-primary relative transition duration-300">
                 <div
-                  className={`absolute left-1 top-1 sm:w-4 sm:h-4 w-3 h-3 bg-white rounded-full transition-transform duration-300 ${isActive ? "translate-x-6" : "translate-x-0"
-                    }`}
+                  className={`absolute left-1 top-1 sm:w-4 sm:h-4 w-3 h-3 bg-white rounded-full transition-transform duration-300 ${isActive ? "translate-x-6" : "translate-x-0"}`}
                 ></div>
               </div>
             </label>
@@ -405,12 +171,11 @@ export default function AddRole() {
         {/* Input Grid */}
         <div className="grid grid-cols-2 sm:grid-cols-2 text-gray-500 lg:grid-cols-5 gap-4">
           <div>
-            <label className="block text-[12px] mb-1">
-              Full Name *
-            </label>
+            <label className="block text-[12px] mb-1">Full Name *</label>
             <input
-              defaultValue={role?.fullName || ""}
-              className="border-2 border-gray-300 text-gray-500 focus:outline-none px-3 py-2 rounded-lg w-full text-[12px] placeholder:text-[12px]"
+              value={form.fullName}
+              onChange={setField("fullName")}
+              className={inputClass}
               placeholder="Enter Full Name"
             />
           </div>
@@ -418,33 +183,39 @@ export default function AddRole() {
           <div>
             <label className="block text-[12px] mb-1">Email ID *</label>
             <input
-              defaultValue={role?.email || ""}
+              value={form.email}
+              onChange={setField("email")}
               type="email"
-              className="border-2 border-gray-300 text-gray-500 focus:outline-none px-3 py-2 rounded-lg w-full text-[12px] placeholder:text-[12px]"
+              autoComplete="off"
+              disabled={isEdit}
+              className={`${inputClass} disabled:bg-gray-50 disabled:text-gray-400`}
               placeholder="Enter Email ID"
             />
           </div>
 
           <div>
-            <label className="block text-[12px] mb-1">
-              Contact Number *
-            </label>
+            <label className="block text-[12px] mb-1">Contact Number *</label>
             <input
-              defaultValue={role?.contactNumber || ""}
+              value={form.contactNumber}
+              onChange={setField("contactNumber")}
               type="tel"
-              className="border-2 border-gray-300 text-gray-500 focus:outline-none px-3 py-2 rounded-lg w-full text-[12px] placeholder:text-[12px]"
+              className={inputClass}
               placeholder="Enter Mobile No."
             />
           </div>
 
           <div className="relative">
-            <label className="block text-[12px] mb-1">Password *</label>
+            <label className="block text-[12px] mb-1">
+              Password {isEdit ? "(leave blank to keep current)" : "*"}
+            </label>
             <div className="flex items-center border border-gray-300 border-1 pr-2 rounded-lg w-full">
               <input
-                defaultValue={role?.password || ""}
+                value={form.password}
+                onChange={setField("password")}
                 type={showPassword ? "text" : "password"}
+                autoComplete="new-password"
                 className="border-1 border border-gray-300 text-gray-500 focus:outline-none px-3 py-2 rounded-tl-lg rounded-bl-lg w-full text-[12px] placeholder:text-[12px]"
-                placeholder="Enter Password"
+                placeholder={isEdit ? "Unchanged" : "Min. 8 characters"}
               />
               <button
                 type="button"
@@ -456,69 +227,43 @@ export default function AddRole() {
             </div>
           </div>
 
-          <div className="relative w-full">
-            <label className="block text-[12px] text-gray-500 mb-1">
-              Select Role *
-            </label>
-            <div
-              className="border-2 px-3 py-2 text-gray-500 rounded-lg w-full flex justify-between items-center cursor-pointer bg-white shadow-sm text-[12px]"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <span>{selectedRole}</span>
-              <FaChevronDown
-                className={`transition-transform duration-300 ${isOpen ? "rotate-180" : "rotate-0"
-                  }`}
-              />
-            </div>
-            {isOpen && (
-              <ul className="absolute w-full mt-1 bg-white border text-gray-500 rounded-lg shadow-lg z-10 max-h-48 overflow-auto text-[12px]">
-                {roles.map((role, index) => (
-                  <li
-                    key={index}
-                    className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer"
-                    onClick={() => {
-                      setSelectedRole(role);
-                      setIsOpen(false);
-                    }}
-                  >
-                    {role}
-                  </li>
-                ))}
-              </ul>
-            )}
+          <div className="w-full">
+            <label className="block text-[12px] mb-1">Role / Designation *</label>
+            {/* Free text, like QuickPost; the list only suggests common designations */}
+            <input
+              value={selectedRole}
+              onChange={(e) => setSelectedRole(e.target.value)}
+              list="employee-role-options"
+              className={inputClass}
+              placeholder="e.g. Support Executive"
+            />
+            <datalist id="employee-role-options">
+              {roleOptions.map((option) => (
+                <option key={option} value={option} />
+              ))}
+            </datalist>
           </div>
         </div>
 
-        {/* Access Rights Sections */}
+        {/* Access Rights: one block per sidebar section, one row per sidebar item */}
         <h2 className="text-[12px] sm:text-[16px] text-gray-700 font-[600] mt-2">Access Rights</h2>
+        <p className="text-[11px] text-gray-500">
+          The employee sees every menu item; items without View access are locked and show a
+          "no access" message when clicked.
+        </p>
 
-        {sections.map(
-          ({ title, checked, setChecked, permissions, state, setState }) => (
-            <div
-              key={title}
-              className="mt-2 p-4 rounded-lg border bg-white border-gray-300 shadow-sm"
-            >
+        {catalog.map(({ section, title, items }) => {
+          const sectionRights = rights[section] || {};
+          return (
+            <div key={section} className="mt-2 p-4 rounded-lg border bg-white border-gray-300 shadow-sm">
               <div className="flex items-center justify-between">
                 <h3 className="font-[600] text-[12px] sm:text-[14px] text-gray-500">{title}</h3>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
                     className="sr-only peer"
-                    checked={checked}
-                    onChange={() => {
-                      const newChecked = !checked;
-                      setChecked(newChecked);
-
-                      const updatedPermissions = {};
-                      permissions.forEach((item) => {
-                        updatedPermissions[item] = {
-                          view: newChecked,
-                          update: newChecked,
-                          action: newChecked,
-                        };
-                      });
-                      setState(updatedPermissions);
-                    }}
+                    checked={!!sectionRights.enabled}
+                    onChange={() => toggleSection(section, items, !sectionRights.enabled)}
                   />
                   <div className="sm:w-12 sm:h-6 w-10 h-5 bg-gray-300 peer-checked:bg-brand-primary rounded-full transition-colors"></div>
                   <div className="absolute left-1 top-1 sm:w-4 sm:h-4 w-3 h-3 bg-white rounded-full transition-transform peer-checked:translate-x-6"></div>
@@ -529,24 +274,24 @@ export default function AddRole() {
                 <thead>
                   <tr>
                     <th className="w-[40%] px-3 py-2 text-left">Permission</th>
-                    {permissionOrder.map(({ label }) => (
-                      <th key={label} className="w-[20%] px-3 py-2 text-center">
+                    {PERMISSION_FLAGS.map(({ key, label }) => (
+                      <th key={key} className="w-[20%] px-3 py-2 text-center">
                         {label}
                       </th>
                     ))}
                   </tr>
                 </thead>
                 <tbody>
-                  {permissions.map((item) => (
-                    <tr key={item}>
-                      <td className="w-[40%] px-3 py-2 text-left">{item}</td>
-                      {permissionOrder.map(({ key }) => (
-                        <td key={key} className="w-[20%] px-3 py-2 text-center">
+                  {items.map(({ key: itemKey, label }) => (
+                    <tr key={itemKey}>
+                      <td className="w-[40%] px-3 py-2 text-left">{label}</td>
+                      {PERMISSION_FLAGS.map(({ key: flag }) => (
+                        <td key={flag} className="w-[20%] px-3 py-2 text-center">
                           <input
                             type="checkbox"
                             className="accent-brand-primary"
-                            checked={!!(state[item] && state[item][key])}
-                            onChange={() => handlePermissionChange(title, item, key)}
+                            checked={!!sectionRights[itemKey]?.[flag]}
+                            onChange={() => toggleFlag(section, itemKey, flag)}
                           />
                         </td>
                       ))}
@@ -554,16 +299,17 @@ export default function AddRole() {
                   ))}
                 </tbody>
               </table>
-
             </div>
-          )
-        )}
+          );
+        })}
+
         <div className="mt-2 text-right">
           <button
             onClick={handleSubmit}
-            className="bg-brand-primary text-[10px] sm:text-[12px] font-[600] text-white px-3 py-2 rounded-lg hover:bg-green-500 transition"
+            disabled={submitting}
+            className="bg-brand-primary text-[10px] sm:text-[12px] font-[600] text-white px-3 py-2 rounded-lg hover:opacity-90 transition disabled:opacity-60"
           >
-            Submit
+            {submitting ? "Saving…" : isEdit ? "Update" : "Submit"}
           </button>
         </div>
       </div>
