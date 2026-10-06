@@ -35,6 +35,11 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
   const [loading, setLoading] = useState(false);
   const [servicesLoading, setServicesLoading] = useState(false);
 
+  // The Provider dropdown lists courier account NAMES (an admin may call the Jiffy account "Jiffy Main"), so
+  // what decides which input to show is the account's real provider type, not the name.
+  const providerTypeOf = (name) =>
+    courierProviders.find((c) => c.courierName === name)?.courierProvider || name;
+
   const fetchServicesForProvider = async (providerName) => {
     setProviderServices([]);
     setServicesLoading(true);
@@ -131,7 +136,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         courier_id: editCourier.courier_id || "",
       });
       setSelectedProvider(editCourier.provider);
-      fetchServicesForProvider(editCourier.provider);
+      fetchServicesForProvider(providerTypeOf(editCourier.provider));
     }
   }, [location.state, isSidebarAdmin, refresh]);
 
@@ -146,10 +151,10 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
     if (name === "provider") {
       setSelectedProvider(value);
       setFormData((prev) => ({ ...prev, courier: "", courier_id: "" }));
-      fetchServicesForProvider(value);
+      fetchServicesForProvider(providerTypeOf(value));
     }
     
-    if (name === "courier" && (selectedProvider === "Shiprocket" || /^xpress\s*bees$/i.test(selectedProvider))) {
+    if (name === "courier" && (providerTypeOf(selectedProvider) === "Shiprocket" || /^xpress\s*bees$/i.test(providerTypeOf(selectedProvider)))) {
       const selectedService = providerServices.find(s => s.service === value);
       if (selectedService) {
         setFormData(prev => ({ ...prev, courier_id: selectedService.courier_id }));
@@ -159,12 +164,13 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const isLosung = formData.provider === "Losung360";
-    const isBoxd = formData.provider === "BoxdLogistics";
+    const formProvider = providerTypeOf(formData.provider);
+    const isLosung = formProvider === "Losung360";
+    const isBoxd = formProvider === "BoxdLogistics";
     // Jiffy and ShipMaxx services are keyed by a code typed in by the admin
     // (Jiffy courier code / ShipMaxx carrier id), not picked from a list.
-    const isJiffy = formData.provider === "Jiffy";
-    const isShipMaxx = formData.provider === "ShipMaxx";
+    const isJiffy = formProvider === "Jiffy";
+    const isShipMaxx = formProvider === "ShipMaxx";
 
     if (!formData.provider || !formData.name || !formData.status || !formData.courierType) {
       Notification("Please fill all required fields", "info");
@@ -290,8 +296,8 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                     Loading services, please wait...
                   </div>
                 </div>
-              ) : (providerServices.length > 0 || selectedProvider === "BoxdLogistics" || selectedProvider === "Losung360" || selectedProvider === "Jiffy" || selectedProvider === "ShipMaxx") && (
-                selectedProvider === "BoxdLogistics" ? (
+              ) : (providerServices.length > 0 || ["BoxdLogistics", "Losung360", "Jiffy", "ShipMaxx"].includes(providerTypeOf(selectedProvider))) && (
+                providerTypeOf(selectedProvider) === "BoxdLogistics" ? (
                   <div className="flex flex-col gap-1.5">
                     <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700">Courier Service ID</label>
                     <input
@@ -303,7 +309,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-brand-primary transition-all font-[600] text-gray-700"
                     />
                   </div>
-                ) : selectedProvider === "Jiffy" ? (
+                ) : providerTypeOf(selectedProvider) === "Jiffy" ? (
                   <div className="flex flex-col gap-1.5">
                     <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700">Courier Code</label>
                     <input
@@ -315,7 +321,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-brand-primary transition-all font-[600] text-gray-700"
                     />
                   </div>
-                ) : selectedProvider === "ShipMaxx" ? (
+                ) : providerTypeOf(selectedProvider) === "ShipMaxx" ? (
                   <div className="flex flex-col gap-1.5">
                     <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700">Courier Code</label>
                     <input
@@ -327,7 +333,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg text-[10px] sm:text-[12px] focus:outline-none focus:border-brand-primary transition-all font-[600] text-gray-700"
                     />
                   </div>
-                ) : selectedProvider === "Losung360" ? (
+                ) : providerTypeOf(selectedProvider) === "Losung360" ? (
                   <div className="flex flex-col gap-1.5">
                     <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700">Courier ID</label>
                     <input
@@ -341,12 +347,12 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                   </div>
                 ) : (
                   <CustomDropdown
-                    label={selectedProvider === "Dtdc" ? "Service Type" : "Courier"}
+                    label={providerTypeOf(selectedProvider) === "Dtdc" ? "Service Type" : "Courier"}
                     name="courier"
                     value={formData.courier}
                     onChange={handleChange}
                     options={providerServices.map(s => typeof s === 'string' ? s : s.service)}
-                    placeholder={selectedProvider ? `Select ${selectedProvider === "Dtdc" ? "Service Type" : "Courier"}` : "Select Provider first"}
+                    placeholder={selectedProvider ? `Select ${providerTypeOf(selectedProvider) === "Dtdc" ? "Service Type" : "Courier"}` : "Select Provider first"}
                   />
                 )
               )}
