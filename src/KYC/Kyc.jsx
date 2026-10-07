@@ -90,6 +90,43 @@ const BusinessTypeSelection = () => {
   const [timerActive, setTimerActive] = useState(false);
 
   const [next, setNext] = useState(false)
+
+  // Every verification is charged, so a verified PAN / Aadhaar / bank account / GSTIN can be replaced by a
+  // different value only a few times (the backend enforces it; entering the same value again is free).
+  const [editsLeft, setEditsLeft] = useState({ pan: 2, aadhaar: 2, bank: 2, gst: 2 });
+  const refreshEditsLeft = () => {
+    axios
+      .get(`${REACT_APP_BACKEND_URL}/getKyc/getKycStatus`, { headers: { Authorization: `Bearer ${Cookies.get("session")}` } })
+      .then((res) => { if (res.data && res.data.editsLeft) setEditsLeft(res.data.editsLeft); })
+      .catch(() => {});
+  };
+  // Asked in our own popup (rendered at the top of the page); the change is applied only when the seller agrees.
+  const [editPrompt, setEditPrompt] = useState(null);
+  const requestEdit = (section, label, apply) => {
+    if (editsLeft[section] <= 0) return Notification("You have used all your changes for this item. Please contact support.", "error");
+    setEditPrompt({ section, label, apply });
+  };
+  // Heading-row control of a verified item: the remaining changes as plain green text, plus a plain Edit link.
+  const editControl = (section, label, apply) => {
+    const left = editsLeft[section];
+    return (
+      <div className="flex items-center gap-3 shrink-0">
+        <span className={`text-[11px] font-[600] whitespace-nowrap ${left > 0 ? "text-brand-primary" : "text-gray-400"}`}>
+          {left > 0 ? `${left} ${left === 1 ? "change" : "changes"} left` : "No changes left"}
+        </span>
+        {left > 0 && (
+          <button type="button" onClick={() => requestEdit(section, label, apply)} className="text-[12px] font-[600] text-gray-600 underline hover:text-brand-primary">
+            Edit
+          </button>
+        )}
+      </div>
+    );
+  };
+  // Refreshed whenever an item becomes verified (first time or after a change).
+  useEffect(() => {
+    refreshEditsLeft();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPanVerified, isAadharVerified, isBankVerified, isGstinVerified]);
   const [isLoading, setIsLoading] = useState(false);
   const [isVerifying, setIsVerifying] = useState(false);
   const [checked, setChecked] = useState(false)
@@ -691,7 +728,7 @@ const BusinessTypeSelection = () => {
       }
     } catch (error) {
       console.log("Error verifying GST", error);
-      Notification(error.response.data.message, "error")
+      Notification((error.response && error.response.data && error.response.data.message) || "GST verification failed!", "error")
 
     } finally {
       // setLoadingState(prev => ({ ...prev, gstVerifying: false }));
@@ -744,7 +781,7 @@ const BusinessTypeSelection = () => {
         // setMessage({ account: response.data.message });
       }
     } catch (error) {
-      Notification("Error verifying account", "error")
+      Notification((error.response && error.response.data && error.response.data.message) || "Error verifying account", "error")
       console.log("Error verifying account", error);
     }
     // setIsVerifying(false);
@@ -793,7 +830,7 @@ const BusinessTypeSelection = () => {
       }
     } catch (error) {
       console.log("Error verifying PAN", error);
-      Notification("PAN verification failed!", "error")
+      Notification((error.response && error.response.data && error.response.data.message) || "PAN verification failed!", "error")
 
     } finally {
       // setLoadingState(prev => ({ ...prev, panVerifying: false }));
@@ -805,6 +842,33 @@ const BusinessTypeSelection = () => {
 
   return (
     <div>
+      {editPrompt && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setEditPrompt(null)} />
+          <div role="dialog" aria-modal="true" className="relative w-full max-w-[420px] bg-white rounded-xl shadow-2xl p-6">
+            <h2 className="text-[16px] font-[700] text-gray-800 mb-1.5">Change your {editPrompt.label}?</h2>
+            <p className="text-[13px] font-[500] text-gray-500 leading-relaxed">
+              A verified {editPrompt.label} can be changed only{" "}
+              <span className="font-[700] text-gray-800">
+                {editsLeft[editPrompt.section]} more time{editsLeft[editPrompt.section] === 1 ? "" : "s"}
+              </span>
+              . A change counts only when the new {editPrompt.label} is verified successfully. Entering the same details again does not count.
+            </p>
+            <div className="flex justify-end gap-2.5 mt-6">
+              <button type="button" onClick={() => setEditPrompt(null)} className="px-5 py-2 rounded-lg border border-gray-300 text-[13px] font-[600] text-gray-600 hover:bg-gray-50">
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => { const { apply } = editPrompt; setEditPrompt(null); apply(); }}
+                className="px-5 py-2 rounded-lg bg-brand-primary text-white text-[13px] font-[600]"
+              >
+                Continue
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* Step Progress Bar */}
       <div className="flex flex-col sm:flex-row justify-start sm:justify-center items-start sm:items-center font-semibold gap-6 sm:gap-24 h-auto p-4 sm:p-8 w-full max-w-lg mx-auto">
         {steps.map((step, index) => (
@@ -1017,9 +1081,12 @@ const BusinessTypeSelection = () => {
                           </div>
                         )} */}
 
-                        <h3 className="sm:text-[14px] text-[12px] text-brand-primary font-[600] sm:mb-3 mb-2">
-                          GSTIN Verification
-                        </h3>
+                        <div className="flex items-center justify-between gap-2 sm:mb-3 mb-2">
+                          <h3 className="sm:text-[14px] text-[12px] text-brand-primary font-[600]">
+                            GSTIN Verification
+                          </h3>
+                          {isGstinVerified && editControl("gst", "GSTIN", () => { setIsGstinVerified(false); })}
+                        </div>
 
                         {/* ✅ All Fields in Responsive Grid */}
                         {/* ✅ All Fields in Responsive Grid */}
@@ -1047,7 +1114,6 @@ const BusinessTypeSelection = () => {
                               <div className="flex items-center gap-1 mb-2 text-brand-primary font-semibold text-[12px]">
                                 <CheckCircleIcon className="w-6 h-6" />
                                 Verified
-                                <button type="button" onClick={() => { setIsGstinVerified(false); }} className="ml-2 text-[11px] font-[600] text-gray-500 underline hover:text-brand-primary">Edit</button>
                               </div>
                             ) : (
                               <button
@@ -1144,7 +1210,10 @@ const BusinessTypeSelection = () => {
               {/* Aadhaar Details Row */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-4 w-full">
                 <div className="p-6 rounded-lg shadow-md bg-white w-full">
-                  <h3 className="font-[600] text-brand-primary text-[14px] mb-2">Aadhaar Verification</h3>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <h3 className="font-[600] text-brand-primary text-[14px]">Aadhaar Verification</h3>
+                    {isAadharVerified && editControl("aadhaar", "Aadhaar", () => { setIsAadharVerified(false); setIsOtpSent(false); })}
+                  </div>
 
                   {/* 🔹 Row 1: Aadhaar + Send OTP */}
                   <div className="grid sm:grid-cols-5 grid-cols-2 gap-2 w-full items-end">
@@ -1182,7 +1251,6 @@ const BusinessTypeSelection = () => {
                             <CheckCircleIcon />
                           </p>
                           <p>Verified</p>
-                          <button type="button" onClick={() => { setIsAadharVerified(false); setIsOtpSent(false); }} className="ml-2 text-[11px] font-[600] text-gray-500 underline hover:text-brand-primary">Edit</button>
                         </div>
 
                       )}
@@ -1313,7 +1381,10 @@ const BusinessTypeSelection = () => {
               {/* PAN Details Row */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-4">
                 <div className="p-6 rounded-lg shadow-md bg-white">
-                  <h3 className="font-[600] text-brand-primary text-[14px] mb-2">PAN Verification</h3>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <h3 className="font-[600] text-brand-primary text-[14px]">PAN Verification</h3>
+                    {isPanVerified && editControl("pan", "PAN", () => { setIsPanVerified(false); })}
+                  </div>
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
                     {/* PAN Number + Verify Button together */}
                     <div className="flex flex-row md:flex-row gap-2 col-span-1">
@@ -1336,7 +1407,6 @@ const BusinessTypeSelection = () => {
                           <>
                             <CheckCircleIcon className="text-brand-primary mt-5" />
                             <span className="text-brand-primary font-semibold mt-5 text-[12px]">Verified</span>
-                            <span className="mt-5"><button type="button" onClick={() => { setIsPanVerified(false); }} className="ml-2 text-[11px] font-[600] text-gray-500 underline hover:text-brand-primary">Edit</button></span>
                           </>
                         ) : (
                           <button
@@ -1385,7 +1455,10 @@ const BusinessTypeSelection = () => {
               {/* Bank Details Row */}
               <div className="grid grid-cols-1 md:grid-cols-1 gap-4 mb-4">
                 <div className="p-6 rounded-lg shadow-md bg-white">
-                  <h3 className="font-[600] text-brand-primary text-[14px] mb-2">Bank Details</h3>
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <h3 className="font-[600] text-brand-primary text-[14px]">Bank Details</h3>
+                    {isBankVerified && editControl("bank", "bank account", () => { setIsBankVerified(false); })}
+                  </div>
                   <div className="grid grid-cols-2 md:grid-cols-6 gap-x-2 gap-y-2 mt-2 items-end">
                     {/* Account Number */}
                     <div className="flex flex-col">
@@ -1417,7 +1490,6 @@ const BusinessTypeSelection = () => {
                           <div className="flex items-center gap-1 text-brand-primary font-semibold text-[12px]">
                             <CheckCircleIcon />
                             <span>Verified</span>
-                            <button type="button" onClick={() => { setIsBankVerified(false); }} className="ml-2 text-[11px] font-[600] text-gray-500 underline hover:text-brand-primary">Edit</button>
                           </div>
                         ) : (
                           <button
