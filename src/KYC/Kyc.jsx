@@ -609,7 +609,23 @@ const BusinessTypeSelection = () => {
           },
         }
       );
-      console.log(response.data);
+      const stored = response.data.data;
+      if (response.data.success && stored && stored.aadhaarNumber && !stored.ref_id) {
+        // The same Aadhaar the seller already verified: no new OTP, its stored details come straight back.
+        setIsOtpPopupOpen(false);
+        setIsAadharVerified(true);
+        setDocumentDetails((prev) => ({
+          ...prev,
+          aadharNo: stored.aadhaarNumber || prev.aadharNo,
+          guardianName: stored.sonOf || "",
+          name: stored.name || "",
+          address: stored.address || "",
+          state: stored.state || "",
+          city: stored.city || "",
+        }));
+        Notification("Aadhaar already verified", "success");
+        return;
+      }
 
       if (response.data.data.ref_id) {
         setIsOtpSent(true);
@@ -1031,6 +1047,7 @@ const BusinessTypeSelection = () => {
                               <div className="flex items-center gap-1 mb-2 text-brand-primary font-semibold text-[12px]">
                                 <CheckCircleIcon className="w-6 h-6" />
                                 Verified
+                                <button type="button" onClick={() => { setIsGstinVerified(false); }} className="ml-2 text-[11px] font-[600] text-gray-500 underline hover:text-brand-primary">Edit</button>
                               </div>
                             ) : (
                               <button
@@ -1165,6 +1182,7 @@ const BusinessTypeSelection = () => {
                             <CheckCircleIcon />
                           </p>
                           <p>Verified</p>
+                          <button type="button" onClick={() => { setIsAadharVerified(false); setIsOtpSent(false); }} className="ml-2 text-[11px] font-[600] text-gray-500 underline hover:text-brand-primary">Edit</button>
                         </div>
 
                       )}
@@ -1318,6 +1336,7 @@ const BusinessTypeSelection = () => {
                           <>
                             <CheckCircleIcon className="text-brand-primary mt-5" />
                             <span className="text-brand-primary font-semibold mt-5 text-[12px]">Verified</span>
+                            <span className="mt-5"><button type="button" onClick={() => { setIsPanVerified(false); }} className="ml-2 text-[11px] font-[600] text-gray-500 underline hover:text-brand-primary">Edit</button></span>
                           </>
                         ) : (
                           <button
@@ -1398,6 +1417,7 @@ const BusinessTypeSelection = () => {
                           <div className="flex items-center gap-1 text-brand-primary font-semibold text-[12px]">
                             <CheckCircleIcon />
                             <span>Verified</span>
+                            <button type="button" onClick={() => { setIsBankVerified(false); }} className="ml-2 text-[11px] font-[600] text-gray-500 underline hover:text-brand-primary">Edit</button>
                           </div>
                         ) : (
                           <button
@@ -1491,7 +1511,7 @@ const BusinessTypeSelection = () => {
                 className="bg-gray-500 hover:bg-gray-600 font-[600] text-white py-2 px-3 sm:text-[12px] text-[10px] rounded-lg transition flex items-center gap-1"
                 onClick={handleBack}
               >
-                <ArrowLeft className="w-4 h-4" /> Back
+                <ArrowLeft className="w-4 h-4" /> {currentStep === 1 ? "Edit Details" : "Back"}
               </button>
             ) : (
               <div />

@@ -199,6 +199,7 @@ const ADMIN_ROUTES = [
   ["/adminDashboard/tools/notification", [["tools", "Notification"]]],
   ["/adminDashboard/tools/announcement", [["tools", "Important Announcement"]]],
   ["/dashboard/user", [["setupAndManage", "Users"]]],
+  ["/dashboard/kyc-review", [["setupAndManage", "Users"]]],
   ["/dashboard/Setup&Manage/User", [["setupAndManage", "Users"]]],
   ["/adminDashboard/Setup&Manage/statusMap", [["setupAndManage", "Status Map"]]],
   ["/adminDashboard/Setup&Manage/EDD-map", [["setupAndManage", "EDD Mapping"]]],
@@ -271,6 +272,7 @@ const USER_ROUTES = [
   ["/adminDashboard", null],
   ["/finance", null],
   ["/dashboard/user", null],
+  ["/dashboard/kyc-review", null],
   ["/dashboard/Setup&Manage/Role_List", null],
   ["/dashboard/Setup&Manage/allocateRoles", null],
 ];

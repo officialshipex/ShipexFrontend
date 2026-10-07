@@ -53,7 +53,8 @@ import CostEstimation from "./component/Toolss/Cost Estimates/CostEstimation";
 import Reports from "./component/Toolss/Report/ReportsPage";
 import WeightDiscrepancy from "./component/Toolss/WeightDiscrepancy/WeightDiscrepancy";
 import CourrierSelection from "./shipment/CourierSelection";
-import Kyc from "./KYC/Kyc";
+// The KYC page: e-KYC, manual KYC or a choice, per the company's setting (KYC/KycEntry.jsx wraps KYC/Kyc.jsx)
+import Kyc from "./KYC/KycEntry";
 import ReportsPage from "./component/Toolss/Report/ReportsPage";
 import NDRPage from "./NDR/ndr.jsx";
 import RechargeWallet from "./recharge/RechargeWallet.jsx";
@@ -64,6 +65,7 @@ import DashboardCards from "./components/Dashboard/MainDashboard.jsx";
 import CompanyProfile from "./component/All setting/profile/ComapnyProfile.jsx";
 import KYCDetails from "./component/All setting/profile/KYC.js";
 import Users from "./components/Users/UserList.jsx";
+import KycReview from "./components/Users/KycReview.jsx";
 import BulkSelection from "./shipment/BulkSelection.jsx";
 import CodRemittanceRecharge from "./recharge/CodRemittanceRecharge.jsx";
 import WooCommerceIntegration from "./components/Set-up&Mannage/WooCommerceIntegration.jsx";
@@ -1188,6 +1190,17 @@ function App() {
                       }
                     />
                   </Route>
+
+                  <Route
+                    path="/dashboard/kyc-review"
+                    element={
+                      isAuthenticated || employeeAuthenticated ? (
+                        <KycReview />
+                      ) : (
+                        <Navigate to="/login" />
+                      )
+                    }
+                  />
 
                   <Route
                     path="/dashboard/user"

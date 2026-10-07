@@ -1,5 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import axios from "axios";
+import Cookies from "js-cookie";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faHome,
@@ -212,6 +214,7 @@ const ADMIN_MENU = [
   {
     icon: faUserCog, text: "Setup & Manage", extent: true, list: [
       { name: "Users", path: "/dashboard/user", perms: [["setupAndManage", "Users"]] },
+      { name: "KYC Review", path: "/dashboard/kyc-review", perms: [["setupAndManage", "Users"]], needsKycReview: true },
       { name: "Roles", path: "/dashboard/Setup&Manage/Role_List", ownerOnly: true },
       { name: "Allocate Sellers", path: "/dashboard/Setup&Manage/allocateRoles", employeeName: "Your Sellers" },
       { name: "Status Map", path: "/adminDashboard/Setup&Manage/statusMap", perms: [["setupAndManage", "Status Map"]] },
@@ -268,7 +271,7 @@ const USER_MENU = [
 
 // Menu for the current session. Owners get every item; employees get the same menu, with the
 // items they hold no permission for marked `locked` (they stay visible, a click shows a popup).
-const buildMenu = (panel, employee) => {
+const buildMenu = (panel, employee, kycReviewVisible) => {
   const isEmployee = !!employee;
   const rights = employee?.accessRights;
   const lockedFor = (perms) => isEmployee && !!perms && !can(rights, panel, perms, "view");
@@ -278,6 +281,8 @@ const buildMenu = (panel, employee) => {
       if (item.extent) {
         const list = item.list
           .filter((sub) => !(isEmployee && sub.ownerOnly))
+          // KYC Review only while the company offers manual KYC (or manual requests still exist)
+          .filter((sub) => !sub.needsKycReview || kycReviewVisible)
           .map((sub) => ({
             ...sub,
             name: isEmployee && sub.employeeName ? sub.employeeName : sub.name,
@@ -341,7 +346,18 @@ const Sidebar = ({ isAdmin = false, adminTab = false, employee = null }) => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  const filteredSidebarItems = useMemo(() => buildMenu(panel, employee), [panel, employee]);
+  const [kycReviewVisible, setKycReviewVisible] = useState(false);
+  useEffect(() => {
+    if (panel !== "admin") return undefined;
+    let cancelled = false;
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/kyc-review/visibility`, { headers: { Authorization: `Bearer ${Cookies.get("session")}` } })
+      .then((res) => { if (!cancelled) setKycReviewVisible(res.data?.visible === true); })
+      .catch(() => { if (!cancelled) setKycReviewVisible(false); });
+    return () => { cancelled = true; };
+  }, [panel]);
+
+  const filteredSidebarItems = useMemo(() => buildMenu(panel, employee, kycReviewVisible), [panel, employee, kycReviewVisible]);
 
   const toggleSidebar = () => {
     setExpanded((prev) => {
