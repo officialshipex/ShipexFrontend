@@ -298,8 +298,8 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
         navigate("/dashboard/b2c/order");
       }
     } catch (error) {
-      console.log("error", error);
-      Notification("Something went wrong while creating the order.", "error");
+      console.log("error", error.response);
+      Notification(error.response.data.error || "Something went wrong while creating the order.", "error");
     } finally {
       setIsSubmitting(false);
     }

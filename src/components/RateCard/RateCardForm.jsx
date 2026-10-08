@@ -236,7 +236,10 @@ export default function RateCardForm() {
 
         if (response.status === 201) {
           Notification(response.data.message, "success")
-          navigate("/dashboard/ratecard")
+          // "/dashboard/ratecard" is not a page (it fell through to the dashboard). Go back to where the card
+          // was added from: the seller's profile, or the rate card list.
+          if (userId) navigate(`/dashboard/Setup&Manage/User/Profile/${userId}`);
+          else navigate("/adminDashboard/b2c/ratecard");
 
         } else {
           Notification("Something went wrong. Please try again.", "error")

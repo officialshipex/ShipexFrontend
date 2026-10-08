@@ -1,4 +1,5 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useLayoutEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { useNavigate, useParams } from "react-router-dom";
 import axios from "axios";
 import { Notification } from "../Notification";
@@ -47,6 +48,63 @@ const formatPickupDate = (date) => {
     month: "short",
     year: "numeric",
   });
+};
+
+// A hover card that is never clipped. The table scrolls, and a card positioned inside it was cut off at the
+// top whenever its row was near the top (for example a single service). This one is drawn on the page itself
+// (fixed, in a portal), beside the trigger, and kept inside the visible window; moving the mouse onto the
+// card keeps it open.
+const HoverTip = ({ trigger, children, width = 200 }) => {
+  const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState(null);
+  const [rect, setRect] = useState(null);
+  const triggerRef = useRef(null);
+  const tipRef = useRef(null);
+  const closeTimer = useRef(null);
+
+  const show = () => {
+    clearTimeout(closeTimer.current);
+    if (triggerRef.current) setRect(triggerRef.current.getBoundingClientRect());
+    setOpen(true);
+  };
+  const hide = () => {
+    closeTimer.current = setTimeout(() => {
+      setOpen(false);
+      setPos(null);
+    }, 120);
+  };
+
+  useLayoutEffect(() => {
+    if (!open || !rect || !tipRef.current) return;
+    const height = tipRef.current.offsetHeight;
+    const margin = 8;
+    let top = rect.top + rect.height / 2 - height / 2;
+    top = Math.max(margin, Math.min(top, window.innerHeight - height - margin));
+    let left = rect.left - width - 12; // to the left of the trigger, as before
+    if (left < margin) left = Math.min(rect.right + 12, window.innerWidth - width - margin);
+    setPos({ top, left });
+  }, [open, rect, width]);
+
+  useEffect(() => () => clearTimeout(closeTimer.current), []);
+
+  return (
+    <span ref={triggerRef} className="inline-block" onMouseEnter={show} onMouseLeave={hide}>
+      {trigger}
+      {open &&
+        createPortal(
+          <div
+            ref={tipRef}
+            onMouseEnter={show}
+            onMouseLeave={hide}
+            style={{ position: "fixed", top: pos ? pos.top : 0, left: pos ? pos.left : 0, width, zIndex: 1000, visibility: pos ? "visible" : "hidden" }}
+            className="bg-white text-gray-700 text-[10px] p-3 rounded-md border shadow-2xl whitespace-normal break-words leading-relaxed font-normal"
+          >
+            {children}
+          </div>,
+          document.body
+        )}
+    </span>
+  );
 };
 
 const CarrierSelection = () => {
@@ -695,78 +753,67 @@ const CarrierSelection = () => {
                         </td>
 
                         <td className="text-center font-[600] text-gray-500 text-[12px]">
-                          <div className="relative inline-block group">
-                            <span className="border-b border-dashed border-gray-400 cursor-pointer">
-                              {getWeightValue(item.courierServiceName, orderDetails?.packageDetails?.applicableWeight || 0)} kg
-                            </span>
-                            {/* HOVER DETAILS (STAYS OPEN) - Match OrdersTable Style */}
-                            <div className={`absolute z-[200] hidden group-hover:block bg-white text-gray-700 text-[10px] p-3 rounded-md border shadow-2xl w-64 right-full mr-3 whitespace-normal break-words leading-relaxed font-normal ${index >= plan.length - 2 ? "bottom-0 mb-4" : "top-1/2 -translate-y-1/2"
-                              }`}>
-                              <div className="text-left select-text">
-                                <p className="font-[600] text-gray-700 mb-1 border-b pb-1">Weight Detail</p>
-                                <div className="space-y-1">
-                                  <div className="flex justify-between">
-                                    <span className="text-gray-500">Dead Weight:</span>
-                                    <span>{orderDetails?.packageDetails?.weight || orderDetails?.packageDetails?.applicableWeight} kg</span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-gray-500">Volumetric Weight:</span>
-                                    <span>
-                                      {Number(
-                                        ((orderDetails?.packageDetails?.volumetricWeight?.length || 0) *
-                                          (orderDetails?.packageDetails?.volumetricWeight?.width || 0) *
-                                          (orderDetails?.packageDetails?.volumetricWeight?.height || 0)) /
-                                        5000
-                                      ).toFixed(2)}{" "}
-                                      kg
-                                    </span>
-                                  </div>
-                                  <div className="flex justify-between">
-                                    <span className="text-gray-500">Applicable Weight:</span>
-                                    <span className="font-[600]">{orderDetails?.packageDetails?.applicableWeight} kg</span>
-                                  </div>
-
+                          <HoverTip
+                            width={256}
+                            trigger={
+                              <span className="border-b border-dashed border-gray-400 cursor-pointer">
+                                {getWeightValue(item.courierServiceName, orderDetails?.packageDetails?.applicableWeight || 0)} kg
+                              </span>
+                            }
+                          >
+                            <div className="text-left select-text">
+                              <p className="font-[600] text-gray-700 mb-1 border-b pb-1">Weight Detail</p>
+                              <div className="space-y-1">
+                                <div className="flex justify-between">
+                                  <span className="text-gray-500">Dead Weight:</span>
+                                  <span>{orderDetails?.packageDetails?.weight || orderDetails?.packageDetails?.applicableWeight} kg</span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-500">Volumetric Weight:</span>
+                                  <span>
+                                    {Number(
+                                      ((orderDetails?.packageDetails?.volumetricWeight?.length || 0) *
+                                        (orderDetails?.packageDetails?.volumetricWeight?.width || 0) *
+                                        (orderDetails?.packageDetails?.volumetricWeight?.height || 0)) /
+                                      5000
+                                    ).toFixed(2)}{" "}
+                                    kg
+                                  </span>
+                                </div>
+                                <div className="flex justify-between">
+                                  <span className="text-gray-500">Applicable Weight:</span>
+                                  <span className="font-[600]">{orderDetails?.packageDetails?.applicableWeight} kg</span>
                                 </div>
                               </div>
-                              {/* INVISIBLE HOVER BRIDGE */}
-                              <div className="absolute left-full top-0 w-3 h-full"></div>
                             </div>
-                          </div>
+                          </HoverTip>
                         </td>
-
                         <td className="text-center font-[600] text-gray-700 text-[12px]">
                           <div className="flex items-center justify-center gap-1">
                             ₹{Number(item.forward.finalCharges).toFixed(2)}
-                            <div className="relative group p-1">
-                              <FiInfo className="text-brand-primary cursor-help" />
-                              {/* HOVER DETAILS (STAYS OPEN) - Match OrdersTable Style */}
-                              <div className={`absolute z-[200] hidden group-hover:block bg-white text-gray-700 text-[10px] p-3 rounded-md border shadow-2xl w-48 right-full mr-3 whitespace-normal break-words leading-relaxed font-normal ${index >= plan.length - 2 ? "bottom-0 mb-4" : "top-1/2 -translate-y-1/2"
-                                }`}>
-                                <div className="text-left select-text">
-                                  <p className="font-[600] text-gray-700 mb-1 border-b pb-1">Price Breakup</p>
-                                  <div className="space-y-1">
-                                    <div className="flex justify-between text-gray-500">
-                                      <span>Freight:</span>
-                                      <span className="text-gray-700">₹{Number(item?.forward?.charges || 0).toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-gray-500">
-                                      <span>COD:</span>
-                                      <span className="text-gray-700">₹{Number(item?.cod || 0).toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-gray-500">
-                                      <span>GST:</span>
-                                      <span className="text-gray-700">₹{Number(item?.forward?.gst || 0).toFixed(2)}</span>
-                                    </div>
-                                    <div className="flex justify-between border-t mt-1 pt-1 font-[600]">
-                                      <span className="text-gray-700">Total:</span>
-                                      <span className="text-brand-primary">₹{Number(item?.forward?.finalCharges || 0).toFixed(2)}</span>
-                                    </div>
+                            <HoverTip width={192} trigger={<span className="inline-block p-1"><FiInfo className="text-brand-primary cursor-help" /></span>}>
+                              <div className="text-left select-text">
+                                <p className="font-[600] text-gray-700 mb-1 border-b pb-1">Price Breakup</p>
+                                <div className="space-y-1">
+                                  <div className="flex justify-between text-gray-500">
+                                    <span>Freight:</span>
+                                    <span className="text-gray-700">₹{Number(item?.forward?.charges || 0).toFixed(2)}</span>
+                                  </div>
+                                  <div className="flex justify-between text-gray-500">
+                                    <span>COD:</span>
+                                    <span className="text-gray-700">₹{Number(item?.cod || 0).toFixed(2)}</span>
+                                  </div>
+                                  <div className="flex justify-between text-gray-500">
+                                    <span>GST:</span>
+                                    <span className="text-gray-700">₹{Number(item?.forward?.gst || 0).toFixed(2)}</span>
+                                  </div>
+                                  <div className="flex justify-between border-t mt-1 pt-1 font-[600]">
+                                    <span className="text-gray-700">Total:</span>
+                                    <span className="text-brand-primary">₹{Number(item?.forward?.finalCharges || 0).toFixed(2)}</span>
                                   </div>
                                 </div>
-                                {/* INVISIBLE HOVER BRIDGE */}
-                                <div className="absolute left-full top-0 w-3 h-full"></div>
                               </div>
-                            </div>
+                            </HoverTip>
                           </div>
                         </td>
                         <td className="text-center">

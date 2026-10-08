@@ -275,6 +275,7 @@ export default function ProfileCard() {
         userName: userData.fullname,
         planName: desiredPlan,
         rateCards: rates.length > 0 ? rates : [], // Ensure we pass current rates if any
+        allowEmpty: true, // a seller with no rate cards yet still gets their own (empty) plan to add cards to
       };
       await axios.put(`${REACT_APP_BACKEND_URL}/users/assignPlan`, assignData, { headers: { Authorization: `Bearer ${token}` } });
 
@@ -894,11 +895,16 @@ export default function ProfileCard() {
                         if (userData?.rateCard && isShared) {
                           Notification("Preparing user-specific plan...", "info");
                           const newPlan = await handleAutoCreateUserPlan();
-                          if (newPlan) planToUse = newPlan;
+                          // If the seller's own plan could not be made, stop here: carrying on would add the
+                          // new rate card to the shared plan (e.g. Bronze) that other sellers use too.
+                          if (!newPlan) return;
+                          planToUse = newPlan;
                         }
                       } catch (err) {
                         console.error("Plan auto-creation failed:", err);
-                      } finally {
+                        return;
+                      }
+                      {
                         navigate(`/dashboard/ratecard/rateCardform?plan=${planToUse || ""}&userId=${id}`);
                       }
                     }}
