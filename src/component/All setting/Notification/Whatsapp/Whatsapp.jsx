@@ -4,7 +4,6 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { useOutletContext } from "react-router-dom";
 import { Notification } from "../../../../Notification";
-import EditTemplateModal from "../EditTemplateModal";
 import TestMessageModal from "../TestMessageModal";
 import { useBranding } from "../../../../context/BrandingContext";
 
@@ -14,10 +13,7 @@ const Whatsapp = () => {
   const [mainEnabled, setMainEnabled] = useState(true);
   const [statusToggles, setStatusToggles] = useState({});
   const [statusTemplates, setStatusTemplates] = useState({});
-  const [updatedTimes, setUpdatedTimes] = useState({});
   const [loading, setLoading] = useState(false);
-  const [editingStatus, setEditingStatus] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [adminBlocked, setAdminBlocked] = useState(false);
   const [testOpen, setTestOpen] = useState(false);
   const [testMessageCount, setTestMessageCount] = useState(0);
@@ -27,26 +23,14 @@ const Whatsapp = () => {
 
   // Modern Order Statuses matching the system
   const statuses = [
-    { key: "PickupPending", label: "Ready To Ship", defaultTemplate: "Hi! Your order {order_id} is ready to ship. We'll notify you once it's picked up. Track: {tracking_link}" },
-    { key: "In-transit", label: "In Transit", defaultTemplate: "Good news! Your order {order_id} is on its way. Track your package here: {tracking_link}" },
-    { key: "OutForDelivery", label: "Out for Delivery", defaultTemplate: "Your order {order_id} is out for delivery today. Please keep your phone available. Track: {tracking_link}" },
-    { key: "Delivered", label: "Delivered", defaultTemplate: "Success! Your order {order_id} has been delivered. We hope you love it!" },
-    { key: "Undelivered", label: "Undelivered", defaultTemplate: "We tried to deliver your order {order_id} but were unsuccessful. We'll try again soon. Track: {tracking_link}" },
-    { key: "RTO", label: "RTO Initiated", defaultTemplate: "Your order {order_id} is being returned to our warehouse. Stay tuned for updates. Track: {tracking_link}" },
-    { key: "Cancelled", label: "Cancelled", defaultTemplate: `Your order {order_id} has been cancelled as per request. Team ${companyDisplayName}.` },
+    { key: "PickupPending", label: "Ready To Ship", defaultTemplate: "Hi {customer}, your order {order_id} from {seller} is Ready for Pickup. AWB {awb}. [Track Order button]" },
+    { key: "In-transit", label: "In Transit", defaultTemplate: "Hi {customer}, your order {order_id} from {seller} is now In Transit. AWB {awb}. [Track Order button]" },
+    { key: "OutForDelivery", label: "Out for Delivery", defaultTemplate: "Hi {customer}, your order {order_id} from {seller} is Out for Delivery. AWB {awb}. [Track Order button]" },
+    { key: "Delivered", label: "Delivered", defaultTemplate: "Hi {customer}, your order {order_id} from {seller} has been Delivered. AWB {awb}. [Track Order button]" },
+    { key: "Undelivered", label: "Undelivered", defaultTemplate: "Hi {customer}, your order {order_id} from {seller} could not be delivered today. A re-attempt will follow. [Track Order button]" },
+    { key: "RTO", label: "RTO Initiated", defaultTemplate: "Hi {customer}, your order {order_id} from {seller} is being Returned to Sender. [Track Order button]" },
+    { key: "Cancelled", label: "Cancelled", defaultTemplate: "Hi {customer}, your order {order_id} from {seller} has been Cancelled." },
   ];
-
-  const formatDate = (dateString) => {
-    if (!dateString) return "-";
-    const date = new Date(dateString);
-    return date.toLocaleString("en-IN", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-  };
 
   useEffect(() => {
     const fetchStatus = async () => {
@@ -66,18 +50,15 @@ const Whatsapp = () => {
         setTestMessageCount(data.testMessageCount || 0);
 
         const toggles = {};
-        const updates = {};
         const templates = {};
 
         statuses.forEach((s) => {
           toggles[s.key] = data[`isWhatsApp${s.key}Enable`] || false;
-          updates[s.key] = data[`whatsapp${s.key}UpdatedAt`];
           // Always show default if custom is empty
-          templates[s.key] = data[`whatsapp${s.key}Template`] || s.defaultTemplate;
+          templates[s.key] = s.defaultTemplate;
         });
 
         setStatusToggles(toggles);
-        setUpdatedTimes(updates);
         setStatusTemplates(templates);
       } catch (error) {
         console.error("Error fetching WhatsApp settings:", error);
@@ -95,16 +76,11 @@ const Whatsapp = () => {
 
     try {
       setLoading(true);
-      const res = await axios.put(
+      await axios.put(
         `${REACT_APP_BACKEND_URL}/notification/updateNotification`,
         { field: `isWhatsApp${key}Enable`, value: newValue, userId: targetUserId },
         { headers: { Authorization: `Bearer ${token}` } }
       );
-
-      setUpdatedTimes((prev) => ({
-        ...prev,
-        [key]: res.data?.updatedAt || new Date().toISOString(),
-      }));
       Notification("Status Updated", "success");
     } catch (error) {
       console.error("Error updating toggle:", error);
@@ -127,37 +103,6 @@ const Whatsapp = () => {
     } catch (error) {
       Notification("Error updating switch", "error");
       console.error("Error updating main toggle:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const openEditModal = (status) => {
-    setEditingStatus(status);
-    setIsModalOpen(true);
-  };
-
-  const handleUpdateTemplate = async ({ template }) => {
-    if (!editingStatus) return;
-
-    try {
-      setLoading(true);
-      await axios.put(
-        `${REACT_APP_BACKEND_URL}/notification/updateNotification`,
-        {
-          field: `whatsapp${editingStatus.key}`,
-          template,
-          userId: targetUserId
-        },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      setStatusTemplates(prev => ({ ...prev, [editingStatus.key]: template }));
-      setUpdatedTimes(prev => ({ ...prev, [editingStatus.key]: new Date().toISOString() }));
-      Notification("WhatsApp Template Saved", "success");
-    } catch (error) {
-      console.error("Error updating template:", error);
-      Notification("Error saving template", "error");
     } finally {
       setLoading(false);
     }
@@ -214,9 +159,7 @@ const Whatsapp = () => {
               <tr>
                 <th className="text-left px-3 py-2 font-bold tracking-wider">Status</th>
                 <th className="text-left px-3 py-2 font-bold tracking-wider">Enable/Disable</th>
-                <th className="text-left px-3 py-2 font-bold tracking-wider">Template</th>
-                <th className="text-left px-3 py-2 font-bold tracking-wider">Updated On</th>
-                <th className="text-center px-3 py-2 font-bold tracking-wider">Action</th>
+                <th className="text-left px-3 py-2 font-bold tracking-wider">Message Sent</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
@@ -251,17 +194,6 @@ const Whatsapp = () => {
                         "{statusTemplates[status.key]}"
                       </p>
                   
-                  </td>
-                  <td className="px-3 py-2 text-gray-500 font-medium">
-                    {formatDate(updatedTimes[status.key])}
-                  </td>
-                  <td className="px-3 py-2 text-center">
-                    <button 
-                      onClick={() => openEditModal(status)}
-                      className="text-[10px] text-brand-primary font-bold hover:bg-brand-secondary/8 px-3 py-2 border border-brand-secondary/16 rounded-lg transition-all"
-                    >
-                      Edit
-                    </button>
                   </td>
                 </tr>
               ))}
@@ -299,30 +231,10 @@ const Whatsapp = () => {
             <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 mb-2 text-[10px] text-gray-500 leading-relaxed">
                 "{statusTemplates[status.key]}"
             </div>
-            <div className="flex justify-between items-center">
-              <span className="text-[10px] text-gray-400 font-medium">
-                {formatDate(updatedTimes[status.key])}
-              </span>
-              <button 
-                onClick={() => openEditModal(status)}
-                className="text-brand-primary font-bold text-[12px] px-4 py-1.5 border border-brand-secondary/16 rounded-lg shadow-sm"
-              >
-                Edit
-              </button>
-            </div>
           </div>
         ))}
         </div>
       </div>
-
-      <EditTemplateModal
-         isOpen={isModalOpen}
-         onClose={() => setIsModalOpen(false)}
-         onUpdate={handleUpdateTemplate}
-         status={editingStatus}
-         type="WhatsApp"
-         currentTemplate={editingStatus ? statusTemplates[editingStatus.key] : ""}
-      />
 
       {testOpen && (
         <TestMessageModal
