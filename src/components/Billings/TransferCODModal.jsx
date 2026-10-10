@@ -11,6 +11,8 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
   const [bankDetails, setBankDetails] = useState(null);
   const [utr, setUtr] = useState("");
   const [loading, setLoading] = useState(false);
+  const [fetchLoading, setFetchLoading] = useState(true);
+  const [fetchError, setFetchError] = useState(null);
 
   const [balance, setBalance] = useState(0);
   const [holdAmount, setHoldAmount] = useState(0);
@@ -33,14 +35,21 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
     const fetchCodTransfer = async () => {
       if (!id || !selectedRemittanceIds?.length) return;
 
+      setFetchLoading(true);
+      setFetchError(null);
       try {
         const token = Cookies.get("session");
 
+        // repeated key (selectedRemittanceIds=a&selectedRemittanceIds=b), the same form the backend reads
+        const params = new URLSearchParams();
+        (selectedRemittanceIds || []).forEach((remId) => {
+          params.append("selectedRemittanceIds", remId);
+        });
+
         const response = await axios.get(
-          `${REACT_APP_BACKEND_URL}/cod/getCODTransferData/${id}`,
+          `${REACT_APP_BACKEND_URL}/cod/getCODTransferData/${id}?${params.toString()}`,
           {
             headers: { Authorization: `Bearer ${token}` },
-            params: { selectedRemittanceIds },
           }
         );
 
@@ -70,6 +79,12 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
         );
       } catch (error) {
         console.error("Error fetching remittance data:", error);
+        // show the reason instead of leaving an empty loading box
+        const errMsg = error?.response?.data?.message || "Error fetching remittance data";
+        setFetchError(errMsg);
+        Notification(errMsg, "error");
+      } finally {
+        setFetchLoading(false);
       }
     };
 
@@ -327,12 +342,28 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
             Transfer COD Details
           </h2>
 
-          {/* LOADING */}
-          {!remittance ? (
-            <div className="space-y-4">
+          {/* LOADING / ERROR / CONTENT */}
+          {fetchLoading ? (
+            <div className="space-y-4 py-8">
               <div className="h-6 bg-gray-200 rounded animate-pulse w-1/2"></div>
               <div className="h-6 bg-gray-200 rounded animate-pulse w-2/3"></div>
               <div className="h-6 bg-gray-200 rounded animate-pulse w-1/3"></div>
+            </div>
+          ) : fetchError ? (
+            <div className="py-8 text-center space-y-4">
+              <div className="p-3 bg-red-50 border border-red-200 text-red-600 rounded-lg text-[13px] font-semibold">
+                {fetchError}
+              </div>
+              <button
+                onClick={onClose}
+                className="px-4 py-2 text-[12px] font-semibold text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition"
+              >
+                Close
+              </button>
+            </div>
+          ) : !remittance ? (
+            <div className="py-8 text-center text-gray-500 text-[13px]">
+              No remittance data found.
             </div>
           ) : (
             <>
@@ -564,6 +595,14 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
                       {bankDetails.ifsc}
                     </div>
                   </div>
+                </div>
+              )}
+              {!bankDetails && (
+                <div className="mb-2 px-3 py-2.5 border border-amber-200 rounded-lg bg-amber-50 shadow-sm flex items-center gap-2 text-[11px] text-amber-800">
+                  <span className="text-amber-600 font-bold text-sm">⚠️</span>
+                  <span>
+                    <strong>No bank details on file:</strong> This seller has not added bank account details yet. Please verify bank account details with the seller.
+                  </span>
                 </div>
               )}
               <h3 className="text-[12px] font-[600] mb-2 text-gray-700">
