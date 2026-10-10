@@ -4,7 +4,7 @@ const Customers = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editData, setEditData] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(5); // Number of rows per page
+  const [rowsPerPage, setRowsPerPage] = useState(100); // Number of rows per page
 
   const openModal = (data) => {
     setEditData(data);
@@ -215,10 +215,10 @@ const Customers = () => {
             value={rowsPerPage}
             onChange={handleRowsPerPageChange}
           >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
+            <option value={100}>100</option>
+            <option value={200}>200</option>
+            <option value={300}>300</option>
+            <option value={500}>500</option>
           </select>
         </div>
 

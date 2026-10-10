@@ -25,7 +25,7 @@ const AutoAcceptedDiscrepancy = () => {
     const [inputValue, setInputValue] = useState("");
     const [clearTrigger, setClearTrigger] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [limit, setLimit] = useState(20);
+    const [limit, setLimit] = useState(100);
     const [totalPages, setTotalPages] = useState(1);
     const [page, setPage] = useState(1);
     const [selectedCourier, setSelectedCourier] = useState([]);

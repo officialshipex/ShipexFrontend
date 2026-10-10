@@ -41,7 +41,7 @@ const UndeliveredOrders = ({ userId: selectedUserId }) => {
   const [copiedOrderId, setCopiedOrderId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
+  const [limit, setLimit] = useState(100);
   const [totalPages, setTotalPages] = useState(1);
 
   const [orderId, setOrderId] = useState("");

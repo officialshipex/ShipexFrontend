@@ -49,7 +49,7 @@ const Invoices = ({
   const actionRef = useRef(null);
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
+  const [limit, setLimit] = useState(100);
   const [totalPages, setTotalPages] = useState(1);
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;

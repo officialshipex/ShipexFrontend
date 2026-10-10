@@ -50,7 +50,7 @@ const InTransitOrders = (filterOrder) => {
 
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
+  const [limit, setLimit] = useState(100);
   const [totalPages, setTotalPages] = useState(1);
   const [loadingOrderId, setLoadingOrderId] = useState(null);
 

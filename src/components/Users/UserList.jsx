@@ -63,7 +63,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
   const [rateCard, setRateCard] = useState("");
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [limit, setLimit] = useState(20)
+  const [limit, setLimit] = useState(100)
   const [userId, setUserId] = useState()
   const [showFilters, setShowFilters] = useState(false);
   const navigate = useNavigate();

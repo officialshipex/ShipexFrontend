@@ -42,7 +42,7 @@ const NewDiscrepancy = ({ refresh, setRefresh }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [declienedPopup, setDeclienedPopup] = useState(false);
     const [reason, setReason] = useState(null)
-    const [limit, setLimit] = useState(20);
+    const [limit, setLimit] = useState(100);
     const [totalPages, setTotalPages] = useState(0);
     const [page, setPage] = useState(1);
     const [selectedCourier, setSelectedCourier] = useState([]);

@@ -13,11 +13,10 @@ const PaginationFooter = ({
   const dropdownRef = useRef(null);
 
   const limitOptions = [
-    { label: "20", value: 20 },
-    { label: "50", value: 50 },
-    { label: "75", value: 75 },
     { label: "100", value: 100 },
     { label: "200", value: 200 },
+    { label: "300", value: 300 },
+    { label: "500", value: 500 },
   ];
 
   // Close dropdown on outside click
@@ -42,7 +41,7 @@ const PaginationFooter = ({
 
   const getDisplayValue = () => {
     const option = limitOptions.find((opt) => opt.value === limit);
-    return option ? option.label : "20";
+    return option ? option.label : String(limit);
   };
 
   return (

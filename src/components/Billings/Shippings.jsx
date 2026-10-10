@@ -38,7 +38,7 @@ const Shippings = (filterOrder) => {
   const courierFilterButtonRef = useRef(null);
   const actionDropdownRef = useRef(null);
   const [page, setPage] = useState(1); // Track current page
-  const [limit, setLimit] = useState(20); // You can make this dynamic if needed
+  const [limit, setLimit] = useState(100); // You can make this dynamic if needed
   const [totalPages, setTotalPages] = useState(1);
 
   const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false);

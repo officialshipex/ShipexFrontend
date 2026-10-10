@@ -28,7 +28,7 @@ const Shippings = () => {
   const [selectedCourier, setSelectedCourier] = useState([]);
 
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(20);
+  const [limit, setLimit] = useState(100);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
   const [courierOptions, setCourierOptions] = useState([]);
