@@ -8,6 +8,14 @@ import { toTenantUrl } from "../utils/tenantApiDomain";
 import { refreshNotifications } from "../utils/NotificationListProvider";
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
+// Plain fetch() calls skip the axios interceptor, which is what tells the backend which company a local
+// (localhost) session is testing as. Without this header the PDF downloads below resolve the default company
+// and answer "Order not found". Empty in production, where the real domain identifies the company.
+const devTenantHeaders = () => {
+  const devTenant = localStorage.getItem("dev_tenant_key") || localStorage.getItem("dev_tenant");
+  return devTenant ? { "x-tenant-key": devTenant } : {};
+};
+
 // Amazon's shipments aren't only booked directly (provider "Amazon
 // Shipping") — they're also booked through aggregator providers like
 // Shiprocket and Jiffy, where the CourierService is created under that
@@ -110,9 +118,7 @@ export const handleBulkDownloadManifests = async (selectedOrders) => {
     }
 
     const orderIds = selectedOrders.join(",");
-    const response = await fetch(
-      `${REACT_APP_BACKEND_URL}/manifest/generate-pdf?orderIds=${orderIds}`
-    );
+    const response = await fetch(`${REACT_APP_BACKEND_URL}/manifest/generate-pdf?orderIds=${orderIds}`, { headers: devTenantHeaders() });
 
     if (!response.ok) {
       throw new Error("Failed to fetch manifest");
@@ -181,9 +187,7 @@ export const ExportExcel = ({ selectedOrders, orders }) => {
 
 export const handleInvoice = async (id) => {
   try {
-    const response = await fetch(
-      `${REACT_APP_BACKEND_URL}/printinvoice/download-invoice/${id}`,
-    );
+    const response = await fetch(`${REACT_APP_BACKEND_URL}/printinvoice/download-invoice/${id}`, { headers: devTenantHeaders() });
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -199,9 +203,7 @@ export const handleInvoice = async (id) => {
 
 export const handleLabel = async (id) => {
   try {
-    const response = await fetch(
-      `${REACT_APP_BACKEND_URL}/printlabel/generate-pdf/${id}`,
-    );
+    const response = await fetch(`${REACT_APP_BACKEND_URL}/printlabel/generate-pdf/${id}`, { headers: devTenantHeaders() });
     const blob = await response.blob();
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -225,9 +227,7 @@ export const handleBulkDownloadInvoice = async ({ selectedOrders }) => {
     const mergedPdf = await PDFDocument.create();
 
     for (let orderId of selectedOrders) {
-      const response = await fetch(
-        `${REACT_APP_BACKEND_URL}/printinvoice/download-invoice/${orderId}`,
-      );
+      const response = await fetch(`${REACT_APP_BACKEND_URL}/printinvoice/download-invoice/${orderId}`, { headers: devTenantHeaders() });
       const blob = await response.blob();
       const existingPdfBytes = await blob.arrayBuffer();
 
@@ -265,7 +265,7 @@ export const handleBulkDownloadLabel = async ({ selectedOrders }) => {
     try {
       const token = Cookies.get("session");
       const settingsRes = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/label/getLabel`), {
-        headers: { authorization: `Bearer ${token}` },
+        headers: { authorization: `Bearer ${token}`, ...devTenantHeaders() },
       });
       if (settingsRes.ok) {
         const settingsData = await settingsRes.json();
@@ -294,7 +294,7 @@ export const handleBulkDownloadLabel = async ({ selectedOrders }) => {
     // ── 2. Fetch order info (to handle Amazon labels) ────────────────────
     const orderResponses = await Promise.all(
       selectedOrders.map((id) =>
-        fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/orders/checkCourier/${id}`)).then(
+        fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/orders/checkCourier/${id}`), { headers: devTenantHeaders() }).then(
           (res) => res.json(),
         ),
       ),
@@ -304,13 +304,9 @@ export const handleBulkDownloadLabel = async ({ selectedOrders }) => {
     for (const orderData of orderResponses) {
       let response;
       if (isAmazonAtsOrder(orderData) && orderData.label) {
-        response = await fetch(
-          `${REACT_APP_BACKEND_URL}/printlabel/proxy-label?url=${encodeURIComponent(orderData.label)}`,
-        );
+        response = await fetch(`${REACT_APP_BACKEND_URL}/printlabel/proxy-label?url=${encodeURIComponent(orderData.label)}`, { headers: devTenantHeaders() });
       } else {
-        response = await fetch(
-          `${REACT_APP_BACKEND_URL}/printlabel/generate-pdf/${orderData._id}`,
-        );
+        response = await fetch(`${REACT_APP_BACKEND_URL}/printlabel/generate-pdf/${orderData._id}`, { headers: devTenantHeaders() });
       }
 
       const blob = await response.blob();

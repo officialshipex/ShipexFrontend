@@ -2,6 +2,7 @@ import { useEffect, useRef, useCallback, useState } from "react";
 import { X } from "lucide-react";
 import { FaHistory, FaCalendarAlt, FaUser, FaInfoCircle, FaLink } from "react-icons/fa";
 import { getCarrierLogo } from "../Common/getCarrierLogo";
+import { useBranding } from "../context/BrandingContext";
 import { ChevronDown } from "lucide-react";
 // Timeline marker with vertical connecting line
 const TimelineMarker = ({ isLast }) => (
@@ -25,6 +26,13 @@ const NdrStatusModal = ({ isOpen, setIsOpen, ndrHistory }) => {
   const [activeTab, setActiveTab] = useState("all");
   const [showDropdown, setShowDropdown] = useState(false);
   const modalRef = useRef();
+  const { companyDisplayName, logoUrl } = useBranding();
+
+  // The platform's own NDR actions are stored under the name "ShipexIndia" (the backend uses that value to tell its
+  // own actions from the courier's), so it is only translated for display: a company sees its own name and logo.
+  const sourceLabel = (src) =>
+    src === "ShipexIndia" ? companyDisplayName || src : src === "Smartship" ? "Bluedart" : src || "—";
+  const sourceLogo = (src) => (src === "ShipexIndia" && logoUrl ? logoUrl : getCarrierLogo(src));
 
   useEffect(() => {
     if (!isOpen) return;
@@ -207,16 +215,16 @@ const NdrStatusModal = ({ isOpen, setIsOpen, ndrHistory }) => {
                                   </span>
                                 </div>
                                 <div className="flex items-center">
-                                  {item.source === "Smartship" ? "Bluedart" : item.source || "—"}
+                                  {sourceLabel(item.source)}
                                 </div>
                                 <div className="flex items-center text-gray-500 text-[12px]">{item.remark || "—"}</div>
                                 <div className="flex items-center justify-center">
                                   <div className="bg-gray-50 p-1 rounded-lg border border-gray-100 group-hover:scale-110 transition-transform">
                                     <img
-                                      src={getCarrierLogo(item.source)}
-                                      alt={item.source}
+                                      src={sourceLogo(item.source)}
+                                      alt={sourceLabel(item.source)}
                                       className="w-8 h-7 object-contain"
-                                      title={item.source}
+                                      title={sourceLabel(item.source)}
                                     />
                                   </div>
                                 </div>
@@ -232,7 +240,7 @@ const NdrStatusModal = ({ isOpen, setIsOpen, ndrHistory }) => {
                                 </div>
                                 <div>
                                   <strong>Action By:</strong>{" "}
-                                  {item.source === "Smartship" ? "Bluedart" : item.source || "—"}
+                                  {sourceLabel(item.source)}
                                 </div>
                                 <div>
                                   <strong>Remarks:</strong> {item.remark || "—"}
@@ -240,10 +248,10 @@ const NdrStatusModal = ({ isOpen, setIsOpen, ndrHistory }) => {
                                 <div className="flex items-center space-x-2">
                                   <strong>Source:</strong>
                                   <img
-                                    src={getCarrierLogo(item.source)}
-                                    alt={item.source}
+                                    src={sourceLogo(item.source)}
+                                    alt={sourceLabel(item.source)}
                                     className="w-9 h-8 object-contain"
-                                    title={item.source}
+                                    title={sourceLabel(item.source)}
                                   />
                                 </div>
                               </div>

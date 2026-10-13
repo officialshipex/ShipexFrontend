@@ -6,6 +6,7 @@ import RTOTab from "./RTOTab";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 import Couriers from "./Couriers"
+import TopSellers from "./TopSellers";
 import Cookies from "js-cookie";
 import { Notification } from "../../Notification"
 import { FiAlertCircle } from "react-icons/fi";
@@ -260,6 +261,9 @@ const Dashboard = () => {
 
             {/* Tab Content */}
             {activeTab === "Overview" && <OverviewTab refresh={refresh} selectedUserId={selectedUserId} selectedDateRange={selectedDateRange} />}
+            {activeTab === "Overview" && isAdmin && adminTab && !selectedUserId && (
+                <TopSellers refresh={refresh} selectedDateRange={selectedDateRange} />
+            )}
             {activeTab === "Orders" && <OrdersTab refresh={refresh} selectedUserId={selectedUserId} selectedDateRange={selectedDateRange} />}
             {activeTab === "RTO Initiated" && <RTOTab refresh={refresh} selectedUserId={selectedUserId} selectedDateRange={selectedDateRange} />}
             {activeTab === "Couriers" && <Couriers refresh={refresh} selectedUserId={selectedUserId} selectedDateRange={selectedDateRange} />}

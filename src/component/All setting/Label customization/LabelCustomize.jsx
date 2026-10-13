@@ -52,6 +52,128 @@ function ThermalPreview() {
   );
 }
 
+// Preview of the "modern" label (backend label/printLabelCopy1.controller.js), shown when the company
+// has that design assigned. Same hide/show settings as the classic one, mirrored from the PDF's rules.
+function ModernLabelPreview({ settings }) {
+  const w = settings.warehouseSettings || {};
+  const p = settings.productDetails || {};
+  const showPickup = !w.hidePickupName || !w.hidePickupAddress || !w.hidePickupMobile;
+  const showReturn = !w.hideRTOName || !w.hideRTOAddress || !w.hideRTOMobile;
+  const showTable = !p.hideSKU || !p.hideProduct || !p.hideHSN || !p.hideQty || !p.hideOrderAmount || !p.hideTotalAmount;
+  const showLogo = settings.showLogoOnLabel && settings.logoUrl;
+
+  return (
+    <div className="border border-black p-4 space-y-2">
+      <div className="flex justify-between items-start">
+        <p className="text-[16px] font-[700]">Your Brand Name</p>
+        {showLogo && <img src={settings.logoUrl} alt="Uploaded Logo" className="w-16 h-10 object-contain" />}
+      </div>
+
+      <div className="border-t border-black pt-2">
+        <div className="flex justify-between items-baseline">
+          <p className="text-[14px] font-[700]">AWB# 35973710008735</p>
+          <p className="text-[10px] font-[700]">COURIER</p>
+        </div>
+        <img src={Barcode2} alt="awb barcode" className="w-3/5 h-12 my-1 mx-auto block" />
+        <div className="flex justify-between text-[10px]">
+          <span>110051</span><span>AWB# 35973710008735</span><span>East Delhi</span>
+        </div>
+      </div>
+
+      <div className="border-t border-black pt-2 grid grid-cols-[3fr_2fr] divide-x divide-black">
+        <div className="pr-2">
+          <p className="font-[700]">Ship to - narinder kaur</p>
+          <p>block c 14/2 new govind pura street no-8 near gandhi park</p>
+          <p className="font-[700]">East Delhi (DELHI)</p>
+          <p className="font-[700]">PIN - 110051</p>
+          {!settings.hideCustomerMobile && <p className="text-[10px]">MOBILE NO: 9718794406</p>}
+        </div>
+        <div className="pl-2">
+          <p className="text-[14px] font-[700]">PREPAID</p>
+          {!p.hideOrderAmount && <p className="text-[14px] font-[700]">INR 800</p>}
+          <p className="text-[10px] font-[700]">Date</p>
+          <p className="text-[10px]">Mar 7, 2025 | 3:42 PM</p>
+          <p className="text-[10px]">WEIGHT: 0.4 kg</p>
+          <p className="text-[10px]">DIMS (cm): 10x10x10</p>
+        </div>
+      </div>
+
+      <div className="border-t border-black pt-2 grid grid-cols-[3fr_2fr] divide-x divide-black">
+        <div className="pr-2">
+          <p><strong>Seller:</strong> Your Brand Name</p>
+          {!w.hideGstNumber && <p className="text-[10px]">GSTIN: 22XXXXX0000SHI</p>}
+        </div>
+        <div className="pl-2 text-center">
+          {!settings.hideOrderBarcode && (
+            <>
+              <p className="text-[10px] font-[700]">#843987</p>
+              <img src={Barcode} alt="order barcode" className="h-8 w-full" />
+            </>
+          )}
+        </div>
+      </div>
+
+      {showTable && (
+        <table className="w-full border border-black text-left">
+          <thead className="bg-gray-200">
+            <tr>
+              {!p.hideSKU && <th className="border border-black px-1">SKU</th>}
+              {!p.hideProduct && <th className="border border-black px-1">Item Name</th>}
+              {!p.hideHSN && <th className="border border-black px-1">HSN</th>}
+              {!p.hideQty && <th className="border border-black px-1">Qty.</th>}
+              {!p.hideOrderAmount && <th className="border border-black px-1">Unit Price</th>}
+              {!p.hideTotalAmount && <th className="border border-black px-1">Total Amount</th>}
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              {!p.hideSKU && <td className="border border-black px-1">1</td>}
+              {!p.hideProduct && <td className="border border-black px-1">honey</td>}
+              {!p.hideHSN && <td className="border border-black px-1">AAA</td>}
+              {!p.hideQty && <td className="border border-black px-1">1</td>}
+              {!p.hideOrderAmount && <td className="border border-black px-1">800</td>}
+              {!p.hideTotalAmount && <td className="border border-black px-1">800</td>}
+            </tr>
+          </tbody>
+        </table>
+      )}
+
+      {showPickup && (
+        <div>
+          <p><strong>Pickup Address:</strong></p>
+          {!w.hidePickupName && <p>Ajeet Kumar</p>}
+          {!w.hidePickupAddress && (
+            <div>
+              <p>Vaidic Panchgavyya, Near LIC Building, Laxmi Sweets, Sagwan Chowk</p>
+              <p>Sirsa, HARYANA, 125055</p>
+            </div>
+          )}
+          {!w.hidePickupMobile && <p>Mobile No: 9518156020</p>}
+        </div>
+      )}
+
+      {showReturn && (
+        <div>
+          <p><strong>Return Address:</strong></p>
+          {!w.hideRTOName && <p>Ajeet Kumar</p>}
+          {!w.hideRTOAddress && (
+            <div>
+              <p>Vaidic Panchgavyya, Near LIC Building, Laxmi Sweets, Sagwan Chowk</p>
+              <p>Sirsa, HARYANA, 125055</p>
+            </div>
+          )}
+          {!w.hideRTOMobile && <p>Mobile No: 9518156020</p>}
+        </div>
+      )}
+
+      <div className="border-t border-black pt-2">
+        <p>This is a computer-generated document, hence does not require a signature.</p>
+        <p><strong>Note:</strong> All disputes are subject to Delhi jurisdiction. Goods once sold will only be taken back or exchanged as per the store's exchange/return policy.</p>
+      </div>
+    </div>
+  );
+}
+
 // ── main component ───────────────────────────────────────────────────────────
 
 export default function LabelCustomize() {
@@ -229,6 +351,9 @@ export default function LabelCustomize() {
 
           {/* Preview Panel */}
           <div className="bg-white p-4 rounded-lg shadow-md w-full md:w-2/5 print:w-full text-[12px] font-sans">
+            {settings.labelTemplate === "modern" ? (
+              <ModernLabelPreview settings={settings} />
+            ) : (
             <div className="border border-black p-4 space-y-2">
               <div className="flex justify-between items-center">
                 <div>
@@ -325,6 +450,7 @@ export default function LabelCustomize() {
                 <p><span><strong>Note:</strong></span> All disputes are subject to Delhi jurisdiction. Goods once sold will only be taken back or exchanged as per the store's exchange/return policy.</p>
               </div>
             </div>
+            )}
           </div>
         </div>
       )}
