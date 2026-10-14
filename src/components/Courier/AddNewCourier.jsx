@@ -320,6 +320,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
               <tr className="text-white bg-brand-primary font-[600] text-[12px]">
                 <th className="py-2 px-3 text-center">Sr.</th>
                 <th className="py-2 px-3 text-left">Courier Name</th>
+                <th className="py-2 px-3 text-left">Courier ID</th>
                 <th className="py-2 px-3 text-left">Provider</th>
                 <th className="py-2 px-3 text-center">COD Contract</th>
                 <th className="py-2 px-3 text-center">Status</th>
@@ -335,6 +336,15 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                   >
                     <td className="py-2.5 px-4 text-center">{index + 1}</td>
                     <td className="py-2.5 px-3 text-gray-700 font-[600]">{courier.courierName}</td>
+                    <td className="py-2.5 px-3">
+                      {courier.courierId != null ? (
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-brand-primary/10 text-brand-primary text-[11px] font-bold border border-brand-primary/20">
+                          #{String(courier.courierId).padStart(2, "0")}
+                        </span>
+                      ) : (
+                        <span className="text-gray-300">—</span>
+                      )}
+                    </td>
                     <td className="py-2.5 px-3">
                       <div className="flex items-center gap-2">
                         <img src={getCarrierLogo(courier.courierProvider)} alt="" className="w-6 h-6 object-contain" />
@@ -396,7 +406,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="6" className="py-10 text-center text-gray-400 text-[12px] font-[500]">
+                  <td colSpan="7" className="py-10 text-center text-gray-400 text-[12px] font-[500]">
                     No couriers found.
                   </td>
                 </tr>
@@ -432,6 +442,9 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
                       </span>
                       <span className="text-[10px] text-brand-primary font-[600]">
                         {courier.courierProvider}
+                        {courier.courierId != null && (
+                          <span className="ml-1.5 text-gray-500">#{String(courier.courierId).padStart(2, "0")}</span>
+                        )}
                       </span>
                     </div>
                   </div>

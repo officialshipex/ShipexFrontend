@@ -592,7 +592,12 @@ const CourierServiceList = ({ refresh, canUpdate = true }) => {
                       />
                     </td>
                     <td className="py-2 px-3 text-center">{index + 1}</td>
-                    <td className="py-2 px-3 text-gray-700 font-[600]">{courier.name}</td>
+                    <td className="py-2 px-3 text-gray-700 font-[600]">
+                      {courier.name}
+                      {courier.courier_id && (
+                        <div className="text-[10px] text-gray-400 font-[500] mt-0.5">ID: {courier.courier_id}</div>
+                      )}
+                    </td>
                     <td className="py-2 px-3">
                       <div className="flex justify-center">
                         {courier.courierType === "Domestic (Air)" ? (
@@ -690,6 +695,9 @@ const CourierServiceList = ({ refresh, canUpdate = true }) => {
                     <span className="text-[10px] font-[600] text-gray-700 truncate max-w-[150px]">
                       {courier.name}
                     </span>
+                    {courier.courier_id && (
+                      <span className="text-[9px] text-gray-400 font-[500]">ID: {courier.courier_id}</span>
+                    )}
                     <div className="flex items-center gap-1.5 mt-0.5">
                       <div className="text-gray-400">
                         {courier.courierType === "Domestic (Air)" ? (
