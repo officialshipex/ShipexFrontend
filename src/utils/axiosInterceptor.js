@@ -1,6 +1,53 @@
 import axios from "axios";
 import Cookies from "js-cookie";
 import { toTenantUrl } from "./tenantApiDomain";
+import { getUserInfoFromToken } from "./session";
+
+// The backend answers every request of a company that has been switched off (Companies screen: "block login only"
+// or "complete shutdown") with code COMPANY_DISABLED. A user who was already logged in is signed out at once and
+// taken to the login page, which shows the reason. Several requests can fail together, so this runs only once.
+const COMPANY_DISABLED = "COMPANY_DISABLED";
+export const LOGOUT_REASON_KEY = "logoutReason";
+let signingOut = false;
+
+function signOutBecauseCompanyDisabled(message) {
+  // Not logged in (e.g. the login request itself was refused): nothing to sign out of, the page shows the message.
+  if (signingOut || !Cookies.get("session")) return;
+  signingOut = true;
+  const loginPage = getUserInfoFromToken()?.type === "employee" ? "/e-login" : "/login";
+  try {
+    sessionStorage.setItem(LOGOUT_REASON_KEY, message || "Something went wrong please contact with your account manager");
+  } catch {
+    // storage blocked: the login page just won't repeat the reason
+  }
+  Cookies.remove("session", { path: "/" });
+  Cookies.remove("session");
+  window.location.replace(loginPage);
+}
+
+// Most screens use axios, but some call our backend with fetch; those refusals are recognised here too.
+function watchFetchForCompanyDisabled() {
+  if (typeof window === "undefined" || !window.fetch || window.fetch.__companyDisabledWatch) return;
+  const originalFetch = window.fetch.bind(window);
+  const watched = (input, init) =>
+    originalFetch(input, init).then((response) => {
+      if (response.status === 400) {
+        const url = typeof input === "string" ? input : input?.url;
+        if (isBackendRequest({ url })) {
+          response
+            .clone()
+            .json()
+            .then((body) => {
+              if (body?.code === COMPANY_DISABLED) signOutBecauseCompanyDisabled(body.message);
+            })
+            .catch(() => {});
+        }
+      }
+      return response;
+    });
+  watched.__companyDisabledWatch = true;
+  window.fetch = watched;
+}
 
 // True only when the request goes to OUR backend: the same origin (scheme, host, port) as
 // REACT_APP_BACKEND_URL. Comparing origins, not a URL prefix, so a look-alike host such as
@@ -18,6 +65,8 @@ function isBackendRequest(config) {
 }
 
 export function setupAxiosInterceptors() {
+  watchFetchForCompanyDisabled();
+
   // Send the login token with every call to OUR backend, so a route that requires a login
   // (see the backend's ENFORCE_AUTH_PREFIXES) works from every screen without each call
   // having to remember to attach it. A call that already sets its own Authorization keeps
@@ -55,6 +104,11 @@ export function setupAxiosInterceptors() {
     (response) => response,
     (error) => {
       const status = error.response?.status;
+
+      if (status === 400 && error.response?.data?.code === COMPANY_DISABLED) {
+        signOutBecauseCompanyDisabled(error.response.data.message);
+        return Promise.reject(error);
+      }
 
       if (status === 403 || status === 401) {
         console.warn("Invalid or expired token. Logging out...");

@@ -19,6 +19,19 @@ const Elogin = ({ setEmployeeAuthenticated }) => {
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+  // signed out because this company was switched off: say why once (utils/axiosInterceptor.js)
+  useEffect(() => {
+    try {
+      const reason = sessionStorage.getItem("logoutReason");
+      if (reason) {
+        sessionStorage.removeItem("logoutReason");
+        setMessage(reason);
+      }
+    } catch {
+      // storage blocked: nothing to show
+    }
+  }, []);
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {

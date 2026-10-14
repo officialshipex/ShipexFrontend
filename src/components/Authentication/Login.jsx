@@ -22,6 +22,19 @@ const LoginPage = ({ setIsAuthenticated }) => {
 
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+  // signed out because this company was switched off: say why once (utils/axiosInterceptor.js)
+  useEffect(() => {
+    try {
+      const reason = sessionStorage.getItem("logoutReason");
+      if (reason) {
+        sessionStorage.removeItem("logoutReason");
+        Notification(reason, "error");
+      }
+    } catch {
+      // storage blocked: nothing to show
+    }
+  }, []);
+
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
