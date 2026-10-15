@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
 import * as XLSX from "xlsx";
+import { CodAdjustmentNotes } from "./CodAdjustments";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -142,6 +143,8 @@ const RemittanceDetails = ({ remittanceId }) => {
         {/* Right Block (Status Icon) */}
         <StatusBadge status={remittance.status} />
       </div>
+
+      <CodAdjustmentNotes adjustments={remittance.adjustments} recoveredAmount={remittance.recoveredAmount} />
 
       <hr className="my-2" />
 

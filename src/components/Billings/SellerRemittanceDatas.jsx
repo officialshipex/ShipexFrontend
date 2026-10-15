@@ -3,6 +3,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { CheckCircle, Clock, XCircle } from "lucide-react";
 import Cookies from "js-cookie";
+import { CodAdjustmentNotes } from "./CodAdjustments";
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const SellerRemittanceDatas = ({ remittanceId }) => {
@@ -146,6 +147,7 @@ const SellerRemittanceDatas = ({ remittanceId }) => {
         <StatusBadge status={remittance.status} />
       </div>
 
+      <CodAdjustmentNotes adjustments={remittance.adjustments} recoveredAmount={remittance.recoveredAmount} />
 
       <hr className="my-2" />
 

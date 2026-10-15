@@ -4,6 +4,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import { Notification } from "../../Notification";
 import { Wallet, Lock } from "lucide-react";
+import { CodAdjustmentBadge } from "./CodAdjustments";
 
 
 const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
@@ -648,13 +649,18 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
                         return (
                           <tr key={idStr} className="border-b">
                             <td className="px-3 py-2 text-brand-primary">
-                              {item.remittanceId}
+                              <div className="flex flex-col items-start">
+                                {item.remittanceId}
+                                <CodAdjustmentBadge adjustments={item.adjustments} recoveredAmount={item.recoveredAmount} remittanceId={item.remittanceId} />
+                              </div>
                             </td>
                             <td className="px-3 py-2">
                               ₹{(
                                 Number(item.codAvailable || 0) +
                                 Number(item.amountCreditedToWallet || 0) +
-                                Number(item.earlyCodCharges || 0)
+                                Number(item.earlyCodCharges || 0) +
+                                // taken back for orders returned after delivery (see the Adjusted note)
+                                Number(item.recoveredAmount || 0)
                               ).toFixed(2)}
                             </td>
                             <td className="px-3 py-2">

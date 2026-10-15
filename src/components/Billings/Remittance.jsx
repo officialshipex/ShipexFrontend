@@ -17,6 +17,7 @@ import NoDataFound from "../../Common/NoDataFound";
 import DateFilter from "../../filter/DateFilter";
 import { motion, AnimatePresence } from "framer-motion";
 import RemittanceDetails from "./RemittanceDetails";
+import { CodAdjustmentBadge, CodRecoveryBanner, CodReversalsModal } from "./CodAdjustments";
 
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -45,6 +46,8 @@ const Remittance = ({
   const [copiedId, setCopiedId] = useState(null);
   const [detailsPopupId, setDetailsPopupId] = useState(null);
   const [clearTrigger, setClearTrigger] = useState(0);
+  // COD orders returned after delivery (their COD was adjusted automatically)
+  const [showReversals, setShowReversals] = useState(false);
 
   useEffect(() => {
     if (clearFiltersTrigger) {
@@ -228,6 +231,8 @@ const Remittance = ({
         </div>
       </div>
 
+      <CodRecoveryBanner amount={remited?.codRecoveryDue} onView={() => setShowReversals(true)} />
+
       {/* Filter Section */}
       <div className="flex w-full flex-col md:hidden mb-2">
         <div className="flex items-center gap-2">
@@ -405,9 +410,12 @@ const Remittance = ({
                     <td className="py-2 px-3 text-brand-primary">₹{(Number(row.codAvailable) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3 text-gray-500">{row.remittanceMethod}</td>
                     <td className="py-2 px-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "Paid" ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-100 text-red-600"}`}>
-                        {row.status}
-                      </span>
+                      <div className="flex flex-col items-start">
+                        <span className={`px-2 py-0.5 rounded text-[10px] ${row.status === "Paid" ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-100 text-red-600"}`}>
+                          {row.status}
+                        </span>
+                        <CodAdjustmentBadge adjustments={row.adjustments} recoveredAmount={row.recoveredAmount} remittanceId={row.remittanceId} />
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -491,6 +499,9 @@ const Remittance = ({
                         </span>
                       </div>
                       <span className="text-gray-400 text-[10px] mt-0.5">{dayjs(row.date).format("DD MMM YYYY")}</span>
+                      <div>
+                        <CodAdjustmentBadge adjustments={row.adjustments} recoveredAmount={row.recoveredAmount} remittanceId={row.remittanceId} />
+                      </div>
                     </div>
                   </div>
                   <div className="text-right flex flex-col items-end">
@@ -600,6 +611,8 @@ const Remittance = ({
           </div>
         </div>
       )}
+
+      <CodReversalsModal open={showReversals} onClose={() => setShowReversals(false)} userId={id} isAdmin={false} />
 
       <CodRemittanceFilterPanel
         isOpen={isFilterPanelOpen}

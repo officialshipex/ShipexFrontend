@@ -18,6 +18,7 @@ import RemittanceDetails from "./SellerRemittanceDatas";
 import { Notification } from "../../Notification";
 import TranseferCODModal from "./TransferCODModal";
 import CodUploadPoopup from "./CodUploadPoopup";
+import { CodAdjustmentBadge, CodRecoveryBanner, CodReversalsModal } from "./CodAdjustments";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -57,6 +58,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
   const [openRemittancePopup, setOpenRemittancePopup] = useState(false);
   const [selectedRemittanceId, setSelectedRemittanceId] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
+  const [expandedUtr, setExpandedUtr] = useState(null); // mobile: tap a shortened UTR to see all of it
   const [detailsPopupId, setDetailsPopupId] = useState(null);
   const [clearTrigger, setClearTrigger] = useState(0);
   const [clearUserTrigger, setClearUserTrigger] = useState(0);
@@ -364,6 +366,9 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
     setOpenRemittancePopup(true);
   };
 
+  // COD orders returned after delivery (their COD was adjusted automatically)
+  const [showReversals, setShowReversals] = useState(false);
+
   const summaryItems = [
     { title: "COD To Be Remitted", value: remitedSummary?.CODToBeRemitted, icon: <Wallet size={18} /> },
     { title: "Last COD Remitted", value: remitedSummary?.LastCODRemitted, icon: <Send size={18} /> },
@@ -399,6 +404,8 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
           ))}
         </div>
       </div>
+
+      <CodRecoveryBanner amount={remitedSummary?.codRecoveryDue} onView={() => setShowReversals(true)} />
 
       {/* Desktop Filter Bar */}
       <div className="hidden md:flex flex-row gap-2 items-center z-20">
@@ -563,7 +570,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 <th className="py-2 px-3 text-left">Date</th>
                 <th className="py-2 px-3 text-left">User</th>
                 <th className="py-2 px-3">Remittance ID</th>
-                <th className="py-2 px-3">UTR</th>
+                <th className="py-2 px-3 w-[180px] min-w-[180px] max-w-[180px]">UTR</th>
                 <th className="py-2 px-3">Total COD Amount</th>
                 <th className="py-2 px-3">Amount Credited to Wallet	</th>
                 <th className="py-2 px-3">Adjusted Amount</th>
@@ -602,11 +609,11 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                         </button>
                       </div>
                     </td>
-                    <td className="py-2 px-3 text-brand-primary font-[600]">
+                    <td className="py-2 px-3 text-brand-primary font-[600] w-[180px] min-w-[180px] max-w-[180px]">
                       <div className="flex items-center justify-center gap-1 group">
-                        <span>{row.utr || "N/A"}</span>
+                        <span className="block min-w-0 max-w-[140px] truncate" title={row.utr || undefined}>{row.utr || "N/A"}</span>
                         {row.utr && (
-                          <button onClick={() => handleCopy(row.utr, row.remittanceId + '_utr')} className="p-1 hover:bg-brand-secondary/16 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
+                          <button onClick={() => handleCopy(row.utr, row.remittanceId + '_utr')} className="p-1 shrink-0 hover:bg-brand-secondary/16 rounded text-gray-400 hover:text-brand-primary transition-all opacity-0 group-hover:opacity-100">
                             {copiedId === row.remittanceId + '_utr' ? <FiCheck className="text-green-500 w-3 h-3" /> : <FiCopy className="w-3 h-3" />}
                           </button>
                         )}
@@ -618,7 +625,10 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                     <td className="py-2 px-3 text-red-700">₹{(Number(row.earlyCodCharges) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3 text-brand-primary font-[600]">₹{(Number(row.remittanceInitiated) || 0).toFixed(2)}</td>
                     <td className="py-2 px-3">
-                      <span className={`px-2 py-0.5 rounded text-[10px] shadow-sm ${row.status === "Paid" ? "bg-brand-secondary/10 text-brand-primary" : "bg-orange-100 text-orange-600"}`}>{row.status}</span>
+                      <div className="flex flex-col items-start">
+                        <span className={`px-2 py-0.5 rounded text-[10px] shadow-sm ${row.status === "Paid" ? "bg-brand-secondary/10 text-brand-primary" : "bg-orange-100 text-orange-600"}`}>{row.status}</span>
+                        <CodAdjustmentBadge adjustments={row.adjustments} recoveredAmount={row.recoveredAmount} remittanceId={row.remittanceId} />
+                      </div>
                     </td>
                   </tr>
                 ))
@@ -664,6 +674,7 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                   <span className={`px-2 py-0.5 rounded text-[10px] shadow-xs ${row.status === "Paid" ? "bg-brand-secondary/10 text-brand-primary" : "bg-red-100 text-red-600"}`}>
                     {row.status}
                   </span>
+                  <CodAdjustmentBadge adjustments={row.adjustments} recoveredAmount={row.recoveredAmount} remittanceId={row.remittanceId} />
                   <p
                     className="text-[9px] text-brand-primary font-bold border-b border-dashed border-brand-primary cursor-pointer mt-1"
                     onClick={() => setDetailsPopupId(detailsPopupId === row.remittanceId ? null : row.remittanceId)}
@@ -704,11 +715,15 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 <div className="text-right">
                   <p className="text-gray-500 font-[600] text-[10px] tracking-tighter">UTR Number</p>
                   <div className="flex items-center justify-end gap-1">
-                    <span className="text-brand-primary font-[600] truncate text-[10px] max-w-[70px]">
+                    <span
+                      title={row.utr || undefined}
+                      onClick={() => row.utr && setExpandedUtr(expandedUtr === row.remittanceId ? null : row.remittanceId)}
+                      className={`text-brand-primary font-[600] text-[10px] ${expandedUtr === row.remittanceId ? "break-all text-right" : "truncate max-w-[70px]"} ${row.utr ? "cursor-pointer" : ""}`}
+                    >
                       {row.utr || "N/A"}
                     </span>
                     {row.utr && (
-                      <button onClick={() => handleCopy(row.utr, row.remittanceId + '_m_utr')}>
+                      <button className="shrink-0" onClick={() => handleCopy(row.utr, row.remittanceId + '_m_utr')}>
                         {copiedId === row.remittanceId + '_m_utr' ? (
                           <FiCheck className="w-2 h-2 text-brand-primary" />
                         ) : (
@@ -807,6 +822,13 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
       )}
 
       {showUpload && <CodUploadPoopup onClose={() => setShowUpload(false)} setRefresh={setRefresh} />}
+
+      <CodReversalsModal
+        open={showReversals}
+        onClose={() => setShowReversals(false)}
+        userId={appliedFilters.selectedUserId || undefined}
+        isAdmin={true}
+      />
 
       {/* Bank Response Upload Modal */}
       <AnimatePresence>
