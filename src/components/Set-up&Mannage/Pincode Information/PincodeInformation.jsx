@@ -8,6 +8,10 @@ import ShreeMaruti from "../../../assets/shreemaruti.png";
 import AmazonShipping from "../../../assets/amazon.jpg";
 import Loader from "../../../Loader"
 import { toTenantUrl } from "../../../utils/tenantApiDomain";
+import Cookies from "js-cookie";
+
+// Plain fetch skips the axios interceptor, so the login token is attached here
+const authHeaders = () => ({ Authorization: `Bearer ${Cookies.get("session")}` });
 
 const PincodeInformation = () => {
     const [loading, setLoading] = useState(false);
@@ -34,7 +38,7 @@ const PincodeInformation = () => {
     const fetchPincodeData = async () => {
         try {
             setLoading(true);
-            const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/serviceablePincode/summary`));
+            const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/serviceablePincode/summary`), { headers: authHeaders() });
             const data = await response.json();
             setLoading(false);
 
@@ -73,7 +77,7 @@ const PincodeInformation = () => {
 
                 const response = await fetch(
                     `${REACT_APP_BACKEND_URL}/serviceablePincode/${courier}/upload-pincode`,
-                    { method: "POST", body: formData }
+                    { method: "POST", body: formData, headers: authHeaders() }
                 );
 
                 setLoading(false);
@@ -95,7 +99,8 @@ const PincodeInformation = () => {
         try {
             setLoading(true);
             const response = await fetch(
-                `${REACT_APP_BACKEND_URL}/serviceablePincode/${courier}/download-pincode`
+                `${REACT_APP_BACKEND_URL}/serviceablePincode/${courier}/download-pincode`,
+                { headers: authHeaders() }
             );
             setLoading(false);
 

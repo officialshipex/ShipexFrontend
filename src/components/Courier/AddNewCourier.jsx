@@ -155,6 +155,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
         const response = await fetch(`${REACT_APP_BACKEND_URL}/serviceablePincode/${courier}/upload-pincode`, {
           method: "POST",
           body: formData,
+          headers: { Authorization: `Bearer ${Cookies.get("session")}` },
         });
         setLoading(false);
 
@@ -175,7 +176,8 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
     try {
       setLoading(true);
       const response = await fetch(
-        `${REACT_APP_BACKEND_URL}/serviceablePincode/${courier}/download-pincode`
+        `${REACT_APP_BACKEND_URL}/serviceablePincode/${courier}/download-pincode`,
+        { headers: { Authorization: `Bearer ${Cookies.get("session")}` } }
       );
       setLoading(false);
 

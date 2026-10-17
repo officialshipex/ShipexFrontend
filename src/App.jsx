@@ -9,7 +9,7 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 import "./index.css"; // Tailwind CSS
 import { getUserInfoFromToken, deleteSession } from "./utils/session.js";
-import { canAccessRoute, employeePanel } from "./utils/employeeAccess.js";
+import { canAccessRoute, employeePanel, isAdminOnlyPath } from "./utils/employeeAccess.js";
 // import { Toaster } from "react-hot-toast";
 import { ToastProvider } from "./utils/ToastProvider";
 import { ToastRegister } from "./Notification";
@@ -234,6 +234,14 @@ function App() {
     location.pathname !== "/dashboard" &&
     !canAccessRoute(employee.accessRights, employeeSide, location.pathname);
 
+  // A merchant (not an admin) opening an admin-panel URL directly goes back to their own dashboard
+  const ownerAdminBlocked =
+    isAuthenticated && !employee && !!user && user.isAdmin !== true && isAdminOnlyPath(location.pathname);
+
+  useEffect(() => {
+    if (ownerAdminBlocked) navigate("/dashboard", { replace: true });
+  }, [ownerAdminBlocked, navigate]);
+
   useEffect(() => {
     if (
       isAuthenticated &&
@@ -320,7 +328,7 @@ function App() {
                   />
                 )}
                 {/* When blocked, route to an empty placeholder so the forbidden page never mounts (or fetches) */}
-                <Routes location={employeeBlocked ? { ...location, pathname: "/employeeAuthentication" } : location}>
+                <Routes location={employeeBlocked || ownerAdminBlocked ? { ...location, pathname: "/employeeAuthentication" } : location}>
                   {/* Public Routes */}
                   <Route
                     path="/login"

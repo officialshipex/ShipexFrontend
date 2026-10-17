@@ -304,6 +304,22 @@ export function canAccessRoute(accessRights, panel, pathname) {
   return can(accessRights, panel, rule.perms, "view");
 }
 
+// Admin-panel pages. A merchant (non-admin owner) typing one of these URLs is sent back to their own
+// dashboard; the backend refuses the data anyway, this just keeps the admin screen from opening.
+const ADMIN_ONLY_PREFIXES = [
+  "/adminDashboard",
+  "/admin",
+  "/finance",
+  "/dashboard/user",
+  "/dashboard/kyc-review",
+  "/dashboard/Setup&Manage/User",
+  "/dashboard/AdminCodRemittances",
+  "/dashboard/ratecard",
+  "/dashboard/setup/courier-services",
+];
+
+export const isAdminOnlyPath = (pathname) => ADMIN_ONLY_PREFIXES.some((p) => matchesPrefix(pathname, p));
+
 // Which panel an employee works in. Admin-side employees carry isAdmin && adminTab.
 export const employeePanel = (employee) =>
   employee && employee.isAdmin === true && employee.adminTab === true && employee.parentType !== "user"

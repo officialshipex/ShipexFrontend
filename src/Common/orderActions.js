@@ -11,9 +11,15 @@ const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 // Plain fetch() calls skip the axios interceptor, which is what tells the backend which company a local
 // (localhost) session is testing as. Without this header the PDF downloads below resolve the default company
 // and answer "Order not found". Empty in production, where the real domain identifies the company.
+// They also carry the login token: the backend only serves a label / invoice / manifest to the order's owner
+// (or an admin). Every call below goes to our own backend.
 const devTenantHeaders = () => {
   const devTenant = localStorage.getItem("dev_tenant_key") || localStorage.getItem("dev_tenant");
-  return devTenant ? { "x-tenant-key": devTenant } : {};
+  const token = Cookies.get("session");
+  return {
+    ...(devTenant ? { "x-tenant-key": devTenant } : {}),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
 };
 
 // Amazon's shipments aren't only booked directly (provider "Amazon
