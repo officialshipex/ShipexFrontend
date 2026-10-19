@@ -3,6 +3,7 @@ import Modal from "./Modal";
 import axios from "axios";
 // import { toast } from "react-toastify";
 import { Notification } from "../Notification"
+import { PICKUP_ADDRESS_NEEDS_NUMBER, pickupAddressHasNumber } from "../utils/pickupAddressCheck";
 import Cookies from "js-cookie";
 const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => {
     const [pincode, setPincode] = useState("");
@@ -88,6 +89,11 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (!pickupAddressHasNumber(formData.address)) {
+            Notification(PICKUP_ADDRESS_NEEDS_NUMBER, "error");
+            return;
+        }
+
         setPickupAddress(formData);
 
         const token = Cookies.get("session");
@@ -133,7 +139,7 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
             }
         } catch (error) {
             console.error("Error saving pickup address:", error.response?.data || error.message);
-            Notification("Error saving pickup address. Please try again.", "error");
+            Notification(error.response?.data?.message || "Error saving pickup address. Please try again.", "error");
         }
     };
 

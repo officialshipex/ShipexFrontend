@@ -4,6 +4,7 @@ import UpdateSenderAdd from "../../Order/viewOrder/UpdateSenderAdd";
 // import { toast } from "react-toastify";
 import { FiEdit, FiTrash2, FiSearch, FiCopy, FiCheck } from "react-icons/fi"
 import { Notification } from "../../Notification";
+import { PICKUP_ADDRESS_NEEDS_NUMBER, pickupAddressHasNumber } from "../../utils/pickupAddressCheck";
 import Cookies from "js-cookie";
 import UserFilter from "../../filter/UserFilter";
 import PaginationFooter from "../../Common/PaginationFooter";
@@ -120,6 +121,10 @@ const PickupAddress = ({ isAdminView = false }) => {
   };
 
   const handleSave = async (formData) => {
+    if (!pickupAddressHasNumber(formData?.address)) {
+      Notification(PICKUP_ADDRESS_NEEDS_NUMBER, "error");
+      return;
+    }
     try {
       const token = Cookies.get("session");
       if (editData && editData._id) {
@@ -145,7 +150,7 @@ const PickupAddress = ({ isAdminView = false }) => {
       closeModal();
     } catch (error) {
       console.error("Error saving address:", error);
-      Notification("Failed to save address", "error");
+      Notification(error.response?.data?.message || "Failed to save address", "error");
     }
   };
 
