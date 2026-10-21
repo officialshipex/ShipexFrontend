@@ -18,6 +18,7 @@ const b2bDefaultOptions = [
   { value: "Shiprocket", label: "Shiprocket" },
   { value: "Delhivery", label: "Delhivery" },
   { value: "BigShip", label: "BigShip" },
+  { value: "Gati", label: "Gati" },
 ];
 
 const AddNewCourier = ({ isSidebarAdmin }) => {

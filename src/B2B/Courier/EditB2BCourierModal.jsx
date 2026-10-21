@@ -79,6 +79,25 @@ const FIELD_META = {
     isMono: true,
     colSpan: "sm:col-span-2",
   },
+  customerCode: {
+    label: "Customer Code",
+    type: "text",
+    placeholder: "8-digit Gati customer code",
+    colSpan: "sm:col-span-1",
+  },
+  goodsCode: {
+    label: "Default Goods Code",
+    type: "text",
+    placeholder: "Optional — auto from products, else 18",
+    colSpan: "sm:col-span-1",
+  },
+  encryptedCustCode: {
+    label: "Encrypted Customer Code",
+    type: "text",
+    placeholder: "Encrypted customer code issued by Gati",
+    isMono: true,
+    colSpan: "sm:col-span-2",
+  },
 };
 
 const formatKeyLabel = (key) => {

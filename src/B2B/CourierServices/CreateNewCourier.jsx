@@ -61,6 +61,9 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         case "delhivery":
           services = ["Delhivery-surface", "Delhivery-air"];
           break;
+        case "gati":
+          services = ["Gati-surface", "Gati-air"];
+          break;
         default:
           services = [];
           break;

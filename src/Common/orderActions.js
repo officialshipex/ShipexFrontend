@@ -223,6 +223,63 @@ export const handleLabel = async (id) => {
   }
 };
 
+// B2B (cargo) orders print one label per box from the B2B label route, not the parcel label above.
+export const handleB2BLabel = async (id) => {
+  try {
+    const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/b2b/generate-label/${id}`), { headers: devTenantHeaders() });
+    if (!response.ok) throw new Error(await response.text());
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `B2B-Label-${id}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  } catch (error) {
+    console.error("Error downloading B2B label:", error);
+    Notification("Failed to download label. Please try again.", "error");
+  }
+};
+
+// Gati's own docket (LR) copy — Gati's pickup person collects it at pickup.
+export const handleGatiDocketCopy = async (id) => {
+  try {
+    const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/b2b/gati/docketCopy/${id}`), { headers: devTenantHeaders() });
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      throw new Error(body.message || "Failed to download the Gati docket copy");
+    }
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `Gati-Docket-${id}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  } catch (error) {
+    Notification(error.message || "Failed to download the Gati docket copy", "error");
+  }
+};
+
+// A booked B2B order is cancelled with its courier (and refunded) by the B2B cancel route.
+export const cancelB2BOrder = async ({ orderId, setRefresh }) => {
+  try {
+    Notification("Cancelling order, please wait...", "info");
+    const token = Cookies.get("session");
+    const response = await axios.post(
+      `${REACT_APP_BACKEND_URL}/b2b/cancelOrder/${orderId}`,
+      {},
+      { headers: { authorization: `Bearer ${token}` } },
+    );
+    Notification(response.data?.message || "Order cancelled successfully", "success");
+    if (setRefresh) setRefresh((prev) => !prev);
+  } catch (error) {
+    Notification(error?.response?.data?.message || "Failed to cancel order. Please try again.", "error");
+  }
+};
+
 export const handleBulkDownloadInvoice = async ({ selectedOrders }) => {
   if (selectedOrders.length === 0) {
     Notification("No orders selected for download.", "info");

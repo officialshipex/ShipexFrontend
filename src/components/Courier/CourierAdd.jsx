@@ -164,6 +164,17 @@ const b2bCourierConfigs = {
       { name: "accessKey", label: "Access Key", placeholder: "API Access Key", type: "text" },
     ],
   },
+  Gati: {
+    endpoint: "/b2b/gati/getToken",
+    provider: "Gati",
+    fields: [
+      { name: "username", label: "User", placeholder: "Gati API Username", type: "text" },
+      { name: "password", label: "Password", placeholder: "Password", type: "password" },
+      { name: "customerCode", label: "Customer Code", placeholder: "8-digit code", type: "text" },
+      { name: "encryptedCustCode", label: "Encrypted Cust Code", placeholder: "Encrypted customer code", type: "text" },
+      { name: "goodsCode", label: "Default Goods Code", placeholder: "Optional — auto from products, else 18", type: "text", optional: true },
+    ],
+  },
 };
 
 const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers, isB2B = false }) => {

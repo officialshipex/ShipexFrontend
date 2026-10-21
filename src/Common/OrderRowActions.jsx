@@ -2,7 +2,7 @@ import React, { useState, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { isAmazonAtsOrder } from "./orderActions";
+import { isAmazonAtsOrder, handleB2BLabel, handleGatiDocketCopy, cancelB2BOrder } from "./orderActions";
 
 const OrderRowActions = ({
     index,
@@ -30,11 +30,15 @@ const OrderRowActions = ({
     const navigate = useNavigate();
     const [position, setPosition] = useState(null);
     const isNewOrder = order.status === "new";
+    const isB2B = order.orderType === "B2B";
 
     // Unified cancel handler
     const onCancel = (e) => {
         e.stopPropagation();
-        if (cancelOrder) {
+        // A booked B2B order has to be cancelled with its courier (and refunded) by the B2B route
+        if (isB2B && !isNewOrder) {
+            cancelB2BOrder({ orderId: order._id, setRefresh });
+        } else if (cancelOrder) {
             cancelOrder({ orderId: order._id, refresh, setRefresh });
         } else if (handleCancelOrder) {
             handleCancelOrder(order, setRefresh);
@@ -183,7 +187,8 @@ const OrderRowActions = ({
                                             <li
                                                 onClick={(e) => {
                                                     e.stopPropagation();
-                                                    if (handleLabel) handleLabel(order._id);
+                                                    if (isB2B) handleB2BLabel(order._id);
+                                                    else if (handleLabel) handleLabel(order._id);
                                                     setDropdownOpen(null);
                                                 }}
                                                 className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer transition-colors"
@@ -191,6 +196,20 @@ const OrderRowActions = ({
                                                 Download Label
                                             </li>
                                         )
+                                    )}
+
+                                    {/* Gati: the carrier's docket (LR) copy for the pickup person */}
+                                    {isB2B && order.partner === "Gati" && order.awb_number && showDownloadLabel && (
+                                        <li
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleGatiDocketCopy(order._id);
+                                                setDropdownOpen(null);
+                                            }}
+                                            className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer transition-colors"
+                                        >
+                                            Gati Docket Copy
+                                        </li>
                                     )}
 
                                     {/* Invoice logic */}
