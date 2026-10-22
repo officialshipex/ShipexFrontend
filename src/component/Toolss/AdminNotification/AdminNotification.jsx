@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import Notification from "../../All setting/Notification/Notification";
 import UserFilter from "../../../filter/UserFilter";
+import { Send, Users } from "lucide-react";
+import { SendAlertModal, BulkNotifyModal } from "./AdminNotifyTools";
 
 const AdminNotification = () => {
   const [selectedUserId, setSelectedUserId] = useState(() => {
     return localStorage.getItem("admin_notif_target_user") || null;
   });
   const [clearTrigger, setClearTrigger] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [bulkOpen, setBulkOpen] = useState(false);
 
   const handleUserSelect = (userId) => {
     setSelectedUserId(userId);
@@ -33,14 +37,30 @@ const AdminNotification = () => {
                  <label className="text-[12px] font-bold text-gray-500 mb-1 block">Search User</label>
                  <UserFilter onUserSelect={handleUserSelect} clearTrigger={clearTrigger} />
               </div>
-              {selectedUserId && (
-                <button 
-                  onClick={handleClear}
-                  className="text-[12px] text-red-500 font-bold hover:underline"
+              <div className="flex items-center gap-2 flex-wrap">
+                {selectedUserId && (
+                  <button
+                    onClick={handleClear}
+                    className="text-[12px] text-red-500 font-bold hover:underline"
+                  >
+                    Clear Selection
+                  </button>
+                )}
+                {/* one alert to the selected user (or one email / everyone) */}
+                <button
+                  onClick={() => setAlertOpen(true)}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg border border-brand-primary text-brand-primary text-[12px] font-[600] hover:bg-brand-secondary/10"
                 >
-                  Clear Selection
+                  <Send className="w-3.5 h-3.5" /> Send Alert
                 </button>
-              )}
+                {/* many sellers at once, by filter or by hand */}
+                <button
+                  onClick={() => setBulkOpen(true)}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg bg-brand-primary text-white text-[12px] font-[600] hover:opacity-90"
+                >
+                  <Users className="w-3.5 h-3.5" /> Bulk Notify
+                </button>
+              </div>
            </div>
         </div>
 
@@ -52,6 +72,9 @@ const AdminNotification = () => {
           />
         </div>
       </div>
+
+      <SendAlertModal open={alertOpen} onClose={() => setAlertOpen(false)} targetUserId={selectedUserId} />
+      <BulkNotifyModal open={bulkOpen} onClose={() => setBulkOpen(false)} />
     </div>
   );
 };

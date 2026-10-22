@@ -22,6 +22,8 @@ const Notification = ({ targetUserId = null, basePath = "/dashboard/settings/not
         { label: "Email (Free)", path: `${basePath}/email` },
         { label: "Smart Calling", path: `${basePath}/ai-order-updation` },
         { label: "Credit History", path: `${basePath}/credit-history` },
+        // admin only: every alert sent with Send Alert / Bulk Notify
+        ...(basePath.startsWith("/adminDashboard") ? [{ label: "Alert Logs", path: `${basePath}/alert-logs` }] : []),
     ];
     const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
     const token = Cookies.get("session");

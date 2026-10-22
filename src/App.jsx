@@ -144,6 +144,7 @@ import CostEstimationB2B from "./component/Toolss/Cost Estimates/CostEstimationB
 
 import B2BCourrierSelection from "./B2B/Shipments/CourierSelection";
 import AdminNotification from "./component/Toolss/AdminNotification/AdminNotification.jsx";
+import { CustomAlertLogs } from "./component/Toolss/AdminNotification/AdminNotifyTools.jsx";
 import Announcement from "./component/Toolss/Announcement/Announcement.jsx";
 import AdminAgreement from "./agreement/AdminAgreement";
 import UserAgreement from "./agreement/UserAgreement";
@@ -837,6 +838,7 @@ function App() {
                     <Route path="email" element={<Email />} />
                     <Route path="credit-history" element={<CreditHistory />} />
                     <Route path="ai-order-updation" element={<AIOrderUpdation />} />
+                    <Route path="alert-logs" element={<CustomAlertLogs />} />
                   </Route>
 
                   <Route
