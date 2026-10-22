@@ -13,6 +13,7 @@ import { FiAlertCircle } from "react-icons/fi";
 import DateFilter from "../../filter/DateFilter";
 import UserFilter from "../../filter/UserFilter";
 import { FiBell, FiX } from "react-icons/fi";
+import { Calculator } from "lucide-react";
 
 const AnnouncementItem = ({ ann, idx, setAnnouncements, announcements }) => {
     const textRef = useRef(null);
@@ -234,6 +235,14 @@ const Dashboard = () => {
                                 <UserFilter onUserSelect={setSelectedUserId} clearTrigger={refresh} />
                             </div>
                         )}
+                        <button
+                            onClick={() => navigate("/dashboard/tools/Cost_Estimation/b2c")}
+                            className="flex items-center gap-1.5 whitespace-nowrap text-[12px] font-[600] text-brand-primary bg-white border border-brand-primary hover:bg-brand-secondary/10 px-3 py-2 rounded-lg transition-all duration-200"
+                            title="Rate Calculator"
+                        >
+                            <Calculator className="w-3.5 h-3.5" />
+                            <span className="hidden sm:inline">Rate Calculator</span>
+                        </button>
                         <button
                             onClick={handleRefresh}
                             className="text-white bg-brand-primary hover:opacity-90 border px-3 py-2 rounded-lg transition-all duration-300 ease-in-out"

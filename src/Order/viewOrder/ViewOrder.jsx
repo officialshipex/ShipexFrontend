@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { Notification } from "../../Notification";
 import ViewOrderHeader from "./ViewOrderHeader";
 import OrderDetailsSection from "./OrderDetailsSection";
+import SellerDetailsSection from "./SellerDetailsSection";
 import PickupDetailsSection from "./PickupDetailsSection";
 import ReceiverDetailsSection from "./ReceiverDetailsSection";
 import PackageDetailsSection from "./PackageDetailsSection";
@@ -262,6 +263,9 @@ const ViewOrder = ({ isSidebarAdmin }) => {
         <div className="grid grid-cols-1 lg:grid-cols-6 gap-2">
           {/* Left Section - 80% on desktop */}
           <div className="lg:col-span-4 space-y-2">
+            {/* User Details — admin / employee only (whose order this is) */}
+            {order.seller && <SellerDetailsSection seller={order.seller} />}
+
             {/* Order Details */}
             <OrderDetailsSection order={order} />
 
