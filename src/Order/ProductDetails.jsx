@@ -118,7 +118,7 @@ const ProductDetails = ({ Address, initialData, userId, updateId }) => {
         5000 || 0
     ).toFixed(2);
 
-    const applicableWeight = Math.max(deadWeight, volumetricWeight, 0.5);
+    const applicableWeight = Math.max(deadWeight, volumetricWeight, 0.25); // minimum chargeable weight 0.25 kg
 
     const totalPrice = products.reduce((total, product) => {
         const price = parseFloat(product.unitPrice) || 0;

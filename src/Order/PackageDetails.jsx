@@ -267,7 +267,7 @@ const PackageDetails = ({
           {/* Note Section */}
           <p className="text-[12px] text-gray-500 mt-2">
             <span className="text-red-500"> Note: </span>Note: The minimum
-            chargeable weight is <strong>0.50 Kg</strong>. Dimensions should be in{" "}
+            chargeable weight is <strong>0.25 Kg</strong>. Dimensions should be in{" "}
             <strong>centimeters only</strong> and values should be greater than{" "}
             <strong>0.50 cm</strong>.
           </p>

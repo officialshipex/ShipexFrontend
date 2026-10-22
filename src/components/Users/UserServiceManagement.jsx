@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import { Save, Info, Settings, Search } from "lucide-react";
-import { FiChevronDown, FiAlertCircle } from "react-icons/fi";
+import { FiChevronDown } from "react-icons/fi";
 import { Notification } from "../../Notification";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -370,13 +370,6 @@ export default function UserServiceManagement({
             </div>
           );
         })}
-      </div>
-
-      <div className="mx-4 mb-4 p-3 bg-yellow-50 border border-yellow-100 rounded-lg">
-        <p className="text-[10px] sm:text-[11px] text-yellow-800 font-bold leading-tight flex items-center gap-2">
-          <FiAlertCircle size={14} className="shrink-0 text-yellow-600" />
-          DTDC IS DISABLED BY DEFAULT FOR ALL NEW USERS.
-        </p>
       </div>
     </div>
   );
