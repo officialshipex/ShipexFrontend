@@ -13,6 +13,8 @@ const FALLBACK_BRANDING = {
   colors: { primary: "#0CBB7D", secondary: "#0F172A", accent: "#0CBB7D" },
   supportEmail: "support@shipexindia.com",
   supportPhone: "+91 98139 81344",
+  // true only for the platform's own company (Shipex), never a white-label one; off until the server says so
+  isDefaultCompany: false,
 };
 
 // A company's branding is remembered in this browser, per domain, so a returning visitor sees the right logo, name and
@@ -102,6 +104,7 @@ export function BrandingProvider({ children }) {
             colors: { ...FALLBACK_BRANDING.colors, ...(res.data.colors || {}) },
             supportEmail: res.data.supportEmail || FALLBACK_BRANDING.supportEmail,
             supportPhone: res.data.supportPhone || FALLBACK_BRANDING.supportPhone,
+            isDefaultCompany: res.data.isDefaultCompany === true,
           };
           setBranding(fresh);
           // From here on, this company's OWN calls to our backend (axiosInterceptor.js)

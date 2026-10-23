@@ -14,6 +14,7 @@ import DateFilter from "../../filter/DateFilter";
 import UserFilter from "../../filter/UserFilter";
 import { FiBell, FiX } from "react-icons/fi";
 import { Calculator } from "lucide-react";
+import NewUIBanner from "./NewUIBanner";
 
 const AnnouncementItem = ({ ann, idx, setAnnouncements, announcements }) => {
     const textRef = useRef(null);
@@ -181,6 +182,8 @@ const Dashboard = () => {
 
     return (
         <div className="sm:px-2">
+            {/* Shipex only: invitation to the new panel */}
+            <NewUIBanner />
             {announcements.length > 0 && announcements.map((ann, idx) => (
                 <AnnouncementItem 
                     key={idx} 
