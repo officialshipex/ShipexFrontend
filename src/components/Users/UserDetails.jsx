@@ -16,60 +16,13 @@ import EarlyCODModal from "../Billings/EarlyCodPopup";
 import UpdateCreditLimitEditModal from "./UpdateCreditLimitModal";
 import { User, MapPin, ExternalLink, CheckCircleIcon, Clock, CreditCard, IdCard, FileText, Settings, Info, Wallet, Download } from "lucide-react";
 import KamDetailsEditModal from "./KamDetailsEditModal";
+import { UserPlanModal } from "../../component/All setting/Invite Friends/ReferralProgramModals";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { FiChevronDown, FiArrowLeft, FiSearch, FiEdit, FiAlertCircle } from "react-icons/fi";
 import UploadRatecard from "../RateCard/UploadRatecard";
 import UserServiceManagement from "./UserServiceManagement";
 import Loader from "../../Loader";
 
-
-// Referral Commission Edit Modal
-const ReferralCommissionEditModal = ({
-  isOpen,
-  onClose,
-  userId,
-  currentValue,
-  onSave,
-}) => {
-  const [newValue, setNewValue] = useState(currentValue || "");
-
-  const handleSave = () => {
-    onSave(newValue);
-  };
-
-  if (!isOpen) return null;
-
-  return (
-    <div className="fixed inset-0 animate-popup-in bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white p-4 rounded-lg w-full max-w-md shadow-2xl">
-        <h2 className="text-[12px] sm:text-[14px] font-[600] mb-4 text-gray-700">
-          Update Referral Commission
-        </h2>
-        <input
-          type="number"
-          value={newValue}
-          onChange={(e) => setNewValue(e.target.value)}
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-[12px] sm:text-[14px] focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent"
-          placeholder="Enter commission percentage"
-        />
-        <div className="flex justify-end gap-3 mt-4">
-          <button
-            onClick={onClose}
-            className="px-3 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50 text-[10px] sm:text-[12px] font-[600] transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={handleSave}
-            className="px-3 py-2 rounded-lg bg-brand-primary text-white hover:bg-green-500 text-[10px] sm:text-[12px] font-[600] transition-colors"
-          >
-            Save
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-};
 
 // Change Password Modal
 const ChangePasswordModal = ({
@@ -458,23 +411,15 @@ export default function ProfileCard() {
     fetchUsers();
   }, [showAadharEditModal, showBankEditModal, id]);
 
-  const handleReferralSave = async (newValue) => {
-    try {
-      const token = Cookies.get("session");
-      const response = await axios.post(
-        `${REACT_APP_BACKEND_URL}/user/updateReferralCommission`,
-        { userId: id, referralCommissionPercentage: Number(newValue) },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
-      Notification("Referral Commission updated successfully!", "success");
-      setShowReferralModal(false);
-      fetchUsers();
-    } catch (error) {
-      Notification("Failed to update Referral Commission.", "error");
-      console.error("Error updating referral commission:", error);
-    }
-  };
+  // The referral commission plan this user is on (admin only)
+  const [referralPlanName, setReferralPlanName] = useState("");
+  useEffect(() => {
+    if (!admin || !id) return;
+    axios
+      .get(`${REACT_APP_BACKEND_URL}/referral/plans/user/${id}`, { headers: { Authorization: `Bearer ${Cookies.get("session")}` } })
+      .then((res) => setReferralPlanName(res.data?.plan?.name || ""))
+      .catch(() => {});
+  }, [admin, id]);
 
   const handleChangePassword = async (newPassword) => {
     try {
@@ -1058,11 +1003,11 @@ export default function ProfileCard() {
                   </div>
                 ))}
 
-                {!!admin && !!userData?.referralCommissionPercentage && (
+                {!!admin && !!userData && (
                   <div className="flex justify-between items-center">
-                    <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">Referral Commission</p>
+                    <p className="text-[10px] sm:text-[12px] font-[600] text-gray-500">Referral Commission Plan</p>
                     <div className="flex items-center gap-2">
-                      <p className="text-[10px] sm:text-[12px] text-gray-700 font-[600]">{userData.referralCommissionPercentage}%</p>
+                      <p className="text-[10px] sm:text-[12px] text-gray-700 font-[600]">{referralPlanName || "-"}</p>
                       <button onClick={() => setShowReferralModal(true)} className="text-brand-primary hover:text-green-500">
                         <FiEdit size={12} />
                       </button>
@@ -1314,13 +1259,9 @@ export default function ProfileCard() {
         isOpen={showGstEditModal}
         onClose={() => setShowGstEditModal(false)}
       />
-      <ReferralCommissionEditModal
-        isOpen={showReferralModal}
-        onClose={() => setShowReferralModal(false)}
-        userId={id}
-        currentValue={userData?.referralCommissionPercentage}
-        onSave={handleReferralSave}
-      />
+      {showReferralModal && (
+        <UserPlanModal userId={id} onClose={() => setShowReferralModal(false)} onSaved={(name) => setReferralPlanName(name)} />
+      )}
       <UpdateCreditLimitEditModal
         isOpen={showCreditLimitModal}
         onClose={() => setShowCreditLimitModal(false)}

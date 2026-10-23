@@ -62,7 +62,8 @@ export default function Signup({ setIsAuthenticated }) {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const code = params.get("code");
+    // ?code= (a user's referral link) or ?ref= (a sales person's link)
+    const code = params.get("code") || params.get("ref");
     if (code) {
       setReferralCode(code);
     }
@@ -189,19 +190,19 @@ export default function Signup({ setIsAuthenticated }) {
                 className="w-full py-2 px-3 border rounded-lg text-[12px] font-[600] text-gray-700 outline-none"
               />
             </div>
-            {referralCode && (
-              <div>
-                <label className="text-gray-700 text-[12px] font-[600]">
-                  Referral Code
-                </label>
-                <input
-                  type="text"
-                  value={referralCode}
-                  readOnly
-                  className="w-full py-2 px-3 border rounded-lg font-[600] text-gray-700 text-[12px] outline-none bg-gray-100 cursor-not-allowed"
-                />
-              </div>
-            )}
+            <div>
+              <label className="text-gray-700 text-[12px] font-[600]">
+                Referral Code <span className="font-[400] text-gray-400">(optional)</span>
+              </label>
+              <input
+                type="text"
+                value={referralCode || ""}
+                onChange={(e) => setReferralCode(e.target.value.toUpperCase().trim() || null)}
+                placeholder="Code from a friend or your sales contact"
+                autoComplete="off"
+                className="w-full py-2 px-3 border rounded-lg font-[600] text-gray-700 text-[12px] outline-none uppercase"
+              />
+            </div>
             <div>
               <label className="text-gray-700 text-[12px] font-[600]">
                 Phone

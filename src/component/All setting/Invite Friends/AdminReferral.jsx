@@ -2,7 +2,8 @@ import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import dayjs from "dayjs";
-import { Filter, ChevronDown, Users, Truck, CircleDollarSign, Wallet, MoreHorizontal, Eye, Download, Search, X } from "lucide-react";
+import { Filter, ChevronDown, Users, Truck, CircleDollarSign, Wallet, MoreHorizontal, Eye, Download, Search, X, Gift, Settings, Award } from "lucide-react";
+import { ReferralSettingsModal, ReferralBonusesModal, ReferralPlansModal } from "./ReferralProgramModals";
 import * as XLSX from "xlsx";
 import Loader from "../../../Loader";
 import ReferralDetailsModal from "./ReferralDetailsModal";
@@ -13,6 +14,8 @@ import PaginationFooter from "../../../Common/PaginationFooter";
 
 const AdminReferral = () => {
   const [data, setData] = useState([]);
+  // "settings" | "bonuses" | null — the referral programme modals
+  const [programModal, setProgramModal] = useState(null);
   const [summary, setSummary] = useState({
     totalUsers: 0,
     totalOrders: 0,
@@ -208,6 +211,11 @@ const AdminReferral = () => {
       value: `₹${Number(summary.totalCommission || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
       icon: <Wallet className="w-4 h-4" />
     },
+    {
+      title: `Joining Bonuses (${summary.bonusCount || 0})`,
+      value: `₹${Number(summary.totalBonus || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+      icon: <Gift className="w-4 h-4" />
+    },
   ];
 
   return (
@@ -226,7 +234,7 @@ const AdminReferral = () => {
       </div>
 
       {/* Summary Grid - Desktop/Tablet View */}
-      <div className="hidden sm:grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div className="hidden sm:grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-2">
         {summaryCards.map((card, i) => (
           <div key={i} className="bg-white border border-brand-primary rounded-lg p-3 flex items-center gap-3 shadow-sm hover:shadow-md transition-all">
             <div className="p-2 rounded-full flex justify-center items-center bg-brand-primary text-white">
@@ -267,6 +275,27 @@ const AdminReferral = () => {
                 >
                   <Wallet className="w-4 h-4 text-brand-primary" />
                   Transfer Referral Amount
+                </button>
+                <button
+                  onClick={() => { setProgramModal("bonuses"); setIsActionDropdownOpen(false); }}
+                  className="w-full text-left px-4 py-2 text-[12px] text-gray-700 hover:bg-gray-50 flex items-center gap-2 border-t"
+                >
+                  <Gift className="w-4 h-4 text-brand-primary" />
+                  Joining Bonuses Paid
+                </button>
+                <button
+                  onClick={() => { setProgramModal("plans"); setIsActionDropdownOpen(false); }}
+                  className="w-full text-left px-4 py-2 text-[12px] text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                >
+                  <Award className="w-4 h-4 text-brand-primary" />
+                  Commission Plans
+                </button>
+                <button
+                  onClick={() => { setProgramModal("settings"); setIsActionDropdownOpen(false); }}
+                  className="w-full text-left px-4 py-2 text-[12px] text-gray-700 hover:bg-gray-50 flex items-center gap-2"
+                >
+                  <Settings className="w-4 h-4 text-brand-primary" />
+                  Referral Programme Settings
                 </button>
                 <button
                   onClick={handleExport}
@@ -476,6 +505,10 @@ const AdminReferral = () => {
         }}
         showUserFilter={false}
       />
+
+      {programModal === "settings" && <ReferralSettingsModal onClose={() => setProgramModal(null)} />}
+      {programModal === "bonuses" && <ReferralBonusesModal onClose={() => setProgramModal(null)} />}
+      {programModal === "plans" && <ReferralPlansModal onClose={() => setProgramModal(null)} />}
 
       {/* Transfer Modal */}
       {isTransferModalOpen && (

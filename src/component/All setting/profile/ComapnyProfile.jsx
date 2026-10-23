@@ -632,9 +632,9 @@ export default function ProfileCard() {
                     Referral Commission
                   </p>
                   <div className="flex items-center gap-2">
-                    <p className="text-[10px] sm:text-[12px] text-gray-700 font-[600]">
-                      {userData.referralCommissionPercentage}%
-                    </p>
+                    <a href="/dashboard/settings/referral" className="text-[10px] sm:text-[12px] text-brand-primary font-[600] hover:underline">
+                      Slab plan - view in Invite Friends
+                    </a>
 
                   </div>
                 </div>

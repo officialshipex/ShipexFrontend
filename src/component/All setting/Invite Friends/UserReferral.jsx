@@ -3,7 +3,7 @@ import { FiCopy, FiCheck } from "react-icons/fi";
 import axios from "axios";
 import dayjs from "dayjs";
 import Cookies from "js-cookie";
-import { Filter, Users, Truck, CircleDollarSign, Wallet, Lock, Info, ExternalLink, ChevronDown, Download, CheckSquare, Square } from "lucide-react";
+import { Filter, Users, Truck, CircleDollarSign, Wallet, Info, ExternalLink, ChevronDown, Download, CheckSquare, Square, Gift } from "lucide-react";
 import * as XLSX from "xlsx";
 import Loader from "../../../Loader";
 import { Notification } from "../../../Notification";
@@ -11,6 +11,7 @@ import ReferralFilterPanel from "../../../Common/ReferralFilterPanel";
 import NoDataFound from "../../../Common/NoDataFound";
 import PaginationFooter from "../../../Common/PaginationFooter";
 import { useBranding } from "../../../context/BrandingContext";
+import { SlabBadge } from "./ReferralProgramModals";
 
 const Referral = () => {
   const { companyDisplayName } = useBranding();
@@ -21,7 +22,15 @@ const Referral = () => {
     totalCommission: 0,
     withdrawn: 0,
     remaining: 0,
+    bonusEarned: 0,
+    bonusCount: 0,
   });
+  // The company's programme (joining bonus rule), this user's commission plan and this month so far,
+  // and the friends this user referred
+  const [program, setProgram] = useState(null);
+  const [plan, setPlan] = useState(null);
+  const [currentMonth, setCurrentMonth] = useState(null);
+  const [referredUsers, setReferredUsers] = useState([]);
 
   const [referralUrl, setReferralUrl] = useState("");
   const [referralCode, setReferralCode] = useState("");
@@ -100,6 +109,10 @@ const Referral = () => {
       setMonthlyData(data.monthlyData);
       setTotalPages(data.totalPages || 1);
       setCommissionPercentage(data.referralCommissionPercentage);
+      setProgram(data.program || null);
+      setPlan(data.plan || null);
+      setCurrentMonth(data.currentMonth || null);
+      setReferredUsers(data.referredUsers || []);
       setLoading(false);
     } catch (err) {
       console.error("Failed to load referral data", err);
@@ -191,16 +204,26 @@ const Referral = () => {
   const statsArray = [
     { title: "Referred Friends", value: stats.referredFriends, icon: <Users className="w-4 h-4" /> },
     { title: "Referral Orders", value: stats.referralOrders, icon: <Truck className="w-4 h-4" /> },
-    { title: "Total Shipping", value: `₹${Number(stats.totalShipping || 0).toFixed(2)}`, icon: <CircleDollarSign className="w-4 h-4" /> },
-    { title: "Total Commission", value: `₹${Number(stats.totalCommission || 0).toFixed(2)}`, icon: <Wallet className="w-4 h-4" /> },
-    { title: "Withdrawn", value: `₹${Number(stats.withdrawn || 0).toFixed(2)}`, icon: <Lock className="w-4 h-4" /> },
-    { 
-      title: "Remaining", 
-      value: `₹${Number(stats.remaining || 0).toFixed(2)}`, 
+    { title: `Joining Bonus (${stats.bonusCount || 0})`, value: `₹${Number(stats.bonusEarned || 0).toFixed(2)}`, icon: <Gift className="w-4 h-4" /> },
+    { title: "Total Commission", value: `₹${Number(stats.totalCommission || 0).toFixed(2)}`, icon: <CircleDollarSign className="w-4 h-4" /> },
+    { title: "Credited to Wallet", value: `₹${Number(stats.withdrawn || 0).toFixed(2)}`, icon: <Wallet className="w-4 h-4" /> },
+    {
+      title: "Not in Wallet Yet",
+      value: `₹${Number(stats.remaining || 0).toFixed(2)}`,
       icon: <Info className="w-4 h-4" />,
       showWithdraw: Number(stats.remaining || 0) > 0
     },
   ];
+
+  const bonusRule = program?.joiningBonus;
+  const fmtDay = (d) => (d ? dayjs(d).format("DD MMM YYYY") : "-");
+  const BONUS_LABEL = {
+    credited: (f) => ({ text: `₹${Number(f.bonusAmount || 0).toFixed(0)} credited`, cls: "text-green-700" }),
+    processing: () => ({ text: "Being credited", cls: "text-brand-primary" }),
+    pending: (f) => ({ text: `Waiting till ${fmtDay(f.bonusDeadline)}`, cls: "text-amber-600" }),
+    expired: () => ({ text: "Time limit passed", cls: "text-gray-400" }),
+    not_eligible: () => ({ text: "First recharge too small", cls: "text-gray-400" }),
+  };
 
   const isAnyFilterApplied = selectedMonth || selectedYear;
 
@@ -212,12 +235,22 @@ const Referral = () => {
           <ExternalLink className="w-12 h-12 text-brand-primary" />
         </div> */}
         <h1 className="text-[14px] font-[700] text-gray-700 mb-1">Referral Dashboard</h1>
-        <p className="text-gray-500 text-[11px] max-w-2xl">
-          Get commission from referral revenue at the end of every month. You can withdraw this commission directly to your wallet.
-          {commissionPercentage !== null && (
-            <span className="block mt-1 font-bold text-brand-primary">You currently earn {commissionPercentage}% commission on your referral revenue.</span>
-          )}
+        <p className="text-gray-500 text-[11px] max-w-3xl">
+          Share your referral link. Everything you earn is added straight to your {companyDisplayName} wallet.
         </p>
+        <ul className="mt-1.5 space-y-0.5 text-[11px] text-gray-600 max-w-3xl list-disc pl-4">
+          {bonusRule?.enabled && Number(bonusRule.amount) > 0 && (
+            <li>
+              <span className="font-bold text-brand-primary">₹{Number(bonusRule.amount).toFixed(0)} joining bonus</span> for every friend who
+              {bonusRule.requireKyc ? " completes KYC and" : ""} makes a first recharge of at least ₹{Number(bonusRule.minFirstRecharge).toFixed(0)} within {bonusRule.withinDays} days of signing up.
+            </li>
+          )}
+          {commissionPercentage !== null && (
+            <li>
+              <span className="font-bold text-brand-primary">Monthly commission</span> on the shipping charges of your friends' shipments that go in transit — the more they ship in the month, the higher your % (see your plan below). Added at the end of every month.
+            </li>
+          )}
+        </ul>
       </div>
 
       {/* Stats Cards - Mobile View */}
@@ -323,6 +356,87 @@ const Referral = () => {
           )}
         </div>
       </div>
+
+      {/* This month on the commission plan */}
+      {!loading && plan && currentMonth && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+          <div className="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="text-[11px] font-bold text-gray-500">This month so far</p>
+                <p className="text-[18px] font-bold text-gray-700">₹{Number(currentMonth.amount || 0).toFixed(2)}</p>
+                <p className="text-[11px] text-gray-500">
+                  {currentMonth.percent}% of ₹{Number(currentMonth.freight || 0).toFixed(2)} · {currentMonth.shipments} in-transit shipments
+                </p>
+              </div>
+              <SlabBadge badge={currentMonth.badge} color={currentMonth.badgeColor} />
+            </div>
+            <div className="mt-2">
+              <div className="flex justify-between text-[11px]">
+                <span className="font-[600] text-gray-600">
+                  {currentMonth.nextSlab
+                    ? `Next: ${currentMonth.nextSlab.percent}%${currentMonth.nextSlab.badge ? ` (${currentMonth.nextSlab.badge})` : ""} at ${currentMonth.nextSlab.minShipments} shipments`
+                    : "Top slab reached"}
+                </span>
+                {currentMonth.nextSlab && <span className="text-gray-400">{currentMonth.nextSlab.needed} to go</span>}
+              </div>
+              <div className="mt-1 h-2 rounded-full bg-gray-100 overflow-hidden">
+                <div
+                  className="h-full rounded-full bg-brand-primary"
+                  style={{ width: `${currentMonth.nextSlab ? Math.min(100, Math.round((currentMonth.shipments / Math.max(1, currentMonth.nextSlab.minShipments)) * 100)) : 100}%` }}
+                />
+              </div>
+            </div>
+          </div>
+          <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+            <div className="px-3 py-2 border-b border-gray-100 text-[12px] font-bold text-gray-700">Your commission plan · {plan.name}</div>
+            <table className="w-full text-[11px]">
+              <tbody>
+                {plan.slabs.map((s) => {
+                  const on = s.percent === currentMonth.percent && (s.badge || "") === (currentMonth.badge || "");
+                  return (
+                    <tr key={s.minShipments} className={`border-b border-gray-100 last:border-0 ${on ? "bg-brand-secondary/20" : ""}`}>
+                      <td className="py-1.5 px-3 text-gray-600">
+                        {Number(s.minShipments).toLocaleString("en-IN")}
+                        {s.maxShipments ? ` - ${Number(s.maxShipments).toLocaleString("en-IN")}` : " and above"} shipments
+                      </td>
+                      <td className="py-1.5 px-3 font-bold text-gray-700">{s.percent}%</td>
+                      <td className="py-1.5 px-3 text-right">
+                        <SlabBadge badge={s.badge} color={s.color} />
+                        {on && <span className="ml-1 text-[10px] font-bold text-brand-primary">You're here</span>}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
+
+      {/* Friends referred and their joining bonus */}
+      {!loading && referredUsers.length > 0 && (
+        <div className="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden">
+          <div className="px-3 py-2 border-b border-gray-100 flex items-center gap-2">
+            <Gift className="w-4 h-4 text-brand-primary" />
+            <h2 className="text-[12px] font-bold text-gray-700">Friends you referred</h2>
+          </div>
+          <div className="max-h-[220px] overflow-y-auto divide-y divide-gray-100">
+            {referredUsers.map((f) => {
+              const b = (BONUS_LABEL[f.bonusStatus] || BONUS_LABEL.not_eligible)(f);
+              return (
+                <div key={f._id} className="px-3 py-2 flex items-center justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-[12px] font-[600] text-gray-700 truncate">{f.name}</p>
+                    <p className="text-[10px] text-gray-400">Joined {fmtDay(f.joinedAt)} · KYC {f.kycDone ? "done" : "pending"}</p>
+                  </div>
+                  <span className={`text-[11px] font-bold whitespace-nowrap ${b.cls}`}>{b.text}</span>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Table / Cards Container */}
       {loading ? (
@@ -465,7 +579,7 @@ const Referral = () => {
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[100] animate-fade-in p-4">
           <div className="bg-white rounded-lg shadow-2xl w-full max-w-md overflow-hidden animate-popup-in">
             <div className="px-4 py-3 border-b bg-gray-50 flex items-center justify-between">
-              <h2 className="text-[14px] font-bold text-gray-700">Withdraw Commission</h2>
+              <h2 className="text-[14px] font-bold text-gray-700">Transfer Commission to Wallet</h2>
               <button onClick={() => setIsWithdrawModalOpen(false)} className="text-gray-400 hover:text-gray-600">
                 <FiCheck className="w-5 h-5 rotate-45" /> {/* Use Check as a pseudo X or just import X */}
               </button>
@@ -473,7 +587,7 @@ const Referral = () => {
             
             <div className="p-6 space-y-4">
               <div className="text-center">
-                <p className="text-[12px] text-gray-500 mb-1">Available for Withdrawal</p>
+                <p className="text-[12px] text-gray-500 mb-1">Earlier commission not in your wallet yet</p>
                 <p className="text-[24px] font-bold text-brand-primary">₹{Number(stats.remaining || 0).toFixed(2)}</p>
               </div>
 
