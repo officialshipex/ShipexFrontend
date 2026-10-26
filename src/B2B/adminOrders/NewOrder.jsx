@@ -196,12 +196,11 @@ const NewOrder = ({ userId: initialUserId }) => {
     const token = Cookies.get("session");
 
     try {
-      const checkResponse = await axios.get(
+      // order IDs in the body: a large selection (500+) does not fit in a URL
+      const checkResponse = await axios.post(
         `${REACT_APP_BACKEND_URL}/order/checkBulkUser`,
-        {
-          params: { orderIds: selectedOrders },
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { orderIds: selectedOrders },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (!checkResponse.data.success) {
@@ -211,12 +210,10 @@ const NewOrder = ({ userId: initialUserId }) => {
 
       setBulkUserId(checkResponse.data.userId);
 
-      const pickupCheckResponse = await axios.get(
+      const pickupCheckResponse = await axios.post(
         `${REACT_APP_BACKEND_URL}/order/checkBulkPickup`,
-        {
-          params: { orderIds: selectedOrders },
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        { orderIds: selectedOrders },
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       const { showPopup, orders: pickupOrders } = pickupCheckResponse.data;

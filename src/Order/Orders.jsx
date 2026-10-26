@@ -239,8 +239,8 @@ const Orders = (filterOrder) => {
     }
     try {
       const token = Cookies.get("session");
-      const checkResponse = await axios.get(`${REACT_APP_BACKEND_URL}/order/checkBulkPickup`, {
-        params: { orderIds: selectedOrders },
+      // order IDs in the body: a large selection (500+) does not fit in a URL
+      const checkResponse = await axios.post(`${REACT_APP_BACKEND_URL}/order/checkBulkPickup`, { orderIds: selectedOrders }, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const { orders: popupOrders } = checkResponse.data;
@@ -250,7 +250,7 @@ const Orders = (filterOrder) => {
       setSelectedData(popupOrders);
     } catch (error) {
       
-      Notification("Something went wrong while processing bulk shipment.", "error");
+      Notification(error?.response?.data?.message || "Something went wrong while processing bulk shipment.", "error");
     }
   };
 
@@ -514,7 +514,7 @@ const Orders = (filterOrder) => {
               refreshNotifications();
               fetchOrders();
             } catch (error) {
-              Notification("Something went wrong while processing bulk shipment.", "error");
+              Notification(error?.response?.data?.message || "Something went wrong while processing bulk shipment.", "error");
             } finally {
               setShowBulkShipModal(false);
             }

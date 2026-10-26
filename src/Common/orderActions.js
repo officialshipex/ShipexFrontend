@@ -123,8 +123,12 @@ export const handleBulkDownloadManifests = async (selectedOrders) => {
       return;
     }
 
-    const orderIds = selectedOrders.join(",");
-    const response = await fetch(`${REACT_APP_BACKEND_URL}/manifest/generate-pdf?orderIds=${orderIds}`, { headers: devTenantHeaders() });
+    // order IDs in the body: a large selection (600+) does not fit in a URL
+    const response = await fetch(`${REACT_APP_BACKEND_URL}/manifest/generate-pdf`, {
+      method: "POST",
+      headers: { ...devTenantHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify({ orderIds: selectedOrders }),
+    });
 
     if (!response.ok) {
       throw new Error("Failed to fetch manifest");
@@ -323,30 +327,17 @@ export const handleBulkDownloadLabel = async ({ selectedOrders }) => {
       return;
     }
 
-    // ── 1. Fetch user's label settings to determine page layout ──────────
-    let labelSize = "A4"; // default
-    try {
-      const token = Cookies.get("session");
-      const settingsRes = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/label/getLabel`), {
-        headers: { authorization: `Bearer ${token}`, ...devTenantHeaders() },
-      });
-      if (settingsRes.ok) {
-        const settingsData = await settingsRes.json();
-        labelSize = settingsData.labelSize || "A4";
-      }
-    } catch (_) {
-      // silently fall back to A4
-    }
-
-    const isThermal = labelSize === "thermal";
+    // ── 1. Layout follows each LABEL, not the person downloading ─────────
+    // The backend draws a thermal label on a 4"×6" page (288×432 pt) and an A4 label on an A4 page, from the ORDER
+    // OWNER's printer setting. A 4"×6" label goes on its own 4"×6" page (one label per sheet); A4 labels keep the
+    // A4 layout (full page for 1–2, otherwise 2×2). Deciding from the downloader's own setting put a thermal
+    // seller's labels four to an A4 page whenever an admin (A4) downloaded them.
+    const isThermalPage = (p) => p.getWidth() <= 320 && p.getHeight() <= 480;
 
     const mergedPdf = await PDFDocument.create();
     // A4 pts
     const pageWidth  = 595;
     const pageHeight = 842;
-    // Thermal pts (4"×6" at 72 dpi)
-    const thermalW = 288;
-    const thermalH = 432;
 
     const labelWidth  = pageWidth  / 2; // for 2×2 grid
     const labelHeight = pageHeight / 2;
@@ -363,7 +354,8 @@ export const handleBulkDownloadLabel = async ({ selectedOrders }) => {
       ),
     );
 
-    // ── 3. Download and assemble each label ──────────────────────────────
+    // ── 3. Download every label, then lay them out ───────────────────────
+    const labelPages = [];
     for (const orderData of orderResponses) {
       let response;
       if (isAmazonAtsOrder(orderData) && orderData.label) {
@@ -380,34 +372,37 @@ export const handleBulkDownloadLabel = async ({ selectedOrders }) => {
         existingPdf.getPageIndices(),
       );
 
-      for (const page of copiedPages) {
-        if (isThermal) {
-          // Thermal: one label per 4"×6" page, no grid
-          const tPage = mergedPdf.addPage([thermalW, thermalH]);
-          const embedded = await mergedPdf.embedPage(page);
-          tPage.drawPage(embedded, { x: 0, y: 0, width: thermalW, height: thermalH });
-        } else if (selectedOrders.length <= 2) {
-          // A4, 1–2 labels: full page each
-          const newPage = mergedPdf.addPage([pageWidth, pageHeight]);
-          const embedded = await mergedPdf.embedPage(page);
-          newPage.drawPage(embedded, { x: 0, y: 0, width: pageWidth, height: pageHeight });
-        } else {
-          // A4, 3+ labels: 2×2 grid
-          if (labelCount % 4 === 0) {
-            currentPage = mergedPdf.addPage([pageWidth, pageHeight]);
-          }
-          const x = (labelCount % 2) * labelWidth;
-          const y = pageHeight - ((Math.floor(labelCount / 2) % 2) + 1) * labelHeight;
-          const embedded = await mergedPdf.embedPage(page);
-          currentPage.drawPage(embedded, { x, y, width: labelWidth, height: labelHeight });
-          labelCount++;
+      labelPages.push(...copiedPages);
+    }
+
+    const a4Total = labelPages.filter((p) => !isThermalPage(p)).length;
+    for (const page of labelPages) {
+      if (isThermalPage(page)) {
+        // Thermal: one label per 4"×6" page, as generated
+        mergedPdf.addPage(page);
+      } else if (a4Total <= 2) {
+        // A4, 1–2 labels: full page each
+        const newPage = mergedPdf.addPage([pageWidth, pageHeight]);
+        const embedded = await mergedPdf.embedPage(page);
+        newPage.drawPage(embedded, { x: 0, y: 0, width: pageWidth, height: pageHeight });
+      } else {
+        // A4, 3+ labels: 2×2 grid
+        if (labelCount % 4 === 0) {
+          currentPage = mergedPdf.addPage([pageWidth, pageHeight]);
         }
+        const x = (labelCount % 2) * labelWidth;
+        const y = pageHeight - ((Math.floor(labelCount / 2) % 2) + 1) * labelHeight;
+        const embedded = await mergedPdf.embedPage(page);
+        currentPage.drawPage(embedded, { x, y, width: labelWidth, height: labelHeight });
+        labelCount++;
       }
     }
 
     const mergedPdfBytes = await mergedPdf.save();
     const mergedBlob = new Blob([mergedPdfBytes], { type: "application/pdf" });
-    saveAs(mergedBlob, `bulk-labels${isThermal ? "-thermal" : ""}.pdf`);
+    // "-thermal" in the file name when every label is a 4"×6" thermal label
+    const allThermal = labelPages.length > 0 && a4Total === 0;
+    saveAs(mergedBlob, `bulk-labels${allThermal ? "-thermal" : ""}.pdf`);
 
     Notification("Labels downloaded successfully!", "success");
   } catch (error) {
