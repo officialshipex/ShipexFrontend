@@ -9,6 +9,10 @@ import Cookies from "js-cookie";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
+// A Shiprocket service is stored as provider "Shiprocket" + courierName = the Shiprocket account it books with
+// (a company may hold several); show the account the admin picked.
+const providerLabel = (svc) => (svc?.provider === "Shiprocket" && svc?.courierName ? svc.courierName : svc?.provider);
+
 // --- Delete Warning & Confirmation Modal ---
 const DeleteServiceModal = ({ isOpen, onClose, servicesToDelete, onDeleted }) => {
   const [stats, setStats] = useState(null);
@@ -180,7 +184,7 @@ const DeleteServiceModal = ({ isOpen, onClose, servicesToDelete, onDeleted }) =>
                         </div>
                         <div className="flex items-center gap-2">
                           <span className="text-[10px] font-bold bg-brand-primary/10 text-brand-primary px-2 py-0.5 rounded border border-brand-primary/20">
-                            {svc.provider}
+                            {providerLabel(svc)}
                           </span>
                           {svcStat && (
                             <span className="text-[10px] font-semibold bg-red-50 text-red-600 px-2 py-0.5 rounded border border-red-200">
@@ -374,7 +378,7 @@ const CourierServiceList = ({ refresh, canUpdate = true }) => {
     if (searchQuery) {
       result = result.filter(courier =>
         courier.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        courier.provider?.toLowerCase().includes(searchQuery.toLowerCase())
+        providerLabel(courier)?.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
@@ -609,7 +613,7 @@ const CourierServiceList = ({ refresh, canUpdate = true }) => {
                     </td>
                     <td className="py-2 px-3">
                       <span className="text-brand-primary font-[700] bg-brand-primary/5 px-2 py-0.5 rounded-md border border-brand-primary/10">
-                        {courier.provider}
+                        {providerLabel(courier)}
                       </span>
                     </td>
                     <td className="py-2 px-3 whitespace-nowrap">
@@ -735,7 +739,7 @@ const CourierServiceList = ({ refresh, canUpdate = true }) => {
               <div className="grid grid-cols-2 text-[10px]">
                 <div className="flex flex-col">
                   <span className="text-gray-700">Provider</span>
-                  <span className="text-brand-primary font-[600]">{courier.provider}</span>
+                  <span className="text-brand-primary font-[600]">{providerLabel(courier)}</span>
                 </div>
                 <div className="flex flex-col items-end">
                   <span className="text-gray-700">Status</span>

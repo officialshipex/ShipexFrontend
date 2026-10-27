@@ -40,7 +40,8 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
   const providerTypeOf = (name) =>
     courierProviders.find((c) => c.courierName === name)?.courierProvider || name;
 
-  const fetchServicesForProvider = async (providerName) => {
+  // accountName: for Shiprocket, which of the company's Shiprocket accounts to list couriers from
+  const fetchServicesForProvider = async (providerName, accountName) => {
     setProviderServices([]);
     setServicesLoading(true);
     try {
@@ -58,7 +59,9 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
           services = xpressRes.data.map((item) => ({ service: item.service, courier_id: item.courier_id || item.provider_courier_id }));
           break;
         case "Shiprocket":
-          const shipRes = await axios.get(`${REACT_APP_BACKEND_URL}/Shiprocket/getAllActiveCourierServices`);
+          const shipRes = await axios.get(`${REACT_APP_BACKEND_URL}/Shiprocket/getAllActiveCourierServices`, {
+            params: accountName ? { account: accountName } : undefined,
+          });
           services = shipRes.data; // Store full objects [{service, provider_courier_id}]
           break;
         case "ShipexIndia":
@@ -128,6 +131,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
       setFormData({
         _id: editCourier._id || null,
         id: editCourier.id || null,
+        // a Shiprocket service is edited under its account (courierName), see the effect below
         provider: editCourier.provider || "",
         courier: editCourier.courier || "",
         courierType: editCourier.courierType || "",
@@ -136,9 +140,19 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         courier_id: editCourier.courier_id || "",
       });
       setSelectedProvider(editCourier.provider);
-      fetchServicesForProvider(providerTypeOf(editCourier.provider));
+      fetchServicesForProvider(providerTypeOf(editCourier.provider), editCourier.courierName || editCourier.provider);
     }
   }, [location.state, isSidebarAdmin, refresh]);
+
+  // Editing a Shiprocket service: once the accounts are loaded, show the account it belongs to as its provider.
+  useEffect(() => {
+    const editCourier = location.state?.courierToEdit;
+    if (!editCourier || editCourier.provider !== "Shiprocket" || !editCourier.courierName) return;
+    const account = courierProviders.find((c) => c.courierName === editCourier.courierName && c.courierProvider === "Shiprocket");
+    if (!account) return;
+    setFormData((prev) => (prev.provider === "Shiprocket" ? { ...prev, provider: account.courierName } : prev));
+    setSelectedProvider((prev) => (prev === "Shiprocket" ? account.courierName : prev));
+  }, [courierProviders, location.state]);
 
   const canSave = isSidebarAdmin || employeeAccess.canAction || employeeAccess.canUpdate;
   const canView = isSidebarAdmin || employeeAccess.canView;
@@ -151,7 +165,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
     if (name === "provider") {
       setSelectedProvider(value);
       setFormData((prev) => ({ ...prev, courier: "", courier_id: "" }));
-      fetchServicesForProvider(providerTypeOf(value));
+      fetchServicesForProvider(providerTypeOf(value), value);
     }
     
     if (name === "courier" && (providerTypeOf(selectedProvider) === "Shiprocket" || /^xpress\s*bees$/i.test(providerTypeOf(selectedProvider)))) {
