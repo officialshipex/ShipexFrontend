@@ -6,6 +6,7 @@ import { getCarrierLogo } from "../Common/getCarrierLogo";
 import { FiCopy, FiCheck } from "react-icons/fi";
 
 import { handleTrackingByAwb } from "../Common/orderActions";
+import { orderReferenceOf } from "./customerOrderId";
 const MobileOrderCard = ({
     order,
     index,
@@ -195,7 +196,7 @@ const MobileOrderCard = ({
                     {dayjs(order.createdAt).format("hh:mm A")}
                 </p>
                 <div className="flex justify-center items-center gap-2">
-                    <p>{order.channelOrderName || order.channelId}</p>
+                    <p>{orderReferenceOf(order)}</p>
                     <span className="uppercase text-brand-primary bg-brand-secondary/26 px-2 rounded">
                         {order.channel || "CUSTOM"}
                     </span>

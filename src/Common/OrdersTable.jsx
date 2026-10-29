@@ -6,6 +6,7 @@ import ThreeDotLoader from "../Loader";
 import NoDataFound from "../Common/NoDataFound";
 import OrderRowActions from "./OrderRowActions";
 import { handleTrackingByAwb } from "./orderActions";
+import { orderReferenceOf } from "./customerOrderId";
 
 const OrdersTable = ({
     orders,
@@ -205,13 +206,13 @@ const OrdersTable = ({
                                         {order?.channel === "WooCommerce" ? "Woo" : (order?.channel || "CUSTOM")}
                                     </p>
                                     {/* CHANNEL ID (Show for all channels if exists) */}
-                                    {/* CHANNEL ORDER REFERENCE — the seller's own channel order
-                                        number/name (e.g. Shopify's "#VN55038") so it matches what they
-                                        see in that channel's own admin panel. Older synced orders may
-                                        not have channelOrderName yet, so fall back to the raw channelId
-                                        rather than showing nothing. */}
-                                    {(order?.channelOrderName || order?.channelId) && (
-                                        <p className="text-gray-500 text-[10px]">({order.channelOrderName || order.channelId})</p>
+                                    {/* CUSTOMER ORDER REFERENCE — the seller's own order id: the one they
+                                        gave on bulk upload / the API, else the channel's order number/name
+                                        (e.g. Shopify's "#VN55038") so it matches their own records. Older
+                                        synced orders may not have channelOrderName yet, so fall back to the
+                                        raw channelId rather than showing nothing. */}
+                                    {orderReferenceOf(order) && (
+                                        <p className="text-gray-500 text-[10px]">({orderReferenceOf(order)})</p>
                                     )}
                                 </div>
                             </td>

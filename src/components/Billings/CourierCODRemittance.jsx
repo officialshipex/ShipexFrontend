@@ -1,3 +1,4 @@
+import { customerOrderIdOf } from "../../Common/customerOrderId";
 import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -198,6 +199,7 @@ const CourierCODRemittance = ({ isSidebarAdmin }) => {
       "Email": row.Email || "N/A",
       "Phone": row.PhoneNumber || "N/A",
       "Order ID": row.orderID,
+      "Customer Order ID": customerOrderIdOf(row),
       "AWB Number": row.AwbNumber,
       "Courier Name": row.courierServiceName,
       "COD Amount": row.CODAmount || 0,

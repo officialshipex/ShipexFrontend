@@ -1,3 +1,4 @@
+import { customerOrderIdOf } from "../../../Common/customerOrderId";
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
@@ -140,6 +141,7 @@ const OrderEscalatedDiscrepancy = () => {
             .filter(order => selectedOrders.includes(order._id))
             .map(order => ({
                 "Order ID": order.orderId,
+                "Customer Order ID": customerOrderIdOf(order),
                 "AWB Number": order.awbNumber,
                 "Courier": order.courierServiceName,
                 "Provider": order.provider,

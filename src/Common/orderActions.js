@@ -6,6 +6,7 @@ import * as XLSX from "xlsx";
 import { Notification } from "../Notification";
 import { toTenantUrl } from "../utils/tenantApiDomain";
 import { refreshNotifications } from "../utils/NotificationListProvider";
+import { customerOrderIdOf } from "./customerOrderId";
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 // Plain fetch() calls skip the axios interceptor, which is what tells the backend which company a local
@@ -155,6 +156,7 @@ export const ExportExcel = ({ selectedOrders, orders }) => {
     .filter((order) => selectedOrders.includes(order._id))
     .map((order) => ({
       "Order ID": order.orderId,
+      "Customer Order ID": customerOrderIdOf(order),
       "Order Status": order.status,
       "Order Date": new Date(order.createdAt).toLocaleString(),
       "Sender Name": order.pickupAddress?.contactName,

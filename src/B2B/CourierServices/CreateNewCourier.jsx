@@ -34,7 +34,13 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
   const [refresh, setRefresh] = useState(false);
   const [loadingServices, setLoadingServices] = useState(false);
 
-  const fetchServicesForProvider = async (providerName) => {
+  // The Provider dropdown lists courier ACCOUNTS (a company may hold several of one courier, e.g. two Shiprocket
+  // accounts); what decides the courier list is the account's courier type, and Shiprocket lists the couriers of
+  // that account itself.
+  const providerTypeOf = (name) =>
+    courierProviders.find((c) => c.courierName === name)?.courierProvider || name;
+
+  const fetchServicesForProvider = async (providerName, accountName) => {
     setLoadingServices(true);
     try {
       let services = [];
@@ -48,7 +54,9 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
           services = xpressRes.data.map((item) => item.service);
           break;
         case "shiprocket":
-          const shipRes = await axios.get(`${REACT_APP_BACKEND_URL}/b2b/couriers/getShiprocketCourierServices`);
+          const shipRes = await axios.get(`${REACT_APP_BACKEND_URL}/b2b/couriers/getShiprocketCourierServices`, {
+            params: accountName ? { account: accountName } : undefined,
+          });
           services = shipRes?.data?.data?.flatMap((item) => item.service) || [];
           break;
         case "bigship":
@@ -133,9 +141,13 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         status: editCourier.status || "",
       });
       setSelectedProvider(editCourier.provider);
-      fetchServicesForProvider(editCourier.provider);
     }
   }, [location.state, isSidebarAdmin, refresh]);
+
+  // Courier list of the chosen account (re-run once the accounts are loaded, so its courier type is known)
+  useEffect(() => {
+    if (selectedProvider) fetchServicesForProvider(providerTypeOf(selectedProvider), selectedProvider);
+  }, [selectedProvider, courierProviders]);
 
   const canSave = isSidebarAdmin || employeeAccess.canAction || employeeAccess.canUpdate;
   const canView = isSidebarAdmin || employeeAccess.canView;
@@ -148,7 +160,6 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
     if (name === "provider") {
       setSelectedProvider(value);
       setFormData((prev) => ({ ...prev, courier: "" }));
-      fetchServicesForProvider(value);
     }
   };
 
@@ -226,13 +237,13 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
                 name="provider"
                 value={formData.provider}
                 onChange={handleChange}
-                options={[...new Set(courierProviders.map((c) => c.courierProvider))]}
+                options={[...new Set([...courierProviders.map((c) => c.courierName), ...(formData.provider ? [formData.provider] : [])])]}
                 placeholder="Select Provider"
               />
 
               {/* Courier */}
               <CustomDropdown
-                label={selectedProvider?.toLowerCase() === "dtdc" ? "Service Type" : "Courier"}
+                label={providerTypeOf(selectedProvider)?.toLowerCase() === "dtdc" ? "Service Type" : "Courier"}
                 name="courier"
                 value={formData.courier}
                 onChange={handleChange}

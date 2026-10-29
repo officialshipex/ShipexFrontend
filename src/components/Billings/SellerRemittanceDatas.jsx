@@ -1,3 +1,4 @@
+import { customerOrderIdOf } from "../../Common/customerOrderId";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState, useEffect } from "react";
@@ -66,6 +67,7 @@ const SellerRemittanceDatas = ({ remittanceId }) => {
       return {
         "Remittance ID": remittanceId,
         "Order ID": item.orderId,
+        "Customer Order ID": customerOrderIdOf(item),
         "Courier Service Name": item.courierServiceName || "N/A",
         "AWB Number": item.awb_number || "N/A",
         "Order Value (₹)": item.paymentDetails?.amount || 0,

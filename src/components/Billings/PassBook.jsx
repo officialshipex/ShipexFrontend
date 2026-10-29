@@ -1,3 +1,4 @@
+import { customerOrderIdOf } from "../../Common/customerOrderId";
 import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
 import { FaCalendarAlt, FaRupeeSign, FaFilter, FaBars } from "react-icons/fa";
@@ -178,6 +179,7 @@ const Passbooks = ({
       .map((t) => ({
         Date: dayjs(t.date).format("DD MMM YYYY hh:mm A"),
         "Order ID": t.orderId,
+        "Customer Order ID": customerOrderIdOf(t),
         "AWB Number": t.awb_number,
         Category: t.category,
         Amount: t.amount,

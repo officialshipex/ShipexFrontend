@@ -95,7 +95,9 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
 
     try {
       setLoading(true);
+      // by the account's id: a company may hold several accounts of one courier
       await axios.post(`${REACT_APP_BACKEND_URL}/b2b/couriers/updateCourierStatus`, {
+        id: courier._id,
         provider,
         status: newStatus
       });

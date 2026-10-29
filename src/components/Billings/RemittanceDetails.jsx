@@ -1,3 +1,4 @@
+import { customerOrderIdOf } from "../../Common/customerOrderId";
 import React, { useEffect, useState } from "react";
 import { CheckCircle, Clock, XCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -63,6 +64,7 @@ const RemittanceDetails = ({ remittanceId }) => {
         return {
           "Remittance ID": remittanceId,
           "Order ID": item.orderId,
+          "Customer Order ID": customerOrderIdOf(item),
           "Courier Service Name": item.courierServiceName || "N/A",
           "AWB Number": item.awb_number || "N/A",
           "Order Value (₹)": item.paymentDetails?.amount || 0,

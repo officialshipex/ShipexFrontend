@@ -1,3 +1,4 @@
+import { customerOrderIdOf } from "../../Common/customerOrderId";
 import React, { useState, useEffect, useRef } from "react";
 import dayjs from "dayjs";
 import axios from "axios";
@@ -362,6 +363,7 @@ const Shippings = (filterOrder) => {
         const isB2C = o.orderType === "B2C";
         return {
           "Order ID": o.orderId,
+          "Customer Order ID": customerOrderIdOf(o),
           "AWB Number": o.awb_number,
           "Courier Service": o.courierServiceName,
           Status: o.status,

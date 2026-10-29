@@ -1,3 +1,4 @@
+import { customerOrderIdOf } from "../../Common/customerOrderId";
 import axios from "axios";
 import React, { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -147,6 +148,7 @@ const Shippings = () => {
           "User ID": o.user?.userId,
           "User Name": o.user?.name,
           "Order ID": o.orderId,
+          "Customer Order ID": customerOrderIdOf(o),
           "AWB Number": o.awb_number,
           "Courier Service": o.courierServiceName,
           Status: o.status,
