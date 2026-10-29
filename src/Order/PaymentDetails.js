@@ -12,6 +12,7 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
   const [showAdditionalFees, setShowAdditionalFees] = useState(false);
   const navigate = useNavigate();
   const [otherDetails, setOtherDetails] = useState({
+    customerOrderId: "",
     resellerName: "",
     gstin: "",
     ewaybill: "",
@@ -22,11 +23,12 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
       if (initialData.paymentDetails?.method) {
         setPaymentMode(initialData.paymentDetails.method);
       }
-      if (initialData.otherDetails) {
+      if (initialData.otherDetails || initialData.clientOrderId) {
         setOtherDetails({
-          resellerName: initialData.otherDetails.resellerName || "",
-          gstin: initialData.otherDetails.gstin || "",
-          ewaybill: initialData.otherDetails.ewaybill || "",
+          customerOrderId: initialData.clientOrderId || "",
+          resellerName: initialData.otherDetails?.resellerName || "",
+          gstin: initialData.otherDetails?.gstin || "",
+          ewaybill: initialData.otherDetails?.ewaybill || "",
         });
       }
     }
@@ -255,6 +257,8 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
         gstin: orderData.otherDetails.gstin,
         ewaybill: orderData.otherDetails.ewaybill,
       },
+      // optional Customer Order ID (saved as the order's clientOrderId)
+      clientOrderId: (orderData.otherDetails.customerOrderId || "").trim(),
       orderType: orderData.orderType,
       rovType: orderData.rovType,
       B2BPackageDetails: {

@@ -286,6 +286,38 @@ export const cancelB2BOrder = async ({ orderId, setRefresh }) => {
   }
 };
 
+// Bulk label / invoice PDFs come from the backend in batches (POST <path> { orderIds }, one merged PDF per
+// batch). Fetching one PDF per order fired 400–1000 requests for a 200–500 order selection, hit the backend's
+// per-minute rate limit and failed the whole download; 50 per request keeps any selection to a few requests.
+// Orders the backend could not render are skipped and counted, not a reason to fail the rest.
+const BULK_PDF_BATCH = 50;
+const fetchBulkPdfPages = async (path, orderIds, intoPdf) => {
+  const pages = [];
+  let failed = 0;
+  for (let i = 0; i < orderIds.length; i += BULK_PDF_BATCH) {
+    const batch = orderIds.slice(i, i + BULK_PDF_BATCH);
+    const response = await fetch(`${REACT_APP_BACKEND_URL}${path}`, {
+      method: "POST",
+      headers: { ...devTenantHeaders(), "Content-Type": "application/json" },
+      body: JSON.stringify({ orderIds: batch }),
+    });
+    if (!response.ok) {
+      failed += batch.length;
+      continue;
+    }
+    failed += Number(response.headers.get("X-Failed-Count")) || 0;
+    const batchPdf = await PDFDocument.load(await response.arrayBuffer());
+    pages.push(...(await intoPdf.copyPages(batchPdf, batchPdf.getPageIndices())));
+  }
+  return { pages, failed };
+};
+
+// "Downloaded" toast, or a warning naming how many orders were left out
+const notifyBulkResult = (what, done, failed) => {
+  if (failed > 0) Notification(`${done} ${what} downloaded; ${failed} order(s) could not be generated.`, "info");
+  else Notification(`${what.charAt(0).toUpperCase() + what.slice(1)} downloaded successfully!`, "success");
+};
+
 export const handleBulkDownloadInvoice = async ({ selectedOrders }) => {
   if (selectedOrders.length === 0) {
     Notification("No orders selected for download.", "info");
@@ -293,21 +325,11 @@ export const handleBulkDownloadInvoice = async ({ selectedOrders }) => {
   }
 
   try {
+    Notification(`Preparing ${selectedOrders.length} invoice(s)...`, "info");
     const mergedPdf = await PDFDocument.create();
-
-    for (let orderId of selectedOrders) {
-      const response = await fetch(`${REACT_APP_BACKEND_URL}/printinvoice/download-invoice/${orderId}`, { headers: devTenantHeaders() });
-      const blob = await response.blob();
-      const existingPdfBytes = await blob.arrayBuffer();
-
-      const existingPdf = await PDFDocument.load(existingPdfBytes);
-      const copiedPages = await mergedPdf.copyPages(
-        existingPdf,
-        existingPdf.getPageIndices(),
-      );
-
-      copiedPages.forEach((page) => mergedPdf.addPage(page));
-    }
+    const { pages, failed } = await fetchBulkPdfPages("/printinvoice/bulk-pdf", selectedOrders, mergedPdf);
+    if (!pages.length) throw new Error("No invoices could be generated");
+    pages.forEach((page) => mergedPdf.addPage(page));
 
     const mergedPdfBytes = await mergedPdf.save();
     const mergedBlob = new Blob([mergedPdfBytes], {
@@ -315,7 +337,7 @@ export const handleBulkDownloadInvoice = async ({ selectedOrders }) => {
     });
     saveAs(mergedBlob, "bulk-invoices.pdf");
 
-    Notification("Invoices downloaded successfully!", "success");
+    notifyBulkResult("invoices", selectedOrders.length - failed, failed);
   } catch (error) {
     console.error("Error downloading invoices:", error);
     Notification("Failed to download invoices.", "error");
@@ -347,35 +369,12 @@ export const handleBulkDownloadLabel = async ({ selectedOrders }) => {
     let labelCount = 0;
     let currentPage = null;
 
-    // ── 2. Fetch order info (to handle Amazon labels) ────────────────────
-    const orderResponses = await Promise.all(
-      selectedOrders.map((id) =>
-        fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/orders/checkCourier/${id}`), { headers: devTenantHeaders() }).then(
-          (res) => res.json(),
-        ),
-      ),
-    );
+    // ── 2. Download every label (in batches; the backend also uses Amazon's own label where it should) ──
+    Notification(`Preparing ${selectedOrders.length} label(s)...`, "info");
+    const { pages: labelPages, failed } = await fetchBulkPdfPages("/printlabel/bulk-pdf", selectedOrders, mergedPdf);
+    if (!labelPages.length) throw new Error("No labels could be generated");
 
-    // ── 3. Download every label, then lay them out ───────────────────────
-    const labelPages = [];
-    for (const orderData of orderResponses) {
-      let response;
-      if (isAmazonAtsOrder(orderData) && orderData.label) {
-        response = await fetch(`${REACT_APP_BACKEND_URL}/printlabel/proxy-label?url=${encodeURIComponent(orderData.label)}`, { headers: devTenantHeaders() });
-      } else {
-        response = await fetch(`${REACT_APP_BACKEND_URL}/printlabel/generate-pdf/${orderData._id}`, { headers: devTenantHeaders() });
-      }
-
-      const blob = await response.blob();
-      const existingPdfBytes = await blob.arrayBuffer();
-      const existingPdf = await PDFDocument.load(existingPdfBytes);
-      const copiedPages = await mergedPdf.copyPages(
-        existingPdf,
-        existingPdf.getPageIndices(),
-      );
-
-      labelPages.push(...copiedPages);
-    }
+    // ── 3. Lay them out ───────────────────────────────────────────────────
 
     const a4Total = labelPages.filter((p) => !isThermalPage(p)).length;
     for (const page of labelPages) {
@@ -406,7 +405,7 @@ export const handleBulkDownloadLabel = async ({ selectedOrders }) => {
     const allThermal = labelPages.length > 0 && a4Total === 0;
     saveAs(mergedBlob, `bulk-labels${allThermal ? "-thermal" : ""}.pdf`);
 
-    Notification("Labels downloaded successfully!", "success");
+    notifyBulkResult("labels", selectedOrders.length - failed, failed);
   } catch (error) {
     console.error("Error downloading Label:", error);
     Notification("Failed to download Labels.", "error");

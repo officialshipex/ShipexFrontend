@@ -17,7 +17,23 @@ const OtherDetails = ({ amount, otherDetails, setOtherDetails }) => {
                 </span>
                 Other Details
             </h2>
-            <div className="flex sm:flex-row flex-col gap-2 font-[600] text-[12px] text-gray-700 sm:w-3/6 w-full">
+            <div className="flex sm:flex-row flex-col gap-2 font-[600] text-[12px] text-gray-700 sm:w-4/6 w-full">
+                {/* Customer Order ID — the seller's own order number, shown next to our Order ID everywhere */}
+                <div className="w-full">
+                    <label className="block">
+                        Customer Order ID <span className="text-gray-400 font-[500]">(Optional)</span>
+                    </label>
+                    <input
+                        type="text"
+                        name="customerOrderId"
+                        value={otherDetails.customerOrderId || ""}
+                        onChange={handleChange}
+                        maxLength={100}
+                        className="w-full border rounded-lg px-3 py-2 text-[12px] outline-none focus:ring-1 focus:ring-brand-primary"
+                        placeholder="Your own order ID"
+                    />
+                </div>
+
                 {/* Reseller Name */}
                 <div className="w-full ">
                     <label className="block">Reseller Name</label>
