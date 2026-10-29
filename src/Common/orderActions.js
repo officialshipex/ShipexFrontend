@@ -469,38 +469,24 @@ export const SavePackageDetails = async ({
 export const BulkCancel = async ({ selectedOrders, setRefresh }) => {
   if (!selectedOrders || selectedOrders.length === 0) return;
 
-  Notification("Cancelling selected orders, please wait...", "info");
+  Notification(`Deleting ${selectedOrders.length} order(s), please wait...`, "info");
 
-  let allSuccess = true;
+  // ONE request for the whole selection (POST /order/bulkDeleteNotShipped). One request per order, all at once,
+  // hit the backend's per-minute rate limit on large selections (500 orders = 500 requests) and most failed.
   const token = Cookies.get("session");
-
   try {
-    await Promise.all(
-      selectedOrders.map((orderId) =>
-        axios.post(
-          `${REACT_APP_BACKEND_URL}/order/cancelOrdersAtNotShipped`,
-          { orderId },
-          {
-            headers: { authorization: `Bearer ${token}` },
-          }
-        )
-      )
+    const { data } = await axios.post(
+      `${REACT_APP_BACKEND_URL}/order/bulkDeleteNotShipped`,
+      { orderIds: selectedOrders },
+      { headers: { authorization: `Bearer ${token}` } }
     );
+    Notification(data?.message || `Deleted ${data?.deleted ?? selectedOrders.length} order(s).`, data?.notDeleted ? "info" : "success");
   } catch (error) {
-    allSuccess = false;
+    Notification(error?.response?.data?.message || "Could not delete the selected orders. Please try again.", "error");
   }
 
-  // refresh the list either way (some of the orders may have been deleted before one failed)
+  // refresh the list either way
   if (typeof setRefresh === "function") setRefresh((prev) => !prev);
-
-  if (allSuccess) {
-    Notification("All selected orders cancelled successfully.", "success");
-  } else {
-    Notification(
-      "Some orders could not be cancelled. Please try again.",
-      "error",
-    );
-  }
 };
 
 export const BulkCancelB2B = BulkCancel;
