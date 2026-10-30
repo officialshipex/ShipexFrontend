@@ -36,7 +36,6 @@ const Referral = () => {
   const [referralCode, setReferralCode] = useState("");
   const [monthlyData, setMonthlyData] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [commissionPercentage, setCommissionPercentage] = useState(null);
 
   // Filters
   const [selectedMonth, setSelectedMonth] = useState("");
@@ -108,7 +107,6 @@ const Referral = () => {
       setStats(data.stats);
       setMonthlyData(data.monthlyData);
       setTotalPages(data.totalPages || 1);
-      setCommissionPercentage(data.referralCommissionPercentage);
       setProgram(data.program || null);
       setPlan(data.plan || null);
       setCurrentMonth(data.currentMonth || null);
@@ -245,9 +243,9 @@ const Referral = () => {
               {bonusRule.requireKyc ? " completes KYC and" : ""} makes a first recharge of at least ₹{Number(bonusRule.minFirstRecharge).toFixed(0)} within {bonusRule.withinDays} days of signing up.
             </li>
           )}
-          {commissionPercentage !== null && (
+          {plan && (
             <li>
-              <span className="font-bold text-brand-primary">Monthly commission</span> on the shipping charges of your friends' shipments that go in transit — the more they ship in the month, the higher your % (see your plan below). Added at the end of every month.
+              <span className="font-bold text-brand-primary">Monthly commission</span> for each of your friends' shipments that go in transit — the more they ship in the month, the higher your ₹ per shipment (see your plan below). Added at the end of every month.
             </li>
           )}
         </ul>
@@ -366,7 +364,7 @@ const Referral = () => {
                 <p className="text-[11px] font-bold text-gray-500">This month so far</p>
                 <p className="text-[18px] font-bold text-gray-700">₹{Number(currentMonth.amount || 0).toFixed(2)}</p>
                 <p className="text-[11px] text-gray-500">
-                  {currentMonth.percent}% of ₹{Number(currentMonth.freight || 0).toFixed(2)} · {currentMonth.shipments} in-transit shipments
+                  {currentMonth.shipments} in-transit shipments × ₹{currentMonth.ratePerShipment}
                 </p>
               </div>
               <SlabBadge badge={currentMonth.badge} color={currentMonth.badgeColor} />
@@ -375,7 +373,7 @@ const Referral = () => {
               <div className="flex justify-between text-[11px]">
                 <span className="font-[600] text-gray-600">
                   {currentMonth.nextSlab
-                    ? `Next: ${currentMonth.nextSlab.percent}%${currentMonth.nextSlab.badge ? ` (${currentMonth.nextSlab.badge})` : ""} at ${currentMonth.nextSlab.minShipments} shipments`
+                    ? `Next: ₹${currentMonth.nextSlab.ratePerShipment} per shipment${currentMonth.nextSlab.badge ? ` (${currentMonth.nextSlab.badge})` : ""} at ${currentMonth.nextSlab.minShipments} shipments`
                     : "Top slab reached"}
                 </span>
                 {currentMonth.nextSlab && <span className="text-gray-400">{currentMonth.nextSlab.needed} to go</span>}
@@ -393,14 +391,14 @@ const Referral = () => {
             <table className="w-full text-[11px]">
               <tbody>
                 {plan.slabs.map((s) => {
-                  const on = s.percent === currentMonth.percent && (s.badge || "") === (currentMonth.badge || "");
+                  const on = s.ratePerShipment === currentMonth.ratePerShipment &&(s.badge || "") === (currentMonth.badge || "");
                   return (
                     <tr key={s.minShipments} className={`border-b border-gray-100 last:border-0 ${on ? "bg-brand-secondary/20" : ""}`}>
                       <td className="py-1.5 px-3 text-gray-600">
                         {Number(s.minShipments).toLocaleString("en-IN")}
                         {s.maxShipments ? ` - ${Number(s.maxShipments).toLocaleString("en-IN")}` : " and above"} shipments
                       </td>
-                      <td className="py-1.5 px-3 font-bold text-gray-700">{s.percent}%</td>
+                      <td className="py-1.5 px-3 font-bold text-gray-700">₹{s.ratePerShipment} / shipment</td>
                       <td className="py-1.5 px-3 text-right">
                         <SlabBadge badge={s.badge} color={s.color} />
                         {on && <span className="ml-1 text-[10px] font-bold text-brand-primary">You're here</span>}

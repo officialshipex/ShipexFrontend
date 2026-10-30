@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import dayjs from "dayjs";
-import { X, Gift, Percent, Award, Plus, Trash2, Pencil, Search } from "lucide-react";
+import { X, Gift, Coins, Award, Plus, Trash2, Pencil, Search } from "lucide-react";
 import Loader from "../../../Loader";
 import { Notification } from "../../../Notification";
 
@@ -87,8 +87,8 @@ export function ReferralSettingsModal({ onClose }) {
             )}
           </div>
           <div className="rounded-lg bg-gray-50 border border-gray-100 p-3">
-            <div className="flex items-center gap-2 text-[13px] font-bold text-gray-700"><Percent className="w-4 h-4 text-brand-primary" /> Monthly commission</div>
-            <p className="text-[11px] text-gray-500 mt-1">Set in <b>Commission Plans</b>: slabs by the referred users' in-transit shipments in the month, each with its % and badge — a default plan for everyone and plans for selected referrers. Credited to the referrer's wallet at month end.</p>
+            <div className="flex items-center gap-2 text-[13px] font-bold text-gray-700"><Coins className="w-4 h-4 text-brand-primary" /> Monthly commission</div>
+            <p className="text-[11px] text-gray-500 mt-1">Set in <b>Commission Plans</b>: slabs by the referred users' in-transit shipments in the month, each with its ₹ per shipment and badge — a default plan for everyone and plans for selected referrers. Credited to the referrer's wallet at month end.</p>
           </div>
         </div>
       )}
@@ -201,20 +201,20 @@ function PlanEditor({ plan, onClose, onSaved }) {
             <p className="text-[12px] font-bold text-gray-700">Slabs</p>
             <button
               type="button"
-              onClick={() => setD((p) => ({ ...p, slabs: [...p.slabs, { minShipments: (p.slabs[p.slabs.length - 1]?.maxShipments ?? p.slabs[p.slabs.length - 1]?.minShipments ?? 0) + 1, maxShipments: null, percent: 0, badge: "", color: "#16a34a" }] }))}
+              onClick={() => setD((p) => ({ ...p, slabs: [...p.slabs, { minShipments: (p.slabs[p.slabs.length - 1]?.maxShipments ?? p.slabs[p.slabs.length - 1]?.minShipments ?? 0) + 1, maxShipments: null, ratePerShipment: 0, badge: "", color: "#16a34a" }] }))}
               className="text-[12px] font-bold text-brand-primary inline-flex items-center gap-1"
             >
               <Plus className="w-3.5 h-3.5" /> Add slab
             </button>
           </div>
-          <p className="text-[11px] text-gray-400 mb-2">The month's in-transit shipments of all the referrer's referred users pick the slab; its % is paid on the shipping charges of all those shipments. Leave "To" empty for "and above".</p>
-          <div className="grid grid-cols-[1fr_1fr_80px_1fr_48px_28px] gap-2 text-[11px] font-bold text-gray-500 mb-1"><span>From</span><span>To</span><span>%</span><span>Badge</span><span>Color</span><span /></div>
+          <p className="text-[11px] text-gray-400 mb-2">The month's in-transit shipments of all the referrer's referred users pick the slab on the last day of the month; commission = all those shipments × that slab's ₹ rate. Leave "To" empty for "and above".</p>
+          <div className="grid grid-cols-[1fr_1fr_80px_1fr_48px_28px] gap-2 text-[11px] font-bold text-gray-500 mb-1"><span>From</span><span>To</span><span>₹ / shipment</span><span>Badge</span><span>Color</span><span /></div>
           <div className="space-y-2">
             {d.slabs.map((s, i) => (
               <div key={i} className="grid grid-cols-[1fr_1fr_80px_1fr_48px_28px] gap-2 items-center">
                 <input type="number" min="0" value={s.minShipments} onChange={(e) => setSlab(i, "minShipments", e.target.value)} className={small} />
                 <input type="number" min="0" value={s.maxShipments ?? ""} placeholder="and above" onChange={(e) => setSlab(i, "maxShipments", e.target.value)} className={small} />
-                <input type="number" min="0" max="100" step="0.05" value={s.percent} onChange={(e) => setSlab(i, "percent", e.target.value)} className={small} />
+                <input type="number" min="0" step="0.05" value={s.ratePerShipment} onChange={(e) => setSlab(i, "ratePerShipment", e.target.value)} className={small} />
                 <input value={s.badge} onChange={(e) => setSlab(i, "badge", e.target.value)} placeholder="e.g. Gold" className={small} />
                 <input type="color" value={s.color || "#16a34a"} onChange={(e) => setSlab(i, "color", e.target.value)} className="h-8 w-full border rounded cursor-pointer" />
                 <button type="button" onClick={() => setD((p) => ({ ...p, slabs: p.slabs.filter((_, j) => j !== i) }))} className="text-gray-400 hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
@@ -281,7 +281,7 @@ export function ReferralPlansModal({ onClose }) {
                     {p.slabs.map((s) => (
                       <tr key={s.minShipments} className="border-t border-gray-100">
                         <td className="py-1 text-gray-500">{slabText(s)} shipments</td>
-                        <td className="py-1 font-bold text-gray-700">{s.percent}%</td>
+                        <td className="py-1 font-bold text-gray-700">₹{s.ratePerShipment} / shipment</td>
                         <td className="py-1 text-right"><SlabBadge badge={s.badge} color={s.color} /></td>
                       </tr>
                     ))}
@@ -350,7 +350,7 @@ export function UserPlanModal({ userId, onClose, onSaved }) {
               </div>
               <div className="mt-1 pl-5 flex flex-wrap gap-1">
                 {p.slabs.map((s) => (
-                  <span key={s.minShipments} className="text-[10px] text-gray-600 border rounded-full px-2 py-0.5">{slabText(s)}: <b>{s.percent}%</b>{s.badge ? ` · ${s.badge}` : ""}</span>
+                  <span key={s.minShipments} className="text-[10px] text-gray-600 border rounded-full px-2 py-0.5">{slabText(s)}: <b>₹{s.ratePerShipment}</b> / shipment{s.badge ? ` · ${s.badge}` : ""}</span>
                 ))}
               </div>
             </label>
