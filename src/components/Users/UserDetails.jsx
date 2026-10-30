@@ -11,6 +11,8 @@ import AadharDetailsEditModal from "./AadharDetailsEditModal";
 import PanDetailsEditModal from "./PanDetailsEditModal";
 import GstDetailsEditModal from "./GstDetailsEditModal";
 import { Notification } from "../../Notification";
+import { TwoFactorAdminCard } from "../../component/All setting/TwoFactor";
+import { useBranding } from "../../context/BrandingContext";
 import UpdateRateCardPopup from "./UpdateRateCardPopup";
 import EarlyCODModal from "../Billings/EarlyCodPopup";
 import UpdateCreditLimitEditModal from "./UpdateCreditLimitModal";
@@ -95,6 +97,7 @@ const ChangePasswordModal = ({
 export default function ProfileCard() {
   const [activeTab, setActiveTab] = useState("My Profile");
   const { id } = useParams();
+  const { twoFactorEnabled } = useBranding();
   const [loading, setLoading] = useState(true);
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const [tabContent, setTabContent] = useState({});
@@ -1238,6 +1241,7 @@ export default function ProfileCard() {
             </div>
 
             <div className="pb-2">{renderTabContent()}</div>
+            {!!admin && twoFactorEnabled && id && <div className="pb-2"><TwoFactorAdminCard userId={id} /></div>}
           </div>
         </>
       )}

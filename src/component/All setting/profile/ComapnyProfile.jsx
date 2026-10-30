@@ -11,6 +11,8 @@ import { FiEdit, FiAlertCircle } from "react-icons/fi";
 // import PanDetailsEditModal from "./PanDetailsEditModal";
 // import GstDetailsEditModal from "./GstDetailsEditModal";
 import { Notification } from "../../../Notification";
+import TwoFactor from "../TwoFactor";
+import { useBranding } from "../../../context/BrandingContext";
 // import UpdateRateCardPopup from "./UpdateRateCardPopup"
 // import EarlyCODModal from "../Billings/EarlyCodPopup";
 import { User, MapPin, ExternalLink, CheckCircleIcon, Clock, CreditCard, IdCard, FileText, Settings, Info, Wallet, Download } from "lucide-react";
@@ -66,6 +68,7 @@ const ReferralCommissionEditModal = ({
 export default function ProfileCard() {
   const [activeTab, setActiveTab] = useState("My Profile");
   const { id } = useParams();
+  const { twoFactorEnabled } = useBranding();
   const [loading, setLoading] = useState(true);
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const [tabContent, setTabContent] = useState({});
@@ -834,6 +837,7 @@ export default function ProfileCard() {
 
             {/* Tab Content */}
             <div className="pb-6 sm:pb-6">{renderTabContent()}</div>
+            {twoFactorEnabled && !id && <div className="pb-6"><TwoFactor /></div>}
           </div>
         </>
       )}

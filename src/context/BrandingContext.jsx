@@ -15,6 +15,8 @@ const FALLBACK_BRANDING = {
   supportPhone: "+91 98139 81344",
   // true only for the platform's own company (Shipex), never a white-label one; off until the server says so
   isDefaultCompany: false,
+  // whether this company offers two-factor login (QuickPost > Companies); off until the server says so
+  twoFactorEnabled: false,
 };
 
 // A company's branding is remembered in this browser, per domain, so a returning visitor sees the right logo, name and
@@ -105,6 +107,7 @@ export function BrandingProvider({ children }) {
             supportEmail: res.data.supportEmail || FALLBACK_BRANDING.supportEmail,
             supportPhone: res.data.supportPhone || FALLBACK_BRANDING.supportPhone,
             isDefaultCompany: res.data.isDefaultCompany === true,
+            twoFactorEnabled: res.data.twoFactorEnabled === true,
           };
           setBranding(fresh);
           // From here on, this company's OWN calls to our backend (axiosInterceptor.js)

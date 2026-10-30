@@ -5,6 +5,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { Notification } from "../../Notification";
 import Loader from "../../Loader";
 import NoDataFound from "../../Common/NoDataFound";
+import { refreshNotifications } from "../../utils/NotificationListProvider";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -36,6 +37,10 @@ export default function CostingRateCard() {
   const [editingId, setEditingId] = useState(null);      // null ⇒ Add mode, string ⇒ Edit mode
   const [errors, setErrors] = useState({});
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  // Changing an existing cost reprices every seller of that service, so it is confirmed in a popup first
+  const [confirmInfo, setConfirmInfo] = useState(null);
+  const [confirmBusy, setConfirmBusy] = useState(false);
 
   // ── Table state ──────────────────────────────────────────────────────
   const [rates, setRates] = useState([]);
@@ -140,8 +145,8 @@ export default function CostingRateCard() {
   };
 
   // ── Submit (Add or Edit) ──────────────────────────────────────────────
-  const handleSave = async (e) => {
-    e.preventDefault();
+  const handleSave = async (e, confirmed = false) => {
+    e?.preventDefault();
     const errs = validate();
     setErrors(errs);
     if (Object.keys(errs).length > 0) return;
@@ -150,6 +155,7 @@ export default function CostingRateCard() {
     try {
       const payload = {
         ...formData,
+        confirmed,
         codCharge: parseFloat(formData.codCharge) || 0,
         codPercent: parseFloat(formData.codPercent) || 0,
         weightPriceBasic: formData.weightPriceBasic.map((r) => ({
@@ -170,18 +176,19 @@ export default function CostingRateCard() {
         })),
       };
 
-      if (editingId) {
-        // ── EDIT: delta is calculated on the backend ──────────────────
-        const res = await axios.put(
-          `${REACT_APP_BACKEND_URL}/costingRate/update/${editingId}`,
-          payload
-        );
-        Notification(res.data.message, "success");
-      } else {
-        // ── ADD: simple save ──────────────────────────────────────────
-        const res = await axios.post(`${REACT_APP_BACKEND_URL}/costingRate/save`, payload);
-        Notification(res.data.message, "success");
+      // EDIT: delta is calculated on the backend. ADD: simple save.
+      const res = editingId
+        ? await axios.put(`${REACT_APP_BACKEND_URL}/costingRate/update/${editingId}`, payload)
+        : await axios.post(`${REACT_APP_BACKEND_URL}/costingRate/save`, payload);
+
+      if (res.data?.needsConfirm) {
+        // an existing cost changes: nothing was saved, ask first
+        const { changedServices, rateCards, plans } = res.data;
+        setConfirmInfo({ changedServices, rateCards, plans, run: () => handleSave(null, true) });
+        setSaving(false);
+        return;
       }
+      Notification(res.data.message, "success");
 
       setFormData(defaultForm());
       setEditingId(null);
@@ -242,6 +249,50 @@ export default function CostingRateCard() {
     setFormData(defaultForm());
     setEditingId(null);
     setErrors({});
+  };
+
+  // ── Template / upload (same sheet as the rate card, minus Plan Name) ──
+  const handleDownloadTemplate = async () => {
+    try {
+      const res = await axios.get(`${REACT_APP_BACKEND_URL}/costingRate/download-excel`, { responseType: "blob" });
+      const url = window.URL.createObjectURL(new Blob([res.data]));
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "costing-rate-card-template.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (e) {
+      Notification("Failed to download template", "error");
+    }
+  };
+
+  const handleUpload = async (file, confirmed = false) => {
+    setUploading(true);
+    try {
+      const fileData = new FormData();
+      fileData.append("file", file);
+      if (confirmed) fileData.append("confirmed", "true");
+      const res = await axios.post(`${REACT_APP_BACKEND_URL}/costingRate/upload`, fileData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+      const { message, errors: uploadErrors, needsConfirm, changedServices, rateCards, plans } = res.data || {};
+      if (needsConfirm) {
+        // nothing was saved: ask, then send the same file again
+        setConfirmInfo({ changedServices, rateCards, plans, run: () => handleUpload(file, true) });
+      } else if (uploadErrors?.length) {
+        Notification(`${message} ${uploadErrors[0]}${uploadErrors.length > 1 ? ` (+${uploadErrors.length - 1} more, see notifications)` : ""}`, "error");
+      } else {
+        Notification(message || "Costing rate card uploaded", "success");
+        await fetchRates();
+      }
+    } catch (e) {
+      Notification(e?.response?.data?.message || "Upload failed", "error");
+    } finally {
+      refreshNotifications();
+      setUploading(false);
+    }
   };
 
   // ── Filtered table rows ───────────────────────────────────────────────
@@ -311,6 +362,47 @@ export default function CostingRateCard() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden bg-gray-50/30 sm:px-2">
+
+      {/* ── CONFIRM: an existing cost changes every seller's rate ─────── */}
+      {confirmInfo && (
+        <div className="fixed inset-0 bg-black/50 z-[200] flex items-center justify-center p-4">
+          <div role="alertdialog" aria-modal="true" aria-labelledby="costing-confirm-title" className="w-full max-w-[460px] bg-white rounded-lg shadow-lg max-h-[90vh] flex flex-col">
+            <div className="px-4 py-3 border-b border-gray-100">
+              <h3 id="costing-confirm-title" className="text-[14px] font-bold text-gray-700">Please cross check all the rates</h3>
+              <p className="text-[12px] text-gray-500 mt-1">
+                This will update your existing rate cards. The increase or decrease is applied automatically to <b>{confirmInfo.rateCards} rate card(s)</b> and <b>{confirmInfo.plans} seller plan(s)</b>, and it cannot be undone automatically.
+              </p>
+            </div>
+            <div className="px-4 py-3 overflow-y-auto">
+              <p className="text-[12px] font-bold text-gray-600 mb-1">Services with a changed rate ({confirmInfo.changedServices.length})</p>
+              <ul className="text-[12px] text-gray-700 list-disc pl-5 space-y-0.5">
+                {confirmInfo.changedServices.map((s) => <li key={s}>{s}</li>)}
+              </ul>
+            </div>
+            <div className="px-4 py-3 border-t border-gray-100 flex flex-col-reverse sm:flex-row sm:justify-end gap-2">
+              <button
+                type="button"
+                disabled={confirmBusy}
+                onClick={() => setConfirmInfo(null)}
+                className="bg-white border border-gray-300 text-gray-600 px-4 py-2 rounded-lg text-[12px] font-bold hover:bg-gray-50 disabled:opacity-60"
+              >
+                Cancel, let me check
+              </button>
+              <button
+                type="button"
+                disabled={confirmBusy}
+                onClick={async () => {
+                  setConfirmBusy(true);
+                  try { await confirmInfo.run(); } finally { setConfirmBusy(false); setConfirmInfo(null); }
+                }}
+                className="bg-brand-primary text-white px-4 py-2 rounded-lg text-[12px] font-bold hover:bg-opacity-90 disabled:opacity-60"
+              >
+                {confirmBusy ? "Updating…" : "Yes, I have checked. Update all rates"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* ── FORM SECTION ─────────────────────────────────────────────── */}
       <div className="bg-white border border-gray-200 rounded-lg p-4 mb-3 shadow-sm">
@@ -446,17 +538,36 @@ export default function CostingRateCard() {
             Costing Rate Cards
             <span className="ml-2 text-[10px] font-medium text-gray-400">({filteredRates.length})</span>
           </h2>
-          <div className="relative font-[600] w-[200px]">
-            <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
-              <FiSearch size={13} />
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={handleDownloadTemplate}
+              className="h-8 px-3 border border-gray-300 rounded-lg bg-white text-gray-600 text-[10px] sm:text-[12px] font-bold hover:bg-gray-50 transition-all whitespace-nowrap"
+            >
+              Template
+            </button>
+            <label className={`h-8 px-3 flex items-center border border-gray-300 rounded-lg bg-white text-gray-600 text-[10px] sm:text-[12px] font-bold hover:bg-gray-50 transition-all whitespace-nowrap cursor-pointer ${uploading ? "opacity-60 pointer-events-none" : ""}`}>
+              {uploading ? "Uploading…" : "Upload"}
+              <input
+                type="file"
+                accept=".xlsx"
+                className="hidden"
+                disabled={uploading}
+                onChange={(e) => { const f = e.target.files?.[0]; if (f) { handleUpload(f); e.target.value = ""; } }}
+              />
+            </label>
+            <div className="relative font-[600] w-[200px]">
+              <div className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400">
+                <FiSearch size={13} />
+              </div>
+              <input
+                type="text"
+                placeholder="Search service..."
+                value={serviceSearch}
+                onChange={(e) => setServiceSearch(e.target.value)}
+                className="w-full border border-gray-300 pl-8 pr-3 py-1.5 h-8 rounded-lg text-[10px] sm:text-[12px] bg-white focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 outline-none transition-all placeholder:text-gray-400"
+              />
             </div>
-            <input
-              type="text"
-              placeholder="Search service..."
-              value={serviceSearch}
-              onChange={(e) => setServiceSearch(e.target.value)}
-              className="w-full border border-gray-300 pl-8 pr-3 py-1.5 h-8 rounded-lg text-[10px] sm:text-[12px] bg-white focus:border-brand-primary focus:ring-1 focus:ring-brand-primary/20 outline-none transition-all placeholder:text-gray-400"
-            />
           </div>
         </div>
 

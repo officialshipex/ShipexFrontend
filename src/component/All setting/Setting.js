@@ -10,6 +10,7 @@ import {
   FiActivity,
 } from "react-icons/fi";
 import { FaWhatsapp } from "react-icons/fa";
+import { useBranding } from "../../context/BrandingContext";
 
 const settingsCards = [
   {
@@ -62,9 +63,18 @@ const settingsCards = [
   },
 ];
 
+const twoFactorCard = {
+  title: "Two-Factor Authentication",
+  subtitle: "Protect your login with an OTP on your mobile",
+  icon: FiShield,
+  link: "/dashboard/settings/two-factor",
+};
+
 const Settings = () => {
   const location = useLocation();
+  const { twoFactorEnabled } = useBranding();
   const isMainSettingsPage = location.pathname === "/dashboard/settings";
+  const cards = twoFactorEnabled ? [...settingsCards.slice(0, 3), twoFactorCard, ...settingsCards.slice(3)] : settingsCards;
 
   return (
     <div className="md:px-2">
@@ -76,7 +86,7 @@ const Settings = () => {
             </h1>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4">
-              {settingsCards.map((item, idx) => {
+              {cards.map((item, idx) => {
                 const Icon = item.icon;
                 return (
                   <Link

@@ -43,6 +43,7 @@ import RemittanceDetails from "./components/Billings/RemittanceDetails.jsx";
 // import NewOrder from "./Order/NewOrder"; // Import the NewOrder component
 // import AdminDashboard from "./components/AdminDashboard"; // Admin dashboard component (you need to create this)
 import Settings from "./component/All setting/Setting";
+import TwoFactor from "./component/All setting/TwoFactor";
 import Channel from "./components/Set-up&Mannage/Channels";
 import Customer from "./components/Set-up&Mannage/Customers";
 import PackageType from "./components/Set-up&Mannage/PackageType";
@@ -1296,6 +1297,7 @@ function App() {
                     <Route path="kyc-profile" element={<KYCDetails />} />
                     <Route path="label" element={<LabelCustomize />} />
                     <Route path="change_password" element={<ForgotPassword />} />
+                    <Route path="two-factor" element={<TwoFactor />} />
                     <Route path="referral" element={<Referral />} />
                     <Route path="webhook" element={<Webhook />} />
 

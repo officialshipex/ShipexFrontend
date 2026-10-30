@@ -7,6 +7,9 @@ import { Logo } from '../Logo';
 import { useBranding } from '../../context/BrandingContext';
 import illustrationimage from '../../assets/Login.png'; // adjust path as needed
 import { Notification } from "../../Notification"
+import { LoginOtpFace } from "../../component/All setting/TwoFactor";
+
+const FACE_STYLE = { gridArea: "1 / 1", backfaceVisibility: "hidden", WebkitBackfaceVisibility: "hidden" };
 
 const LoginPage = ({ setIsAuthenticated }) => {
   const { companyDisplayName } = useBranding();
@@ -15,6 +18,9 @@ const LoginPage = ({ setIsAuthenticated }) => {
   const [message, setMessage] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  // The OTP side of the card (kept after flipping back, so the card has no blank side while it turns)
+  const [flipped, setFlipped] = useState(false);
+  const [challenge, setChallenge] = useState(null);
   const navigate = useNavigate();
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -120,6 +126,31 @@ const LoginPage = ({ setIsAuthenticated }) => {
   };
 
 
+  const finishLogin = (data) => {
+    // console.log("response datata", data);
+    localStorage.setItem("kyc", data.kyc)
+    Notification(data.message || "Login successful", "success");
+    createSession(data.data);
+    // delay redirect for 2 seconds to let toast show
+    setTimeout(() => {
+      setIsAuthenticated(true);
+    }, 2000);
+    localStorage.removeItem("activeNdrTab"); // or whatever your token key is
+    localStorage.removeItem("activeOrderTab");
+    localStorage.removeItem("activeOperationFirstMileTab");
+    localStorage.removeItem("activeOperationMidMileTab");
+    localStorage.removeItem("activeOperationLastMileTab");
+    localStorage.removeItem("activeUserDiscrepancyTab");
+    localStorage.removeItem("activeDiscrepancyTab");
+    localStorage.removeItem("activeSidebarItem");
+    // navigate("/dashboard");
+  };
+
+  const backToLogin = (reason) => {
+    setFlipped(false);
+    if (reason) Notification(reason, "error");
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const { email, password } = formData;
@@ -146,25 +177,13 @@ const LoginPage = ({ setIsAuthenticated }) => {
         { email, password }
       );
 
-      if (response?.data?.success) {
-        // console.log("response datata", response.data);
-        localStorage.setItem("kyc", response.data.kyc)
-        Notification(response.data.message || "Login successful", "success");
-        createSession(response.data.data);
-        // delay redirect for 2 seconds to let toast show
-        setTimeout(() => {
-          setIsAuthenticated(true);
-        }, 2000);
-        localStorage.removeItem("activeNdrTab"); // or whatever your token key is
-        localStorage.removeItem("activeOrderTab");
-        localStorage.removeItem("activeOperationFirstMileTab");
-        localStorage.removeItem("activeOperationMidMileTab");
-        localStorage.removeItem("activeOperationLastMileTab");
-        localStorage.removeItem("activeUserDiscrepancyTab");
-        localStorage.removeItem("activeDiscrepancyTab");
-        localStorage.removeItem("activeSidebarItem");
-        console.log("ress", response.data)
-        // navigate("/dashboard");
+      if (response?.data?.twoFactorRequired) {
+        // Password correct and two-factor on: no session yet, flip to the OTP side
+        setChallenge(response.data);
+        setFlipped(true);
+        setIsLoading(false);
+      } else if (response?.data?.success) {
+        finishLogin(response.data);
       } else {
         // setMessage(response?.data?.message || "Invalid login attempt");
         Notification(response?.data?.message || "Invalid login attempt", "error");
@@ -189,7 +208,25 @@ const LoginPage = ({ setIsAuthenticated }) => {
       <div className="flex flex-col md:flex-row bg-brand-secondary/8 flex-grow">
         {/* Left Section */}
         <div className="w-full px-4 py-6 md:p-6 flex justify-center items-center">
-          <div className="w-full max-w-sm md:max-w-md p-4 md:p-6 rounded-lg shadow-sm bg-white">
+          <div className="w-full max-w-sm md:max-w-md" style={{ perspective: 1400 }}>
+          <div
+            className="grid"
+            style={{ transformStyle: "preserve-3d", transition: "transform 0.6s ease-in-out", transform: flipped ? "rotateY(180deg)" : "none" }}
+          >
+          {/* Back: the OTP step */}
+          <div
+            className="p-4 md:p-6 rounded-lg shadow-sm bg-white flex flex-col justify-center"
+            style={{ ...FACE_STYLE, transform: "rotateY(180deg)", pointerEvents: flipped ? undefined : "none" }}
+            aria-hidden={!flipped}
+          >
+            <LoginOtpFace challenge={challenge} active={flipped} onBack={backToLogin} onSuccess={finishLogin} />
+          </div>
+          {/* Front: email and password */}
+          <div
+            className="p-4 md:p-6 rounded-lg shadow-sm bg-white"
+            style={{ ...FACE_STYLE, pointerEvents: flipped ? "none" : undefined }}
+            aria-hidden={flipped}
+          >
             {/* Logo */}
             <div className="flex justify-start mb-4 md:mb-4">
               <Logo className="h-10 md:h-12 max-w-[220px] object-contain" />
@@ -209,7 +246,8 @@ const LoginPage = ({ setIsAuthenticated }) => {
             )}
 
             {/* Form */}
-            <form className="space-y-2" onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit}>
+              <fieldset disabled={flipped} className="space-y-2">
               {/* Email Field */}
               <div>
                 <label className="block text-gray-700 text-[12px] font-[600]">
@@ -305,8 +343,11 @@ const LoginPage = ({ setIsAuthenticated }) => {
                   Create new account
                 </Link>
               </p>
+              </fieldset>
             </form>
 
+          </div>
+          </div>
           </div>
         </div>
 
