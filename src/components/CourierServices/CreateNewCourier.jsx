@@ -49,7 +49,8 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
       switch (providerName) {
         case "NimbusPost":
           const nimbusRes = await axios.get(`${REACT_APP_BACKEND_URL}/NimbusPost/getCourierServices`);
-          services = nimbusRes.data.map((item) => item.service);
+          // Keep NimbusPost's courier id: without it NimbusPost picks any courier it likes at booking
+          services = nimbusRes.data.map((item) => ({ service: item.service, courier_id: item.provider_courier_id }));
           break;
         case "Xpressbees":
         case "XpressBees":
@@ -154,6 +155,13 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
     setSelectedProvider((prev) => (prev === "Shiprocket" ? account.courierName : prev));
   }, [courierProviders, location.state]);
 
+  // Editing a NimbusPost service saved without a courier id: fill it in from the list for its courier
+  useEffect(() => {
+    if (providerTypeOf(selectedProvider) !== "NimbusPost" || !formData.courier || formData.courier_id) return;
+    const found = providerServices.find((s) => s.service === formData.courier);
+    if (found?.courier_id) setFormData((prev) => ({ ...prev, courier_id: found.courier_id }));
+  }, [providerServices, selectedProvider, formData.courier, formData.courier_id]);
+
   const canSave = isSidebarAdmin || employeeAccess.canAction || employeeAccess.canUpdate;
   const canView = isSidebarAdmin || employeeAccess.canView;
   const canUpdate = isSidebarAdmin || employeeAccess.canUpdate;
@@ -168,7 +176,7 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
       fetchServicesForProvider(providerTypeOf(value), value);
     }
     
-    if (name === "courier" && (providerTypeOf(selectedProvider) === "Shiprocket" || /^xpress\s*bees$/i.test(providerTypeOf(selectedProvider)))) {
+    if (name === "courier" && (providerTypeOf(selectedProvider) === "Shiprocket" || /^xpress\s*bees$/i.test(providerTypeOf(selectedProvider)) || providerTypeOf(selectedProvider) === "NimbusPost")) {
       const selectedService = providerServices.find(s => s.service === value);
       if (selectedService) {
         setFormData(prev => ({ ...prev, courier_id: selectedService.courier_id }));
@@ -213,6 +221,11 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
 
     if (providerServices.length > 0 && !isLosung && !isBoxd && !isJiffy && !isShipMaxx && !formData.courier) {
       Notification("Please select a Courier", "info");
+      return;
+    }
+
+    if (formProvider === "NimbusPost" && !formData.courier_id) {
+      Notification("This NimbusPost courier has no courier ID. Please select the courier again.", "info");
       return;
     }
 

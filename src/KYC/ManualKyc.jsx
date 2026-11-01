@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { User, Building2, UploadCloud, FileText, X, CheckCircle2 } from "lucide-react";
 import VerifyPhoneEmail from "./VerifyPhoneEmail";
 import { Notification } from "../Notification";
+import { loadDraft, removeDraftDocument, uploadDraftDocument, useDraftAutosave } from "./kycDraft";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -15,7 +16,6 @@ const AADHAAR_RE = /^[2-9][0-9]{11}$/;
 const IFSC_RE = /^[A-Z]{4}0[A-Z0-9]{6}$/;
 const ACCOUNT_RE = /^[A-Za-z0-9]{9,18}$/;
 const PINCODE_RE = /^\d{6}$/;
-const ACCEPTED = ["image/jpeg", "image/png", "application/pdf"];
 const MAX_MB = 5;
 const today = () => new Date().toISOString().slice(0, 10);
 const validDate = (v) => /^\d{4}-\d{2}-\d{2}$/.test(v) && !Number.isNaN(Date.parse(v)) && v <= today();
@@ -44,29 +44,71 @@ function Card({ title, children }) {
   );
 }
 
-function FileInput({ label, file, onChange }) {
-  const pick = (e) => {
+// Same rules as backend kyc/kycDocuments.js. A real PDF has "%PDF-" in its first 1024 bytes.
+async function pdfProblem(file, label) {
+  if (!/\.pdf$/i.test(file.name)) return `${label} must be a PDF file. "${file.name}" is not a PDF.`;
+  if (!file.size) return `${label} is an empty file. Please choose it again.`;
+  if (file.size > MAX_MB * 1024 * 1024) return `${label} is larger than ${MAX_MB} MB. Please upload a smaller PDF.`;
+  const head = await file.slice(0, 1024).text();
+  if (!head.includes("%PDF-")) return `${label} is not a valid PDF. "${file.name}" may have been renamed or damaged; please upload the original PDF.`;
+  return "";
+}
+
+// The specific reason a submission failed, including failures that never reach the backend's own messages.
+function submitError(error) {
+  const message = error.response && error.response.data && error.response.data.message;
+  if (typeof message === "string" && message) return message;
+  const status = error.response && error.response.status;
+  if (status === 413) return `Your documents are too large to upload together. Please upload smaller PDFs (up to ${MAX_MB} MB each).`;
+  if (status === 429) return "Too many attempts. Please wait a minute and try again.";
+  if (!error.response) return "The upload could not finish. Please check your internet connection and try again. Nothing was submitted.";
+  return "We could not submit your KYC because of a problem on our side. Please try again in a few minutes.";
+}
+
+// A document is saved on the server the moment it is chosen, so it is still here if the seller leaves and comes back.
+function FileInput({ field, label, file, onChange }) {
+  const [uploading, setUploading] = useState(false);
+  const pick = async (e) => {
     const f = e.target.files && e.target.files[0];
     e.target.value = "";
     if (!f) return;
-    if (!ACCEPTED.includes(f.type)) return Notification("Please upload a JPG, PNG or PDF file.", "error");
-    if (f.size > MAX_MB * 1024 * 1024) return Notification(`File must be smaller than ${MAX_MB} MB.`, "error");
-    onChange(f);
+    const problem = await pdfProblem(f, label);
+    if (problem) return Notification(problem, "error");
+    setUploading(true);
+    try {
+      onChange(await uploadDraftDocument(field, f));
+    } catch (error) {
+      Notification(submitError(error), "error");
+    } finally {
+      setUploading(false);
+    }
+  };
+  const remove = async () => {
+    try {
+      await removeDraftDocument(field);
+      onChange(null);
+    } catch (error) {
+      Notification(submitError(error), "error");
+    }
   };
   return (
     <Field label={label}>
       {file ? (
         <div className="flex items-center gap-2 border border-gray-300 rounded-lg px-3 py-2">
           <FileText size={16} className="text-brand-primary shrink-0" />
-          <span className="text-[12px] font-[500] text-gray-700 truncate flex-1">{file.name}</span>
-          <button type="button" onClick={() => onChange(null)} aria-label="Remove file" className="text-gray-400 hover:text-red-500">
+          {file.url ? (
+            <a href={file.url} target="_blank" rel="noopener noreferrer" className="text-[12px] font-[500] text-gray-700 truncate flex-1 hover:underline">{file.name}</a>
+          ) : (
+            <span className="text-[12px] font-[500] text-gray-700 truncate flex-1">{file.name}</span>
+          )}
+          <button type="button" onClick={remove} aria-label="Remove file" className="text-gray-400 hover:text-red-500">
             <X size={14} />
           </button>
         </div>
       ) : (
         <label className="flex items-center justify-center gap-2 border-2 border-dashed border-gray-300 hover:border-brand-primary rounded-lg px-3 py-3 cursor-pointer text-[12px] font-[600] text-gray-500">
-          <UploadCloud size={16} /> Upload JPG, PNG or PDF (max {MAX_MB} MB)
-          <input type="file" accept={ACCEPTED.join(",")} className="hidden" onChange={pick} />
+          <UploadCloud size={16} /> {uploading ? "Uploading…" : `Upload PDF only (max ${MAX_MB} MB)`}
+          <input type="file" accept=".pdf,application/pdf" className="hidden" disabled={uploading} onChange={pick} />
         </label>
       )}
     </Field>
@@ -139,23 +181,38 @@ function firstError(f, verified) {
   return "";
 }
 
+// The form as saved in the draft: everything typed. Documents are saved separately when they are chosen.
+function draftSection(f) {
+  const { card: _card, ...pan } = f.pan;
+  const { front: _front, back: _back, ...aadhaar } = f.aadhaar;
+  const { proof: _proof, ...bank } = f.bank;
+  return { type: f.type, billing: f.billing, gstin: f.gstin, pan, aadhaar, bank };
+}
+
+function formFromDraft(f, manual, docs) {
+  return {
+    ...f,
+    type: manual.type === "company" ? "company" : manual.type === "individual" ? "individual" : f.type,
+    billing: { ...f.billing, ...manual.billing },
+    gstin: manual.gstin ?? f.gstin,
+    gstCert: docs.gstCertificate || f.gstCert,
+    pan: { ...f.pan, ...manual.pan, card: docs.panCard || f.pan.card },
+    aadhaar: { ...f.aadhaar, ...manual.aadhaar, front: docs.aadhaarFront || f.aadhaar.front, back: docs.aadhaarBack || f.aadhaar.back },
+    bank: { ...f.bank, ...manual.bank, proof: docs.bankProof || f.bank.proof },
+  };
+}
+
+// The documents are already on the server (the draft); the backend takes them from there.
 function buildFormData(f) {
   const fd = new FormData();
   fd.append("selectedType", f.type);
   fd.append("billingInfo", JSON.stringify(f.billing));
-  if (f.type === "company") {
-    fd.append("gstNumber", f.gstin);
-    fd.append("gstCertificate", f.gstCert);
-  }
+  if (f.type === "company") fd.append("gstNumber", f.gstin);
   fd.append("pan", JSON.stringify({ pan: f.pan.number, name: f.pan.name.trim(), date: f.pan.date }));
-  fd.append("panCard", f.pan.card);
-  const { front, back, ...aadhaar } = f.aadhaar;
+  const { front: _front, back: _back, ...aadhaar } = f.aadhaar;
   fd.append("aadhaar", JSON.stringify({ ...aadhaar, aadhaarNumber: aadhaar.number }));
-  fd.append("aadhaarFront", front);
-  fd.append("aadhaarBack", back);
   const { holderName, accountNumber, ifsc, bankName, branch, accountType, proofType } = f.bank;
   fd.append("bankDetails", JSON.stringify({ holderName, accountNumber, ifsc, bankName, branch, accountType, proofType }));
-  fd.append("bankProof", f.bank.proof);
   return fd;
 }
 
@@ -166,6 +223,19 @@ export default function ManualKyc({ prefill, onSubmitted }) {
   const [verified, setVerified] = useState({ phone: false, email: false });
   const [submitting, setSubmitting] = useState(false);
   const [confirmed, setConfirmed] = useState(false);
+  const [draftReady, setDraftReady] = useState(false);
+
+  // What the seller had filled in when they left; it is newer than the answers of a rejected request.
+  useEffect(() => {
+    let cancelled = false;
+    loadDraft().then((draft) => {
+      if (cancelled) return;
+      if (draft) setForm((f) => formFromDraft(f, draft.manual || {}, draft.documents || {}));
+      setDraftReady(true);
+    });
+    return () => { cancelled = true; };
+  }, []);
+  useDraftAutosave({ method: "manual", manual: draftSection(form) }, draftReady && !submitting);
 
   const patch = (section, values) => setForm((f) => ({ ...f, [section]: { ...f[section], ...values } }));
 
@@ -211,7 +281,7 @@ export default function ManualKyc({ prefill, onSubmitted }) {
       const message = error.response && error.response.data && error.response.data.message;
       // Already submitted (a double click, or another tab): show where it stands instead of an error.
       if (status === 409 && /under review/i.test(message || "")) return onSubmitted();
-      Notification(message || "Could not submit your KYC. Please try again.", "error");
+      Notification(submitError(error), "error");
     } finally {
       setSubmitting(false);
     }
@@ -269,7 +339,7 @@ export default function ManualKyc({ prefill, onSubmitted }) {
             <Field label="GSTIN">
               <input className={`${inputCls} uppercase`} maxLength={15} value={form.gstin} onChange={(e) => setForm((f) => ({ ...f, gstin: e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, "") }))} placeholder="15-character GSTIN" />
             </Field>
-            <FileInput label="GST Registration Certificate" file={form.gstCert} onChange={(file) => setForm((f) => ({ ...f, gstCert: file }))} />
+            <FileInput field="gstCertificate" label="GST Registration Certificate" file={form.gstCert} onChange={(file) => setForm((f) => ({ ...f, gstCert: file }))} />
           </div>
         </Card>
       )}
@@ -285,7 +355,7 @@ export default function ManualKyc({ prefill, onSubmitted }) {
           <Field label={isCompany ? "Date of Incorporation" : "Date of Birth"}>
             <input type="date" max={today()} className={inputCls} value={form.pan.date} onChange={(e) => patch("pan", { date: e.target.value })} />
           </Field>
-          <FileInput label="PAN Card" file={form.pan.card} onChange={(file) => patch("pan", { card: file })} />
+          <FileInput field="panCard" label="PAN Card" file={form.pan.card} onChange={(file) => patch("pan", { card: file })} />
         </div>
       </Card>
 
@@ -316,8 +386,8 @@ export default function ManualKyc({ prefill, onSubmitted }) {
             <input className={inputCls} value={form.aadhaar.state} onChange={(e) => patch("aadhaar", { state: e.target.value })} />
           </Field>
           <div className="hidden sm:block" />
-          <FileInput label="Aadhaar Front" file={form.aadhaar.front} onChange={(file) => patch("aadhaar", { front: file })} />
-          <FileInput label="Aadhaar Back" file={form.aadhaar.back} onChange={(file) => patch("aadhaar", { back: file })} />
+          <FileInput field="aadhaarFront" label="Aadhaar Front" file={form.aadhaar.front} onChange={(file) => patch("aadhaar", { front: file })} />
+          <FileInput field="aadhaarBack" label="Aadhaar Back" file={form.aadhaar.back} onChange={(file) => patch("aadhaar", { back: file })} />
         </div>
       </Card>
 
@@ -353,7 +423,7 @@ export default function ManualKyc({ prefill, onSubmitted }) {
               <option value="statement">Bank statement</option>
             </select>
           </Field>
-          <FileInput label={form.bank.proofType === "cheque" ? "Cancelled Cheque" : "Bank Statement"} file={form.bank.proof} onChange={(file) => patch("bank", { proof: file })} />
+          <FileInput field="bankProof" label={form.bank.proofType === "cheque" ? "Cancelled Cheque" : "Bank Statement"} file={form.bank.proof} onChange={(file) => patch("bank", { proof: file })} />
         </div>
       </Card>
 

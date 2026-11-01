@@ -1,27 +1,21 @@
-import React from "react";
+import SellerDetailsEditModal from "./SellerDetailsEditModal";
 
-export default function BankDetailsEditModal({ isOpen, onClose }) {
-  if (!isOpen) return null;
+const FIELDS = [
+  { key: "number", label: "PAN Number", upper: true, maxLength: 10 },
+  { key: "name", label: "Name as on PAN" },
+];
 
+export default function PanDetailsEditModal({ isOpen, onClose, onSaved, initial }) {
   return (
-    <div className="fixed animate-popup-in inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
-      <div className="bg-white w-[90%] max-w-md rounded-lg p-6 relative shadow-lg">
-        {/* Close Button */}
-        <button
-          className="absolute top-3 right-4 text-gray-600 hover:text-red-500 text-xl"
-          onClick={onClose}
-        >
-          ×
-        </button>
-
-        {/* Modal Title */}
-        <h2 className="text-lg font-semibold text-gray-700">Edit PAN Details</h2>
-
-        {/* Modal Content (empty for now) */}
-        <div className="mt-4">
-          <p className="text-gray-500 text-sm">Form goes here...</p>
-        </div>
-      </div>
-    </div>
+    <SellerDetailsEditModal
+      isOpen={isOpen}
+      onClose={onClose}
+      onSaved={onSaved}
+      initial={initial}
+      section="pan"
+      title="Edit PAN Details"
+      note="Saved as entered, without an online check. The change is recorded against your account."
+      fields={FIELDS}
+    />
   );
 }

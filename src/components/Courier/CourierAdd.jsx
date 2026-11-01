@@ -172,7 +172,7 @@ const b2bCourierConfigs = {
       { name: "password", label: "Password", placeholder: "Password", type: "password" },
       { name: "customerCode", label: "Customer Code", placeholder: "8-digit code", type: "text" },
       { name: "encryptedCustCode", label: "Encrypted Cust Code", placeholder: "Encrypted customer code", type: "text" },
-      { name: "goodsCode", label: "Default Goods Code", placeholder: "Optional — auto from products, else 18", type: "text", optional: true },
+      { name: "goodsCode", label: "Default Goods Code", placeholder: "Optional — auto from products, else 401", type: "text", optional: true },
     ],
   },
 };

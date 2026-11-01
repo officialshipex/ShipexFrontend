@@ -10,6 +10,7 @@ import Cookies from "js-cookie";
 import { CheckCircleIcon, ClockIcon } from "lucide-react";
 import ThreeDotLoader from "../Loader"
 import VerifyPhoneEmail from "./VerifyPhoneEmail";
+import { loadDraft, useDraftAutosave } from "./kycDraft";
 
 
 
@@ -90,6 +91,7 @@ const BusinessTypeSelection = () => {
   const [timerActive, setTimerActive] = useState(false);
 
   const [next, setNext] = useState(false)
+  const [draftReady, setDraftReady] = useState(false);
 
   // Every verification is charged, so a verified PAN / Aadhaar / bank account / GSTIN can be replaced by a
   // different value only a few times (the backend enforces it; entering the same value again is free).
@@ -179,8 +181,10 @@ const BusinessTypeSelection = () => {
       otpRefs.current[index + 1]?.focus();
     }
   };
+  // A company needs its GSTIN verified, an individual a billing address; the other one doesn't count.
+  const businessReady = selectedType === "company" ? isGstinVerified : isBillingVerified;
   const allKycVerified =
-    (selectedType === "company" ? isGstinVerified : isBillingVerified) &&
+    businessReady &&
     isAadharVerified &&
     isPanVerified &&
     isBankVerified &&
@@ -279,10 +283,12 @@ const BusinessTypeSelection = () => {
 
         Notification("Billing info saved successfully!", "success")
         setIsBillingVerified(true)
+        setIsGstinVerified(false); // the backend keeps one business record: saving this removed any GST record
         setCurrentStep(prev => prev + 1);
         console.log("biling", response.data);
       } catch (error) {
         console.log("Error in billing info", error)
+        Notification((error.response && error.response.data && error.response.data.message) || "Could not save your billing information. Please try again.", "error");
       }
 
 
@@ -356,6 +362,7 @@ const BusinessTypeSelection = () => {
 
   useEffect(() => {
     // this is for Aadhaar
+    let hasBusinessRecord = false;
     const fetchAllData = async () => {
       try {
         const token = Cookies.get("session");
@@ -377,6 +384,7 @@ const BusinessTypeSelection = () => {
           postalCode: response_billing.data.postalCode || "",
         })
         if (response_billing.data.address) {
+          hasBusinessRecord = true;
           setIsBillingVerified(true);
           setSelectedType("individual");
           // Removed auto-advancement to ensure user sees phone/email verification
@@ -422,7 +430,7 @@ const BusinessTypeSelection = () => {
         setDocumentDetails((prevDetails) => ({
           ...prevDetails,
           pan: response_p.data.pan || "",
-          panName: response_p.data.nameProvided || "",
+          panName: response_p.data.nameProvided || response_p.data.registeredName || "",
           panType: response_p.data.panType || "",
         }));
         setPan(response_p.data);
@@ -472,6 +480,7 @@ const BusinessTypeSelection = () => {
         setState(response_g.data.state || "");
         setPincode(response_g.data.pincode || "");
         if (response_g.data.gstin) {
+          hasBusinessRecord = true;
           setIsGstinVerified(true);
           setSelectedType("company");
           // Removed auto-advancement to ensure user sees phone/email verification
@@ -482,13 +491,41 @@ const BusinessTypeSelection = () => {
 
       }
     };
-    fetchAllData();
+    // After the saved records: what the seller had typed fills only what is not verified yet.
+    fetchAllData().then(async () => {
+      const draft = await loadDraft();
+      const d = (draft && draft.ekyc) || {};
+      if (!hasBusinessRecord) {
+        if (d.selectedType === "company" || d.selectedType === "individual") setSelectedType(d.selectedType);
+        if (d.billingInfo) setBillingInfo((p) => ({ ...p, ...d.billingInfo }));
+        if (d.gstNumber) setGstNumber(d.gstNumber);
+      }
+      setDocumentDetails((p) => ({ ...p, pan: p.pan || d.pan || "", aadharNo: p.aadharNo || d.aadharNo || "" }));
+      setBankDetails((p) => ({ ...p, accountNumber: p.accountNumber || d.accountNumber || "", ifsc: p.ifsc || d.ifsc || "" }));
+      setDraftReady(true);
+    });
   }, []);
+
+  useDraftAutosave(
+    {
+      method: "ekyc",
+      ekyc: {
+        selectedType,
+        billingInfo,
+        gstNumber,
+        pan: documentDetails.pan,
+        aadharNo: documentDetails.aadharNo,
+        accountNumber: bankDetails.accountNumber,
+        ifsc: bankDetails.ifsc,
+      },
+    },
+    draftReady
+  );
 
   const handleNext = async () => {
     setNext(true);
 
-    if (currentStep === 0 && (!isBillingVerified && !isGstinVerified || !isPhoneVerified || !isEmailVerified)) {
+    if (currentStep === 0 && (!businessReady || !isPhoneVerified || !isEmailVerified)) {
       if (!isPhoneVerified || !isEmailVerified) {
         Notification("Please verify your Email and Mobile number first!", "warning");
       } else {
@@ -623,7 +660,7 @@ const BusinessTypeSelection = () => {
       }
     } catch (error) {
       console.log("error", error)
-      Notification(error.response.data.message || "OTP verification failed!", "error");
+      Notification((error.response && error.response.data && error.response.data.message) || "OTP verification failed. Please check your connection and try again.", "error");
     } finally {
       setIsVerifying(false);
     }
@@ -682,7 +719,7 @@ const BusinessTypeSelection = () => {
     } catch (error) {
       setIsOtpPopupOpen(false);
       console.log("Error sending Aadhaar OTP", error);
-      Notification(error?.response?.data?.message, "error")
+      Notification(error?.response?.data?.message || "Could not send the Aadhaar OTP. Please check your connection and try again.", "error")
 
     } finally {
       setIsVerifying(false);
@@ -716,6 +753,7 @@ const BusinessTypeSelection = () => {
       if (response?.data?.success) {
         console.log(response.data);
         setIsGstinVerified(true);
+        setIsBillingVerified(false); // the backend keeps one business record: saving this removed any billing address
         setCompanyAddress(response.data.data.address);
         setCity(response.data.data.city);
         setState(response.data.data.state);
@@ -816,7 +854,7 @@ const BusinessTypeSelection = () => {
 
         setDocumentDetails({
           ...documentDetails,
-          panName: response.data.data.nameProvided,
+          panName: response.data.data.nameProvided || response.data.data.registeredName || "",
           panType: response.data.data.panType,
         });
         setIsPanVerified(true);
@@ -973,7 +1011,7 @@ const BusinessTypeSelection = () => {
               </>
 
               {/* Billing Info - Individual */}
-              {(selectedType === "individual" && !isGstinVerified) && (
+              {selectedType === "individual" && (
                 <div className="lg:w-full max-w-full bg-white p-4 sm:p-6 rounded-lg shadow-md">
                   <h2 className="sm:text-[14px] text-[12px] text-brand-primary font-[600] sm:mb-2">Billing Information</h2>
                   <div className="grid grid-cols-2 md:grid-cols-6 sm:gap-2 gap-2 sm:px-4 md:px-0 items-end">
@@ -1070,7 +1108,7 @@ const BusinessTypeSelection = () => {
 
 
               {/* Billing Info - Company */}
-              {(selectedType === "company" && !isBillingVerified) && (
+              {selectedType === "company" && (
                 <div className="w-full">
                   <div className="flex flex-col items-center w-full">
                     <div className="w-full">
@@ -1385,6 +1423,13 @@ const BusinessTypeSelection = () => {
                     <h3 className="font-[600] text-brand-primary text-[14px]">PAN Verification</h3>
                     {isPanVerified && editControl("pan", "PAN", () => { setIsPanVerified(false); })}
                   </div>
+                  {isPanVerified && (
+                    <p className="text-[11px] font-[500] text-gray-500 mb-2">
+                      {editsLeft.pan > 0
+                        ? "Your PAN is verified and locked. Click Edit to change it."
+                        : "Your PAN is verified and locked. To change it, please contact support."}
+                    </p>
+                  )}
                   <div className="grid grid-cols-1 md:grid-cols-4 gap-2 items-end">
                     {/* PAN Number + Verify Button together */}
                     <div className="flex flex-row md:flex-row gap-2 col-span-1">
@@ -1393,9 +1438,10 @@ const BusinessTypeSelection = () => {
                         <input
                           type="text"
                           placeholder="PAN Number"
-                          className="w-full px-3 py-2 text-gray-500 text-[12px] border border-gray-300 rounded-lg outline-none"
+                          maxLength={10}
+                          className="w-full px-3 py-2 text-gray-500 text-[12px] border border-gray-300 rounded-lg outline-none uppercase disabled:cursor-not-allowed"
                           value={documentDetails.pan}
-                          onChange={(e) => setDocumentDetails({ ...documentDetails, pan: e.target.value })}
+                          onChange={(e) => setDocumentDetails({ ...documentDetails, pan: e.target.value.toUpperCase() })}
                           readOnly={isPanVerified}
                           disabled={isPanVerified}
                         />
@@ -1593,12 +1639,12 @@ const BusinessTypeSelection = () => {
             <button
               onClick={handleNext}
               disabled={
-                (currentStep === 0 && (!(isBillingVerified || isGstinVerified) || !isPhoneVerified || !isEmailVerified)) ||
+                (currentStep === 0 && (!businessReady || !isPhoneVerified || !isEmailVerified)) ||
                 (currentStep === 1 && !canSubmitKyc)
               }
               className={`py-2 px-3 sm:text-[12px] text-[10px] rounded-lg font-[600]
     flex items-center gap-1 transition
-    ${(currentStep === 0 && (!(isBillingVerified || isGstinVerified) || !isPhoneVerified || !isEmailVerified)) ||
+    ${(currentStep === 0 && (!businessReady || !isPhoneVerified || !isEmailVerified)) ||
                   (currentStep === 1 && !canSubmitKyc)
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-brand-primary hover:bg-[#09946A] text-white"

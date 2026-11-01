@@ -10,6 +10,7 @@ import BankDetailsEditModal from "./BankDetailsEditModal";
 import AadharDetailsEditModal from "./AadharDetailsEditModal";
 import PanDetailsEditModal from "./PanDetailsEditModal";
 import GstDetailsEditModal from "./GstDetailsEditModal";
+import SellerDetailsEditModal from "./SellerDetailsEditModal";
 import { Notification } from "../../Notification";
 import { TwoFactorAdminCard } from "../../component/All setting/TwoFactor";
 import { useBranding } from "../../context/BrandingContext";
@@ -107,6 +108,7 @@ export default function ProfileCard() {
   const [showAadharEditModal, setShowAadharEditModal] = useState(false);
   const [showPanEditModal, setShowPanEditModal] = useState(false);
   const [showGstEditModal, setShowGstEditModal] = useState(false);
+  const [showContactEditModal, setShowContactEditModal] = useState(false);
   const [showReferralModal, setShowReferralModal] = useState(false);
   const [showCreditLimitModal, setShowCreditLimitModal] = useState(false);
   const [isEnabled, setIsEnabled] = useState(false);
@@ -275,7 +277,12 @@ export default function ProfileCard() {
               <React.Fragment key={index}>
                 <tr className="border-b border-gray-50 text-[10px] sm:text-[11px] text-gray-700">
                   <td className="px-2 py-1.5" rowSpan={2}>{card.courierProviderName}</td>
-                  <td className="px-2 py-1.5" rowSpan={2}>{card.courierServiceName}</td>
+                  <td className="px-2 py-1.5" rowSpan={2}>
+                    {card.courierServiceName}
+                    {card.isCustomRate && (
+                      <span className="ml-1 text-[10px] bg-orange-100 text-orange-600 px-1.5 py-[1px] rounded-lg font-[600] whitespace-nowrap">custom</span>
+                    )}
+                  </td>
                   <td className="px-2 py-1.5" rowSpan={2}>{card.mode}</td>
                   <td className="px-2 py-1.5 text-gray-400">Basic: {card.weightPriceBasic[0]?.weight}gm</td>
                   <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic[0]?.zoneA}</td>
@@ -596,7 +603,7 @@ export default function ProfileCard() {
                 </h3>
 
                 {!!admin && (
-                  <button className="p-1.5 sm:p-2 hover:bg-gray-200 rounded-lg transition-colors">
+                  <button onClick={() => setShowContactEditModal(true)} title="Edit email and mobile" className="p-1.5 sm:p-2 hover:bg-gray-200 rounded-lg transition-colors">
                     <FiEdit size={14} className="text-gray-600 sm:w-4 sm:h-4" />
                   </button>
                 )}
@@ -638,7 +645,7 @@ export default function ProfileCard() {
                   <MapPin size={16} className="text-gray-600" /> Address Details
                 </h3>
                 {!!admin && (
-                  <button className="p-1.5 sm:p-2 hover:bg-gray-200 rounded-lg transition-colors">
+                  <button onClick={() => setShowGstEditModal(true)} title="Edit GST details" className="p-1.5 sm:p-2 hover:bg-gray-200 rounded-lg transition-colors">
                     <FiEdit size={14} className="text-gray-600 sm:w-4 sm:h-4" />
                   </button>
                 )}
@@ -1258,10 +1265,34 @@ export default function ProfileCard() {
       <PanDetailsEditModal
         isOpen={showPanEditModal}
         onClose={() => setShowPanEditModal(false)}
+        onSaved={fetchUsers}
+        initial={{ number: userData?.panDetails?.panNumber || "", name: userData?.panDetails?.nameOnPan || "" }}
       />
       <GstDetailsEditModal
         isOpen={showGstEditModal}
         onClose={() => setShowGstEditModal(false)}
+        onSaved={fetchUsers}
+        initial={{
+          gstin: userData?.gstDetails?.gstNumber || "",
+          businessName: userData?.gstDetails?.companyName || userData?.company || "",
+          address: userData?.gstDetails?.companyAddress || "",
+          city: userData?.gstDetails?.city || "",
+          state: userData?.gstDetails?.state || "",
+          pincode: userData?.gstDetails?.pincode ? String(userData.gstDetails.pincode) : "",
+        }}
+      />
+      <SellerDetailsEditModal
+        isOpen={showContactEditModal}
+        onClose={() => setShowContactEditModal(false)}
+        onSaved={fetchUsers}
+        section="contact"
+        title="Edit Email & Mobile"
+        note="The seller signs in with these. Their old email is told about the change."
+        initial={{ email: userData?.email || "", phoneNumber: userData?.phoneNumber || "" }}
+        fields={[
+          { key: "email", label: "Email" },
+          { key: "phoneNumber", label: "Mobile Number", numeric: true, maxLength: 10 },
+        ]}
       />
       {showReferralModal && (
         <UserPlanModal userId={id} onClose={() => setShowReferralModal(false)} onSaved={(name) => setReferralPlanName(name)} />

@@ -162,7 +162,8 @@ export default function UserServiceManagement({
               <span className={`text-[10px] sm:text-[12px] truncate ${selectedService ? "text-gray-700" : "text-gray-400"}`}>
                 {selectedService ? selectedService.courierServiceName : "Select a Courier Service"}
               </span>
-              {selectedService?.isCustomRate && (
+              {/* from the fresh list: the selected object is a copy from before any save */}
+              {services.find(s => s.courierServiceName === selectedService?.courierServiceName)?.isCustomRate && (
                 <span className="text-[10px] bg-orange-100 text-orange-600 px-1.5 py-[1px] rounded-lg font-[600] shrink-0">custom</span>
               )}
             </div>

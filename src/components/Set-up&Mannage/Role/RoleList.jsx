@@ -14,6 +14,22 @@ const RoleList = ({ isSidebarAdmin, panel = 'admin' }) => {
     const [roles, setRoles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [busyId, setBusyId] = useState(null);
+    // Like "login as user": same tab, and "Return to admin" in the top bar comes back. A sales person works only in
+    // QuickPost's Sales panel, so they have nothing to open here.
+    const canLoginAs = (role) => isSidebarAdmin && panel === 'admin' && role.team !== 'sales';
+    const handleLoginAs = async (role) => {
+        setBusyId(role._id);
+        try {
+            const res = await axios.post(`${REACT_APP_BACKEND_URL}/staffRole/loginAs/${role._id}`, {}, { headers: { Authorization: `Bearer ${Cookies.get("session")}` } });
+            const current = Cookies.get("session");
+            if (current) localStorage.setItem("admin_token_backup", current);
+            Cookies.set("session", res.data.token, { expires: 1, path: "/" });
+            window.location.href = res.data.employee?.parentType === "user" ? "/dashboard" : "/adminDashboard";
+        } catch (error) {
+            Notification(error.response?.data?.message || "Could not sign in as this employee. Please try again.", "error");
+            setBusyId(null);
+        }
+    };
     const [showEmployeeAuthModal, setShowEmployeeAuthModal] = useState(!isSidebarAdmin);
 
     const [copied, setCopied] = useState(false);
@@ -192,6 +208,16 @@ const RoleList = ({ isSidebarAdmin, panel = 'admin' }) => {
                                         </td>
                                         <td className="px-3 py-2 text-center">
                                             <div className="flex items-center justify-center gap-1">
+                                                {canLoginAs(role) && (
+                                                    <button
+                                                        title={role.isEmpActive ? 'Sign in as this employee' : 'Activate this employee first'}
+                                                        disabled={busyId === role._id || !role.isEmpActive}
+                                                        className="px-2 py-1 font-[600] rounded-lg text-[10px] sm:text-[12px] border border-brand-primary text-brand-primary disabled:opacity-50"
+                                                        onClick={() => handleLoginAs(role)}
+                                                    >
+                                                        Login
+                                                    </button>
+                                                )}
                                                 <button
                                                     title="Edit"
                                                     className="text-white px-2 py-1 font-[600] rounded-lg text-[10px] sm:text-[12px] bg-brand-primary hover:opacity-90 transition"
@@ -232,6 +258,16 @@ const RoleList = ({ isSidebarAdmin, panel = 'admin' }) => {
                     return (
                         <div key={role._id} className="bg-white rounded-lg shadow-md p-4 border border-gray-200 relative">
                             <div className="absolute top-4 right-4 flex items-center gap-3">
+                                {canLoginAs(role) && (
+                                    <button
+                                        title={role.isEmpActive ? 'Sign in as this employee' : 'Activate this employee first'}
+                                        disabled={busyId === role._id || !role.isEmpActive}
+                                        className="text-[12px] font-[600] text-brand-primary underline disabled:opacity-50"
+                                        onClick={() => handleLoginAs(role)}
+                                    >
+                                        Login
+                                    </button>
+                                )}
                                 <button title="Edit" className="text-brand-primary" onClick={() => handleEditRole(role)}>
                                     <Pencil size={18} strokeWidth={2} />
                                 </button>

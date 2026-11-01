@@ -230,7 +230,13 @@ const RateCardUpdateForm = () => {
       )
       .then(() => {
         Notification("Rate Card updated successfully!", "success");
-        navigate("/dashboard/rateCard");
+        const queryParams = new URLSearchParams(window.location.search);
+        const userId = queryParams.get("userId");
+        if (userId) {
+          navigate(`/dashboard/Setup&Manage/User/Profile/${userId}`);
+        } else {
+          navigate("/dashboard/rateCard");
+        }
       })
       .catch((error) => console.error("Error updating rate card:", error));
   };

@@ -88,7 +88,7 @@ const FIELD_META = {
   goodsCode: {
     label: "Default Goods Code",
     type: "text",
-    placeholder: "Optional — auto from products, else 18",
+    placeholder: "Optional — auto from products, else 401",
     colSpan: "sm:col-span-1",
   },
   encryptedCustCode: {

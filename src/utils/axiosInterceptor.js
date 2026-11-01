@@ -111,6 +111,14 @@ export function setupAxiosInterceptors() {
       }
 
       if (status === 403 || status === 401) {
+        // Signed in as someone and refused: back to the admin's own session, not out to the login page.
+        const adminBackup = localStorage.getItem("admin_token_backup");
+        if (adminBackup) {
+          localStorage.removeItem("admin_token_backup");
+          Cookies.set("session", adminBackup, { expires: 1, path: "/" });
+          window.location.href = "/adminDashboard";
+          return Promise.reject(error);
+        }
         console.warn("Invalid or expired token. Logging out...");
         Cookies.remove("session");
         window.location.href = "/login";

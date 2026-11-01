@@ -6,6 +6,7 @@ import { ScanLine, FileText, Check, Clock, XCircle } from "lucide-react";
 import Kyc from "./Kyc";
 import ManualKyc from "./ManualKyc";
 import ThreeDotLoader from "../Loader";
+import { loadDraft, saveDraft } from "./kycDraft";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -42,8 +43,11 @@ export default function KycEntry() {
 
   useEffect(() => {
     let cancelled = false;
-    axios
-      .get(`${REACT_APP_BACKEND_URL}/getKyc/getKycStatus`, { headers: { Authorization: `Bearer ${Cookies.get("session")}` } })
+    const readStatus = () =>
+      axios.get(`${REACT_APP_BACKEND_URL}/getKyc/getKycStatus`, { headers: { Authorization: `Bearer ${Cookies.get("session")}` } });
+    // A failed read would quietly hide manual KYC (only the backend knows it is on), so it gets one more try.
+    readStatus()
+      .catch(() => new Promise((resolve) => setTimeout(resolve, 1000)).then(readStatus))
       .then((res) => {
         if (cancelled) return;
         const m = { ekyc: res.data?.methods?.ekyc !== false, manual: res.data?.methods?.manual === true };
@@ -55,6 +59,10 @@ export default function KycEntry() {
       })
       .catch(() => { if (!cancelled) setMethod("EKYC"); })
       .finally(() => { if (!cancelled) setLoading(false); });
+    // The method chosen last time stays selected; the seller still sees the choice.
+    loadDraft().then((draft) => {
+      if (!cancelled && draft && draft.method) setSelected(draft.method === "manual" ? "MANUAL" : "EKYC");
+    });
     return () => { cancelled = true; };
   }, []);
 
@@ -142,7 +150,7 @@ export default function KycEntry() {
             <button
               type="button"
               disabled={!selected}
-              onClick={() => setMethod(selected)}
+              onClick={() => { saveDraft({ method: selected === "MANUAL" ? "manual" : "ekyc" }); setMethod(selected); }}
               className="bg-brand-primary text-white text-[13px] font-[600] px-6 py-2.5 rounded-lg disabled:opacity-50"
             >
               Next
