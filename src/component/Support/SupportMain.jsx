@@ -1,18 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import AddCase from "./AddCase";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import EmployeeAuthModal from "../../employeeAuth/EmployeeAuthModal";
 import Cookies from "js-cookie";
-import { FiTag, FiBarChart2, FiTool } from "react-icons/fi";
+import { FiTag, FiTool, FiPhone, FiMail } from "react-icons/fi";
 import { useBranding } from "../../context/BrandingContext";
+import DetailedTicketView from "./DetailedTicketView";
+import { StatusBadge, StatusTabs, useFillHeight } from "./StatusTabs";
+import { formatTicketDate, replyCountText, shortAwbList, statusTab } from "./ticketStatus";
 
 const SupportPage = ({ isSidebarAdmin }) => {
   const { supportEmail, supportPhone } = useBranding();
   const [refresh, setRefresh] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [ticketHistoryData, setTicketHistoryData] = useState([]);
-  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [employeeAccess, setEmployeeAccess] = useState({
     canCreate: false,
@@ -21,6 +23,9 @@ const SupportPage = ({ isSidebarAdmin }) => {
   });
   const [showEmployeeAuthModal, setShowEmployeeAuthModal] = useState(false);
   const [isEmployee, setIsEmployee] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState(null);
+  const [selectedTab, setSelectedTab] = useState("");
+  const [listRef, listHeight] = useFillHeight(16);
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const navigate = useNavigate();
@@ -29,14 +34,12 @@ const SupportPage = ({ isSidebarAdmin }) => {
     const fetchAccessAndTickets = async () => {
       try {
         const token = Cookies.get("session");
-        console.log(token)
         if (isSidebarAdmin) {
           setEmployeeAccess({
             canCreate: true,
             canFeedbackView: true,
             canManageTickets: true,
           });
-          setIsAdmin(true);
           setIsEmployee(false);
           setShowEmployeeAuthModal(false);
         } else {
@@ -56,7 +59,6 @@ const SupportPage = ({ isSidebarAdmin }) => {
               !!employee?.accessRights?.support?.["Manage Ticket"]?.view;
 
             setEmployeeAccess({ canCreate, canFeedbackView, canManageTickets });
-            if (employee.isAdmin) setIsAdmin(true);
             setShowEmployeeAuthModal(!canCreate && !canFeedbackView);
           } catch (err) {
             // Not an employee, treat as normal user
@@ -67,7 +69,6 @@ const SupportPage = ({ isSidebarAdmin }) => {
               canManageTickets: false,
             });
             setShowEmployeeAuthModal(false);
-            setIsAdmin(false);
           }
         }
 
@@ -77,17 +78,12 @@ const SupportPage = ({ isSidebarAdmin }) => {
           `${REACT_APP_BACKEND_URL}/support/user`,
           { headers }
         );
-        console.log("Ticket History Data:", response);
         setTicketHistoryData(response.data || []);
 
         setRefresh(false);
 
       } catch (error) {
-        if (error.response && error.response.status === 401) {
-          setShowEmployeeAuthModal(true);
-        } else {
-          setShowEmployeeAuthModal(true);
-        }
+        setShowEmployeeAuthModal(true);
       } finally {
         setIsLoading(false);
       }
@@ -96,27 +92,11 @@ const SupportPage = ({ isSidebarAdmin }) => {
     fetchAccessAndTickets();
   }, [refresh, isSidebarAdmin, REACT_APP_BACKEND_URL, navigate]);
 
-  
-  const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
-  const openManageTickets = () => navigate("/dashboard/support/manageTickets");
 
-  const tableHeaders = [
-    { key: "ticketNumber", label: "Ticket Number" },
-    { key: "category", label: "Category" },
-    { key: "subcategory", label: "Subcategory" },
-    { key: "status", label: "Status" },
-  ];
   const handleCreateTicket = () => {
     if (employeeAccess.canCreate) {
       setIsModalOpen(true);
-    } else if (isSidebarAdmin === false) {
-      setShowEmployeeAuthModal(true);
-    }
-  };
-  const handleFeedback = () => {
-    if (employeeAccess.canFeedbackView) {
-      // navigate("/dashboard/support/feedback");
     } else if (isSidebarAdmin === false) {
       setShowEmployeeAuthModal(true);
     }
@@ -125,129 +105,118 @@ const SupportPage = ({ isSidebarAdmin }) => {
   const handleManageTickets = () => {
     navigate("/adminDashboard/support/manageTickets");
   };
+
+  const visibleTickets = useMemo(
+    () => (selectedTab ? ticketHistoryData.filter((t) => statusTab(t.status) === selectedTab) : ticketHistoryData),
+    [ticketHistoryData, selectedTab]
+  );
+
+  if (selectedTicket) {
+    return (
+      <DetailedTicketView
+        ticket={selectedTicket}
+        onClose={() => setSelectedTicket(null)}
+        onTicketUpdated={(updated) =>
+          setTicketHistoryData((prev) => prev.map((t) => (t._id === updated._id ? updated : t)))
+        }
+      />
+    );
+  }
+
   return (
-    <div className="">
-      <div className="md:p-2 p-2 w-full mx-auto">
-        <h2 className="text-[12px] md:text-[18px] font-[600] text-gray-700 text-center">
-          Have a query?
-        </h2>
-        <p className="text-center text-gray-700 text-[12px] md:text-[14px] mt-2">
-          For Support (24x7), Contact us through{" "}
-          <span className="font-[600] text-gray-700 animate-wavy">
-            {supportPhone}
-          </span>{" "}
-          | Email:
-          <a
-            href={`mailto:${supportEmail}`}
-            className="text-gray-700 font-[600]"
+    <div>
+      {/* Header */}
+      <div className="bg-white rounded-lg border border-gray-200 px-4 py-3 mb-3 flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="min-w-0">
+          <h2 className="text-[14px] md:text-[16px] font-[600] text-gray-800">Support</h2>
+          <p className="text-[12px] text-gray-500 mt-0.5">We're here 24x7. Raise a ticket or reach us directly.</p>
+          <div className="flex flex-wrap gap-x-4 gap-y-1 mt-1.5 text-[12px] font-[600] text-gray-700">
+            {supportPhone && (
+              <span className="flex items-center gap-1.5"><FiPhone className="w-3.5 h-3.5 text-brand-primary" />{supportPhone}</span>
+            )}
+            {supportEmail && (
+              <a href={`mailto:${supportEmail}`} className="flex items-center gap-1.5 hover:underline"><FiMail className="w-3.5 h-3.5 text-brand-primary" />{supportEmail}</a>
+            )}
+          </div>
+        </div>
+        <div className="flex gap-2 shrink-0">
+          {(isSidebarAdmin || employeeAccess.canManageTickets) && (
+            <button
+              className="flex items-center gap-1.5 px-3 py-2 bg-white border border-gray-200 text-gray-700 text-[12px] font-[600] rounded-lg hover:bg-gray-50 transition"
+              onClick={handleManageTickets}
+            >
+              <FiTool className="w-4 h-4" />
+              Manage Tickets
+            </button>
+          )}
+          <button
+            className="flex items-center gap-1.5 px-3 py-2 bg-brand-primary text-white text-[12px] font-[600] rounded-lg hover:opacity-90 transition"
+            onClick={handleCreateTicket}
           >
-            {supportEmail}
-          </a>
-        </p>
-
-        {/* Mobile: Buttons Centered Above "Ticket History" */}
-        <div className="md:hidden flex flex-col items-center mt-4">
-          <div className="flex gap-2">
-            <button
-              className="flex items-center gap-1 px-3 py-2 bg-brand-primary text-white text-[10px] sm:text-[12px] font-[600] rounded-lg hover:bg-green-500 transition"
-              onClick={handleCreateTicket}
-            >
-              <FiTag className="w-4 h-4" />
-              Create Ticket
-            </button>
-
-            <button
-              className="flex items-center gap-1 px-3 py-2 bg-gray-200 text-gray-700 text-[10px] sm:text-[12px] font-[600] rounded-lg hover:bg-gray-300 transition"
-              onClick={handleFeedback}
-            >
-              <FiBarChart2 className="w-4 h-4" />
-              Feedback
-            </button>
-            {(isSidebarAdmin || employeeAccess.canManageTickets) && (
-              <button
-                className="flex items-center gap-1 px-3 py-2 bg-red-600 text-white text-[10px] sm:text-[12px] font-[600] rounded-lg hover:bg-red-700 transition"
-                onClick={handleManageTickets}
-              >
-                <FiTool className="w-4 h-4" />
-                Manage Tickets
-              </button>
-            )}
-          </div>
+            <FiTag className="w-4 h-4" />
+            Create Ticket
+          </button>
         </div>
+      </div>
 
-        {/* Ticket History & Buttons (Desktop: Buttons in Same Row) */}
-        <div className="hidden md:flex items-center justify-between mt-4">
-          <h3 className="text-[10px] md:text-[14px] font-[600] text-gray-500 whitespace-nowrap">
-            Ticket History:
-          </h3>
-          <div className="flex gap-2">
-            <button
-              className="flex items-center gap-1 px-3 py-2 bg-brand-primary text-white text-[10px] sm:text-[12px] font-[600] rounded-lg hover:bg-green-500 transition"
-              onClick={handleCreateTicket}
-            >
-              <FiTag className="w-4 h-4" />
-              Create Ticket
-            </button>
-
-            <button
-              className="flex items-center gap-1 px-3 py-2 bg-gray-200 text-gray-700 text-[10px] sm:text-[12px] font-[600] rounded-lg hover:bg-gray-300 transition"
-              onClick={handleFeedback}
-            >
-              <FiBarChart2 className="w-4 h-4" />
-              Feedback
-            </button>
-            {(isSidebarAdmin || employeeAccess.canManageTickets) && (
-              <button
-                className="flex items-center gap-1 px-3 py-2 bg-red-600 text-white text-[10px] sm:text-[12px] font-[600] rounded-lg hover:bg-red-700 transition"
-                onClick={handleManageTickets}
-              >
-                <FiTool className="w-4 h-4" />
-                Manage Tickets
-              </button>
-            )}
-          </div>
+      {isLoading ? (
+        <p className="text-center text-[12px] text-gray-500 py-10">Loading...</p>
+      ) : ticketHistoryData.length === 0 ? (
+        <div ref={listRef} style={{ height: listHeight }} className="bg-white rounded-lg border border-gray-200 flex flex-col items-center justify-center text-center">
+          <p className="text-[14px] font-[600] text-gray-700">No tickets yet</p>
+          <p className="text-[12px] text-gray-500 mt-1">Your support tickets will show here once you raise one.</p>
         </div>
+      ) : (
+        <>
+          <div className="mb-2">
+            <StatusTabs tickets={ticketHistoryData} selected={selectedTab} onSelect={setSelectedTab} />
+          </div>
 
-        {/* Ticket Table or No Record Message */}
-        <div className="mt-2">
-          {isLoading ? (
-            <p className="text-center">Loading...</p>
-          ) : ticketHistoryData.length === 0 ? (
-            <p className="text-center">No record available</p>
+          <div ref={listRef}>
+          {visibleTickets.length === 0 ? (
+            <div style={{ height: listHeight }} className="bg-white rounded-lg border border-gray-200 flex items-center justify-center text-[12px] text-gray-500">
+              No tickets here.
+            </div>
           ) : (
             <>
               {/* Desktop Table */}
-              <div className="hidden md:block overflow-x-auto">
-                <table className="min-w-full bg-white border border-gray-200">
-                  <thead>
-                    <tr className="bg-brand-primary text-white text-[12px] font-[600] border border-gray-200">
-                      <th className="px-3 py-2 text-center" style={{ width: "80px", maxWidth: "100px" }}>
-                        Sl No.
-                      </th>
-                      {tableHeaders.map(({ label }, index) => (
-                        <th
-                          key={index}
-                          className="px-3 py-2 text-left"
-                        >
-                          {label}
-                        </th>
-                      ))}
+              <div style={{ height: listHeight }} className="hidden md:block bg-white rounded-lg border border-gray-200 overflow-auto">
+                <table className="w-full text-left">
+                  <thead className="sticky top-0 z-10">
+                    <tr className="bg-brand-primary text-white text-[12px] font-[600]">
+                      <th className="px-4 py-2.5">Ticket</th>
+                      <th className="px-4 py-2.5">AWB</th>
+                      <th className="px-4 py-2.5">Issue</th>
+                      <th className="px-4 py-2.5">Status</th>
+                      <th className="px-4 py-2.5">Last update</th>
+                      <th className="px-4 py-2.5 text-right">Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {ticketHistoryData.map((row, index) => (
-                      <tr key={index} className="border-b border-gray-200 text-[12px] font-[400] text-gray-500">
-                        <td className="px-3 py-2 text-center" style={{ width: "80px", maxWidth: "100px" }}>
-                          {index + 1}
+                    {visibleTickets.map((row) => (
+                      <tr key={row._id} className="border-t border-gray-100 hover:bg-gray-50 transition-colors">
+                        <td className="px-4 py-2.5">
+                          <p className="text-[12px] font-[600] text-brand-primary">#{row.ticketNumber}</p>
+                          <p className="text-[11px] text-gray-400">{formatTicketDate(row.createdAt)}</p>
                         </td>
-                        {tableHeaders.map(({ key }) => (
-                          <td
-                            key={key}
-                            className="px-3 py-2"
+                        <td className="px-4 py-2.5 text-[12px] text-gray-600">{shortAwbList(row.awbNumbers)}</td>
+                        <td className="px-4 py-2.5">
+                          <p className="text-[12px] font-[600] text-gray-700">{row.subcategory}</p>
+                          <p className="text-[11px] text-gray-400">{row.category}</p>
+                        </td>
+                        <td className="px-4 py-2.5"><StatusBadge status={row.status} /></td>
+                        <td className="px-4 py-2.5">
+                          <p className="text-[12px] text-gray-600">{formatTicketDate(row.lastRepliedAt || row.createdAt)}</p>
+                          <p className="text-[11px] text-gray-400">{replyCountText(row)}</p>
+                        </td>
+                        <td className="px-4 py-2.5 text-right">
+                          <button
+                            className="px-3 py-1 rounded-lg border border-brand-primary text-brand-primary text-[12px] font-[600] hover:bg-brand-primary hover:text-white transition-colors"
+                            onClick={() => setSelectedTicket(row)}
                           >
-                            {row[key] || "N/A"}
-                          </td>
-                        ))}
+                            View
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
@@ -255,41 +224,31 @@ const SupportPage = ({ isSidebarAdmin }) => {
               </div>
 
               {/* Mobile View - Card Format */}
-              <div className="md:hidden">
-                <h3 className="text-[12px] font-[600] text-gray-700 mb-2 whitespace-nowrap">
-                  Ticket History:
-                </h3>
-                {ticketHistoryData.map((row, index) => (
-                  <div
-                    key={index}
-                    className="bg-white border border-gray-200 rounded-md p-2 mb-2"
-                  >
-                    {/* <div className="flex justify-between py-1">
-                      <span className="text-[10px] font-[600] text-gray-500">Sl No.</span>
-                      <span className="text-[10px] text-gray-700">{index + 1}</span>
-                    </div> */}
-                    {tableHeaders.map(({ key, label }) => (
-                      <div
-                        key={key}
-                        className="flex py-1 text-[10px] text-gray-700"
-                      >
-                        <span className="font-[600] text-gray-500 w-1/3">{label}</span>
-                        <span className="w-[10px] text-center">:</span>
-                        <span
-                          className={`w-2/3 text-right break-words ${key === "subcategory" ? "max-w-[calc(100%-20px)]" : ""}`}
-                        >
-                          {row[key] || "N/A"}
-                        </span>
-                      </div>
-                    ))}
+              <div style={{ height: listHeight }} className="md:hidden overflow-y-auto flex flex-col gap-2">
+                {visibleTickets.map((row) => (
+                  <div key={row._id} className="bg-white border border-gray-200 rounded-lg p-3">
+                    <div className="flex items-center justify-between gap-2">
+                      <span className="text-[12px] font-[600] text-brand-primary">#{row.ticketNumber}</span>
+                      <StatusBadge status={row.status} />
+                    </div>
+                    <p className="text-[12px] font-[600] text-gray-700 mt-1.5">{row.subcategory}</p>
+                    <p className="text-[11px] text-gray-400">{row.category}</p>
+                    <p className="text-[11px] text-gray-500 mt-1.5">AWB: {shortAwbList(row.awbNumbers)}</p>
+                    <p className="text-[11px] text-gray-500">Updated {formatTicketDate(row.lastRepliedAt || row.createdAt)} · {replyCountText(row)}</p>
+                    <button
+                      className="mt-2 w-full py-1.5 rounded-lg border border-brand-primary text-brand-primary text-[12px] font-[600]"
+                      onClick={() => setSelectedTicket(row)}
+                    >
+                      View
+                    </button>
                   </div>
                 ))}
               </div>
-
             </>
           )}
-        </div>
-      </div>
+          </div>
+        </>
+      )}
 
       {/* Modal Component */}
       <AddCase isOpen={isModalOpen} onClose={closeModal} refresh={setRefresh} />

@@ -154,7 +154,7 @@ const CostEstimationB2B = () => {
             }, 300);
         } catch (err) {
             console.error(err);
-            Notification("Failed to calculate B2B rates", "error");
+            Notification(err?.response?.data?.error || err?.response?.data?.message || "Failed to calculate B2B rates", "error");
             setIsDataFetched(false);
         } finally {
             setLoading(false);

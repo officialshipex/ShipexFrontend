@@ -26,7 +26,8 @@ import {
   faPlusSquare,
   faBars,
   faTimes,
-  faLock
+  faLock,
+  faHeadset
 } from "@fortawesome/free-solid-svg-icons";
 import { LuBoxes } from "react-icons/lu";
 
@@ -240,6 +241,7 @@ const ADMIN_MENU = [
     ],
   },
   { icon: faUserFriends, text: "Referral", path: "/adminDashboard/referral", perms: [["referral", "Referral"]] },
+  { icon: faHeadset, text: "Support", path: "/adminDashboard/support/manageTickets", perms: [["support", "Manage ticket"]] },
 ];
 
 const USER_MENU = [
@@ -267,6 +269,7 @@ const USER_MENU = [
     ],
   },
   { icon: faCogs, text: "Settings", path: "/dashboard/settings", perms: [["settings", "Settings"]] },
+  { icon: faHeadset, text: "Support", path: "/dashboard/support", perms: [["support", "Create Ticket"], ["support", "Feedbacks"]] },
 ];
 
 // Menu for the current session. Owners get every item; employees get the same menu, with the

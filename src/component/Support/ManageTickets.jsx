@@ -1,32 +1,38 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import EmployeeAuthModal from "../../employeeAuth/EmployeeAuthModal";
 // import { toast } from "react-toastify";
 import { ChevronDown } from "lucide-react";
-import DatePicker from "react-datepicker";
+import DateFilter from "../../filter/DateFilter";
 import DetailedTicketView from "./DetailedTicketView";
-import "react-datepicker/dist/react-datepicker.css";
 import { BsThreeDotsVertical } from "react-icons/bs";
 import Cookies from "js-cookie";
 import { Notification } from "../../Notification";
+import { formatTicketDate, isTicketClosed, replyCountText, shortAwbList, statusTab } from "./ticketStatus";
+import { StatusBadge, StatusTabs, useFillHeight } from "./StatusTabs";
+import PaginationFooter from "../../Common/PaginationFooter";
 
+
+// The shared date filter defaults to the last 30 days. Here it starts empty, so older tickets still waiting on
+// an answer are not hidden.
+const NO_DATE_RANGE = [{ startDate: null, endDate: null, key: "selection" }];
 
 const ManageTickets = ({ isSidebarAdmin }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 20;
+  const [itemsPerPage, setItemsPerPage] = useState(100);
+  const [tableRef, tableHeight] = useFillHeight();
   const [ticketData, setTicketData] = useState([]);
   const [filteredData, setFilteredData] = useState([]);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [searchNameEmail, setSearchNameEmail] = useState("");
-  const [searchDate, setSearchDate] = useState("");
+  const [dateRange, setDateRange] = useState(null); // null: no date filter, every ticket shows
+  const [dateFilterKey, setDateFilterKey] = useState(0); // a new key resets the date filter's own display
   const [searchTicketId, setSearchTicketId] = useState("");
   const [searchAWBNumber, setSearchAWBNumber] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedPlatform, setSelectedPlatform] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("active");
-  const [roleData, setRoleData] = useState([]);
+  const [selectedStatus, setSelectedStatus] = useState("New");
   const [showEmployeeAuthModal, setShowEmployeeAuthModal] = useState(false);
-  const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [platformDropdownOpen, setPlatformDropdownOpen] = useState(false);
   const [showDetailedView, setShowDetailedView] = useState(false);
@@ -38,14 +44,6 @@ const ManageTickets = ({ isSidebarAdmin }) => {
   });
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
-  const [dateDropdownOpen, setDateDropdownOpen] = useState(false);
-
-  const statusOptions = [
-    { label: "All", value: "" },
-    { label: "Active", value: "active" },
-    { label: "Resolved", value: "resolved" },
-    { label: "Deleted", value: "deleted" },
-  ];
 
   const categoryOptions = [
     { label: "Select Category", value: "" },
@@ -80,14 +78,9 @@ const ManageTickets = ({ isSidebarAdmin }) => {
               headers: { Authorization: `Bearer ${token}` },
             }
           );
-          const support = roleRes.data.employee;
-          console.log("Support Access Rights:", support);
-          const canView =
-            !!support?.accessRights?.support?.["Manage ticket"]?.view;
-          const canUpdate =
-            !!support?.accessRights?.support?.["Manage ticket"]?.action;
-          // console.log(canUpdate);
-          setRoleData(support);
+          const manageRights = roleRes.data.employee?.accessRights?.support?.["Manage ticket"];
+          const canView = !!manageRights?.view;
+          const canUpdate = !!(manageRights?.update || manageRights?.action);
           setEmployeeAccess({ canView, canUpdate });
           setShowEmployeeAuthModal(!canView);
           if (!canView) return;
@@ -100,7 +93,6 @@ const ManageTickets = ({ isSidebarAdmin }) => {
           headers,
         });
         setTicketData(response.data || []);
-        console.log("Ticket Data:", response.data);
         setFilteredData(response.data || []);
       } catch (error) {
         console.error("Error fetching tickets or role:", error);
@@ -120,12 +112,13 @@ const ManageTickets = ({ isSidebarAdmin }) => {
 
 
 
-    if (searchDate) {
-      filtered = filtered.filter(
-        (ticket) =>
-          new Date(ticket.createdAt).toLocaleDateString() ===
-          new Date(searchDate).toLocaleDateString()
-      );
+    const from = dateRange?.[0]?.startDate;
+    const to = dateRange?.[0]?.endDate;
+    if (from && to) {
+      filtered = filtered.filter((ticket) => {
+        const created = new Date(ticket.createdAt);
+        return created >= from && created <= to;
+      });
     }
 
     if (searchTicketId) {
@@ -136,7 +129,7 @@ const ManageTickets = ({ isSidebarAdmin }) => {
 
     if (searchAWBNumber) {
       filtered = filtered.filter((ticket) =>
-        ticket.awbNumbers?.includes(searchAWBNumber)
+        ticket.awbNumbers?.some((awb) => awb.toLowerCase().includes(searchAWBNumber.trim().toLowerCase()))
       );
     }
 
@@ -154,7 +147,7 @@ const ManageTickets = ({ isSidebarAdmin }) => {
 
     if (selectedStatus) {
       filtered = filtered.filter((ticket) =>
-        ticket.status?.toLowerCase().includes(selectedStatus.toLowerCase())
+        statusTab(ticket.status) === selectedStatus
       );
     }
 
@@ -162,7 +155,7 @@ const ManageTickets = ({ isSidebarAdmin }) => {
   }, [
     ticketData,
     searchNameEmail,
-    searchDate,
+    dateRange,
     searchTicketId,
     searchAWBNumber,
     selectedCategory,
@@ -170,63 +163,46 @@ const ManageTickets = ({ isSidebarAdmin }) => {
     selectedStatus,
   ]);
 
-  const handleStatusChange = async (ticketId, newStatus) => {
+  // A narrower list may have fewer pages than the one being looked at
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchNameEmail, dateRange, searchTicketId, searchAWBNumber, selectedCategory, selectedPlatform, selectedStatus]);
+
+  const updateTicketInList = (updated) => {
+    setTicketData((prev) => prev.map((t) => (t._id === updated._id ? updated : t)));
+    setSelectedTicket((current) => (current && current._id === updated._id ? updated : current));
+  };
+
+  const removeTicketFromList = (ticketId) => {
+    setTicketData((prev) => prev.filter((t) => t._id !== ticketId));
+  };
+
+  const handleCloseTicket = async (ticketId) => {
     try {
-      console.log("Handling status change:", ticketId, newStatus);
-
-      const token = Cookies.get("session");
-
-      if (!token) {
-        alert("Session expired. Please log in again.");
-        return;
-      }
-
-      const headers = {
-        authorization: `Bearer ${token}`,
-      };
-
-      const hasUpdateAccess =
-        roleData.accessRights?.support?.["Manage ticket"]?.update;
-      const isEmployeeActive = roleData.isEmpActive === true;
-
-      if ((hasUpdateAccess && isEmployeeActive) || isSidebarAdmin) {
-        console.log("Authorized to update");
-
-        const response = await axios.put(
-          `${REACT_APP_BACKEND_URL}/support/${ticketId}/status`,
-          { status: newStatus },
-          { headers }
-        );
-
-        if (response.status === 200) {
-          setTicketData((prevData) =>
-            prevData.map((ticket) =>
-              ticket._id === ticketId
-                ? { ...ticket, status: newStatus }
-                : ticket
-            )
-          );
-
-          Notification(
-            newStatus === "resolved"
-              ? "Ticket marked as resolved!"
-              : "Ticket marked as deleted!",
-            "success"
-          );
-
-        } else {
-          console.log("Failed to update status:", response.data.message);
-          Notification("Failed to update ticket status. Try again.", "error");
-        }
-      } else {
-        console.log(
-          "Unauthorized: either update access or employee status is false."
-        );
-        Notification("Unauthorized to update ticket status.", "error");
-      }
+      const response = await axios.put(
+        `${REACT_APP_BACKEND_URL}/support/${ticketId}/close`,
+        {},
+        { headers: { authorization: `Bearer ${Cookies.get("session")}` } }
+      );
+      updateTicketInList(response.data.ticket);
+      Notification("Ticket closed.", "success");
     } catch (error) {
-      console.error("Error updating status:", error);
-      Notification("failed to update ticket status.", "error");
+      Notification(error.response?.data?.message || "Failed to close the ticket.", "error");
+    }
+  };
+
+  const handleDeleteTicket = async (ticketId) => {
+    if (!window.confirm("Delete this ticket? It will disappear for the seller too.")) return;
+    try {
+      await axios.put(
+        `${REACT_APP_BACKEND_URL}/support/${ticketId}/status`,
+        { status: "deleted" },
+        { headers: { authorization: `Bearer ${Cookies.get("session")}` } }
+      );
+      removeTicketFromList(ticketId);
+      Notification("Ticket deleted.", "success");
+    } catch (error) {
+      Notification(error.response?.data?.message || "Failed to delete the ticket.", "error");
     }
   };
 
@@ -234,14 +210,12 @@ const ManageTickets = ({ isSidebarAdmin }) => {
     setSelectedStatus(status);
   };
 
-  const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(filteredData.length / itemsPerPage));
   const startIndex = (currentPage - 1) * itemsPerPage;
   const displayedData = filteredData.slice(
     startIndex,
     startIndex + itemsPerPage
   );
-  const dropdownRef = useRef(null); // Reference for dropdown
-
   useEffect(() => {
     const handleClickOutside = (event) => {
       const isDropdownButton = event.target.closest(".dropdown-button");
@@ -278,64 +252,18 @@ const ManageTickets = ({ isSidebarAdmin }) => {
       <DetailedTicketView
         ticket={selectedTicket}
         onClose={() => setShowDetailedView(false)}
-        onStatusChange={handleStatusChange} // <-- Pass this!
-        isSidebarAdmin={isSidebarAdmin}
-        employeeAccess={employeeAccess}
-        roleData={roleData}
+        onTicketUpdated={updateTicketInList}
+        onTicketDeleted={removeTicketFromList}
+        isSupportSide
+        canUpdate={employeeAccess.canUpdate}
       />
     );
   }
   return (
-    <div className="md:p-2">
-      {/* Status Filter - Responsive */}
+    <div className="min-w-0 max-w-full">
+      {/* Status tabs */}
       <div className="mb-2">
-        {/* Desktop View: Buttons */}
-        <div className="hidden text-[12px] font-[600] md:flex space-x-2">
-          {statusOptions.map((status) => (
-            <button
-              key={status.value}
-              className={`px-3 py-2 rounded-lg transition-colors duration-200 ${selectedStatus === status.value
-                ? "bg-brand-primary text-white"
-                : "bg-white text-gray-700 hover:bg-brand-secondary/10"
-                }`}
-              onClick={() => filterByStatus(status.value)}
-            >
-              {status.label}
-            </button>
-          ))}
-        </div>
-
-        {/* Mobile View: Custom Dropdown */}
-        <div className="md:hidden relative w-full">
-          <button
-            className="w-full py-2 px-3 text-[12px] rounded-lg bg-brand-primary text-white font-[600] transition-all duration-200 flex justify-between items-center"
-            onClick={() => setStatusDropdownOpen(!statusDropdownOpen)}
-          >
-            {statusOptions.find((o) => o.value === selectedStatus)?.label ||
-              "Select Status"}
-            <ChevronDown className="w-4 h-4 text-white" />
-          </button>
-
-          {statusDropdownOpen && (
-            <ul className="absolute z-50 mt-1 w-full bg-white rounded-lg border shadow-md max-h-48 overflow-auto">
-              {statusOptions.map((option) => (
-                <li
-                  key={option.value}
-                  className={`cursor-pointer px-3 py-2 text-gray-700 text-[12px] font-[600] hover:bg-brand-secondary/8 ${selectedStatus === option.value
-                    ? "font-[600] bg-brand-secondary/26"
-                    : ""
-                    }`}
-                  onClick={() => {
-                    filterByStatus(option.value);
-                    setStatusDropdownOpen(false);
-                  }}
-                >
-                  {option.label}
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <StatusTabs tickets={ticketData} selected={selectedStatus} onSelect={filterByStatus} />
       </div>
 
       {/* Filters and Search Inputs */}
@@ -366,39 +294,9 @@ const ManageTickets = ({ isSidebarAdmin }) => {
               onChange={(e) => setSearchAWBNumber(e.target.value)}
             />
 
-            {/* Date Dropdown */}
-            <div className="relative w-36 shrink-0">
-              <button
-                onClick={() => setDateDropdownOpen(!dateDropdownOpen)}
-                className="w-full border px-3 py-2 rounded-lg text-[12px] font-[600] flex justify-between items-center h-9 transition-all duration-200 text-gray-400 bg-white"
-              >
-                {searchDate
-                  ? new Date(searchDate).toLocaleDateString()
-                  : "Select Date"}
-                <ChevronDown
-                  className={`w-4 h-4 ml-2 transition-transform duration-200 ${dateDropdownOpen ? "rotate-180" : ""}`}
-                />
-              </button>
-              <div
-                className={`absolute left-0 mt-1 w-full z-30 transition-all duration-200 transform origin-top ${dateDropdownOpen
-                  ? "scale-y-100 opacity-100"
-                  : "scale-y-0 opacity-0 pointer-events-none"
-                  }`}
-              >
-                <div className="w-full max-w-xs mx-auto">
-                  <DatePicker
-                    selected={searchDate ? new Date(searchDate) : null}
-                    onChange={(date) => {
-                      setSearchDate(date?.toISOString().slice(0, 10));
-                      setDateDropdownOpen(false);
-                    }}
-                    inline
-                    className="w-full"
-                  />
-                </div>
-              </div>
+            <div className="w-[190px] shrink-0">
+              <DateFilter key={dateFilterKey} noInitialFilter initialDateRange={NO_DATE_RANGE} className="w-full" onDateChange={setDateRange} />
             </div>
-
             {/* Platform Dropdown */}
             <div className="relative dropdown-container w-36 h-9 shrink-0">
               <button
@@ -479,10 +377,11 @@ const ManageTickets = ({ isSidebarAdmin }) => {
           </div>
           {/* Clear Button right-aligned, height same as fields */}
           <button
-            className="ml-auto bg-brand-primary border border-white hover:bg-green-500 text-white px-3 py-2 rounded-lg text-[12px] font-semibold transition h-9"
+            className="ml-auto bg-white border border-gray-200 hover:bg-gray-50 text-gray-600 px-3 py-2 rounded-lg text-[12px] font-semibold transition h-9"
             onClick={() => {
               setSearchNameEmail("");
-              setSearchDate("");
+              setDateRange(null);
+              setDateFilterKey((k) => k + 1);
               setSearchTicketId("");
               setSearchAWBNumber("");
               setSelectedCategory("");
@@ -494,7 +393,7 @@ const ManageTickets = ({ isSidebarAdmin }) => {
         </div>
 
         {/* Mobile View */}
-        <div className="md:hidden grid grid-cols-2 gap-2 w-full mx-auto">
+        <div className="md:hidden grid grid-cols-2 gap-2 w-full mx-auto min-w-0 [&>*]:min-w-0">
           {/* Row 1: Search by username spans full width */}
           <input
             type="text"
@@ -507,49 +406,19 @@ const ManageTickets = ({ isSidebarAdmin }) => {
           <input
             type="text"
             placeholder="Search By Ticket ID"
-            className="border px-3 py-2 rounded-lg text-[12px] font-[600] h-9 focus:outline-none placeholder:text-[12px]"
+            className="w-full min-w-0 border px-3 py-2 rounded-lg text-[12px] font-[600] h-9 focus:outline-none placeholder:text-[12px]"
             value={searchTicketId}
             onChange={(e) => setSearchTicketId(e.target.value)}
           />
           <input
             type="text"
             placeholder="Search By AWB number"
-            className="border px-3 py-2 rounded-lg text-[12px] font-[600] h-9 focus:outline-none placeholder:text-[12px]"
+            className="w-full min-w-0 border px-3 py-2 rounded-lg text-[12px] font-[600] h-9 focus:outline-none placeholder:text-[12px]"
             value={searchAWBNumber}
             onChange={(e) => setSearchAWBNumber(e.target.value)}
           />
           {/* Row 3: Date & Platform side-by-side */}
-          <div className="relative w-full">
-            <button
-              onClick={() => setDateDropdownOpen(!dateDropdownOpen)}
-              className="w-full border px-3 py-2 rounded-lg text-[12px] font-[600] flex justify-between items-center h-9 transition-all duration-200 text-gray-400 bg-white"
-            >
-              {searchDate
-                ? new Date(searchDate).toLocaleDateString()
-                : "Select Date"}
-              <ChevronDown
-                className={`w-4 h-4 ml-2 transition-transform duration-200 ${dateDropdownOpen ? "rotate-180" : ""}`}
-              />
-            </button>
-            <div
-              className={`absolute left-0 mt-1 w-full z-30 transition-all duration-200 transform origin-top ${dateDropdownOpen
-                ? "scale-y-100 opacity-100"
-                : "scale-y-0 opacity-0 pointer-events-none"
-                }`}
-            >
-              <div className="w-full max-w-xs mx-auto">
-                <DatePicker
-                  selected={searchDate ? new Date(searchDate) : null}
-                  onChange={(date) => {
-                    setSearchDate(date?.toISOString().slice(0, 10));
-                    setDateDropdownOpen(false);
-                  }}
-                  inline
-                  className="w-full"
-                />
-              </div>
-            </div>
-          </div>
+          <DateFilter key={dateFilterKey} noInitialFilter initialDateRange={NO_DATE_RANGE} className="w-full" onDateChange={setDateRange} />
           <div className="relative dropdown-container h-9">
             <button
               className="w-full h-full border px-3 py-2 rounded-lg text-[12px] font-[600] flex justify-between items-center bg-white text-gray-400"
@@ -627,10 +496,11 @@ const ManageTickets = ({ isSidebarAdmin }) => {
               )}
             </div>
             <button
-              className="flex-shrink-0 bg-brand-primary hover:bg-green-500 border border-white text-white px-3 py-2 rounded-lg text-[12px] font-semibold transition h-9"
+              className="flex-shrink-0 bg-white border border-gray-200 hover:bg-gray-50 text-gray-600 px-3 py-2 rounded-lg text-[12px] font-semibold transition h-9"
               onClick={() => {
                 setSearchNameEmail("");
-                setSearchDate("");
+                setDateRange(null);
+              setDateFilterKey((k) => k + 1);
                 setSearchTicketId("");
                 setSearchAWBNumber("");
                 setSelectedCategory("");
@@ -648,93 +518,79 @@ const ManageTickets = ({ isSidebarAdmin }) => {
 
 
       {/* Ticket Table */}
-      <div className="w-full">
+      <div className="w-full" ref={tableRef}>
         {/* Desktop View */}
-        <div className="hidden md:block">
-          <table className="w-full border border-gray-300">
-            <thead>
-              <tr className="bg-brand-primary text-[12px] text-white border-brand-primary border font-[600]">
-                <th className="py-2 px-3">Sl No.</th>
-                <th className="py-2 px-3">Ticket ID</th>
-                <th className="py-2 px-3">AWB No.</th>
-                <th className="py-2 px-3">Name</th>
-                <th className="py-2 px-3">Category</th>
-                <th className="py-2 px-3">Subcategory</th>
-                <th className="py-2 px-3">Status</th>
-                <th className="py-2 px-3">Action</th>
+        <div style={{ height: tableHeight }} className="hidden md:block overflow-auto bg-white rounded-lg border border-gray-200">
+          <table className="w-full text-left">
+            <thead className="sticky top-0 z-10">
+              <tr className="bg-brand-primary text-[12px] text-white font-[600]">
+                <th className="py-2.5 px-4">Ticket</th>
+                <th className="py-2.5 px-4">Raised by</th>
+                <th className="py-2.5 px-4">AWB</th>
+                <th className="py-2.5 px-4">Issue</th>
+                <th className="py-2.5 px-4">Status</th>
+                <th className="py-2.5 px-4">Last update</th>
+                <th className="py-2.5 px-4 text-right">Action</th>
               </tr>
             </thead>
             <tbody>
               {displayedData.length > 0 ? (
-                displayedData.map((ticket, index) => {
-                  const awbNumbers = ticket.awbNumbers || [];
-                  const displayedAWB = awbNumbers.slice(0, 2).join(", ");
-                  const hasMore = awbNumbers.length > 2;
-
-                  return (
-                    <tr
-                      key={ticket._id}
-                      className="text-center text-[12px] border border-gray-300"
-                    >
-                      <td className="py-2 px-3">{startIndex + index + 1}</td>
-                      <td className="py-2 px-3">{ticket.ticketNumber}</td>
-                      <td className="py-2 px-3 relative group">
-                        <span>
-                          {displayedAWB}
-                          {hasMore && " ..."}
-                        </span>
-                        {hasMore && (
-                          <div className="absolute left-0 bottom-full mb-2 w-max bg-gray-700 text-white text-sm p-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
-                            {awbNumbers.join(", ")}
-                          </div>
-                        )}
-                      </td>
-                      <td className="py-2 px-3">
-                        {ticket.fullname}
-                      </td>
-                      <td className="py-2 px-3">{ticket.category}</td>
-                      <td className="py-2 px-3">{ticket.subcategory}</td>
-                      <td className="py-2 px-3">
-                        {ticket.status || "Pending"}
-                      </td>
-
-                      <td className="px-3 py-2 flex justify-center relative" ref={dropdownRef}>
+                displayedData.map((ticket) => (
+                  <tr key={ticket._id} className="border-t border-gray-100 hover:bg-gray-50 transition-colors">
+                    <td className="py-2.5 px-4">
+                      <p className="text-[12px] font-[600] text-brand-primary">#{ticket.ticketNumber}</p>
+                      <p className="text-[11px] text-gray-400">{formatTicketDate(ticket.createdAt)}</p>
+                    </td>
+                    <td className="py-2.5 px-4">
+                      <p className="text-[12px] font-[600] text-gray-700">{ticket.fullname}</p>
+                      <p className="text-[11px] text-gray-400">{ticket.email}</p>
+                    </td>
+                    <td className="py-2.5 px-4 text-[12px] text-gray-600" title={(ticket.awbNumbers || []).join(", ")}>
+                      {shortAwbList(ticket.awbNumbers)}
+                    </td>
+                    <td className="py-2.5 px-4">
+                      <p className="text-[12px] font-[600] text-gray-700">{ticket.subcategory}</p>
+                      <p className="text-[11px] text-gray-400">{ticket.category}</p>
+                    </td>
+                    <td className="py-2.5 px-4"><StatusBadge status={ticket.status} /></td>
+                    <td className="py-2.5 px-4">
+                      <p className="text-[12px] text-gray-600">{formatTicketDate(ticket.lastRepliedAt || ticket.createdAt)}</p>
+                      <p className="text-[11px] text-gray-400">{replyCountText(ticket)}</p>
+                    </td>
+                    <td className="py-2.5 px-4">
+                      <div className="flex items-center justify-end gap-1.5 relative">
                         <button
-                          className={`dropdown-button bg-brand-primary text-white w-6 h-6 rounded-full flex items-center justify-center ${!isSidebarAdmin && !employeeAccess.canUpdate
-                            ? "opacity-50 cursor-not-allowed"
-                            : ""
-                            }`}
-                          disabled={!isSidebarAdmin && !employeeAccess.canUpdate}
-                          onClick={() => {
-                            if (isSidebarAdmin || employeeAccess.canUpdate) {
-                              setOpenDropdown(openDropdown === ticket._id ? null : ticket._id);
-                            }
-                          }}
+                          className="px-3 py-1 rounded-lg border border-brand-primary text-brand-primary text-[12px] font-[600] hover:bg-brand-primary hover:text-white transition-colors"
+                          onClick={() => handleViewDetails(ticket)}
                         >
-                          <BsThreeDotsVertical size={16} />
+                          View
                         </button>
-
+                        {employeeAccess.canUpdate && (
+                          <button
+                            aria-label="More actions"
+                            className="dropdown-button text-gray-500 hover:bg-gray-100 w-7 h-7 rounded-lg flex items-center justify-center"
+                            onClick={() => setOpenDropdown(openDropdown === ticket._id ? null : ticket._id)}
+                          >
+                            <BsThreeDotsVertical size={14} />
+                          </button>
+                        )}
                         {openDropdown === ticket._id && (
-                          <div className="dropdown-menu absolute right-2 top-full w-28 bg-white border rounded-lg shadow-lg z-50">
+                          <div className="dropdown-menu absolute right-0 top-full mt-1 w-32 bg-white border rounded-lg shadow-lg z-50 overflow-hidden">
+                            {!isTicketClosed(ticket.status) && (
+                              <button
+                                className="block w-full text-gray-700 py-2 px-3 text-[12px] text-left hover:bg-gray-50"
+                                onClick={() => {
+                                  handleCloseTicket(ticket._id);
+                                  setOpenDropdown(null);
+                                }}
+                              >
+                                Mark Closed
+                              </button>
+                            )}
                             <button
-                              className="block w-full text-gray-600 py-2 px-3 text-[12px] text-left hover:bg-gray-100"
-                              onMouseDown={() => handleViewDetails(ticket)}
-                            >
-                              View Details
-                            </button>
-                            <button
-                              className="block w-full text-green-600 py-2 px-3 text-[12px] text-left hover:bg-green-100"
+                              className="block w-full text-red-600 py-2 px-3 text-[12px] text-left hover:bg-red-50"
                               onClick={() => {
-                                handleStatusChange(ticket._id, "resolved");
-                                setOpenDropdown(null);
-                              }}
-                            >
-                              Resolved
-                            </button>
-                            <button
-                              className="block w-full text-red-600 py-2 px-3 text-[12px] text-left hover:bg-red-100"
-                              onClick={() => {
-                                handleStatusChange(ticket._id, "deleted");
+                                handleDeleteTicket(ticket._id);
                                 setOpenDropdown(null);
                               }}
                             >
@@ -742,15 +598,14 @@ const ManageTickets = ({ isSidebarAdmin }) => {
                             </button>
                           </div>
                         )}
-                      </td>
-
-                    </tr>
-                  );
-                })
+                      </div>
+                    </td>
+                  </tr>
+                ))
               ) : (
                 <tr>
-                  <td colSpan="8" className="text-center p-4">
-                    No data available in table
+                  <td colSpan="7" className="text-center py-10 text-[12px] text-gray-500">
+                    No tickets here.
                   </td>
                 </tr>
               )}
@@ -759,145 +614,54 @@ const ManageTickets = ({ isSidebarAdmin }) => {
         </div>
 
         {/* Mobile View (Card Structure) */}
-        <div className="md:hidden space-y-4">
+        <div style={{ height: tableHeight }} className="md:hidden overflow-y-auto flex flex-col gap-2">
           {displayedData.length > 0 ? (
-            displayedData.map((ticket, index) => {
-              const awbNumbers = ticket.awbNumbers || [];
-              const displayedAWB = awbNumbers.slice(0, 2).join(", ");
-              const hasMore = awbNumbers.length > 2;
-
-              return (
-                <div
-                  key={ticket._id}
-                  className="border border-gray-300 p-3 rounded-lg shadow-sm bg-white text-[12px]"
-                >
-                  <div className="flex justify-between items-center border-b pb-2 mb-2">
-                    <span className="font-semibold text-gray-700">
-                      Sl No: {startIndex + index + 1}
-                    </span>
+            displayedData.map((ticket) => (
+              <div key={ticket._id} className="bg-white border border-gray-200 rounded-lg p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-[12px] font-[600] text-brand-primary">#{ticket.ticketNumber}</span>
+                  <StatusBadge status={ticket.status} />
+                </div>
+                <p className="text-[12px] font-[600] text-gray-700 mt-1.5">{ticket.subcategory}</p>
+                <p className="text-[11px] text-gray-400">{ticket.category}</p>
+                <p className="text-[11px] text-gray-500 mt-1.5">{ticket.fullname} · {ticket.email}</p>
+                <p className="text-[11px] text-gray-500">AWB: {shortAwbList(ticket.awbNumbers)}</p>
+                <p className="text-[11px] text-gray-500">Updated {formatTicketDate(ticket.lastRepliedAt || ticket.createdAt)} · {replyCountText(ticket)}</p>
+                <div className="flex gap-2 mt-2">
+                  <button
+                    className="flex-1 py-1.5 rounded-lg border border-brand-primary text-brand-primary text-[12px] font-[600]"
+                    onClick={() => handleViewDetails(ticket)}
+                  >
+                    View
+                  </button>
+                  {employeeAccess.canUpdate && !isTicketClosed(ticket.status) && (
                     <button
-                      className={`dropdown-button bg-brand-primary text-white w-6 h-6 rounded-full flex items-center justify-center ${!isSidebarAdmin && !employeeAccess.canUpdate
-                        ? "opacity-50 cursor-not-allowed"
-                        : ""
-                        }`}
-                      disabled={!isSidebarAdmin && !employeeAccess.canUpdate}
-                      onClick={() => {
-                        if (isSidebarAdmin || employeeAccess.canUpdate) {
-                          setOpenDropdown(
-                            openDropdown === ticket._id ? null : ticket._id
-                          );
-                        }
-                      }}
+                      className="flex-1 py-1.5 rounded-lg border border-gray-200 text-gray-700 text-[12px] font-[600]"
+                      onClick={() => handleCloseTicket(ticket._id)}
                     >
-                      <BsThreeDotsVertical size={14} />
+                      Mark Closed
                     </button>
-                  </div>
-
-                  {/* Ticket details like table rows */}
-                  <div className="space-y-1">
-                    <p>
-                      <strong className="text-gray-600">Ticket ID: </strong>
-                      {ticket.ticketNumber}
-                    </p>
-                    <p className="relative">
-                      <strong className="text-gray-600">AWB No.: </strong>
-                      {displayedAWB}
-                      {hasMore && " ..."}
-                    </p>
-                    <p>
-                      <strong className="text-gray-600">Name: </strong>
-                      {ticket.fullname}
-                    </p>
-                    <p>
-                      <strong className="text-gray-600">Category: </strong>
-                      {ticket.category}
-                    </p>
-                    <p>
-                      <strong className="text-gray-600">Subcategory: </strong>
-                      {ticket.subcategory}
-                    </p>
-                    <p>
-                      <strong className="text-gray-600">Status: </strong>
-                      <span
-                        className={`${ticket.status === "resolved"
-                          ? "text-green-600 font-semibold"
-                          : ticket.status === "deleted"
-                            ? "text-red-600 font-semibold"
-                            : "text-yellow-600 font-semibold"
-                          }`}
-                      >
-                        {ticket.status || "Pending"}
-                      </span>
-                    </p>
-                    <p>
-                      <strong className="text-gray-600">Created On: </strong>
-                      {new Date(ticket.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-
-                  {/* Actions dropdown same as desktop */}
-                  {openDropdown === ticket._id && (
-                    <div className="mt-2 w-full bg-white border rounded shadow-md p-2">
-                      <button
-                        className="block w-full text-gray-600 py-2 text-left text-[12px] hover:bg-gray-100"
-                        onMouseDown={() => handleViewDetails(ticket)}
-                      >
-                        View Details
-                      </button>
-                      <button
-                        className="block w-full text-green-600 py-2 text-left text-[12px] hover:bg-green-100"
-                        onMouseDown={() => {
-                          handleStatusChange(ticket._id, "resolved");
-                          setOpenDropdown(null);
-                        }}
-                      >
-                        Resolved
-                      </button>
-                      <button
-                        className="block w-full text-red-600 py-2 text-left text-[12px] hover:bg-red-100"
-                        onMouseDown={() => {
-                          handleStatusChange(ticket._id, "deleted");
-                          setOpenDropdown(null);
-                        }}
-                      >
-                        Delete
-                      </button>
-                    </div>
+                  )}
+                  {employeeAccess.canUpdate && (
+                    <button
+                      className="px-3 py-1.5 rounded-lg border border-red-200 text-red-600 text-[12px] font-[600]"
+                      onClick={() => handleDeleteTicket(ticket._id)}
+                    >
+                      Delete
+                    </button>
                   )}
                 </div>
-              );
-            })
+              </div>
+            ))
           ) : (
-            <div className="text-center p-4 border rounded-lg bg-gray-50 text-[12px] shadow-sm">
-              No data available in table
+            <div className="bg-white border border-gray-200 rounded-lg py-10 text-center text-[12px] text-gray-500">
+              No tickets here.
             </div>
           )}
         </div>
-
       </div>
 
-      {/* Pagination Controls */}
-      <div className="flex justify-between items-center mt-4">
-        <button
-          className="px-3 py-2 bg-gray-300 text-[10px] rounded-lg disabled:opacity-50"
-          onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-          disabled={currentPage === 1}
-        >
-          Previous
-        </button>
-        <span className="text-[12px]">
-          Page {currentPage} of {totalPages}
-        </span>
-        <button
-          className="px-3 py-2 bg-gray-300 text-[10px] rounded-lg disabled:opacity-50"
-          onClick={() =>
-            setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-          }
-          disabled={currentPage === totalPages}
-        >
-          Next
-        </button>
-      </div>
+      <PaginationFooter page={currentPage} totalPages={totalPages} setPage={setCurrentPage} limit={itemsPerPage} setLimit={setItemsPerPage} />
     </div>
   );
 };

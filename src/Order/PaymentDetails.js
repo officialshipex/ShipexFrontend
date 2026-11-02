@@ -278,6 +278,9 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
         return;
       }
 
+      // B2B orders go back to the B2B list (always went to B2C before)
+      const ordersListPath = orderData.orderType === "B2B" ? "/dashboard/b2b/order" : "/dashboard/b2c/order";
+
       if (updateId) {
         // Update existing order
         await axios.put(
@@ -290,7 +293,7 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
           }
         );
         Notification("Order updated successfully", "success");
-        navigate("/dashboard/b2c/order");
+        navigate(ordersListPath);
       } else {
         // Create new order
         await axios.post(`${REACT_APP_BACKEND_URL}/order/neworder`, data, {
@@ -299,11 +302,15 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
           },
         });
         Notification("Order created successfully", "success");
-        navigate("/dashboard/b2c/order");
+        navigate(ordersListPath);
       }
     } catch (error) {
       console.log("error", error.response);
-      Notification(error.response.data.error || "Something went wrong while creating the order.", "error");
+      Notification(
+        error?.response?.data?.error || error?.response?.data?.message ||
+          (updateId ? "Something went wrong while updating the order." : "Something went wrong while creating the order."),
+        "error"
+      );
     } finally {
       setIsSubmitting(false);
     }

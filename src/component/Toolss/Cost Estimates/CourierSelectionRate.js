@@ -36,6 +36,12 @@ const CourierSelectionRate = ({ plan, loading, hasFetched }) => {
   if (hasFetched && (!Array.isArray(plan) || plan.length === 0)) {
     return <p className="text-center py-4 text-gray-600">No Data Found</p>;
   }
+  if (!Array.isArray(plan)) plan = [];
+
+  // B2C rows carry forward.finalCharges, B2B rows working.grand_total — sorting on forward alone crashed the
+  // B2B calculator (white screen). Sort a copy so the parent's array isn't reordered in place.
+  const chargeOf = (item) => Number(item?.forward?.finalCharges ?? item?.working?.grand_total ?? Infinity);
+  const sortedPlan = [...plan].sort((a, b) => chargeOf(a) - chargeOf(b));
 
   const openRatePopup = (e, working) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -91,13 +97,9 @@ const CourierSelectionRate = ({ plan, loading, hasFetched }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {plan
-                    .sort(
-                      (a, b) => a.forward.finalCharges - b.forward.finalCharges
-                    )
-                    .map((item) => (
+                  {sortedPlan.map((item, idx) => (
                       <tr
-                        key={item._id}
+                        key={item._id || `${item.courierServiceName}-${idx}`}
                         className="border-b text-gray-700 text-[12px]"
                       >
                         <td className="flex items-center space-x-4 px-3 py-2">
@@ -135,7 +137,7 @@ const CourierSelectionRate = ({ plan, loading, hasFetched }) => {
 
                         {item.orderType === "B2C" && (
                           <td className="text-center px-3 py-2 text-gray-700 font-[600]">
-                            ₹{item.forward.finalCharges}
+                            ₹{item.forward?.finalCharges ?? "-"}
                           </td>
                         )}
                         {item.orderType === "B2B" && (
@@ -180,9 +182,9 @@ const CourierSelectionRate = ({ plan, loading, hasFetched }) => {
 
           {/* Mobile View */}
           <div className="md:hidden bg-white rounded-lg mt-[-20px] sm:p-4">
-            {plan.map((item) => (
+            {sortedPlan.map((item, idx) => (
               <div
-                key={item._id}
+                key={item._id || `${item.courierServiceName}-${idx}`}
                 className="bg-white shadow-md rounded-lg p-4 mb-4"
               >
                 <div className="flex items-center space-x-4">
@@ -233,7 +235,7 @@ const CourierSelectionRate = ({ plan, loading, hasFetched }) => {
                     <div className="flex justify-between font-[600] text-[10px] text-gray-500">
                       <span>Charges:</span>
                       <span className="font-[600] text-gray-500">
-                        ₹{item.forward.finalCharges}
+                        ₹{item.forward?.finalCharges ?? "-"}
                       </span>
                     </div>
                   )}

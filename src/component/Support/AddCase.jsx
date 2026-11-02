@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
 import axios from "axios";
-import { toast, ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Cookies from "js-cookie";
 import { Notification } from "../../Notification";
 
@@ -96,6 +94,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
   const [message, setMessage] = useState("");
   const [attachments, setAttachments] = useState([]);
   const [userDetails, setUserDetails] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -192,7 +191,29 @@ export default function AddCase({ isOpen, onClose, refresh }) {
   };
 
   const handleFileChange = (e) => {
-    setAttachments(Array.from(e.target.files));
+    const files = Array.from(e.target.files);
+    if (files.length > 5) {
+      Notification("You can attach at most 5 files.", "info");
+      e.target.value = "";
+      return;
+    }
+    if (files.some((file) => file.size > 10 * 1024 * 1024)) {
+      Notification("Each file can be at most 10 MB.", "info");
+      e.target.value = "";
+      return;
+    }
+    setAttachments(files);
+  };
+
+  // AWBs from an uploaded list: every cell of an Excel sheet, or every word of a csv / txt file
+  const readAwbFile = async (file) => {
+    if (/\.(xlsx|xls)$/i.test(file.name)) {
+      const XLSX = await import("xlsx");
+      const book = XLSX.read(await file.arrayBuffer(), { type: "array" });
+      const rows = XLSX.utils.sheet_to_json(book.Sheets[book.SheetNames[0]], { header: 1, blankrows: false });
+      return rows.flat().map((cell) => String(cell ?? "").trim()).filter(Boolean);
+    }
+    return (await file.text()).split(/[\s,]+/).map((a) => a.trim()).filter(Boolean);
   };
 
   const handleSubmit = async (e) => {
@@ -201,6 +222,12 @@ export default function AddCase({ isOpen, onClose, refresh }) {
       Notification("Please fill all required fields.","info");
       return;
     }
+    if (!userDetails) {
+      Notification("Could not load your account details. Please try again.","error");
+      return;
+    }
+    if (submitting) return;
+    setSubmitting(true);
     try {
       const formData = new FormData();
       formData.append("category", category);
@@ -209,14 +236,11 @@ export default function AddCase({ isOpen, onClose, refresh }) {
       if (awbNumbers.length > 0)
         formData.append("awbNumbers", awbNumbers.join(","));
       formData.append("message", message);
-      formData.append("status", "active");
-      if (userDetails) {
-        formData.append("fullname", userDetails.fullname);
-        formData.append("phoneNumber", userDetails.phoneNumber);
-        formData.append("email", userDetails.email);
-        formData.append("isAdmin", userDetails.isAdmin);
-        formData.append("company", userDetails.company);
-      }
+      formData.append("fullname", userDetails.fullname || "");
+      formData.append("phoneNumber", userDetails.phoneNumber || "");
+      formData.append("email", userDetails.email || "");
+      formData.append("isAdmin", userDetails.isAdmin === true);
+      formData.append("company", userDetails.company || "");
       attachments.forEach((file) => formData.append("attachments", file));
       const token = Cookies.get("session");
       await axios.post(`${REACT_APP_BACKEND_URL}/support`, formData, {
@@ -226,7 +250,9 @@ export default function AddCase({ isOpen, onClose, refresh }) {
       resetForm();
       if (refresh) refresh(true);
     } catch (error) {
-      Notification("Error creating case. Please try again.","error");
+      Notification(error.response?.data?.message || "Error creating case. Please try again.","error");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -238,7 +264,7 @@ export default function AddCase({ isOpen, onClose, refresh }) {
       style={{ animation: "fadeInModal 0.3s cubic-bezier(.4,0,.2,1)" }}
     >
       <form
-        className="bg-white p-4 md:p-6 rounded-lg shadow-lg w-full max-w-6xl flex flex-col gap-4 animate-modalPop md:h-[650px] overflow-y-auto relative"
+        className="bg-white p-4 md:p-6 rounded-lg shadow-lg w-full max-w-3xl flex flex-col gap-4 animate-modalPop max-h-[90vh] overflow-y-auto relative"
         onSubmit={handleSubmit}
         encType="multipart/form-data"
         style={{ animation: "modalPop 0.4s cubic-bezier(.4,0,.2,1)" }}
@@ -414,12 +440,11 @@ export default function AddCase({ isOpen, onClose, refresh }) {
                     onChange={async (e) => {
                       const file = e.target.files[0];
                       if (!file) return;
-                      const text = await file.text();
-                      const awbs = text
-                        .split(/[\s,]+/)
-                        .map((a) => a.trim())
-                        .filter(Boolean);
-                      setAwbNumbers(awbs);
+                      try {
+                        setAwbNumbers(await readAwbFile(file));
+                      } catch (error) {
+                        Notification("Could not read this file.", "error");
+                      }
                     }}
                   />
                   <div className="flex items-center gap-2 border border-dashed border-brand-primary rounded px-3 py-2 bg-brand-secondary/10 text-brand-primary text-[12px] cursor-pointer hover:bg-brand-secondary/16 transition">
@@ -501,24 +526,23 @@ export default function AddCase({ isOpen, onClose, refresh }) {
         {/* Fixed Buttons */}
 
         {/* Fixed Footer Buttons Inside Modal */}
-        <div className="absolute bottom-0 left-0 w-full bg-white border-t border-gray-200 px-4 py-2 flex justify-between md:justify-end gap-2">
+        <div className="sticky -bottom-4 md:-bottom-6 -mx-4 md:-mx-6 -mb-4 md:-mb-6 mt-auto bg-white border-t border-gray-200 px-4 md:px-6 py-3 flex justify-between md:justify-end gap-2 z-20">
           <button
             type="button"
             onClick={resetForm}
-            className="border border-gray-300 text-gray-500 px-3 py-2 rounded-lg bg-gray-200 font-semibold text-[12px] hover:bg-brand-secondary/8 transition w-1/2 md:w-auto"
+            className="border border-gray-200 text-gray-600 px-3 py-2 rounded-lg bg-white font-semibold text-[12px] hover:bg-gray-50 transition w-1/2 md:w-auto"
           >
             Cancel
           </button>
           <button
             type="submit"
-            className="bg-brand-primary text-white px-4 py-2 rounded-lg font-semibold text-[12px] hover:bg-green-600 transition w-1/2 md:w-auto"
+            disabled={submitting}
+            className="bg-brand-primary text-white px-4 py-2 rounded-lg font-semibold text-[12px] hover:bg-green-600 transition w-1/2 md:w-auto disabled:opacity-50"
           >
-            Submit
+            {submitting ? "Submitting..." : "Submit"}
           </button>
         </div>
 
-        {/* Spacer for fixed buttons on mobile */}
-        <div className="h-16 md:hidden" />
         {/* Animations */}
         <style>{`
           @keyframes fadeInModal {

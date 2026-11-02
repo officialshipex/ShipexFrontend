@@ -133,7 +133,12 @@ const DateFilter = ({ onDateChange, clearTrigger, noInitialFilter, className, in
 
     const handleDateOptionClick = (option) => {
         if (option.custom) {
-            setTempDateRange([...dateRange]);
+            // A filter that starts empty opens on today (with no dates the calendar paints the whole month as selected)
+            setTempDateRange(
+                dateRange?.[0]?.startDate
+                    ? [...dateRange]
+                    : [{ startDate: new Date(), endDate: new Date(), key: "selection" }]
+            );
             setShowDropdown(false);
             requestAnimationFrame(() => setShowCustom(true));
         } else {
