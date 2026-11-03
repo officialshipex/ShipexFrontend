@@ -505,7 +505,7 @@ const NewOrder = (filterOrder) => {
           setRefresh={setRefresh}
           refresh={refresh}
           userId={selectedData?.[0]?.userId?._id || selectedData?.[0]?.userId}
-          onPickupSelected={async (formData) => {
+          onPickupSelected={async (formData, priority) => {
             if (title !== "Bulk Ship") {
               setRefresh(prev => !prev);
               setShowBulkShipModal(false);
@@ -515,7 +515,8 @@ const NewOrder = (filterOrder) => {
               setShowBulkShipModal(false);
               Notification("Processing bulk shipment. Please wait...", "info");
               const token = Cookies.get("session");
-              const shipResponse = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/bulk/create-bulk-order`, { selectedOrders, wh: formData?.address ? formData : undefined }, {
+              // a priority ranked in the popup is used for this run whatever the parcel weight
+              const shipResponse = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/bulk/create-bulk-order`, { selectedOrders, wh: formData?.address ? formData : undefined, courierPriority: priority?.length ? priority : undefined }, {
                 headers: { Authorization: `Bearer ${token}` }
               });
               if (shipResponse.data.success) Notification(shipResponse.data.message || `${shipResponse.data.successCount} orders shipped.`, "success");

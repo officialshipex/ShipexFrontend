@@ -501,12 +501,19 @@ const Orders = (filterOrder) => {
           setRefresh={setRefresh}
           refresh={refresh}
           userId={id}
-          onPickupSelected={async (formData) => {
+          onPickupSelected={async (formData, priority) => {
+            // "Update Pickup Address" uses the same popup: it only saves the address, it must never ship
+            if (title !== "Bulk Ship") {
+              setRefresh(prev => !prev);
+              setShowBulkShipModal(false);
+              return;
+            }
             try {
               setShowBulkShipModal(false);
               Notification("Processing bulk shipment. Please wait...", "info");
               const token = Cookies.get("session");
-              const shipResponse = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/bulk/create-bulk-order`, { selectedOrders, wh: formData?.address ? formData : undefined }, {
+              // a priority ranked in the popup is used for this run whatever the parcel weight
+              const shipResponse = await axios.post(`${process.env.REACT_APP_BACKEND_URL}/bulk/create-bulk-order`, { selectedOrders, wh: formData?.address ? formData : undefined, courierPriority: priority?.length ? priority : undefined }, {
                 headers: { Authorization: `Bearer ${token}` }
               });
               if (shipResponse.data.success) Notification(shipResponse.data.message || `${shipResponse.data.successCount} orders shipped.`, "success");

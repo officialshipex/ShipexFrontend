@@ -33,7 +33,11 @@ const UpdateReceiverAdd = ({ isOpen, onClose, onSave, ReceiverAddress }) => {
   }, [ReceiverAddress]);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name } = e.target;
+    let { value } = e.target;
+    // couriers want exactly 10 digits: never let a space / +91 / letter into the saved number
+    if (name === "phoneNumber") value = value.replace(/\D/g, "").slice(0, 10);
+    if (name === "pinCode") value = value.replace(/\D/g, "").slice(0, 6);
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
@@ -42,7 +46,7 @@ const UpdateReceiverAdd = ({ isOpen, onClose, onSave, ReceiverAddress }) => {
 
   const handlePincodeChange = async (e) => {
     handleChange(e);
-    const enteredPincode = e.target.value;
+    const enteredPincode = e.target.value.replace(/\D/g, "").slice(0, 6);
 
     if (enteredPincode.length === 6) {
       try {
@@ -76,6 +80,21 @@ const UpdateReceiverAdd = ({ isOpen, onClose, onSave, ReceiverAddress }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const missing = ["contactName", "phoneNumber", "address", "pinCode", "city", "state"].filter(
+      (k) => !String(formData[k] || "").trim()
+    );
+    if (missing.length) {
+      Notification("Please fill name, phone, address and a valid pincode.", "info");
+      return;
+    }
+    if (!/^\d{10}$/.test(formData.phoneNumber)) {
+      Notification("Phone number must be exactly 10 digits.", "info");
+      return;
+    }
+    if (!/^\d{6}$/.test(formData.pinCode)) {
+      Notification("Pincode must be exactly 6 digits.", "info");
+      return;
+    }
     if (onSave) {
       onSave(formData);
     }
@@ -117,6 +136,7 @@ const UpdateReceiverAdd = ({ isOpen, onClose, onSave, ReceiverAddress }) => {
           </label>
           <input
             type="text"
+            inputMode="numeric"
             name="phoneNumber"
             placeholder="Enter Phone Number"
             value={formData.phoneNumber}

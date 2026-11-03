@@ -35,29 +35,19 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh, initialData }) => 
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // Phone number validation
-    if (name === "phoneNumber") {
-      const cleanedPhone = value.replace(/\D/g, ""); // Remove non-digit characters
+    // Phone number: digits only, at most 10. Extra digits are cut instead of the keystroke being refused —
+    // refusing it locked the field for an order saved with two numbers ("9727977677, 9574663777"): even
+    // deleting one character still left more than 10 digits, so nothing could be changed.
+    const cleanedValue = name === "phoneNumber" ? value.replace(/\D/g, "").slice(0, 10) : value;
 
-      if (cleanedPhone.length > 10) {
-        Notification("Phone number must be exactly 10 digits.", "info");
-        return;
-      }
-
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: cleanedPhone,
-      }));
-    } else {
-      setFormData((prevData) => ({
-        ...prevData,
-        [name]: value,
-      }));
-    }
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: cleanedValue,
+    }));
 
     setReceiverAddress((prevData) => ({
       ...prevData,
-      [name]: value,
+      [name]: cleanedValue,
     }));
   };
 
@@ -173,9 +163,13 @@ const AddReceiverAddress = ({ setReceiverAddress, setRefresh, initialData }) => 
               value={formData.phoneNumber}
               onChange={handleChange}
               placeholder="Enter Phone Number"
-              className="w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-brand-primary"
+              inputMode="numeric"
+              className={`w-full border font-[600] rounded-lg px-3 py-2 text-[12px]  outline-none focus:ring-1 focus:ring-brand-primary ${formData.phoneNumber && !/^\d{10}$/.test(formData.phoneNumber) ? "border-red-400" : ""}`}
               required
             />
+            {formData.phoneNumber && !/^\d{10}$/.test(formData.phoneNumber) && (
+              <p className="text-[10px] text-red-500 mt-0.5">Enter one 10-digit mobile number.</p>
+            )}
           </div>
           <div>
             <label className="block font-[600] text-[12px]">

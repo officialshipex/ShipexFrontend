@@ -28,7 +28,9 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
         city: "",
         state: "",
     });
-    console.log("userId in select pickup popup", userId)
+    // One popup, two jobs: "Bulk Ship" (pickup optional + courier priority, the caller then ships) and every
+    // update-address flow (pickup required, nothing about couriers, nothing is shipped).
+    const isBulkShip = title === "Bulk Ship";
     const navigate = useNavigate()
     // console.log(setSelectedData)
     const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -59,6 +61,7 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
     // fetched independently so a failure here never blocks shipping.
     useEffect(() => {
         const fetchCourierServices = async () => {
+            if (!isBulkShip) return; // courier priority belongs to bulk ship only
             if (!effectiveUserId || effectiveUserId === "null" || effectiveUserId === "undefined") return;
             try {
                 const token = Cookies.get("session");
@@ -85,7 +88,7 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
             }
         };
         fetchCourierServices();
-    }, [effectiveUserId, REACT_APP_BACKEND_URL]);
+    }, [effectiveUserId, REACT_APP_BACKEND_URL, isBulkShip]);
 
     // Composite key — courierServiceName alone isn't unique (same courier can
     // appear with different modes, e.g. Surface vs Air), so dedupe/exclude on
@@ -163,10 +166,16 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
             return;
         }
 
+        // Updating the address: a pickup address is the whole point
+        if (!isBulkShip && !(formData.address && formData.contactName)) {
+            Notification("Please select a pickup address.", "info");
+            return;
+        }
+
         // Priority is optional and independent of the pickup-address update —
         // a failure here must never block shipping. Only touch it at all if
-        // the user actually picked something this time.
-        if (rankedCouriers.length > 0 && rankedCouriers.map(courierKey).join("##") !== savedPriorityKeys.current) {
+        // the user actually picked something this time (bulk ship only).
+        if (isBulkShip && rankedCouriers.length > 0 && rankedCouriers.map(courierKey).join("##") !== savedPriorityKeys.current) {
             try {
                 await axios.post(
                     `${REACT_APP_BACKEND_URL}/courier/saveCourierPriority?userId=${effectiveUserId}`,
@@ -198,7 +207,8 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
                 if (hasPickup) Notification("Pickup address selected successfully!", "success");
 
                 if (typeof onPickupSelected === "function") {
-                    await onPickupSelected(formData);
+                    // the couriers ranked here go with the bulk shipment: used whatever the parcel weight
+                    await onPickupSelected(formData, isBulkShip ? rankedCouriers : []);
                 } else {
                     setRefresh && setRefresh(!refresh);
                 }
@@ -266,9 +276,14 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
                 <div className="flex items-center gap-2 mb-2">
                     <MapPin className="w-4 h-4 text-brand-primary" />
                     <h2 className="font-[600] text-[12px] sm:text-[14px] text-gray-700">
-                        Select Pickup Address
+                        {isBulkShip ? "Bulk Ship" : "Update Pickup Address"}
                     </h2>
                 </div>
+                {isBulkShip && (
+                    <p className="text-[10px] sm:text-[12px] text-gray-500 mb-2">
+                        Pickup address (optional) — leave empty to ship from each order's own pickup address.
+                    </p>
+                )}
                 {/* header and the Cancel / Save buttons stay fixed; everything between scrolls */}
                 <div className="flex-1 overflow-y-auto pr-1 min-h-0">
                 <Select
@@ -303,7 +318,7 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
                     </div>
                 )}
                 {/* Courier Priority — optional, mirrors Setup & Manage > Courier > Courier Priority */}
-                {courierServices.length > 0 && (
+                {isBulkShip && courierServices.length > 0 && (
                     <div className="mt-4 pt-3 border-t border-gray-200">
                         <div className="flex items-center gap-2 mb-1">
                             <ListOrdered className="w-4 h-4 text-brand-primary" />
@@ -312,8 +327,9 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
                             </h2>
                         </div>
                         <p className="text-[10px] sm:text-[12px] text-gray-500 mb-2">
-                            Rank your preferred couriers — this updates your account's standing priority
-                            for all future shipments too. Leave blank to keep your current settings.
+                            Only the couriers listed here are used, in this order, whatever the parcel weight
+                            (extra weight is charged per the rate card). This also becomes your standing priority.
+                            Leave blank to use your current settings.
                         </p>
                         <Select
                             options={availableCourierOptions}
@@ -373,7 +389,7 @@ const SelectPickupPopup = ({ onClose, setSelectedData, title, setRefresh, refres
                         onClick={handleSubmit}
                         className="bg-brand-primary text-[10px] sm:text-[12px] font-[600] text-white px-5 py-2 rounded-lg hover:bg-opacity-90 transition-all"
                     >
-                        Save
+                        {isBulkShip ? "Ship" : "Save"}
                     </button>
                 </div>
             </div>
