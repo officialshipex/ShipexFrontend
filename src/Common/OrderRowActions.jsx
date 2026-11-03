@@ -2,7 +2,14 @@ import React, { useState, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import { FiMoreHorizontal } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import { isAmazonAtsOrder, handleB2BLabel, handleGatiDocketCopy, cancelB2BOrder } from "./orderActions";
+import {
+    isAmazonAtsOrder,
+    handleB2BLabel,
+    handleGatiDocketCopy,
+    cancelB2BOrder,
+    cancelOrder as deleteNewOrder,
+    handleCancelOrderAtBooked,
+} from "./orderActions";
 
 const OrderRowActions = ({
     index,
@@ -32,16 +39,19 @@ const OrderRowActions = ({
     const isNewOrder = order.status === "new";
     const isB2B = order.orderType === "B2B";
 
-    // Unified cancel handler
+    // Delete vs cancel follows the ORDER'S STATUS, exactly like the menu label below — never which handler the
+    // page happened to pass in:
+    //   new (not booked)  -> "Delete Order": the order is removed from the database
+    //   booked            -> "Cancel Order": the courier booking is cancelled + refunded, the order stays
     const onCancel = (e) => {
         e.stopPropagation();
-        // A booked B2B order has to be cancelled with its courier (and refunded) by the B2B route
-        if (isB2B && !isNewOrder) {
-            cancelB2BOrder({ orderId: order._id, setRefresh });
-        } else if (cancelOrder) {
-            cancelOrder({ orderId: order._id, refresh, setRefresh });
-        } else if (handleCancelOrder) {
-            handleCancelOrder(order, setRefresh);
+        if (isNewOrder) {
+            (cancelOrder || deleteNewOrder)({ orderId: order._id, orderNumber: order.orderId, refresh, setRefresh });
+        } else if (isB2B) {
+            // a booked B2B order is cancelled with its courier (and refunded) by the B2B route
+            cancelB2BOrder({ orderId: order._id, orderNumber: order.orderId, setRefresh });
+        } else {
+            (handleCancelOrder || handleCancelOrderAtBooked)(order, setRefresh);
         }
         setDropdownOpen(null);
     };

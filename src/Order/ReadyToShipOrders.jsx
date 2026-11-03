@@ -25,6 +25,7 @@ import {
   handleBulkDownloadInvoice,
   ExportExcel,
   BulkCancel,
+  BulkCancelShipments,
   handleCancelOrderAtBooked,
   handleManifest,
   handleBulkDownloadManifests,
@@ -275,41 +276,14 @@ const ReadyToShipOrders = (filterOrder) => {
   const handleBulkDownloadManifest = async () => {
     handleBulkDownloadManifests(selectedOrders);
   };
-  const handleBulkCancel = async ({ selectedOrders, setRefresh }) => {
-    try {
-      Notification("Processing bulk cancellation, please wait...", "info")
-      const token = Cookies.get("session");
-      const response = await axios.post(
-        `${REACT_APP_BACKEND_URL}/order/bulkCancelOrder`,
-        { selectedOrders },
-        {
-          headers: { authorization: `Bearer ${token}` },
-        }
-      );
-
-      const data = response.data;
-
-      if (data.success) {
-        // Show message with success/failed counts
-        Notification(data?.message, "success")
-        if (setRefresh) setRefresh((prev) => !prev);
-        console.log("Details:", data);
-      } else {
-        Notification(data?.message || "Bulk cancellation failed", "error");
-      }
-    } catch (error) {
-      console.error("Error during bulk cancellation:", error);
-      Notification("Failed to cancel order", "error")
-    }
-    finally {
-    }
-  };
-
+  // Booked shipments are CANCELLED (courier cancel + refund), never deleted. This button was labelled
+  // "Bulk Delete" while the Actions menu called the same thing "Bulk Cancel".
+  const handleBulkCancel = ({ selectedOrders, setRefresh }) => BulkCancelShipments({ selectedOrders, setRefresh });
 
   const quickActions = [
     { label: "Export", onClick: () => ExportExcel({ selectedOrders, orders }) },
     { label: "Download Invoice", onClick: () => handleBulkDownloadInvoice({ selectedOrders }) },
-    { label: "Bulk Delete", onClick: () => handleBulkCancel({ selectedOrders, setRefresh }) },
+    { label: "Bulk Cancel", onClick: () => handleBulkCancel({ selectedOrders, setRefresh }) },
   ];
 
   return (

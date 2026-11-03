@@ -8,6 +8,7 @@ import { toTenantUrl } from "../utils/tenantApiDomain";
 import { refreshNotifications } from "../utils/NotificationListProvider";
 import { customerOrderIdOf } from "./customerOrderId";
 import { startDownloadProgress } from "../utils/downloadProgress";
+import { confirmBulkAction } from "./BulkActionConfirm";
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 // Plain fetch() calls skip the axios interceptor, which is what tells the backend which company a local
@@ -272,20 +273,45 @@ export const handleGatiDocketCopy = async (id) => {
 };
 
 // A booked B2B order is cancelled with its courier (and refunded) by the B2B cancel route.
-export const cancelB2BOrder = async ({ orderId, setRefresh }) => {
+export const cancelB2BOrder = async ({ orderId, orderNumber, setRefresh }) => {
+  if (!(await confirmBulkAction({ action: "cancel", count: 1, orderNumber }))) return;
   try {
-    Notification("Cancelling order, please wait...", "info");
+    Notification("Cancelling the shipment with the courier, please wait...", "info");
     const token = Cookies.get("session");
     const response = await axios.post(
       `${REACT_APP_BACKEND_URL}/b2b/cancelOrder/${orderId}`,
       {},
       { headers: { authorization: `Bearer ${token}` } },
     );
-    Notification(response.data?.message || "Order cancelled successfully", "success");
+    Notification(response.data?.message || "Shipment cancelled — the order is in Cancelled and the freight is refunded", "success");
     if (setRefresh) setRefresh((prev) => !prev);
   } catch (error) {
-    Notification(error?.response?.data?.message || "Failed to cancel order. Please try again.", "error");
+    Notification(error?.response?.data?.message || "Failed to cancel the shipment. Please try again.", "error");
   }
+};
+
+// Bulk CANCEL for booked B2B orders (B2B Ready To Ship tab). The B2C bulk cancel only knows B2C couriers, so each
+// order goes through the B2B cancel (courier cancel + refund), a few at a time. The orders are kept (Cancelled).
+// This tab used to offer "Bulk Delete" here, which can never apply to booked orders.
+export const BulkCancelB2BShipments = async ({ selectedOrders, setRefresh }) => {
+  if (!selectedOrders || selectedOrders.length === 0) return;
+  if (!(await confirmBulkAction({ action: "cancel", count: selectedOrders.length }))) return;
+  Notification(`Cancelling ${selectedOrders.length} shipment(s) with the courier, please wait...`, "info");
+  const token = Cookies.get("session");
+  let ok = 0;
+  const failures = [];
+  for (let i = 0; i < selectedOrders.length; i += 5) {
+    const batch = selectedOrders.slice(i, i + 5);
+    const results = await Promise.allSettled(
+      batch.map((id) =>
+        axios.post(`${REACT_APP_BACKEND_URL}/b2b/cancelOrder/${id}`, {}, { headers: { authorization: `Bearer ${token}` } })
+      )
+    );
+    results.forEach((r) => (r.status === "fulfilled" ? ok++ : failures.push(r.reason?.response?.data?.message || "failed")));
+  }
+  if (!failures.length) Notification(`Cancelled ${ok} shipment(s). The orders are in Cancelled and the freight is refunded.`, "success");
+  else Notification(`Cancelled ${ok} shipment(s), ${failures.length} could not be cancelled — ${failures[0]}`, "error");
+  if (typeof setRefresh === "function") setRefresh((prev) => !prev);
 };
 
 // Bulk label / invoice PDFs come from the backend in batches (POST <path> { orderIds }, one merged PDF per
@@ -466,8 +492,12 @@ export const SavePackageDetails = async ({
   }
 };
 
+// Bulk DELETE (New tab): removes not-yet-booked orders for good. The backend only ever deletes orders that are
+// still "new" and have no AWB, so a booked shipment is never deleted here — those are cancelled with
+// BulkCancelShipments below.
 export const BulkCancel = async ({ selectedOrders, setRefresh }) => {
   if (!selectedOrders || selectedOrders.length === 0) return;
+  if (!(await confirmBulkAction({ action: "delete", count: selectedOrders.length }))) return;
 
   Notification(`Deleting ${selectedOrders.length} order(s), please wait...`, "info");
 
@@ -491,9 +521,34 @@ export const BulkCancel = async ({ selectedOrders, setRefresh }) => {
 
 export const BulkCancelB2B = BulkCancel;
 
-export const cancelOrder = async ({ orderId, refresh, setRefresh }) => {
+// Bulk CANCEL (Ready To Ship tab): cancels booked shipments with the courier and refunds the freight; the orders
+// stay (status Cancelled). Runs in the background — progress and per-order result appear in the notification bell.
+// Works for the seller (own orders) and for admin / employee sessions (any seller).
+export const BulkCancelShipments = async ({ selectedOrders, setRefresh }) => {
+  if (!selectedOrders || selectedOrders.length === 0) return;
+  if (!(await confirmBulkAction({ action: "cancel", count: selectedOrders.length }))) return;
+
+  Notification("Processing bulk cancellation, please wait...", "info");
+  const token = Cookies.get("session");
   try {
-    Notification("Cancelling order, please wait...", "info");
+    const { data } = await axios.post(
+      `${REACT_APP_BACKEND_URL}/order/bulkCancelOrder`,
+      { selectedOrders },
+      { headers: { authorization: `Bearer ${token}` } }
+    );
+    if (data?.success) Notification(data?.message || "Bulk cancellation started.", "success");
+    else Notification(data?.message || "Bulk cancellation failed", "error");
+  } catch (error) {
+    Notification(error?.response?.data?.message || "Failed to cancel the selected shipments.", "error");
+  }
+  if (typeof setRefresh === "function") setRefresh((prev) => !prev);
+};
+
+// A not-yet-booked order is DELETED by this route (cancelOrdersAtNotShipped removes it from the database)
+export const cancelOrder = async ({ orderId, orderNumber, refresh, setRefresh }) => {
+  if (!(await confirmBulkAction({ action: "delete", count: 1, orderNumber }))) return;
+  try {
+    Notification("Deleting order, please wait...", "info");
     const token = Cookies.get("session");
     const response = await axios.post(
       `${REACT_APP_BACKEND_URL}/order/cancelOrdersAtNotShipped`,
@@ -502,17 +557,18 @@ export const cancelOrder = async ({ orderId, refresh, setRefresh }) => {
         headers: { authorization: `Bearer ${token}` },
       },
     );
-    Notification(response.data.message, "success");
-    setRefresh(!refresh);
+    Notification(response.data?.message || "Order deleted successfully", "success");
+    if (typeof setRefresh === "function") setRefresh((prev) => !prev);
   } catch (error) {
-    Notification("Failed to cancel order. Please try again.", "error");
+    Notification(error?.response?.data?.error || "Failed to delete the order. Please try again.", "error");
   }
 };
 
+// A booked order: the shipment is cancelled with the courier and refunded; the order stays (Cancelled)
 export const handleCancelOrderAtBooked = async (orderData, setRefresh) => {
+  if (!(await confirmBulkAction({ action: "cancel", count: 1, orderNumber: orderData?.orderId }))) return;
   try {
-    Notification("Cancelling booked order, please wait...", "info");
-    console.log("order", orderData)
+    Notification("Cancelling the shipment with the courier, please wait...", "info");
     const token = Cookies.get("session");
     const response = await axios.post(
       `${REACT_APP_BACKEND_URL}/order/cancelOrdersAtBooked`,
@@ -521,12 +577,12 @@ export const handleCancelOrderAtBooked = async (orderData, setRefresh) => {
         headers: { authorization: `Bearer ${token}` },
       }
     );
-    Notification("Order canceled successfully", "success");
+    Notification("Shipment cancelled — the order is in Cancelled and the freight is refunded", "success");
     if (setRefresh) setRefresh((prev) => !prev);
   } catch (error) {
     Notification(
       error?.response?.data?.error ||
-      "Failed to cancel order. Please try again.", "error"
+      "Failed to cancel the shipment. Please try again.", "error"
     );
   } finally {
   }

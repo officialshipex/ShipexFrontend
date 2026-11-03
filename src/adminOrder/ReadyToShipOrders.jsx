@@ -20,6 +20,7 @@ import {
   handleManifest,
   handleBulkDownloadManifests,
   handleCancelOrderAtBooked,
+  BulkCancelShipments,
   handleClone
 } from "../Common/orderActions";
 import OrdersTable from "../Common/OrdersTable";
@@ -202,9 +203,13 @@ const ReadyToShipOrders = ({ userId: initialUserId, initialDateRange }) => {
     handleBulkDownloadManifests(selectedOrders);
   };
 
+  // Admin can cancel booked shipments in bulk too (the seller tab already could): courier cancel + refund
+  const handleBulkCancel = () => BulkCancelShipments({ selectedOrders, setRefresh });
+
   const quickActions = [
     { label: "Export", onClick: () => ExportExcel({ selectedOrders, orders }) },
     { label: "Download Invoice", onClick: () => handleBulkDownloadInvoice({ selectedOrders }) },
+    { label: "Bulk Cancel", onClick: handleBulkCancel },
   ];
 
   return (
@@ -263,6 +268,10 @@ const ReadyToShipOrders = ({ userId: initialUserId, initialDateRange }) => {
                   <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer flex items-center gap-2"
                     onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setDesktopDropdownOpen(false); }}>
                     Download Labels
+                  </li>
+                  <li className="px-3 py-2 text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2"
+                    onClick={() => { handleBulkCancel(); setDesktopDropdownOpen(false); }}>
+                    Bulk Cancel
                   </li>
                 </ul>
               </div>
@@ -331,6 +340,7 @@ const ReadyToShipOrders = ({ userId: initialUserId, initialDateRange }) => {
                   <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer" onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Invoices</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer" onClick={() => { handleBulkDownloadManifest(); setMobileDropdownOpen(false); }}>Download Manifests</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer" onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Labels</li>
+                  <li className="px-3 py-2 text-red-600 hover:bg-red-50 cursor-pointer" onClick={() => { handleBulkCancel(); setMobileDropdownOpen(false); }}>Bulk Cancel</li>
                 </ul>
               </div>
             )}

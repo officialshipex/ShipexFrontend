@@ -171,7 +171,7 @@ const ReadyToShipOrders = (filterOrder) => {
 
   const quickActions = [
     { label: "Export", onClick: () => ExportExcel({ selectedOrders, orders }) },
-    { label: "Bulk Delete", onClick: () => BulkCancelB2B({ selectedOrders, setRefresh }) },
+    { label: "Bulk Cancel", onClick: () => BulkCancelB2BShipments({ selectedOrders, setRefresh }) },
   ];
 
   return (
@@ -228,8 +228,8 @@ const ReadyToShipOrders = (filterOrder) => {
                     Download Labels
                   </li>
                   <li className="px-3 py-2 text-red-600 hover:bg-red-50 cursor-pointer flex items-center gap-2"
-                    onClick={() => { BulkCancelB2B({ selectedOrders, setRefresh }); setDesktopDropdownOpen(false); }}>
-                    Bulk Delete
+                    onClick={() => { BulkCancelB2BShipments({ selectedOrders, setRefresh }); setDesktopDropdownOpen(false); }}>
+                    Bulk Cancel
                   </li>
                 </ul>
               </div>
@@ -292,7 +292,7 @@ const ReadyToShipOrders = (filterOrder) => {
                   <li className="px-3 py-2 text-gray-700 hover:bg-brand-primary/8 cursor-pointer" onClick={() => { ExportExcel({ selectedOrders, orders }); setMobileDropdownOpen(false); }}>Export Excel</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-brand-primary/8 cursor-pointer" onClick={() => { handleBulkDownloadInvoice({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Invoices</li>
                   <li className="px-3 py-2 text-gray-700 hover:bg-brand-primary/8 cursor-pointer" onClick={() => { handleBulkDownloadLabel({ selectedOrders }); setMobileDropdownOpen(false); }}>Download Labels</li>
-                  <li className="px-3 py-2 text-red-600 hover:bg-red-100 cursor-pointer" onClick={() => { BulkCancelB2B({ selectedOrders, setRefresh }); setMobileDropdownOpen(false); }}>Bulk Delete</li>
+                  <li className="px-3 py-2 text-red-600 hover:bg-red-100 cursor-pointer" onClick={() => { BulkCancelB2BShipments({ selectedOrders, setRefresh }); setMobileDropdownOpen(false); }}>Bulk Cancel</li>
                 </ul>
               </div>
             )}
