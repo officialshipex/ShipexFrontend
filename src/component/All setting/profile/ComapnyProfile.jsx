@@ -12,6 +12,7 @@ import { FiEdit, FiAlertCircle } from "react-icons/fi";
 // import GstDetailsEditModal from "./GstDetailsEditModal";
 import { Notification } from "../../../Notification";
 import TwoFactor from "../TwoFactor";
+import UpgradePlanModal from "./UpgradePlanModal";
 import { useBranding } from "../../../context/BrandingContext";
 // import UpdateRateCardPopup from "./UpdateRateCardPopup"
 // import EarlyCODModal from "../Billings/EarlyCodPopup";
@@ -79,6 +80,18 @@ export default function ProfileCard() {
   const [showPanEditModal, setShowPanEditModal] = useState(false);
   const [showGstEditModal, setShowGstEditModal] = useState(false);
   const [showReferralModal, setShowReferralModal] = useState(false);
+  const [showUpgradePlan, setShowUpgradePlan] = useState(false);
+  // "Upgrade plan" only where recharge plans are on for this company and apply to this seller
+  const [canUpgradePlan, setCanUpgradePlan] = useState(false);
+  useEffect(() => {
+    if (id) return; // an admin viewing another seller's profile
+    let alive = true;
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/rate-plans/status`, { headers: { Authorization: `Bearer ${Cookies.get("session")}` } })
+      .then((res) => { if (alive) setCanUpgradePlan(res.data?.available === true && res.data?.managed === true); })
+      .catch(() => { if (alive) setCanUpgradePlan(false); });
+    return () => { alive = false; };
+  }, [id]);
   const [isEnabled, setIsEnabled] = useState(false);
   const [showPrivateKey, setShowPrivateKey] = useState(false);
   const [showRateCardModal, setShowRateCardModal] = useState(false);
@@ -601,7 +614,18 @@ export default function ProfileCard() {
                         <span>{userData?.rateCard || "Basic Plan"}</span>
                       </div>
                     ) : (
-                      userData?.rateCard || "Basic Plan"
+                      <span className="inline-flex items-center gap-2">
+                        {userData?.rateCard || "Basic Plan"}
+                        {canUpgradePlan && !admin && !id && (
+                          <button
+                            type="button"
+                            onClick={() => setShowUpgradePlan(true)}
+                            className="px-2 py-0.5 rounded-full border border-brand-primary text-brand-primary text-[10px] font-[600] hover:bg-green-50 whitespace-nowrap"
+                          >
+                            Upgrade plan
+                          </button>
+                        )}
+                      </span>
                     ),
                   },
                   {
@@ -842,7 +866,7 @@ export default function ProfileCard() {
         </>
       )}
 
-
+      {showUpgradePlan && <UpgradePlanModal onClose={() => setShowUpgradePlan(false)} />}
     </div>
   );
 }

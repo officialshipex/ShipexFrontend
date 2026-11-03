@@ -13,7 +13,11 @@ const RechargeWallet = () => {
   // value at call time -- it does not see our page's CSS, so a CSS var string would not
   // resolve there the way it does in our own DOM. Use the actual resolved hex instead.
   const { colors: brandColors, companyDisplayName } = useBranding();
-  const [amount, setAmount] = useState("1000");
+  // ?amount= prefills the amount (Upgrade plan sends the plan's recharge amount); never below the Rs.1000 minimum
+  const [amount, setAmount] = useState(() => {
+    const q = Number(new URLSearchParams(window.location.search).get("amount"));
+    return Number.isFinite(q) && q >= 1000 && q <= 10000000 ? String(Math.round(q)) : "1000";
+  });
   const [user, setUser] = useState(null);
   const [balance, setBalance] = useState(null);
   const [walletId, setWalletId] = useState(null);

@@ -6,6 +6,7 @@ import EmployeeAuthModal from "../../employeeAuth/EmployeeAuthModal";
 import Loader from "../../Loader";
 import AddPlanModal from "./AddPlanModal";
 import UploadRatecard from "./UploadRatecard";
+import RechargePlansModal from "./RechargePlansModal";
 import Cookies from "js-cookie";
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { FiChevronDown, FiArrowLeft, FiSearch } from "react-icons/fi";
@@ -27,6 +28,7 @@ const RateCard = ({ isSidebarAdmin }) => {
   const [isAddPlanModalOpen, setIsAddPlanModalOpen] = useState(false);
   const [plans, setPlans] = useState([]);
   const [isUploadRatecardModalOpen, setIsUploadRatecardModalOpen] = useState(false);
+  const [isRechargePlansOpen, setIsRechargePlansOpen] = useState(false);
   const [isPlanOpen, setIsPlanOpen] = useState(false);
   const [isStatusOpen, setIsStatusOpen] = useState(false);
   const [tableHeight, setTableHeight] = useState("calc(100vh - 200px)");
@@ -239,6 +241,13 @@ const RateCard = ({ isSidebarAdmin }) => {
             >
               Upload
             </button>
+            <button
+              className={`bg-brand-primary sm:text-[12px] text-[10px] font-bold hover:bg-opacity-90 text-white px-3 h-9 rounded-lg transition-all ${canAction ? "" : "opacity-50 cursor-not-allowed"}`}
+              onClick={() => canAction && setIsRechargePlansOpen(true)}
+              disabled={!canAction}
+            >
+              Recharge Plans
+            </button>
           </div>
         </div>
         <div className="hidden sm:block overflow-auto border border-gray-200 bg-white" style={{ height: tableHeight }}>
@@ -439,6 +448,7 @@ const RateCard = ({ isSidebarAdmin }) => {
           onClose={() => setIsUploadRatecardModalOpen(false)}
           setRefresh={refreshRates}
         />
+        <RechargePlansModal isOpen={isRechargePlansOpen} onClose={() => setIsRechargePlansOpen(false)} />
       </div>
     )
   );
