@@ -11,6 +11,7 @@ import { CheckCircleIcon, ClockIcon } from "lucide-react";
 import ThreeDotLoader from "../Loader"
 import VerifyPhoneEmail from "./VerifyPhoneEmail";
 import { loadDraft, useDraftAutosave } from "./kycDraft";
+import { useDigilocker } from "./useDigilocker";
 
 
 
@@ -726,6 +727,27 @@ const BusinessTypeSelection = () => {
     }
   };
 
+  // Aadhaar through DigiLocker: the main way (the OTP above is kept as the fallback)
+  const digilocker = useDigilocker({
+    onVerified: (body) => {
+      const d = body?.data || {};
+      setDocumentDetails((prev) => ({
+        ...prev,
+        aadharNo: d.aadhaarNumber || prev.aadharNo,
+        name: d.name || "",
+        guardianName: d.sonOf || "",
+        address: d.address || "",
+        city: d.city || "",
+        state: d.state || "",
+      }));
+      setIsAadharVerified(true);
+      setIsOtpSent(false);
+      setIsOtpPopupOpen(false);
+      Notification(body?.alreadyVerified ? "Aadhaar already verified" : "Aadhaar verified through DigiLocker!", "success");
+    },
+    onFailed: (message) => Notification(message, "error"),
+  });
+
   const verifyGstin = async () => {
     if (!gstNumber) {
       Notification("Please enter GST number!", "info")
@@ -1265,24 +1287,33 @@ const BusinessTypeSelection = () => {
                         onChange={(e) =>
                           setDocumentDetails({ ...documentDetails, aadharNo: e.target.value })
                         }
-                        disabled={isLoading || isAadharVerified}
+                        disabled={isLoading || isAadharVerified || digilocker.phase !== "idle"}
                       />
                     </div>
 
-                    <div className="flex items-end">
+                    <div className="flex items-end gap-2 sm:col-span-2 flex-wrap">
                       {!isAadharVerified ? (
-                        <button
-                          onClick={() => {
-                            handleSendOtp();
-                            setIsOtpPopupOpen(true);
-                            setOtpError("");
-                            setOtpDigits(new Array(6).fill(""));
-                          }}
-                          className="bg-brand-primary text-white px-3 py-2 text-[12px] rounded-lg w-auto"
-                          disabled={isAadharVerified || isLoading || timerActive}
-                        >
-                          {isOtpSent ? "OTP Sent" : "Send OTP"}
-                        </button>
+                        <>
+                          <button
+                            onClick={() => digilocker.start(String(documentDetails.aadharNo || "").replace(/\s/g, ""))}
+                            className="bg-brand-primary text-white px-3 py-2 text-[12px] rounded-lg w-auto disabled:opacity-50"
+                            disabled={isLoading || digilocker.phase !== "idle" || String(documentDetails.aadharNo || "").replace(/\s/g, "").length !== 12}
+                          >
+                            {digilocker.phase === "starting" ? "Opening DigiLocker…" : "Verify with DigiLocker"}
+                          </button>
+                          <button
+                            onClick={() => {
+                              handleSendOtp();
+                              setIsOtpPopupOpen(true);
+                              setOtpError("");
+                              setOtpDigits(new Array(6).fill(""));
+                            }}
+                            className="border border-brand-primary text-brand-primary bg-white px-3 py-2 text-[12px] rounded-lg w-auto disabled:opacity-50"
+                            disabled={isAadharVerified || isLoading || timerActive || digilocker.phase !== "idle"}
+                          >
+                            {isOtpSent ? "OTP Sent" : "Use OTP instead"}
+                          </button>
+                        </>
                       ) : (
                         <div className="flex items-center gap-1 mb-1.5 text-brand-primary font-semibold text-[12px]">
                           <p className="w-6 h-6 flex items-center justify-center">
@@ -1295,6 +1326,19 @@ const BusinessTypeSelection = () => {
                     </div>
                   </div>
 
+
+                  {digilocker.phase === "waiting" && (
+                    <div className="mt-3 px-3 py-2.5 rounded-lg bg-gray-50 border border-gray-200 text-[12px] text-gray-600">
+                      <b className="text-gray-800">Waiting for DigiLocker…</b> Log in in the new window and click <b>Allow</b> to share your Aadhaar. This page updates by itself.
+                      <div className="mt-1.5 flex flex-wrap gap-x-4 gap-y-1 font-semibold">
+                        {digilocker.link && (
+                          <a href={digilocker.link} target="_blank" rel="noopener noreferrer" className="text-brand-primary hover:underline">Open DigiLocker again</a>
+                        )}
+                        <button type="button" onClick={() => digilocker.checkNow()} className="text-brand-primary hover:underline">I have finished</button>
+                        <button type="button" onClick={digilocker.cancel} className="text-gray-500 hover:underline">Cancel</button>
+                      </div>
+                    </div>
+                  )}
 
                   {/* 🔹 Aadhaar result info (Row 2 onwards) */}
                   <div className="grid sm:grid-cols-6 gap-2 mt-2 w-full">

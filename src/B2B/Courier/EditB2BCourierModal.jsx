@@ -91,6 +91,13 @@ const FIELD_META = {
     placeholder: "Optional — auto from products, else 401",
     colSpan: "sm:col-span-1",
   },
+  trackingToken: {
+    label: "Tracking Token",
+    type: "text",
+    placeholder: "Security token for tracking (16 characters)",
+    isMono: true,
+    colSpan: "sm:col-span-1",
+  },
   encryptedCustCode: {
     label: "Encrypted Customer Code",
     type: "text",

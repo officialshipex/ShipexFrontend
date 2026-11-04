@@ -173,6 +173,7 @@ const b2bCourierConfigs = {
       { name: "customerCode", label: "Customer Code", placeholder: "8-digit code", type: "text" },
       { name: "encryptedCustCode", label: "Encrypted Cust Code", placeholder: "Encrypted customer code", type: "text" },
       { name: "goodsCode", label: "Default Goods Code", placeholder: "Optional — auto from products, else 401", type: "text", optional: true },
+      { name: "trackingToken", label: "Tracking Token", placeholder: "Security token for tracking (16 characters)", type: "text", optional: true },
     ],
   },
 };
