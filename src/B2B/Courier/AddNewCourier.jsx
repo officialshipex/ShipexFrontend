@@ -233,10 +233,9 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
     return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  const existingCourierProviders = couriers.map((courier) => courier.courierProvider);
-  const availableOptions = enabledB2BOptions.filter(
-    (option) => !existingCourierProviders.includes(option.value)
-  );
+  // A company may add several accounts of one courier (each with its own name), so every enabled courier stays
+  // selectable; adding the SAME account twice is refused by the duplicate check on save.
+  const availableOptions = enabledB2BOptions;
 
   useEffect(() => {
     if (availableOptions.length > 0) {
@@ -254,6 +253,7 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
         provider={selectedOption}
         onCourierSaved={handleCourierSaved}
         canAction={canAction}
+        existingCouriers={couriers}
         isB2B={true}
       />
     );
@@ -288,10 +288,6 @@ const AddNewCourier = ({ isSidebarAdmin }) => {
         ) : enabledB2BOptions.length === 0 ? (
           <div className="p-3 text-xs bg-amber-50 border border-amber-200 text-amber-800 rounded-lg">
             No B2B couriers are currently enabled for your company. Please contact your platform administrator to enable B2B couriers.
-          </div>
-        ) : availableOptions.length === 0 ? (
-          <div className="p-3 text-xs bg-emerald-50 border border-emerald-200 text-emerald-800 rounded-lg">
-            All enabled B2B couriers for your company have already been added.
           </div>
         ) : (
           <div className="flex flex-col lg:flex-row items-center gap-2">

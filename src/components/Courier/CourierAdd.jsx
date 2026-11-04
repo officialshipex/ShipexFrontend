@@ -224,29 +224,28 @@ const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers, isB
     // Check for existing courier with same email, username, API key, or name
     if (existingCouriers && existingCouriers.length > 0) {
       // 1. Global check for Name
-      const nameDuplicate = existingCouriers.find(c => c.courierName.toLowerCase() === courierName.toLowerCase());
+      const nameDuplicate = existingCouriers.find(c => (c.courierName || "").trim().toLowerCase() === courierName.trim().toLowerCase());
       if (nameDuplicate) {
         Notification(`Courier with name "${courierName}" already exists. Please use a unique name.`, "error");
         return;
       }
 
-      // 2. Provider-specific check for Credentials
+      // 2. Same courier, same account (several accounts of one courier are fine, the same login twice is not)
+      const same = (a, b) => !!a && !!b && String(a).trim().toLowerCase() === String(b).trim().toLowerCase();
+      const currentProvider = config.provider || provider;
+      let duplicateField = null;
       const credDuplicate = existingCouriers.find(c => {
-        const currentProvider = config.provider || provider;
         if (c.courierProvider !== currentProvider) return false;
-
-        const inputEmail = credentials.email || credentials.username;
-        if (inputEmail && c.email === inputEmail) return true;
-
-        const inputApiKey = credentials.apiKey;
-        if (inputApiKey && c.apiKey === inputApiKey) return true;
-
+        const inputLogin = credentials.email || credentials.username;
+        if (same(inputLogin, c.email) || same(inputLogin, c.username)) { duplicateField = "Email/Username"; return true; }
+        if (same(credentials.apiKey, c.apiKey)) { duplicateField = "API Key"; return true; }
+        if (same(credentials.clientId, c.clientId)) { duplicateField = "Client ID"; return true; }
+        if (same(credentials.customerCode, c.customerCode)) { duplicateField = "Customer Code"; return true; }
         return false;
       });
 
       if (credDuplicate) {
-        const identifier = credentials.apiKey ? 'API Key' : 'Email/Username';
-        Notification(`${provider} with this ${identifier} already exists.`, "error");
+        Notification(`This ${provider} account (same ${duplicateField}) is already added as "${credDuplicate.courierName}".`, "error");
         return;
       }
     }
