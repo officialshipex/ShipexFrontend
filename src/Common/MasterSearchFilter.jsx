@@ -19,6 +19,8 @@ const MasterSearchFilter = ({ isMobile = false }) => {
     const placeholderTexts = [
         "Order ID",
         "AWB Number",
+        "Child AWB Number",
+        "Customer Order ID",
         "Pickup Name",
         "Pickup Email",
         "Pickup Mobile",
@@ -90,6 +92,30 @@ const MasterSearchFilter = ({ isMobile = false }) => {
 
         return () => clearTimeout(timer);
     }, [searchQuery]);
+
+    // Under the AWB: the child AWB that matched the search (else how many the B2B order has) and the
+    // seller's Customer Order ID, so a result found through either of them shows why it matched.
+    const renderOrderRefs = (order) => {
+        const q = searchQuery.trim().toLowerCase();
+        const kids = (order.child_awb_numbers || []).filter(Boolean).map(String);
+        const matchedKid = q ? kids.find((k) => k.toLowerCase().includes(q)) : undefined;
+        return (
+            <>
+                {matchedKid ? (
+                    <div>
+                        Child AWB: <span className="text-brand-primary font-[600]">{matchedKid}</span>
+                    </div>
+                ) : kids.length > 0 && (
+                    <div className="text-gray-500">+{kids.length} child AWB{kids.length > 1 ? "s" : ""}</div>
+                )}
+                {order.clientOrderId && (
+                    <div>
+                        Customer Order ID: <span className="font-[600]">{order.clientOrderId}</span>
+                    </div>
+                )}
+            </>
+        );
+    };
 
     const handleSuggestionClick = (orderId) => {
         navigate(`/dashboard/order/neworder/updateOrder/${orderId}`);
@@ -169,6 +195,8 @@ const MasterSearchFilter = ({ isMobile = false }) => {
                                                     {order.awb_number}
                                                 </div>
                                             )}
+
+                                            {renderOrderRefs(order)}
 
                                             {order.courierServiceName && (
                                                 <div>
@@ -267,6 +295,8 @@ const MasterSearchFilter = ({ isMobile = false }) => {
                                                 {order.awb_number}
                                             </div>
                                         )}
+
+                                        {renderOrderRefs(order)}
 
                                         {order.courierServiceName && (
                                             <div>

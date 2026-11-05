@@ -3,6 +3,7 @@ import dayjs from "dayjs";
 import { FiCopy, FiCheck } from "react-icons/fi";
 import { getCarrierLogo } from "../../Common/getCarrierLogo"
 import { Truck } from "lucide-react";
+import { Notification } from "../../Notification";
 
 const ShippingDetailsSection = ({ order }) => {
     const [copiedAwb, setCopiedAwb] = useState(false);
@@ -155,6 +156,30 @@ const ShippingDetailsSection = ({ order }) => {
                     </p>
                 </div>
 
+
+                {/* B2B child AWBs (one per extra box; the master is the AWB above) */}
+                {order.orderType === "B2B" && order.child_awb_numbers?.filter(Boolean).length > 0 && (
+                    <div className="col-span-2 sm:col-span-4">
+                        <span className="font-[600] text-gray-700">
+                            Child AWB Numbers ({order.child_awb_numbers.filter(Boolean).length}):
+                        </span>
+                        <div className="flex flex-wrap gap-x-3 gap-y-1 max-h-24 overflow-y-auto">
+                            {order.child_awb_numbers.filter(Boolean).map((awb) => (
+                                <p
+                                    key={awb}
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(awb);
+                                        Notification(`Copied ${awb}`, "success");
+                                    }}
+                                    title="Click to copy"
+                                    className="text-brand-primary cursor-pointer hover:underline"
+                                >
+                                    {awb}
+                                </p>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
                 {/* Pickup ID with Copy Functionality */}
                 {order.pickupId && (
