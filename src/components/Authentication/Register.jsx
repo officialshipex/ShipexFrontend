@@ -7,6 +7,7 @@ import { Logo } from "../Logo";
 import { useBranding } from "../../context/BrandingContext";
 import illustrationimage from "../../assets/Login.png";
 import { Notification } from "../../Notification";
+import { useRegisterOtp } from "./RegisterOtpStep";
 
 export default function Signup({ setIsAuthenticated }) {
   const { companyDisplayName } = useBranding();
@@ -15,6 +16,7 @@ export default function Signup({ setIsAuthenticated }) {
   const [isTermsAccepted, setIsTermsAccepted] = useState(false);
   const [error, setError] = useState("");
   const [loadingRegister, setLoadingRegister] = useState(false);
+  const registerOtp = useRegisterOtp();
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const navigate = useNavigate();
@@ -85,12 +87,16 @@ export default function Signup({ setIsAuthenticated }) {
 
     try {
       setLoadingRegister(true);
+      // This company asks for OTP at registration: verify email + mobile first (closed = stay on the form)
+      const otpTokens = await registerOtp.verify(formData.email, formData.phoneNumber);
+      if (!otpTokens) return;
       const response = await fetch(
         `${REACT_APP_BACKEND_URL}/external/register`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
+            ...otpTokens,
             fullname: formData.fullName,
             email: formData.email,
             phoneNumber: formData.phoneNumber,
@@ -341,6 +347,7 @@ export default function Signup({ setIsAuthenticated }) {
           </div>
         </footer>
       </div>
+      {registerOtp.dialog}
     </div>
   );
 }
