@@ -1,5 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { Link } from "react-router-dom";
 
 // OTP check of the email AND mobile number before an account is created — only when this company has
 // "OTP at registration" switched on (QuickPost > System > Companies). The register call then carries
@@ -25,12 +26,14 @@ async function call(path, body) {
   if (!res.ok || data.success === false) {
     const err = new Error(data.message || "Something went wrong. Please try again.");
     err.retryAfter = data.retryAfter;
+    err.status = res.status;
     throw err;
   }
   return data;
 }
 
-export function useRegisterOtp() {
+// fields: the form's input names, so "Change email / mobile" can put the cursor back in that field.
+export function useRegisterOtp(fields = { email: "email", phone: "phoneNumber" }) {
   const [required, setRequired] = useState(null);
   const [open, setOpen] = useState(null); // { email, phone }
   const verified = useRef({}); // { email: { target, token }, phone: { target, token } }
@@ -83,6 +86,13 @@ export function useRegisterOtp() {
       onVerified={(ch, v) => { verified.current = { ...verified.current, [ch]: v }; rerender((n) => n + 1); }}
       onDone={() => finish(tokensFor(open.email, open.phone))}
       onClose={() => finish(null)}
+      onEdit={(ch) => {
+        finish(null);
+        setTimeout(() => {
+          const el = document.querySelector(`input[name="${fields[ch]}"]`);
+          if (el) { el.focus(); el.select(); }
+        }, 50);
+      }}
     />
   ) : null;
 
@@ -120,7 +130,7 @@ export function RegisterOtpFormBar({ otp, email, phone }) {
   );
 }
 
-function OtpRow({ channel, label, shown, target, already, onVerified }) {
+function OtpRow({ channel, label, shown, target, already, onVerified, onEdit }) {
   const [done, setDone] = useState(already?.target === target);
   const [code, setCode] = useState("");
   const [sending, setSending] = useState(false);
@@ -128,6 +138,8 @@ function OtpRow({ channel, label, shown, target, already, onVerified }) {
   const [sent, setSent] = useState(false);
   const [wait, setWait] = useState(0);
   const [msg, setMsg] = useState(null); // { ok, text }
+  // already registered: no OTP can be sent, only changing it (or logging in) helps
+  const [taken, setTaken] = useState(null);
   const started = useRef(false);
 
   useEffect(() => {
@@ -145,6 +157,7 @@ function OtpRow({ channel, label, shown, target, already, onVerified }) {
       setSent(true); setWait(d.resendAfter || 30);
       setMsg({ ok: true, text: d.message || "OTP sent" });
     } catch (e) {
+      if (e.status === 409) { setTaken(e.message || `This ${label.toLowerCase()} is already registered.`); return; }
       if (e.retryAfter) { setSent(true); setWait(e.retryAfter); }
       setMsg({ ok: false, text: e.message });
     } finally { setSending(false); }
@@ -170,7 +183,7 @@ function OtpRow({ channel, label, shown, target, already, onVerified }) {
   };
 
   return (
-    <div className={`rounded-lg border p-3 ${done ? "border-green-200 bg-green-50" : "border-gray-200"}`}>
+    <div className={`rounded-lg border p-3 ${done ? "border-green-200 bg-green-50" : taken ? "border-red-200 bg-red-50" : "border-gray-200"}`}>
       <div className="flex items-center justify-between gap-2">
         <div className="min-w-0">
           <p className="text-[12px] font-[600] text-gray-700">{label}</p>
@@ -178,7 +191,21 @@ function OtpRow({ channel, label, shown, target, already, onVerified }) {
         </div>
         {done && <span className="text-[12px] font-[600] text-green-600 shrink-0">✓ Verified</span>}
       </div>
-      {!done && (
+      {taken ? (
+        <div className="mt-2">
+          <p className="text-[11px] text-red-600">{taken}</p>
+          <div className="flex items-center gap-3 mt-2">
+            <button
+              type="button"
+              onClick={onEdit}
+              className="py-1.5 px-3 rounded-lg bg-brand-primary text-white text-[12px] font-[600]"
+            >
+              Change {channel === "email" ? "email" : "mobile number"}
+            </button>
+            <Link to="/login" className="text-[12px] font-[600] text-brand-primary">Log in instead</Link>
+          </div>
+        </div>
+      ) : !done && (
         <>
           <div className="flex gap-2 mt-2">
             <input
@@ -203,14 +230,19 @@ function OtpRow({ channel, label, shown, target, already, onVerified }) {
             {msg ? (
               <p className={`text-[11px] ${msg.ok ? "text-green-600" : "text-red-500"}`}>{msg.text}</p>
             ) : <span />}
-            <button
-              type="button"
-              onClick={send}
-              disabled={sending || wait > 0}
-              className="text-[11px] font-[600] text-brand-primary disabled:text-gray-400 shrink-0"
-            >
-              {sending ? "Sending…" : wait > 0 ? `Resend in ${wait}s` : sent ? "Resend OTP" : "Send OTP"}
-            </button>
+            <div className="flex items-center gap-3 shrink-0">
+              <button type="button" onClick={onEdit} className="text-[11px] font-[600] text-gray-500 hover:text-gray-800">
+                Change
+              </button>
+              <button
+                type="button"
+                onClick={send}
+                disabled={sending || wait > 0}
+                className="text-[11px] font-[600] text-brand-primary disabled:text-gray-400"
+              >
+                {sending ? "Sending…" : wait > 0 ? `Resend in ${wait}s` : sent ? "Resend OTP" : "Send OTP"}
+              </button>
+            </div>
           </div>
         </>
       )}
@@ -218,7 +250,7 @@ function OtpRow({ channel, label, shown, target, already, onVerified }) {
   );
 }
 
-function RegisterOtpDialog({ email, phone, already, onVerified, onDone, onClose }) {
+function RegisterOtpDialog({ email, phone, already, onVerified, onDone, onClose, onEdit }) {
   const e = normEmail(email), p = normPhone(phone);
   const [ok, setOk] = useState({ email: already.email?.target === e, phone: already.phone?.target === p });
   const both = ok.email && ok.phone;
@@ -237,16 +269,14 @@ function RegisterOtpDialog({ email, phone, already, onVerified, onDone, onClose 
       <div className="relative w-full max-w-md bg-white rounded-lg shadow-lg p-5">
         <button type="button" onClick={onClose} aria-label="Close" className="absolute right-3 top-2 text-gray-400 hover:text-gray-600 text-[18px]">×</button>
         <h3 className="text-[16px] font-[600] text-brand-primary mb-1">Verify your email and mobile</h3>
-        <p className="text-[12px] text-gray-500 mb-3">We have sent a 6-digit code to each. Enter both to create your account.</p>
+        <p className="text-[12px] text-gray-500 mb-3">We send a 6-digit code to each. Enter both to create your account.</p>
         <div className="space-y-2">
           <OtpRow channel="email" label="Email" shown={String(email).trim()} target={e} already={already.email}
-            onVerified={(v) => { onVerified("email", v); setOk((s) => ({ ...s, email: true })); }} />
+            onVerified={(v) => { onVerified("email", v); setOk((s) => ({ ...s, email: true })); }} onEdit={() => onEdit("email")} />
           <OtpRow channel="phone" label="Mobile number" shown={`+91 ${p}`} target={p} already={already.phone}
-            onVerified={(v) => { onVerified("phone", v); setOk((s) => ({ ...s, phone: true })); }} />
+            onVerified={(v) => { onVerified("phone", v); setOk((s) => ({ ...s, phone: true })); }} onEdit={() => onEdit("phone")} />
         </div>
-        <p className="text-[11px] text-center mt-3 text-gray-500">
-          {both ? "Verified. Creating your account…" : "Wrong email or number? Close this, correct it in the form and sign up again."}
-        </p>
+        {both && <p className="text-[11px] text-center mt-3 text-green-600 font-[600]">Verified. Creating your account…</p>}
       </div>
     </div>,
     document.body
