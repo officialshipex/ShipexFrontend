@@ -7,7 +7,7 @@ import { Logo } from "../Logo";
 import { useBranding } from "../../context/BrandingContext";
 import illustrationimage from "../../assets/Login.png";
 import { Notification } from "../../Notification";
-import { useRegisterOtp } from "./RegisterOtpStep";
+import { useRegisterOtp, RegisterOtpFormBar } from "./RegisterOtpStep";
 
 export default function Signup({ setIsAuthenticated }) {
   const { companyDisplayName } = useBranding();
@@ -240,6 +240,7 @@ export default function Signup({ setIsAuthenticated }) {
                 className="w-full py-2 px-3 border rounded-lg text-[12px] font-[600] text-gray-700 outline-none"
               />
             </div>
+            <RegisterOtpFormBar otp={registerOtp} email={formData.email} phone={formData.phoneNumber} />
             <div className="relative">
               <label className="text-gray-700 text-[12px] font-[600]">
                 Password

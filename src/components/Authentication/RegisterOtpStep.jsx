@@ -35,6 +35,13 @@ export function useRegisterOtp() {
   const [open, setOpen] = useState(null); // { email, phone }
   const verified = useRef({}); // { email: { target, token }, phone: { target, token } }
   const resolver = useRef(null);
+  const [, rerender] = useState(0);
+
+  // Which of these two are verified already (for the ticks on the form).
+  const status = (email, phone) => ({
+    email: verified.current.email?.target === normEmail(email),
+    phone: verified.current.phone?.target === normPhone(phone),
+  });
 
   useEffect(() => {
     call("/auth/register-otp/config")
@@ -73,13 +80,44 @@ export function useRegisterOtp() {
       email={open.email}
       phone={open.phone}
       already={verified.current}
-      onVerified={(ch, v) => { verified.current = { ...verified.current, [ch]: v }; }}
+      onVerified={(ch, v) => { verified.current = { ...verified.current, [ch]: v }; rerender((n) => n + 1); }}
       onDone={() => finish(tokensFor(open.email, open.phone))}
       onClose={() => finish(null)}
     />
   ) : null;
 
-  return { required, verify, dialog };
+  return { required, verify, status, dialog };
+}
+
+// Shown on the form (under email + mobile) when this company asks for OTP at registration.
+export function RegisterOtpFormBar({ otp, email, phone }) {
+  if (otp.required !== true) return null;
+  const s = otp.status(email || "", phone || "");
+  const ready = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(email || "").trim()) && /^[6-9]\d{9}$/.test(normPhone(phone));
+  const tick = (ok, label) => (
+    <span className={`text-[11px] font-[600] ${ok ? "text-green-600" : "text-gray-400"}`}>
+      {ok ? "✓" : "○"} {label} {ok ? "verified" : "not verified"}
+    </span>
+  );
+  return (
+    <div className="rounded-lg border border-green-200 bg-green-50 px-3 py-2 flex flex-wrap items-center justify-between gap-2">
+      <div className="flex flex-col">
+        <span className="text-[12px] font-[600] text-gray-700">Verify your email and mobile with OTP</span>
+        <div className="flex gap-3">{tick(s.email, "Email")}{tick(s.phone, "Mobile")}</div>
+      </div>
+      {!(s.email && s.phone) && (
+        <button
+          type="button"
+          disabled={!ready}
+          onClick={() => { otp.verify(email, phone); }}
+          title={ready ? undefined : "Enter a valid email and 10-digit mobile number first"}
+          className="py-1.5 px-3 rounded-lg bg-brand-primary text-white text-[12px] font-[600] disabled:opacity-50 shrink-0"
+        >
+          Send OTP
+        </button>
+      )}
+    </div>
+  );
 }
 
 function OtpRow({ channel, label, shown, target, already, onVerified }) {
