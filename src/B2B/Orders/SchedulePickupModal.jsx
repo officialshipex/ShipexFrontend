@@ -47,7 +47,7 @@ const SchedulePickupModal = ({ orderId, awb, pickupAddress, onClose }) => {
             const token = Cookies.get("session");
 
             const response = await axios.post(
-                `${REACT_APP_BACKEND_URL}/b2b/schedulePickup`,
+                `${REACT_APP_BACKEND_URL}/b2b/generatePickup`,
                 {
                     orderIds: [orderId], // Send as array for compatibility with bulk
                     pickupDate: selectedDate,
@@ -57,7 +57,17 @@ const SchedulePickupModal = ({ orderId, awb, pickupAddress, onClose }) => {
                 }
             );
 
-            Notification(response?.data?.message || "Pickup scheduled successfully", "success");
+            // A failed pickup comes back as HTTP 207 with success:false and the reason on the order's result
+            const result = response?.data?.results?.[0];
+            if (response?.data?.success === false) {
+                const reason = result?.error;
+                Notification(
+                    (typeof reason === "string" ? reason : reason?.message || reason?.error) || response.data.message || "Failed to schedule pickup",
+                    "error"
+                );
+                return;
+            }
+            Notification(result?.message || response?.data?.message || "Pickup scheduled successfully", "success");
             onClose(true);
         } catch (err) {
             console.error(err);

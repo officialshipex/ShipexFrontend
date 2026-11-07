@@ -163,18 +163,18 @@ export default function ProfileCard() {
     }
   };
 
+  // The Ratecard Management table and its add / assign / upload / edit / delete actions are all B2C, so it always
+  // shows the seller's B2C rate cards. (It used to follow rateCardType, which the B2B "edit plan" button also sets:
+  // B2B cards have no weight slabs, the table crashed to a white page, and "Add Rate Card" would have sent those
+  // B2B cards to the B2C plan assignment.) rateCardType now only tells the plan popup which kind to assign.
   const refreshRates = async () => {
     setRateLoading(true);
     try {
-      const endpoint = rateCardType === "B2B"
-        ? `${REACT_APP_BACKEND_URL}/b2b/saveRate/getRateCard`
-        : `${REACT_APP_BACKEND_URL}/saveRate/getRateCard`;
-
-      const response = await axios.get(endpoint, {
+      const response = await axios.get(`${REACT_APP_BACKEND_URL}/saveRate/getRateCard`, {
         headers: { Authorization: `Bearer ${Cookies.get("session")}` },
         params: { userId: id }
       });
-      setRates(response.data.rateCards || response.data.B2BRateCard || []);
+      setRates(response.data.rateCards || []);
     } catch (error) {
       console.error("Failed to fetch rate cards", error);
       setRates([]);
@@ -201,7 +201,7 @@ export default function ProfileCard() {
   useEffect(() => {
     fetchPlans();
     refreshRates();
-  }, [id, rateCardType]);
+  }, [id]);
 
   useEffect(() => {
     if (userData?.rateCard) {
@@ -284,12 +284,12 @@ export default function ProfileCard() {
                     )}
                   </td>
                   <td className="px-2 py-1.5" rowSpan={2}>{card.mode}</td>
-                  <td className="px-2 py-1.5 text-gray-400">Basic: {card.weightPriceBasic[0]?.weight}gm</td>
-                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic[0]?.zoneA}</td>
-                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic[0]?.zoneB}</td>
-                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic[0]?.zoneC}</td>
-                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic[0]?.zoneD}</td>
-                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic[0]?.zoneE}</td>
+                  <td className="px-2 py-1.5 text-gray-400">Basic: {card.weightPriceBasic?.[0]?.weight}gm</td>
+                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic?.[0]?.zoneA}</td>
+                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic?.[0]?.zoneB}</td>
+                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic?.[0]?.zoneC}</td>
+                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic?.[0]?.zoneD}</td>
+                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic?.[0]?.zoneE}</td>
                   <td className="px-2 py-1.5 font-medium" rowSpan={2}>₹{card.codCharge} / {card.codPercent}%</td>
                   <td className="px-2 py-1.5" rowSpan={2}>
                     <div className="flex justify-center gap-1.5">
@@ -299,12 +299,12 @@ export default function ProfileCard() {
                   </td>
                 </tr>
                 <tr className="border-b border-gray-50 text-[10px] sm:text-[11px] text-gray-700">
-                  <td className="px-2 py-1.5 text-gray-400">Addl: {card.weightPriceAdditional[0]?.weight}gm</td>
-                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional[0]?.zoneA}</td>
-                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional[0]?.zoneB}</td>
-                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional[0]?.zoneC}</td>
-                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional[0]?.zoneD}</td>
-                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional[0]?.zoneE}</td>
+                  <td className="px-2 py-1.5 text-gray-400">Addl: {card.weightPriceAdditional?.[0]?.weight}gm</td>
+                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional?.[0]?.zoneA}</td>
+                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional?.[0]?.zoneB}</td>
+                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional?.[0]?.zoneC}</td>
+                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional?.[0]?.zoneD}</td>
+                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional?.[0]?.zoneE}</td>
                 </tr>
               </React.Fragment>
             ))

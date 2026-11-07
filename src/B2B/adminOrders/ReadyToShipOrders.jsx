@@ -25,7 +25,8 @@ import {
 import OrdersTable from "../../Common/OrdersTable";
 import MobileOrderCard from "../../Common/MobileOrderCard";
 import NotFound from "../../assets/nodatafound.png";
-import SchedulePickupModal from "../../shipment/SchedulePickupModal";
+// The B2B one: it posts to /b2b/generatePickup (the B2C modal's /order/schedulePickup route doesn't exist)
+import SchedulePickupModal from "../Orders/SchedulePickupModal";
 
 import QuickActionButtons from "../../Common/QuickActionButtons";
 import SelectedCountBadge from "../../Common/SelectedCountBadge";
