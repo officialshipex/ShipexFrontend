@@ -79,6 +79,8 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
   const isXpressbees = partner === "Xpressbees";
   // Xpressbees' API has no RTO request: re-attempt / change address / phone only.
   const actionOptions = isXpressbees ? ACTIONS.filter((a) => a.value !== "RTO") : ACTIONS;
+  // Gati's API has no NDR / re-attempt / RTO request: the seller handles it with Gati directly.
+  const isGati = partner === "Gati";
 
   const isChangeAddress = action === "CHANGE_ADDRESS";
   const isReattempt = action === "RE-ATTEMPT";
@@ -280,6 +282,13 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
         {/* Body */}
         <div className="overflow-y-auto p-4 flex flex-col gap-3 custom-scrollbar">
 
+          {isGati && (
+            <div className="p-3 text-[11px] font-[600] bg-amber-50 border border-amber-200 text-amber-800 rounded-lg">
+              Gati does not accept NDR actions (re-attempt, address / phone change, RTO) through its API.
+              Please contact Gati support for this shipment.
+            </div>
+          )}
+
           {/* Action Dropdown */}
           <div className="flex flex-col gap-1" ref={dropdownRef}>
             <label className="text-[10px] sm:text-[12px] font-[600] text-gray-700">Action</label>
@@ -466,8 +475,8 @@ const NdrActionModal = ({ isOpen, onClose, order, onSubmit }) => {
           </button>
           <button
             onClick={handleSubmit}
-            disabled={loading || !action}
-            className={`px-3 py-2 text-white font-[600] text-[12px] rounded-lg transition-all ${loading || !action
+            disabled={loading || !action || isGati}
+            className={`px-3 py-2 text-white font-[600] text-[12px] rounded-lg transition-all ${loading || !action || isGati
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-brand-primary hover:bg-[#099c68] active:scale-95 shadow-sm shadow-brand-primary/20"
               }`}

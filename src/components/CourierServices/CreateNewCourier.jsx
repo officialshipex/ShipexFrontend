@@ -73,6 +73,10 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         case "Dtdc":
           services = ["B2C SMART EXPRESS", "B2C PRIORITY", "B2C GROUND ECONOMY"];
           break;
+        case "Gati":
+          // Gati books surface or air (its prodServCode); pick the one matching the service type
+          services = ["Gati Surface", "Gati Air"];
+          break;
         default:
           services = [];
           break;

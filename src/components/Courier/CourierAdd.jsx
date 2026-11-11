@@ -131,6 +131,19 @@ const courierConfigs = {
       { name: "password", label: "Password", placeholder: "API Password", type: "password" },
     ],
   },
+  // B2C Gati — its own account, separate from the B2B (Cargo) Gati account; the login is checked with Gati on save
+  Gati: {
+    endpoint: "/Gati/getAuthToken",
+    provider: "Gati",
+    fields: [
+      { name: "username", label: "User", placeholder: "Gati API Username", type: "text" },
+      { name: "password", label: "Password", placeholder: "Password", type: "password" },
+      { name: "customerCode", label: "Customer Code", placeholder: "8-digit code", type: "text" },
+      { name: "encryptedCustCode", label: "Encrypted Cust Code", placeholder: "Encrypted customer code", type: "text" },
+      { name: "goodsCode", label: "Default Goods Code", placeholder: "Optional — auto from products, else 401", type: "text", optional: true },
+      { name: "trackingToken", label: "Tracking Token", placeholder: "Security token for tracking (16 characters)", type: "text", optional: true },
+    ],
+  },
 };
 
 // B2B (Setup > B2B Courier) has its own backend routes and credential store

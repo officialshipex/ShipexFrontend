@@ -208,12 +208,12 @@ const OrderRowActions = ({
                                         )
                                     )}
 
-                                    {/* Gati: the carrier's docket (LR) copy for the pickup person */}
-                                    {isB2B && order.partner === "Gati" && order.awb_number && showDownloadLabel && (
+                                    {/* Gati: the carrier's docket (LR) copy for the pickup person (Cargo and B2C) */}
+                                    {order.partner === "Gati" && order.awb_number && showDownloadLabel && (
                                         <li
                                             onClick={(e) => {
                                                 e.stopPropagation();
-                                                handleGatiDocketCopy(order._id);
+                                                handleGatiDocketCopy(order._id, isB2B);
                                                 setDropdownOpen(null);
                                             }}
                                             className="px-3 py-2 text-gray-700 hover:bg-brand-secondary/8 cursor-pointer transition-colors"

@@ -251,10 +251,12 @@ export const handleB2BLabel = async (id) => {
   }
 };
 
-// Gati's own docket (LR) copy — Gati's pickup person collects it at pickup.
-export const handleGatiDocketCopy = async (id) => {
+// Gati's own docket (LR) copy — Gati's pickup person collects it at pickup. Cargo (B2B) and B2C dockets are
+// booked on different Gati accounts, each with its own route.
+export const handleGatiDocketCopy = async (id, isB2B = true) => {
   try {
-    const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}/b2b/gati/docketCopy/${id}`), { headers: devTenantHeaders() });
+    const route = isB2B ? `/b2b/gati/docketCopy/${id}` : `/Gati/docketCopy/${id}`;
+    const response = await fetch(toTenantUrl(`${REACT_APP_BACKEND_URL}${route}`), { headers: devTenantHeaders() });
     if (!response.ok) {
       const body = await response.json().catch(() => ({}));
       throw new Error(body.message || "Failed to download the Gati docket copy");
