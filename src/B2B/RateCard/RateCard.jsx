@@ -6,7 +6,8 @@ import {
   updateRateCard,
   deleteRateCard,
 } from "./rateCardApi";
-import { FiEdit, FiTrash2, FiPlus } from "react-icons/fi";
+import { FiEdit, FiTrash2, FiPlus, FiUpload } from "react-icons/fi";
+import UploadRatesModal from "./UploadRatesModal";
 import Loader from "../../Loader";
 import { Notification } from "../../Notification";
 import CustomDropdown from "./CustomDropdown";
@@ -27,6 +28,9 @@ export default function RateCardAdmin() {
   const [mode, setMode] = useState("view");
   const [loading, setLoading] = useState(false);
   const [isPlanNameAdd, setPlanNameAdd] = useState(false);
+  const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const [reloadKey, setReloadKey] = useState(0); // bumped after an upload so the shown card is fetched again
+  const [uploadSaved, setUploadSaved] = useState(false);
 
   const openPlanForm = () => setIsAddPlanModalOpen(true);
 
@@ -115,7 +119,7 @@ export default function RateCardAdmin() {
     };
 
     loadRateCard();
-  }, [selectedCourier, selectedPlan, meta]);
+  }, [selectedCourier, selectedPlan, meta, reloadKey]);
 
   /* ================= MATRIX HELPERS ================= */
   const buildEmptyMatrix = (zones) =>
@@ -275,6 +279,17 @@ export default function RateCardAdmin() {
             </button>
           )}
 
+          {mode !== "edit" && (
+            <button
+              onClick={() => setIsUploadOpen(true)}
+              title="Upload zone prices from Excel (overhead charges are not changed)"
+              className="border border-brand-primary text-brand-primary bg-white px-3 py-2 text-[12px] font-[600] rounded-lg flex items-center justify-center gap-2 whitespace-nowrap"
+            >
+              <FiUpload className="text-[14px]" />
+              <span>Upload Rates</span>
+            </button>
+          )}
+
           <button
             className={`bg-brand-primary font-[600] text-[10px] sm:w-auto w-full h-9 sm:text-[12px] text-white px-3 py-2 rounded-lg`}
             onClick={openPlanForm}
@@ -408,6 +423,20 @@ export default function RateCardAdmin() {
         rateType={rateType}
       // onSuccess={refreshRates}
       setPlanNameAdd={setPlanNameAdd}
+      />
+
+      <UploadRatesModal
+        key={selectedPlan}
+        isOpen={isUploadOpen}
+        onClose={() => {
+          setIsUploadOpen(false);
+          // refresh only once the window is closed: the page shows a full loader while it reloads,
+          // which would otherwise close the window before the result could be read
+          if (uploadSaved) { setUploadSaved(false); setReloadKey((k) => k + 1); }
+        }}
+        planId={selectedPlan}
+        planName={planOptions.find((p) => p.value === selectedPlan)?.label}
+        onDone={() => setUploadSaved(true)}
       />
 
       <div className="flex justify-end">
