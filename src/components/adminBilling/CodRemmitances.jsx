@@ -33,6 +33,7 @@ const CodRemittances = () => {
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [actionOpen, setActionOpen] = useState(false);
   const actionRef = useRef(null);
+  const actionRefMobile = useRef(null); // the mobile copy of the same menu (a ref can only point at one element)
   const [openRemittancePopup, setOpenRemittancePopup] = useState(false);
   const [selectedRemittanceId, setSelectedRemittanceId] = useState(null);
   const [clearTrigger, setClearTrigger] = useState(0);
@@ -87,7 +88,7 @@ const CodRemittances = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (actionRef.current && !actionRef.current.contains(event.target)) {
+      if (![actionRef, actionRefMobile].some((r) => r.current && r.current.contains(event.target))) {
         setActionOpen(false);
       }
     };
@@ -401,7 +402,7 @@ const CodRemittances = () => {
             <span className="text-[10px] font-[600] text-gray-700 tracking-wider">Select All</span>
           </div>
 
-          <div className="relative" ref={actionRef}>
+          <div className="relative" ref={actionRefMobile}>
             <button
               disabled={selectedRemittances.length === 0}
               onClick={() => setActionOpen(!actionOpen)}

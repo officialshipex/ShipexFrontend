@@ -37,6 +37,7 @@ const Shippings = () => {
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [actionOpen, setActionOpen] = useState(false);
   const actionRef = useRef(null);
+  const actionRefMobile = useRef(null); // the mobile copy of the same menu (a ref can only point at one element)
   const [copiedId, setCopiedId] = useState(null);
   const [selectedOrders, setSelectedOrders] = useState([]);
   const [weightPopupId, setWeightPopupId] = useState(null);
@@ -95,7 +96,7 @@ const Shippings = () => {
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (actionRef.current && !actionRef.current.contains(event.target)) {
+      if (![actionRef, actionRefMobile].some((r) => r.current && r.current.contains(event.target))) {
         setActionOpen(false);
       }
     };
@@ -516,7 +517,7 @@ const Shippings = () => {
             <span className="text-[10px] font-[600] text-gray-700 tracking-wider">Select All</span>
           </div>
 
-          <div className="relative" ref={actionRef}>
+          <div className="relative" ref={actionRefMobile}>
             <button
               disabled={selectedOrders.length === 0}
               onClick={() => setActionOpen(!actionOpen)}

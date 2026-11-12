@@ -32,6 +32,7 @@ const WalletHistorys = () => {
     const [copiedId, setCopiedId] = useState(null);
     const [actionOpen, setActionOpen] = useState(false);
     const actionRef = useRef(null);
+    const actionRefMobile = useRef(null); // the mobile copy of the same menu (a ref can only point at one element)
     const [selectedTransactions, setSelectedTransactions] = useState([]);
     const navigate = useNavigate();
 
@@ -80,7 +81,7 @@ const WalletHistorys = () => {
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (actionRef.current && !actionRef.current.contains(event.target)) {
+            if (![actionRef, actionRefMobile].some((r) => r.current && r.current.contains(event.target))) {
                 setActionOpen(false);
             }
         };
@@ -349,7 +350,7 @@ const WalletHistorys = () => {
                         <span className="text-[10px] font-[600] text-gray-700 tracking-wider">Select All</span>
                     </div>
 
-                    <div className="relative" ref={actionRef}>
+                    <div className="relative" ref={actionRefMobile}>
                         <button
                             disabled={selectedTransactions.length === 0}
                             onClick={() => setActionOpen(!actionOpen)}

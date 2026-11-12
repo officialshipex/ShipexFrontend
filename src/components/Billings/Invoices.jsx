@@ -47,7 +47,8 @@ const Invoices = ({
 
   const [isFilterPanelOpen, setIsFilterPanelOpen] = useState(false);
   const [actionOpen, setActionOpen] = useState(false);
-  const actionRef = useRef(null);
+  const actionRef = useRef(null); // desktop Actions dropdown
+  const actionRefMobile = useRef(null); // mobile Actions dropdown (a ref can only point at one element)
 
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(100);
@@ -62,7 +63,8 @@ const Invoices = ({
 
   useEffect(() => {
     const handler = (event) => {
-      if (actionRef.current && !actionRef.current.contains(event.target)) {
+      const inside = [actionRef, actionRefMobile].some((r) => r.current && r.current.contains(event.target));
+      if (!inside) {
         setActionOpen(false);
       }
     };
@@ -417,7 +419,7 @@ const Invoices = ({
             </span>
           </div>
 
-          <div className="relative" ref={actionRef}>
+          <div className="relative" ref={actionRefMobile}>
             <button
               disabled={selectedInvoices.length === 0}
               onClick={() => setActionOpen(!actionOpen)}

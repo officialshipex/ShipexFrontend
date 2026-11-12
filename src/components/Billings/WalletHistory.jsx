@@ -35,6 +35,7 @@ const WalletHistory = ({
   const [actionOpen, setActionOpen] = useState(false);
   const [selectedTransactions, setSelectedTransactions] = useState([]);
   const actionRef = useRef(null);
+  const actionRefMobile = useRef(null); // the mobile copy of the same menu (a ref can only point at one element)
   const { id } = useParams();
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -94,7 +95,7 @@ const WalletHistory = ({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (actionRef.current && !actionRef.current.contains(event.target)) {
+      if (![actionRef, actionRefMobile].some((r) => r.current && r.current.contains(event.target))) {
         setActionOpen(false);
       }
     };
@@ -366,7 +367,7 @@ const WalletHistory = ({
             <span className="text-[10px] font-[600] text-gray-700">Select All</span>
           </div>
 
-          <div className="relative" ref={actionRef}>
+          <div className="relative" ref={actionRefMobile}>
             <button
               disabled={selectedTransactions.length === 0}
               onClick={() => setActionOpen(!actionOpen)}
