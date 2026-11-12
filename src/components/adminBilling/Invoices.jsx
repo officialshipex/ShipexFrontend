@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { downloadWithAuth } from "../../Common/downloadWithAuth";
 import { ChevronDown, Filter, Search } from "lucide-react";
 import ThreeDotLoader from "../../Loader"
 import { HiOutlineDownload } from "react-icons/hi";
@@ -220,8 +221,7 @@ const Invoices = () => {
                   className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                   onClick={() => {
                     setActionOpen(false);
-                    const url = `${REACT_APP_BACKEND_URL}/invoice/bulk-download?invoiceNumbers=${selectedInvoices.join(",")}`;
-                    window.open(url, "_blank");
+                    downloadWithAuth(`${REACT_APP_BACKEND_URL}/invoice/bulk-download`, `Invoices_${Date.now()}.pdf`, { params: { invoiceNumbers: selectedInvoices.join(",") } });
                   }}
                 >
                   Bulk Download
@@ -370,8 +370,7 @@ const Invoices = () => {
                         )}
                         <button
                           onClick={() => {
-                            const url = `${REACT_APP_BACKEND_URL}/invoice/export-excel?invoiceNumber=${inv.invoiceNumber}`;
-                            window.open(url, "_blank");
+                            downloadWithAuth(`${REACT_APP_BACKEND_URL}/invoice/export-excel`, `Invoice_${inv.invoiceNumber}.xlsx`, { params: { invoiceNumber: inv.invoiceNumber } });
                           }}
                           className="inline-flex items-center justify-center bg-brand-primary text-white w-8 h-8 rounded-lg hover:shadow-md hover:bg-opacity-90 transition-all shadow-sm"
                           title="Download Invoice Excel"
@@ -416,8 +415,7 @@ const Invoices = () => {
                   className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-[600] text-gray-600"
                   onClick={() => {
                     setActionOpen(false);
-                    const url = `${REACT_APP_BACKEND_URL}/invoice/bulk-download?invoiceNumbers=${selectedInvoices.join(",")}`;
-                    window.open(url, "_blank");
+                    downloadWithAuth(`${REACT_APP_BACKEND_URL}/invoice/bulk-download`, `Invoices_${Date.now()}.pdf`, { params: { invoiceNumbers: selectedInvoices.join(",") } });
                   }}
                 >
                   Bulk Download
@@ -513,8 +511,7 @@ const Invoices = () => {
                       )}
                       <button
                         onClick={() => {
-                          const url = `${REACT_APP_BACKEND_URL}/invoice/export-excel?invoiceNumber=${inv.invoiceNumber}`;
-                          window.open(url, "_blank");
+                          downloadWithAuth(`${REACT_APP_BACKEND_URL}/invoice/export-excel`, `Invoice_${inv.invoiceNumber}.xlsx`, { params: { invoiceNumber: inv.invoiceNumber } });
                         }}
                         className="p-1.5 bg-brand-primary text-white rounded-lg flex items-center justify-center shadow active:scale-95 transition-transform"
                         title="Download Invoice Excel"
