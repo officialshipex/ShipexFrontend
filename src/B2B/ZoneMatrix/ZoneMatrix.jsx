@@ -7,11 +7,10 @@ import {
   searchLocations,
   getMatrices,
   createMatrix,
-  renameMatrix,
   deleteMatrix,
   assignMatrix,
 } from "./zoneApi";
-import { FiTrash2, FiPlus, FiEdit } from "react-icons/fi";
+import { FiTrash2, FiPlus } from "react-icons/fi";
 import { Notification } from "../../Notification";
 import Loader from "../../Loader";
 
@@ -39,10 +38,9 @@ export default function ZoneAdmin() {
 
   // zone matrix management
   const [showNew, setShowNew] = useState(false);
-  const [newName, setNewName] = useState("");
+  const [newCourier, setNewCourier] = useState(""); // the courier the new matrix is made for
   const [copyFrom, setCopyFrom] = useState("");
   const [creating, setCreating] = useState(false);
-  const [renaming, setRenaming] = useState(null); // the new name being typed
   const [assigningId, setAssigningId] = useState(null);
   const [ratesToUpdate, setRatesToUpdate] = useState(null); // { courier, matrix, cards }
 
@@ -80,6 +78,7 @@ export default function ZoneAdmin() {
 
   useEffect(() => {
     loadMatrices();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -204,37 +203,24 @@ export default function ZoneAdmin() {
 
   /* zone matrices */
   const handleCreateMatrix = async () => {
-    const name = newName.trim();
-    if (!name) return;
+    if (!newCourier) return;
     try {
       setCreating(true);
-      const res = await createMatrix({ name, ...(copyFrom ? { copyFromId: copyFrom } : {}) });
+      const res = await createMatrix({ courierId: newCourier, ...(copyFrom ? { copyFromId: copyFrom } : {}) });
+      const name = res.data?.matrix?.name || "";
+      const courierName = res.data?.courier?.courierName || "";
       const copied = res.data?.copiedZones || 0;
-      Notification(copied ? `Zone matrix "${name}" created with ${copied} zones copied` : `Zone matrix "${name}" created`, "success");
+      Notification(`Zone matrix "${name}" created${copied ? ` with ${copied} zones copied` : ""} and assigned to ${courierName}`, "success");
+      const cards = res.data?.ratesToUpdate || [];
+      setRatesToUpdate(cards.length ? { courier: courierName, matrix: name, cards } : null);
       setShowNew(false);
-      setNewName("");
+      setNewCourier("");
       setCopyFrom("");
       await loadMatrices(res.data?.matrix?._id);
     } catch (err) {
       Notification(errMsg(err, "Failed to create zone matrix"), "error");
     } finally {
       setCreating(false);
-    }
-  };
-
-  const handleRename = async () => {
-    const name = (renaming || "").trim();
-    if (!current || !name || name === current.name) {
-      setRenaming(null);
-      return;
-    }
-    try {
-      await renameMatrix(current._id, name);
-      Notification("Zone matrix renamed", "success");
-      setRenaming(null);
-      await loadMatrices();
-    } catch (err) {
-      Notification(errMsg(err, "Failed to rename zone matrix"), "error");
     }
   };
 
@@ -290,15 +276,8 @@ export default function ZoneAdmin() {
             ))}
           </select>
 
-          {current && renaming === null && !current.isDefault && (
+          {current && !current.isDefault && (
             <div className="flex gap-2">
-              <button
-                type="button"
-                onClick={() => setRenaming(current.name)}
-                className="border border-brand-primary text-brand-primary px-3 py-2 rounded-lg text-[12px] font-[600] flex items-center gap-1"
-              >
-                <FiEdit /> Rename
-              </button>
               <button
                 type="button"
                 onClick={handleDeleteMatrix}
@@ -308,24 +287,9 @@ export default function ZoneAdmin() {
               </button>
             </div>
           )}
-          {renaming !== null && (
-            <div className="flex gap-2">
-              <input
-                autoFocus
-                value={renaming}
-                onChange={(e) => setRenaming(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") handleRename(); if (e.key === "Escape") setRenaming(null); }}
-                maxLength={60}
-                className="border px-3 py-2 font-[600] text-gray-600 rounded-md text-[12px] focus:outline-brand-primary"
-              />
-              <button type="button" onClick={handleRename} className="bg-brand-primary text-white px-3 py-2 rounded-lg text-[12px] font-[600]">Save</button>
-              <button type="button" onClick={() => setRenaming(null)} className="border px-3 py-2 rounded-lg text-[12px] font-[600] text-gray-600">Cancel</button>
-            </div>
-          )}
-
           <button
             type="button"
-            onClick={() => { setShowNew(true); setCopyFrom(""); }}
+            onClick={() => { setShowNew(true); setCopyFrom(""); setNewCourier(couriers[0]?._id || ""); }}
             className="sm:ml-auto bg-brand-primary text-white px-3 py-2 rounded-lg text-[12px] font-[600] flex items-center justify-center gap-1"
           >
             <FiPlus /> New zone matrix
@@ -614,21 +578,29 @@ export default function ZoneAdmin() {
               <h3 className="text-[14px] font-[600] text-brand-primary">New zone matrix</h3>
               <button type="button" onClick={() => !creating && setShowNew(false)} className="text-gray-400 hover:text-gray-600 text-[18px]">×</button>
             </div>
-            <input
-              autoFocus
-              value={newName}
-              onChange={(e) => setNewName(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && handleCreateMatrix()}
-              maxLength={60}
-              placeholder="Name, e.g. Gati zones"
-              className="border px-3 py-2 font-[600] text-gray-600 rounded-md w-full text-[12px] focus:outline-brand-primary"
-            />
+            <p className="text-[12px] font-[600] text-gray-700 mb-1">Courier</p>
+            {couriers.length ? (
+              <select
+                value={newCourier}
+                onChange={(e) => setNewCourier(e.target.value)}
+                className="border px-3 py-2 font-[600] text-gray-600 rounded-md w-full text-[12px] focus:outline-brand-primary"
+                aria-label="Courier"
+              >
+                {couriers.map((c) => (
+                  <option key={c._id} value={c._id}>
+                    {c.courierName === c.courierProvider ? c.courierName : `${c.courierName} (${c.courierProvider})`}
+                  </option>
+                ))}
+              </select>
+            ) : (
+              <p className="text-[12px] text-gray-400">No B2B couriers yet — add them under Couriers first.</p>
+            )}
             <p className="text-[12px] font-[600] text-gray-700 mt-3 mb-1">Start with</p>
             <label className="flex items-center gap-2 text-[12px] text-gray-600 cursor-pointer">
-              <input type="radio" checked={!copyFrom} onChange={() => setCopyFrom("")} className="accent-brand-primary" /> An empty zone matrix
+              <input type="radio" checked={!copyFrom} onChange={() => setCopyFrom("")} className="accent-brand-primary" /> New zones (empty)
             </label>
             <label className="flex items-center gap-2 text-[12px] text-gray-600 cursor-pointer mt-1">
-              <input type="radio" checked={!!copyFrom} onChange={() => setCopyFrom(current?._id || matrices[0]?._id || "")} className="accent-brand-primary" /> A copy of
+              <input type="radio" checked={!!copyFrom} onChange={() => setCopyFrom(current?._id || matrices[0]?._id || "")} className="accent-brand-primary" /> Copy of an existing zone matrix
             </label>
             {!!copyFrom && (
               <select
@@ -641,15 +613,17 @@ export default function ZoneAdmin() {
                 ))}
               </select>
             )}
+            <p className="text-[11px] text-gray-500 mt-3">
+              Name: set automatically — <span className="font-[600] text-gray-700">{(couriers.find((c) => c._id === newCourier)?.courierName || "Courier")} zones</span>. The courier starts using it straight away.
+            </p>
             <button
               type="button"
               onClick={handleCreateMatrix}
-              disabled={creating || !newName.trim()}
+              disabled={creating || !newCourier}
               className="mt-4 w-full bg-brand-primary text-white px-3 py-2 rounded-lg text-[12px] font-[600] disabled:opacity-50"
             >
               {creating ? "Creating..." : "Create zone matrix"}
             </button>
-            <p className="text-[10px] text-gray-400 mt-2">Then assign it to couriers under "Courier zone matrices".</p>
           </div>
         </div>
       )}
