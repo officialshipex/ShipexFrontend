@@ -11,13 +11,21 @@ const BASE = `${API}/b2b/zonematrix`;
 
 // ================= API CALLS =================
 
-export const getZones = () => axios.get(`${BASE}/getAll`);
+// matrixId: the zone matrix to work on (each courier prices with one); omitted = the Default matrix
+export const getZones = (matrixId) => axios.get(`${BASE}/getAll`, { params: matrixId ? { matrixId } : undefined });
 
 export const addLocation = (data) =>
   axios.post(`${BASE}/addLocation`, data);
 
 export const removeLocation = (data) =>
   axios.put(`${BASE}/removeLocation`, data);
+
+// zone matrices + which matrix each courier uses
+export const getMatrices = () => axios.get(`${BASE}/matrices`);
+export const createMatrix = (data) => axios.post(`${BASE}/matrices`, data); // { name, copyFromId? }
+export const renameMatrix = (id, name) => axios.put(`${BASE}/matrices/${id}`, { name });
+export const deleteMatrix = (id) => axios.delete(`${BASE}/matrices/${id}`);
+export const assignMatrix = (courierId, matrixId) => axios.put(`${BASE}/assign`, { courierId, matrixId });
 
 export const deleteZone = (id) =>
   axios.delete(`${BASE}/removeZone/${id}`);

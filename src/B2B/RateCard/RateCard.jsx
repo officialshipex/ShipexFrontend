@@ -14,6 +14,15 @@ import CustomDropdown from "./CustomDropdown";
 import OverheadCharges from "./OverheadCharges";
 import AddPlanModal from "../../components/RateCard/AddPlanModal";
 
+// Each B2B service prices with its courier's zone matrix (getMeta: couriers[].zoneMatrixId + zoneMatrices[]).
+// A backend from before zone matrices sends neither: then the one zone list (meta.zones), as before.
+const matrixOf = (meta, serviceId) => {
+  const service = meta?.couriers?.find((c) => c._id === serviceId);
+  return meta?.zoneMatrices?.find((m) => m._id === service?.zoneMatrixId) || null;
+};
+const zonesFor = (meta, serviceId) => matrixOf(meta, serviceId)?.zones || meta?.zones || [];
+const matrixNameFor = (meta, serviceId) => matrixOf(meta, serviceId)?.name || "";
+
 export default function RateCardAdmin() {
   const [meta, setMeta] = useState(null);
   const [selectedCourier, setSelectedCourier] = useState("");
@@ -102,12 +111,12 @@ export default function RateCardAdmin() {
           setRateCard(res.data);
           setStatus(res.data.status);
           setOverheadCharges(res.data.overheadCharges);
-          setMatrix(buildMatrix(meta.zones, res.data.rates));
+          setMatrix(buildMatrix(zonesFor(meta, selectedCourier), res.data.rates));
           setMode("view");
         } else {
           setRateCard(null);
           setOverheadCharges(defaultOverheadCharges);
-          setMatrix(buildEmptyMatrix(meta.zones));
+          setMatrix(buildEmptyMatrix(zonesFor(meta, selectedCourier)));
           setMode("create");
         }
       } catch(error) {
@@ -177,7 +186,7 @@ export default function RateCardAdmin() {
 
       const res = await getRateCard(selectedCourier, selectedPlan);
       setRateCard(res.data);
-      setMatrix(buildMatrix(meta.zones, res.data.rates));
+      setMatrix(buildMatrix(zonesFor(meta, selectedCourier), res.data.rates));
       setMode("view");
     } catch {
       Notification("Failed to save rate card", "error");
@@ -191,7 +200,7 @@ export default function RateCardAdmin() {
       setLoading(true);
       await deleteRateCard(rateCard._id);
       Notification("Rate card deleted", "success");
-      setMatrix(buildEmptyMatrix(meta.zones));
+      setMatrix(buildEmptyMatrix(zonesFor(meta, selectedCourier)));
       setRateCard(null);
       setMode("create");
     } catch {
@@ -202,6 +211,10 @@ export default function RateCardAdmin() {
   };
 
   if (!meta || loading) return <Loader />;
+
+  // the zones of the selected service's courier zone matrix (each courier may use its own)
+  const zones = zonesFor(meta, selectedCourier);
+  const zoneMatrixName = matrixNameFor(meta, selectedCourier);
 
   /* ================= DROPDOWN OPTIONS ================= */
   const planOptions = meta.plans.map((p) => ({
@@ -306,6 +319,7 @@ export default function RateCardAdmin() {
           {courierOptions.find(c => c.value === selectedCourier)?.label}
           {" – "}
           <span className="text-gray-500">Per 1 KG</span>
+          {zoneMatrixName && <span className="ml-2 text-gray-500">· Zones: {zoneMatrixName}</span>}
         </p>
       </div>
 
@@ -316,7 +330,7 @@ export default function RateCardAdmin() {
           <thead className="bg-brand-primary text-white">
             <tr className="border border-brand-primary">
               <th className="p-2">Zone</th>
-              {meta.zones.map((z) => (
+              {zones.map((z) => (
                 <th key={z} className="p-2">
                   {z}
                 </th>
@@ -324,25 +338,25 @@ export default function RateCardAdmin() {
             </tr>
           </thead>
           <tbody>
-            {(!meta?.zones?.length ||
+            {(!zones.length ||
               !matrix?.length ||
-              matrix.length !== meta.zones.length) ? (
+              matrix.length !== zones.length) ? (
               <tr>
                 <td
-                  colSpan={meta?.zones?.length + 1 || 1}
+                  colSpan={zones.length + 1}
                   className="p-6 text-center text-gray-500 text-sm"
                 >
                   No data found
                 </td>
               </tr>
             ) : (
-              meta.zones.map((from, i) => (
+              zones.map((from, i) => (
                 <tr key={from} className="border border-gray-300">
                   <td className="p-2 font-[600] text-gray-700">
                     {from}
                   </td>
 
-                  {meta.zones.map((_, j) => (
+                  {zones.map((_, j) => (
                     <td key={j} className="px-1 py-2 text-gray-500">
                       {mode === "view" ? (
                         matrix[i]?.[j]?.price ?? "-"
@@ -368,14 +382,14 @@ export default function RateCardAdmin() {
 
       {/* ================= MOBILE VIEW ================= */}
       <div className="md:hidden space-y-2">
-        {matrix.length === meta.zones.length &&
+        {matrix.length === zones.length &&
           matrix.map((row, i) => (
             <div
               key={i}
               className="bg-white rounded-lg p-3 shadow"
             >
               <p className="text-[12px] font-[700] text-gray-700 mb-2">
-                From: {meta.zones[i]}
+                From: {zones[i]}
               </p>
 
               <div className="grid grid-cols-3 gap-2">
@@ -385,7 +399,7 @@ export default function RateCardAdmin() {
                     className="flex justify-between items-center border rounded px-2 py-1"
                   >
                     <span className="text-[10px] text-gray-500">
-                      To {meta.zones[j]}
+                      To {zones[j]}
                     </span>
 
                     {mode === "view" ? (
@@ -436,6 +450,7 @@ export default function RateCardAdmin() {
         }}
         planId={selectedPlan}
         planName={planOptions.find((p) => p.value === selectedPlan)?.label}
+        couriers={meta.courierAccounts || []}
         onDone={() => setUploadSaved(true)}
       />
 

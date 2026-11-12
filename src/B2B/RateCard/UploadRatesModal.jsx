@@ -5,8 +5,12 @@ import { downloadRateTemplate, uploadRateFile } from "./rateCardApi";
 
 // B2B rate card upload (Excel) — zone prices only. Overhead charges are not changed by it: an existing
 // card keeps its overheads, a new card starts with the standard ones (set them on this screen with Edit).
-export default function UploadRatesModal({ isOpen, onClose, planId, planName, onDone }) {
+export default function UploadRatesModal({ isOpen, onClose, planId, planName, couriers = [], onDone }) {
   const [scope, setScope] = useState(planId ? "plan" : "all");
+  // every courier (one sheet per zone matrix) or one courier (its own zone matrix)
+  const [courierScope, setCourierScope] = useState("all");
+  const [courierId, setCourierId] = useState(couriers[0]?._id || "");
+  const courierName = couriers.find((c) => c._id === courierId)?.courierName || "";
   const [file, setFile] = useState(null);
   const [downloading, setDownloading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -26,11 +30,12 @@ export default function UploadRatesModal({ isOpen, onClose, planId, planName, on
   const download = async () => {
     setDownloading(true);
     try {
-      const res = await downloadRateTemplate(scope === "plan" ? planId : undefined);
+      const oneCourier = courierScope === "one" && courierId;
+      const res = await downloadRateTemplate(scope === "plan" ? planId : undefined, oneCourier ? courierId : undefined);
       const url = URL.createObjectURL(res.data);
       const a = document.createElement("a");
       a.href = url;
-      a.download = scope === "plan" && planName ? `b2b-ratecard-${planName}.xlsx` : "b2b-ratecard-all-plans.xlsx";
+      a.download = `b2b-ratecard-${scope === "plan" && planName ? planName : "all-plans"}${oneCourier && courierName ? `-${courierName}` : ""}.xlsx`;
       a.click();
       setTimeout(() => URL.revokeObjectURL(url), 1000);
     } catch (err) {
@@ -95,7 +100,36 @@ export default function UploadRatesModal({ isOpen, onClose, planId, planName, on
                 All plans
               </label>
             </div>
-            <p className="text-[11px] text-gray-400">Current prices are already filled in — change only what you need. Blank or 0 = lane not offered.</p>
+            <div className="flex flex-wrap items-center gap-4 pt-1">
+              <label className="flex items-center gap-1.5 text-[12px] font-[600] text-gray-600 cursor-pointer">
+                <input type="radio" checked={courierScope === "all"} onChange={() => setCourierScope("all")} className="accent-brand-primary" />
+                All couriers
+              </label>
+              <label className={`flex items-center gap-1.5 text-[12px] font-[600] cursor-pointer ${couriers.length ? "text-gray-600" : "text-gray-300 cursor-not-allowed"}`}>
+                <input type="radio" disabled={!couriers.length} checked={courierScope === "one"} onChange={() => setCourierScope("one")} className="accent-brand-primary" />
+                Courier-wise
+              </label>
+              {courierScope === "one" && (
+                <select
+                  value={courierId}
+                  onChange={(e) => setCourierId(e.target.value)}
+                  className="border px-2 py-1.5 rounded-lg text-[12px] font-[600] text-gray-600 focus:outline-brand-primary"
+                  aria-label="Courier"
+                >
+                  {couriers.map((c) => (
+                    <option key={c._id} value={c._id}>
+                      {c.courierName === c.courierProvider ? c.courierName : `${c.courierName} (${c.courierProvider})`}
+                    </option>
+                  ))}
+                </select>
+              )}
+            </div>
+            <p className="text-[11px] text-gray-400">
+              {courierScope === "one"
+                ? `The file has ${courierName || "this courier"}'s services with the zones of its own zone matrix.`
+                : "Each courier uses its own zone matrix, so the file has one sheet per zone matrix."}{" "}
+              Current prices are already filled in — change only what you need. Blank or 0 = lane not offered.
+            </p>
             <button
               onClick={download}
               disabled={downloading}

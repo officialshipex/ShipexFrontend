@@ -16,8 +16,12 @@ export const createRateCard = (data) => axios.post(`${BASE}/createRateCard`, dat
 export const updateRateCard = (id, data) => axios.put(`${BASE}/updateRateCard/${id}`, data);
 export const deleteRateCard = (id) => axios.delete(`${BASE}/deleteRateCard/${id}`);
 // Excel upload of the zone prices only (overhead charges are not changed by it)
-export const downloadRateTemplate = (planId) =>
-  axios.get(`${BASE}/uploadTemplate`, { params: planId ? { planId } : undefined, responseType: "blob" });
+// courierId: one courier (account) -> its services with its own zone matrix; omitted = every courier
+export const downloadRateTemplate = (planId, courierId) =>
+  axios.get(`${BASE}/uploadTemplate`, {
+    params: { ...(planId ? { planId } : {}), ...(courierId ? { courierId } : {}) },
+    responseType: "blob",
+  });
 export const uploadRateFile = (file) => {
   const form = new FormData();
   form.append("file", file);
