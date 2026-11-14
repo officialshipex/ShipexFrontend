@@ -140,7 +140,8 @@ const CostEstimationB2B = () => {
             );
 
             if (!res.data?.rates?.length) {
-                Notification("No serviceable couriers found", "info");
+                // the backend says why when the plan itself has nothing to price with (e.g. no rates assigned yet)
+                Notification(res.data?.message || "No serviceable couriers found", "info");
                 setRates([]);
                 setIsDataFetched(false);
                 return;
