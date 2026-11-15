@@ -18,6 +18,7 @@ import NoDataFound from "../../Common/NoDataFound";
 import { FiCopy, FiCheck, FiBookOpen } from "react-icons/fi";
 
 import PassbookFilterPanel from "../../Common/PassbookFilterPanel";
+import B2BBreakupLines from "../Billings/B2BBreakupLines";
 
 const Passbooks = () => {
   const [transactions, setTransactions] = useState([]);
@@ -758,12 +759,7 @@ const Passbooks = () => {
                     return (
                       <div className="space-y-1.5">
                         {row.rateBreakup && Object.keys(row.rateBreakup).length > 0
-                          ? Object.entries(row.rateBreakup).map(([key, val]) => (
-                            <div key={key} className="flex justify-between">
-                              <span className="text-gray-500 capitalize">{key}</span>
-                              <span className="font-bold">{typeof val === "number" ? `₹ ${val.toFixed(2)}` : val}</span>
-                            </div>
-                          ))
+                          ? <B2BBreakupLines w={row.rateBreakup} valueClass="font-bold" />
                           : <p className="text-gray-400 italic text-center py-2">No breakup available</p>
                         }
                         <div className="flex justify-between border-t border-dashed pt-2 mt-1"><span className="font-bold text-brand-secondary">Total</span><span className="font-bold text-brand-primary">₹ {Number(row.amount || 0).toFixed(2)}</span></div>
@@ -813,12 +809,7 @@ const Passbooks = () => {
           ) : (
             <div className="space-y-1">
               {pricePopupPos.order.rateBreakup && Object.keys(pricePopupPos.order.rateBreakup).length > 0
-                ? Object.entries(pricePopupPos.order.rateBreakup).map(([key, val]) => (
-                  <div key={key} className="flex justify-between">
-                    <span className="text-gray-500 capitalize">{key}</span>
-                    <span className="font-[600]">{typeof val === "number" ? `₹ ${val.toFixed(2)}` : val}</span>
-                  </div>
-                ))
+                ? <B2BBreakupLines w={pricePopupPos.order.rateBreakup} valueClass="font-[600]" />
                 : <p className="text-gray-400 italic">No breakup available</p>
               }
               <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-brand-secondary">Total</span><span className="font-[700] text-brand-primary">₹ {Number(pricePopupPos.order.amount || 0).toFixed(2)}</span></div>

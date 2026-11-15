@@ -17,6 +17,7 @@ import Ekart from "../../assets/ekart.png"
 import ThreeDotLoader from "../../Loader";
 import { FaTruck, FaPlane, FaStar, FaInfoCircle } from "react-icons/fa";
 import Cookies from "js-cookie";
+import { b2bBreakupRows, b2bIfApplicable } from "../../utils/b2bPriceBreakup";
 
 const isTouchDevice = () =>
   window.matchMedia("(pointer: coarse)").matches;
@@ -125,7 +126,8 @@ const CarrierSelection = () => {
 
   const openRatePopup = (e, working) => {
     const rect = e.currentTarget.getBoundingClientRect();
-    const popupWidth = 220;
+    const popupWidth = 280;
+    const popupHeight = 400 + b2bIfApplicable(working).length * 16; // 16 breakup rows + total (+ if-applicable lines)
     const screenPadding = 10;
 
     let left = rect.left + rect.width / 2 - popupWidth / 2;
@@ -134,10 +136,12 @@ const CarrierSelection = () => {
     left = Math.max(screenPadding, left);
     left = Math.min(window.innerWidth - popupWidth - screenPadding, left);
 
-    setPopupPos({
-      top: rect.bottom + 10,
-      left,
-    });
+    let top = rect.bottom + 10;
+    if (top + popupHeight > window.innerHeight - screenPadding) {
+      top = Math.max(screenPadding, rect.top - popupHeight - 10);
+    }
+
+    setPopupPos({ top, left });
 
     setRatePopup(working);
   };
@@ -513,28 +517,10 @@ const CarrierSelection = () => {
       {ratePopup && (
         <div
           className="rate-popup fixed z-[9999] bg-white border shadow-lg rounded-lg p-3 text-[12px]"
-          style={{ top: popupPos.top, left: popupPos.left, width: "260px" }}
+          style={{ top: popupPos.top, left: popupPos.left, width: "280px" }}
         >
-          {[
-            ["Zone", ratePopup.zone || "—"],
-            ["Chargeable Weight", `${ratePopup.billable_weight || 0} kg`],
-            ["Freight / Kg", `₹${ratePopup.rate ?? 0}`],
-            ["Freight Charges", `₹${ratePopup.freight}`],
-            ["Docket Charges", `₹${ratePopup.docket_charges}`],
-            ["Pickup Charges", `₹${ratePopup.pickup_charge}`],
-            ["Handling Charges", `₹${ratePopup.handling_charge}`],
-            ["Appointment Charges", `₹${ratePopup.appointment_charge}`],
-            ["COD Charges", `₹${ratePopup.cod_charges}`],
-            ["ROV", `₹${ratePopup.rov}`],
-            [
-              ratePopup.fsc_percent != null ? `FSC (${ratePopup.fsc_percent}%)` : "FSC",
-              `₹${ratePopup.fsc}`,
-            ],
-            ["ODA", `₹${ratePopup.oda}`],
-            ["Green Tax", `₹${ratePopup.green_tax}`],
-            ["GST", `₹${ratePopup.gst}`],
-          ].map(([k, v]) => (
-            <div key={k} className="flex justify-between py-[2px]">
+          {b2bBreakupRows(ratePopup).map(([k, v]) => (
+            <div key={k} className="flex justify-between gap-3 py-[2px]">
               <span className="text-gray-500 font-[600]">{k}</span>
               <span className="font-[600] text-gray-700">{v}</span>
             </div>
@@ -542,8 +528,16 @@ const CarrierSelection = () => {
 
           <div className="border-t mt-2 pt-1 flex text-gray-700 justify-between font-[700]">
             <span>Total</span>
-            <span>₹{ratePopup.grand_total}</span>
+            <span>₹{Number(ratePopup.grand_total || 0).toFixed(2)}</span>
           </div>
+          {b2bIfApplicable(ratePopup).length > 0 && (
+            <div className="border-t border-dashed mt-2 pt-1">
+              <p className="font-[600] text-gray-600">If applicable (not in total)</p>
+              {b2bIfApplicable(ratePopup).map((t) => (
+                <p key={t} className="text-[11px] text-gray-500 leading-snug">{t}</p>
+              ))}
+            </div>
+          )}
         </div>
       )}
 

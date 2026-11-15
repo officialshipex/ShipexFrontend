@@ -19,6 +19,7 @@ import ThreeDotLoader from "../../Loader";
 import Cookies from "js-cookie";
 import PaginationFooter from "../../Common/PaginationFooter";
 import NoDataFound from "../../Common/NoDataFound";
+import B2BBreakupLines from "./B2BBreakupLines";
 
 const Shippings = (filterOrder) => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -995,12 +996,7 @@ const Shippings = (filterOrder) => {
                           ) : (
                             <>
                               {row.rateBreakup && Object.keys(row.rateBreakup).length > 0
-                                ? Object.entries(row.rateBreakup).map(([key, val]) => (
-                                  <div key={key} className="flex justify-between">
-                                    <span className="text-gray-500 capitalize">{key}</span>
-                                    <span className="font-bold">{typeof val === "number" ? `₹ ${val.toFixed(2)}` : val}</span>
-                                  </div>
-                                ))
+                                ? <B2BBreakupLines w={row.rateBreakup} valueClass="font-bold" />
                                 : <p className="text-gray-400 italic text-center py-2">No breakup available</p>
                               }
                               <div className="flex justify-between border-t pt-2 mt-1"><span className="font-bold text-brand-secondary">Total</span><span className="font-bold text-brand-primary">₹ {Number(row.totalFreightCharges ?? 0).toFixed(2)}</span></div>
@@ -1088,12 +1084,7 @@ const Shippings = (filterOrder) => {
           ) : (
             <div className="space-y-1">
               {pricePopupPos.order.rateBreakup && Object.keys(pricePopupPos.order.rateBreakup).length > 0
-                ? Object.entries(pricePopupPos.order.rateBreakup).map(([key, val]) => (
-                  <div key={key} className="flex justify-between">
-                    <span className="text-gray-500 capitalize">{key}</span>
-                    <span className="font-[600]">{typeof val === "number" ? `₹ ${val.toFixed(2)}` : val}</span>
-                  </div>
-                ))
+                ? <B2BBreakupLines w={pricePopupPos.order.rateBreakup} valueClass="font-[600]" />
                 : <p className="text-gray-400 italic">No breakup available</p>
               }
               <div className="flex justify-between border-t pt-1 mt-1"><span className="font-[700] text-brand-secondary">Total</span><span className="font-[700] text-brand-primary">₹ {Number(pricePopupPos.order.totalFreightCharges ?? 0).toFixed(2)}</span></div>

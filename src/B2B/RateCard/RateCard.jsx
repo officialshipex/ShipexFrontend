@@ -11,7 +11,7 @@ import UploadRatesModal from "./UploadRatesModal";
 import Loader from "../../Loader";
 import { Notification } from "../../Notification";
 import CustomDropdown from "./CustomDropdown";
-import OverheadCharges from "./OverheadCharges";
+import OverheadCharges, { withShownTypes } from "./OverheadCharges";
 import AddPlanModal from "../../components/RateCard/AddPlanModal";
 
 // Each B2B service prices with its courier's zone matrix (getMeta: couriers[].zoneMatrixId + zoneMatrices[]).
@@ -71,6 +71,20 @@ export default function RateCardAdmin() {
     minimumFreight: { type: "flat", value: 220 },
 
     gst: { type: "percentage", value: 18 },
+
+    // carrier "unit charges" (e.g. Gati) — all 0 = not charged, so older cards price exactly as before
+    odaCharges50to150: { type: "perKg", value: 0, min: 0 },
+    odaCharges150plus: { type: "perKg", value: 0, min: 0 },
+    packageHandling0to250: { type: "perKg", value: 0, min: 0 },
+    packageHandling250to400: { type: "perKg", value: 0, min: 0 },
+    packageHandling400plus: { type: "perKg", value: 0, min: 0 },
+    minChargeableWeight: { type: "flat", value: 0 },
+    minimumBilling: { type: "flat", value: 0 },
+    csdDelivery: { type: "perKg", value: 0, min: 0 },
+    floorDelivery: { type: "perKg", value: 0, min: 0 },
+    demurrage: { type: "perKg", value: 0, min: 0 },
+    reattemptCharge: { type: "perKg", value: 0, min: 0 },
+    reattemptFreeCount: { type: "flat", value: 0 },
   };
 
 
@@ -110,7 +124,8 @@ export default function RateCardAdmin() {
         if (res.data) {
           setRateCard(res.data);
           setStatus(res.data.status);
-          setOverheadCharges(res.data.overheadCharges);
+          // cards saved before the newer charge rows existed get those rows at 0 (= not charged)
+          setOverheadCharges({ ...defaultOverheadCharges, ...(res.data.overheadCharges || {}) });
           setMatrix(buildMatrix(zonesFor(meta, selectedCourier), res.data.rates));
           setMode("view");
         } else {
@@ -168,6 +183,8 @@ export default function RateCardAdmin() {
       price: Number(c.price),
     }));
 
+    const overheadsToSave = withShownTypes(overheadCharges);
+
     try {
       setLoading(true);
       if (mode === "create") {
@@ -175,12 +192,12 @@ export default function RateCardAdmin() {
           courierService: selectedCourier,
           plan: selectedPlan,
           rates,
-          overheadCharges,
+          overheadCharges: overheadsToSave,
           status,
         });
         Notification("Rate card created", "success");
       } else {
-        await updateRateCard(rateCard._id, { rates, overheadCharges, status });
+        await updateRateCard(rateCard._id, { rates, overheadCharges: overheadsToSave, status });
         Notification("Rate card updated", "success");
       }
 
