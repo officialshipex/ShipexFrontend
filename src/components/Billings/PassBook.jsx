@@ -25,6 +25,8 @@ const Passbooks = ({
   setClearFiltersTrigger,
 }) => {
   const [transactions, setTransactions] = useState([]);
+  // QuickPost Cargo wallet: its rows are tagged (their balance is the Cargo wallet's). False for white-label sellers.
+  const [hasCargoWallet, setHasCargoWallet] = useState(false);
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
   const [page, setPage] = useState(1);
@@ -122,6 +124,7 @@ const Passbooks = ({
       );
 
       setTransactions(response.data.results || []);
+      setHasCargoWallet(Boolean(response.data.hasCargoWallet));
       setTotalPages(response.data.page || 0);
       setLoading(false);
     } catch (error) {
@@ -182,6 +185,7 @@ const Passbooks = ({
         "Order ID": t.orderId,
         "Customer Order ID": customerOrderIdOf(t),
         "AWB Number": t.awb_number,
+        ...(hasCargoWallet ? { Wallet: t.walletKind === "cargo" ? "Cargo" : "B2C" } : {}),
         Category: t.category,
         Amount: t.amount,
         "Available Balance": t.balanceAfterTransaction,
@@ -423,7 +427,12 @@ const Passbooks = ({
                     </td>
                     <td className="py-2 px-3 text-gray-700">₹{Number(row.balanceAfterTransaction).toFixed(2)}</td>
                     <td className="py-2 px-3">
-                      <p className="line-clamp-2 text-[12px] leading-relaxed text-gray-700" title={row.description}>{row.description}</p>
+                      <p className="line-clamp-2 text-[12px] leading-relaxed text-gray-700" title={row.description}>
+                        {hasCargoWallet && row.walletKind === "cargo" && (
+                          <span className="mr-1 inline-block rounded border border-brand-primary px-1 text-[10px] font-[600] text-brand-primary">Cargo Wallet</span>
+                        )}
+                        {row.description}
+                      </p>
                     </td>
                   </tr>
                 ))
@@ -586,6 +595,9 @@ const Passbooks = ({
                   <div className="p-2 bg-brand-secondary/8 rounded-lg border border-brand-secondary/16">
                     <p className="text-gray-700 font-[600] text-[10px] tracking-wider">Description</p>
                     <p className="text-gray-500 leading-relaxed text-[10px]">
+                      {hasCargoWallet && row.walletKind === "cargo" && (
+                        <span className="mr-1 inline-block rounded border border-brand-primary px-1 font-[600] text-brand-primary">Cargo Wallet</span>
+                      )}
                       {row.description}
                     </p>
                   </div>

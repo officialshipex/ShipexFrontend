@@ -12,6 +12,7 @@ import { ChevronDown } from "lucide-react";
 // import DowngradeComponent from "../Billings/Downgrade";
 import { Truck, Banknote, BookOpen, Wallet, CircleDollarSign } from "lucide-react";
 import { Lock } from "lucide-react";
+import TransferWalletModal from "../../recharge/TransferWalletModal";
 
 const icons = {
   Shipping: <Truck className="w-4 h-4" />,
@@ -43,6 +44,8 @@ const Billing = () => {
   const [balance, setBalance] = useState(0);
   const [holdAmount, setHoldAmount] = useState(0);
   const [creditLimit, setCreditLimit] = useState(0);
+  const [cargoBalance, setCargoBalance] = useState(null);
+  const [showTransferModal, setShowTransferModal] = useState(false);
   const { id } = useParams();
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -77,6 +80,8 @@ const Billing = () => {
         setBalance(response.data.balance);
         setHoldAmount(response.data.holdAmount);
         setCreditLimit(response.data.creditLimit);
+        // QuickPost Cargo wallet: null for accounts without one (every white-label seller) — nothing extra shown
+        setCargoBalance(response.data.hasCargoWallet ? Number(response.data.cargoBalance || 0) : null);
       } else {
         console.error("Failed to fetch wallet summary:", response.data.message);
       }
@@ -257,10 +262,32 @@ const Billing = () => {
             </div>
 
             <div className="flex flex-col font-[600] leading-tight">
-              <p>Wallet Balance</p>
+              <p>{cargoBalance !== null ? "B2C Wallet Balance" : "Wallet Balance"}</p>
               <p className="font-[700]">{Number(balance).toFixed(2)}</p>
             </div>
           </div>
+
+          {/* QuickPost Cargo wallet (B2B shipments) — only for an account that has one */}
+          {cargoBalance !== null && (
+            <div className="flex flex-row w-full bg-white text-gray-700 rounded-lg gap-2 px-2 h-14 items-center justify-start text-[12px] border border-brand-primary">
+              <div className="p-2 rounded-full flex justify-center items-center bg-brand-primary text-white">
+                <Wallet className="w-4 h-4" />
+              </div>
+              <div className="flex flex-col font-[600] leading-tight">
+                <p>Cargo Wallet</p>
+                <p className={`font-[700] ${cargoBalance < 0 ? "text-red-500" : ""}`}>{cargoBalance.toFixed(2)}</p>
+              </div>
+              {!id && (
+                <button
+                  type="button"
+                  onClick={() => setShowTransferModal(true)}
+                  className="ml-auto rounded border border-brand-primary text-brand-primary text-[10px] px-2 py-0.5 hover:bg-gray-50"
+                >
+                  Transfer
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Hold Amount Box */}
           <div className="flex flex-row w-full bg-white text-gray-700 rounded-lg gap-2 px-2 h-14 items-center justify-start text-[12px] border border-brand-primary">
@@ -356,6 +383,11 @@ const Billing = () => {
       </div>
       {/* Render Selected Component */}
       <div className="mt-6">{renderComponent()}</div>
+      <TransferWalletModal
+        open={showTransferModal}
+        onClose={() => setShowTransferModal(false)}
+        onSuccess={({ main, cargo }) => { setBalance(main); setCargoBalance(cargo); }}
+      />
     </div>
   );
 };

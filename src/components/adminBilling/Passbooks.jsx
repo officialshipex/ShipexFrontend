@@ -449,7 +449,13 @@ const Passbooks = () => {
                     </td>
                     <td className="py-2 px-3 text-gray-700">₹{Number(row.balanceAfterTransaction).toLocaleString('en-IN', { minimumFractionDigits: 2 })}</td>
                     <td className="py-2 px-3">
-                      <p className="line-clamp-2 text-[12px] leading-relaxed" title={row.description}>{row.description}</p>
+                      <p className="line-clamp-2 text-[12px] leading-relaxed" title={row.description}>
+                        {/* a QuickPost Cargo wallet row (its balance is the Cargo wallet's); never on white-label */}
+                        {row.walletKind === "cargo" && (
+                          <span className="mr-1 inline-block rounded border border-brand-primary px-1 text-[10px] font-[600] text-brand-primary">Cargo Wallet</span>
+                        )}
+                        {row.description}
+                      </p>
                     </td>
                     <td className="py-2 px-3">
                       {row.category === "debit" && (

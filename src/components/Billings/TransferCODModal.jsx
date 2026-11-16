@@ -16,6 +16,7 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
   const [fetchError, setFetchError] = useState(null);
 
   const [balance, setBalance] = useState(0);
+  const [walletSplit, setWalletSplit] = useState(null);
   const [holdAmount, setHoldAmount] = useState(0);
   const [creditLimit, setCreditLimit] = useState(0);
 
@@ -58,6 +59,14 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
         setRemittance(Array.isArray(fetched) ? fetched[0] : fetched);
 
         setBankDetails(response.data.bankDetails || null);
+
+        // QuickPost seller with a Cargo wallet: `walletBalance` is the total negative of both wallets to clear
+        // (the backend gives each wallet its own part back); show the two real balances too
+        setWalletSplit(
+          response.data.hasCargoWallet
+            ? { main: Number(response.data.mainWalletBalance ?? 0), cargo: Number(response.data.cargoWalletBalance ?? 0) }
+            : null
+        );
 
         setBalance(
           Number(
@@ -388,13 +397,18 @@ const TranseferCODModal = ({ id, onClose, selectedRemittanceIds = [] }) => {
                       </div>
 
                       <div>
-                        <div className="text-[10px] font-[600]">Wallet Balance</div>
+                        <div className="text-[10px] font-[600]">{walletSplit && balance < 0 ? "Negative to Clear" : "Wallet Balance"}</div>
                         <div
                           className={`text-[16px] font-[600] ${balance >= 0 ? "text-green-700" : "text-red-600"
                             }`}
                         >
                           ₹{balance.toFixed(2)}
                         </div>
+                        {walletSplit && (
+                          <div className="text-[10px] text-gray-500">
+                            B2C ₹{walletSplit.main.toFixed(2)} · Cargo ₹{walletSplit.cargo.toFixed(2)}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>

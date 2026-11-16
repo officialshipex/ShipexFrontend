@@ -26,6 +26,7 @@ import {
 import { MdOutlineCalculate } from "react-icons/md";
 import { FaTicketAlt } from "react-icons/fa";
 import AddCase from "../Support/AddCase";
+import TransferWalletModal from "../../recharge/TransferWalletModal";
 import { Notification } from "../../Notification"
 import MasterSearchFilter from "../../Common/MasterSearchFilter";
 import { X as XIcon, Package, PackageX, UploadCloud, Loader2 } from "lucide-react";
@@ -43,6 +44,9 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [userData, setUserData] = useState();
   const [balance, setBalance] = useState();
+  // QuickPost Cargo wallet: null for every account without one (all white-label sellers) — then nothing changes
+  const [cargoBalance, setCargoBalance] = useState(null);
+  const [showTransferModal, setShowTransferModal] = useState(false);
   const [holdAmount, setHoldAmount] = useState();
   const [isAdminTab, setIsAdminTab] = useState(false);
   const [awbNumber, setAwbNumber] = useState("");
@@ -280,6 +284,8 @@ const Navbar = () => {
             setUserData(response.data.user);
             setBalance(response.data.user.Wallet?.balance || 0);
             setHoldAmount(response.data.user.Wallet?.holdAmount || 0);
+            // QuickPost Cargo wallet (platform company sellers only; null = none, nothing extra is shown)
+            setCargoBalance(response.data.user.CargoWallet ? Number(response.data.user.CargoWallet.balance || 0) : null);
             setIsAdminTab(response.data.user.adminTab);
             setRefresh(false)
           }
@@ -295,6 +301,7 @@ const Navbar = () => {
             // An employee works on the owner's account, so the wallet shown is the owner's
             setBalance(response.data.user?.Wallet?.balance || 0);
             setHoldAmount(response.data.user?.Wallet?.holdAmount || 0);
+            setCargoBalance(response.data.user?.CargoWallet ? Number(response.data.user.CargoWallet.balance || 0) : null);
             setIsAdminTab(response.data.employee.adminTab);
             setRefresh(false)
           }
@@ -832,6 +839,22 @@ const Navbar = () => {
                     <p className="text-red-700 font-[600] mb-1">Hold Amount :</p>
                     <p>₹{holdAmount?.toFixed(2) || "0.00"}</p>
                   </div>
+
+                  {cargoBalance !== null && (
+                    <>
+                      <div className="flex text-[10px] gap-1 border-t border-gray-100 pt-1 mt-1">
+                        <p className="mb-1">Cargo Wallet :</p>
+                        <p className={`${cargoBalance < 0 ? "text-red-500" : ""}`}>₹{cargoBalance.toFixed(2)}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => { setIsBalanceDropdownOpen(false); setShowTransferModal(true); }}
+                        className="w-full mt-1 rounded border border-brand-primary text-brand-primary text-[10px] py-0.5 hover:bg-gray-50"
+                      >
+                        Transfer
+                      </button>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -1016,6 +1039,11 @@ const Navbar = () => {
                     <div className="text-red-700">
                       Hold Amount: ₹{holdAmount?.toFixed(2) || "0.00"}
                     </div>
+                    {cargoBalance !== null && (
+                      <div className={`${cargoBalance < 0 ? "text-red-500" : "text-gray-700"}`}>
+                        Cargo Wallet: ₹{cargoBalance.toFixed(2)}
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -1243,6 +1271,11 @@ const Navbar = () => {
         />
       )}
       <AddCase isOpen={isModalOpen} onClose={closeModal} refresh={setRefresh} />
+      <TransferWalletModal
+        open={showTransferModal}
+        onClose={() => setShowTransferModal(false)}
+        onSuccess={({ main, cargo }) => { setBalance(main); setCargoBalance(cargo); }}
+      />
 
       {/* ═══════════════════════════════════════════════════════════════
            ADMIN: Login As User Popup
