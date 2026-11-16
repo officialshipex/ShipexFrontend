@@ -11,7 +11,7 @@ import UploadRatesModal from "./UploadRatesModal";
 import Loader from "../../Loader";
 import { Notification } from "../../Notification";
 import CustomDropdown from "./CustomDropdown";
-import OverheadCharges, { withShownTypes } from "./OverheadCharges";
+import OverheadCharges, { withShownTypes, pkgSlabProblem, withMinFreightMoved } from "./OverheadCharges";
 import AddPlanModal from "../../components/RateCard/AddPlanModal";
 
 // Each B2B service prices with its courier's zone matrix (getMeta: couriers[].zoneMatrixId + zoneMatrices[]).
@@ -68,7 +68,7 @@ export default function RateCardAdmin() {
 
     divisor: { type: "formula", value: 4500 },
 
-    minimumFreight: { type: "flat", value: 220 },
+    minimumFreight: { type: "flat", value: 0 }, // replaced by Min. LR Billing; always saved as 0
 
     gst: { type: "percentage", value: 18 },
 
@@ -125,7 +125,7 @@ export default function RateCardAdmin() {
           setRateCard(res.data);
           setStatus(res.data.status);
           // cards saved before the newer charge rows existed get those rows at 0 (= not charged)
-          setOverheadCharges({ ...defaultOverheadCharges, ...(res.data.overheadCharges || {}) });
+          setOverheadCharges(withMinFreightMoved({ ...defaultOverheadCharges, ...(res.data.overheadCharges || {}) }));
           setMatrix(buildMatrix(zonesFor(meta, selectedCourier), res.data.rates));
           setMode("view");
         } else {
@@ -183,6 +183,11 @@ export default function RateCardAdmin() {
       price: Number(c.price),
     }));
 
+    const slabProblem = pkgSlabProblem(overheadCharges);
+    if (slabProblem) {
+      Notification(slabProblem, "error");
+      return;
+    }
     const overheadsToSave = withShownTypes(overheadCharges);
 
     try {
@@ -203,10 +208,12 @@ export default function RateCardAdmin() {
 
       const res = await getRateCard(selectedCourier, selectedPlan);
       setRateCard(res.data);
+      // show what was actually saved (numbers, slabs sorted)
+      setOverheadCharges(withMinFreightMoved({ ...defaultOverheadCharges, ...(res.data?.overheadCharges || {}) }));
       setMatrix(buildMatrix(zonesFor(meta, selectedCourier), res.data.rates));
       setMode("view");
-    } catch {
-      Notification("Failed to save rate card", "error");
+    } catch (err) {
+      Notification(err?.response?.data?.message || "Failed to save rate card", "error");
     } finally {
       setLoading(false);
     }
