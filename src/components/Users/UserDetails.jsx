@@ -24,6 +24,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { FiChevronDown, FiArrowLeft, FiSearch, FiEdit, FiAlertCircle } from "react-icons/fi";
 import UploadRatecard from "../RateCard/UploadRatecard";
 import UserServiceManagement from "./UserServiceManagement";
+import B2BRateCardsView from "./B2BRateCardsView";
 import Loader from "../../Loader";
 
 
@@ -121,6 +122,51 @@ export default function ProfileCard() {
   const [selectedUserId, setSelectedUserId] = useState(null);
   const [notificationSettings, setNotificationSettings] = useState(null);
   const [apiAccess, setApiAccess] = useState(false);
+  // API Details: B2C and B2B shown separately. B2B = the admin's B2B switch for this seller (adminB2BApiAccess,
+  // separate from the B2C API Access switch) + the seller's own B2B switch and key status (read-only here).
+  const [apiMode, setApiMode] = useState("B2C");
+  // Ratecard Management: B2C (weight slabs, add / assign / upload) or B2B (zone matrix + charges, assign plan)
+  const [rateMode, setRateMode] = useState("B2C");
+  const [b2bRatesReload, setB2bRatesReload] = useState(0);
+  const [b2bAccess, setB2bAccess] = useState(null);
+  const [b2bAccessError, setB2bAccessError] = useState("");
+  useEffect(() => {
+    if (apiMode !== "B2B" || !id) return undefined;
+    let alive = true;
+    setB2bAccessError("");
+    setB2bAccess(null); // never show the previous seller's switch while this one loads
+    axios
+      .get(`${process.env.REACT_APP_BACKEND_URL}/b2b-api/access`, {
+        headers: { Authorization: `Bearer ${Cookies.get("session")}` },
+        params: { userId: id },
+      })
+      .then((res) => alive && setB2bAccess(res.data?.data || null))
+      .catch((error) => {
+        if (!alive) return;
+        setB2bAccess(null);
+        setB2bAccessError(error?.response?.data?.message || "Could not load B2B API access");
+      });
+    return () => {
+      alive = false;
+    };
+  }, [apiMode, id]);
+  const handleB2BAdminToggle = async () => {
+    if (!b2bAccess) return;
+    const next = !b2bAccess.adminB2BApiAccess;
+    setB2bAccess({ ...b2bAccess, adminB2BApiAccess: next });
+    try {
+      const res = await axios.put(
+        `${process.env.REACT_APP_BACKEND_URL}/b2b-api/access`,
+        { userId: id, enabled: next },
+        { headers: { Authorization: `Bearer ${Cookies.get("session")}` } }
+      );
+      if (res.data?.data) setB2bAccess((prev) => (prev ? { ...prev, ...res.data.data } : prev));
+      Notification(next ? "B2B API access turned on" : "B2B API access turned off", "success");
+    } catch (error) {
+      setB2bAccess({ ...b2bAccess, adminB2BApiAccess: !next });
+      Notification(error?.response?.data?.message || "Error updating B2B API access", "error");
+    }
+  };
   const [showKAMEditModal, setShowKAMEditModal] = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [rateCardType, setRateCardType] = useState("");
@@ -836,7 +882,39 @@ export default function ProfileCard() {
                 <h3 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 flex items-center gap-2">
                   <CreditCard size={16} className="text-gray-600" />
                   Ratecard Management
+                  {/* B2C and B2B rate cards are separate: each side shows and manages only its own */}
+                  <span className="flex rounded-lg border border-gray-300 overflow-hidden ml-1">
+                    {["B2C", "B2B"].map((mode) => (
+                      <button
+                        key={mode}
+                        type="button"
+                        onClick={() => setRateMode(mode)}
+                        className={`px-2.5 py-0.5 text-[10px] sm:text-[11px] font-[600] transition-colors ${rateMode === mode ? "bg-brand-primary text-white" : "bg-white text-gray-700 hover:bg-brand-secondary/10"}`}
+                      >
+                        {mode}
+                      </button>
+                    ))}
+                  </span>
                 </h3>
+                {rateMode === "B2B" ? (
+                  <div className="flex flex-wrap justify-center gap-2">
+                    <button
+                      onClick={() => {
+                        setRateCardType("B2B");
+                        setShowRateCardModal(true);
+                      }}
+                      className="bg-brand-primary text-white px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-green-600 transition-colors"
+                    >
+                      Assign B2B
+                    </button>
+                    <button
+                      onClick={() => setB2bRatesReload((n) => n + 1)}
+                      className="bg-white border border-gray-300 text-gray-700 px-3 py-1.5 rounded-lg text-[10px] font-bold hover:bg-brand-secondary/10 transition-colors"
+                    >
+                      Refresh
+                    </button>
+                  </div>
+                ) : (
                 <div className="flex flex-wrap justify-center gap-2">
                   <button
                     onClick={async () => {
@@ -886,9 +964,10 @@ export default function ProfileCard() {
                     Upload
                   </button>
                 </div>
+                )}
               </div>
               <div className="p-4 space-y-3">
-                {renderRateTable()}
+                {rateMode === "B2B" ? <B2BRateCardsView userId={id} reloadKey={b2bRatesReload} /> : renderRateTable()}
               </div>
             </div>
           </div>
@@ -1103,11 +1182,58 @@ export default function ProfileCard() {
 
             {/* API Details */}
             <div className="bg-white rounded-lg border border-gray-200 overflow-hidden shadow-sm">
-              <div className="px-4 sm:px-4 py-2 sm:py-2 bg-gray-50 border-b border-gray-200">
+              <div className="px-4 sm:px-4 py-2 sm:py-2 bg-gray-50 border-b border-gray-200 flex items-center justify-between gap-2">
                 <h3 className="text-[12px] sm:text-[14px] font-[600] text-gray-700 flex items-center gap-2">
                   <Settings size={16} className="text-gray-600" />API Details
                 </h3>
+                {/* B2C and B2B APIs are separate: each side shows only its own switch and status */}
+                <div className="flex rounded-lg border border-gray-300 overflow-hidden">
+                  {["B2C", "B2B"].map((mode) => (
+                    <button
+                      key={mode}
+                      type="button"
+                      onClick={() => setApiMode(mode)}
+                      className={`px-3 py-1 text-[10px] sm:text-[12px] font-[600] transition-colors ${apiMode === mode ? "bg-brand-primary text-white" : "bg-white text-gray-700 hover:bg-brand-secondary/10"}`}
+                    >
+                      {mode}
+                    </button>
+                  ))}
+                </div>
               </div>
+              {apiMode === "B2B" ? (
+              <div className="p-4 sm:p-4 space-y-2">
+                <div className="flex items-center justify-between text-[10px] sm:text-[12px] font-[600]">
+                  <p>
+                    B2B API Access
+                    {b2bAccess && !b2bAccess.b2bApiAccess && <span className="text-gray-400 text-[9px] ml-1">(seller has it off)</span>}
+                  </p>
+                  <label className={`relative inline-flex items-center ${b2bAccess ? "cursor-pointer" : "cursor-not-allowed opacity-70"}`}>
+                    <input
+                      type="checkbox"
+                      className="sr-only peer"
+                      checked={b2bAccess ? b2bAccess.adminB2BApiAccess : false}
+                      onChange={handleB2BAdminToggle}
+                      disabled={!b2bAccess}
+                    />
+                    <div className="w-9 h-5 bg-gray-300 peer-focus:outline-none rounded-full peer peer-checked:bg-brand-primary transition-all"></div>
+                    <div className="absolute left-1 top-1 bg-white w-3 h-3 rounded-full transition-transform peer-checked:translate-x-4"></div>
+                  </label>
+                </div>
+                {b2bAccessError && <p className="text-[10px] sm:text-[12px] text-red-500">{b2bAccessError}</p>}
+                <div className="flex items-center justify-between gap-2 text-[10px] sm:text-[12px] font-[600]">
+                  <p>B2B API Key</p>
+                  <span className={`truncate max-w-[200px] ${b2bAccess?.key?.exists ? "font-mono text-gray-600" : "text-gray-400"}`} title={b2bAccess?.key?.keyPreview || ""}>
+                    {!b2bAccess ? "…" : b2bAccess.key.exists ? b2bAccess.key.keyPreview : "Not generated"}
+                  </span>
+                </div>
+                {b2bAccess?.key?.exists && (
+                  <div className="flex items-center justify-between text-[10px] sm:text-[12px] font-[600]">
+                    <p>Key last used</p>
+                    <span className="text-gray-500">{b2bAccess.key.lastUsedAt ? new Date(b2bAccess.key.lastUsedAt).toLocaleString("en-IN") : "Not used yet"}</span>
+                  </div>
+                )}
+              </div>
+              ) : (
               <div className="p-4 sm:p-4 space-y-2">
                 <div className="flex items-center gap-2 text-[10px] sm:text-[12px] font-[600]">
                   <p>Check latest version of API documentation</p>
@@ -1133,6 +1259,7 @@ export default function ProfileCard() {
                   </label>
                 </div>
               </div>
+              )}
             </div>
             {!!admin && (
               <UserServiceManagement
@@ -1338,6 +1465,7 @@ export default function ProfileCard() {
           onSubmit={() => {
             setShowRateCardModal(false);
             fetchUsers();
+            setB2bRatesReload((n) => n + 1); // a new B2B plan: show its rates
           }}
           rateCardType={rateCardType}
         />
