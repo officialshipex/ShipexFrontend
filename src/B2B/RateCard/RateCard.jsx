@@ -11,7 +11,7 @@ import UploadRatesModal from "./UploadRatesModal";
 import Loader from "../../Loader";
 import { Notification } from "../../Notification";
 import CustomDropdown from "./CustomDropdown";
-import OverheadCharges, { withShownTypes, pkgSlabProblem, withMinFreightMoved } from "./OverheadCharges";
+import OverheadCharges, { withFixedTypes, pkgSlabProblem, odaBandProblem, withMinFreightMoved, typeMismatchesOf, labelOf, placesOf } from "./OverheadCharges";
 import AddPlanModal from "../../components/RateCard/AddPlanModal";
 
 // Each B2B service prices with its courier's zone matrix (getMeta: couriers[].zoneMatrixId + zoneMatrices[]).
@@ -29,6 +29,14 @@ export default function RateCardAdmin() {
   const [selectedPlan, setSelectedPlan] = useState("");
   const [status, setStatus] = useState("active");
   const [overheadCharges, setOverheadCharges] = useState(null);
+  // charges the card saved with another type than their row's (flagged until the admin ticks them checked)
+  const [savedAs, setSavedAs] = useState({});
+  const [checkedTypes, setCheckedTypes] = useState([]);
+  const showOverheads = (oh) => {
+    setOverheadCharges(oh);
+    setSavedAs(typeMismatchesOf(oh));
+    setCheckedTypes([]);
+  };
   const [isAddPlanModalOpen, setIsAddPlanModalOpen] = useState(false);
   const rateType = "b2b";
 
@@ -43,14 +51,15 @@ export default function RateCardAdmin() {
 
   const openPlanForm = () => setIsAddPlanModalOpen(true);
 
+  // same defaults as QuickPost's Cargo rate card and the backend (one type per charge)
   const defaultOverheadCharges = {
-    pickupCharge: { type: "percentage", value: 4, min: 0 },
+    pickupCharge: { type: "perKg", value: 0, min: 0 },
 
-    handlingCharge: { type: "flat", value: 0 },
+    handlingCharge: { type: "perKg", value: 0, min: 0 },
 
     codCharges: { type: "percentage", value: 0, min: 0 },
 
-    fodCharges: { type: "flat", value: 0 },
+    fodCharges: { type: "percentage", value: 0, min: 0 },
 
     rovOwner: { type: "percentage", value: 0, min: 70 },
 
@@ -62,9 +71,11 @@ export default function RateCardAdmin() {
 
     docketCharge: { type: "flat", value: 0 },
 
-    appointmentDelivery: { type: "flat", value: 0 },
+    appointmentDelivery: { type: "perKg", value: 0, min: 0 },
 
-    greenTax: { type: "flat", value: 0 },
+    greenTax: { type: "perKg", value: 0, min: 0, delhiOnly: true },
+
+    deliveryCharge: { type: "perKg", value: 0, min: 0, places: [] },
 
     divisor: { type: "formula", value: 4500 },
 
@@ -125,12 +136,12 @@ export default function RateCardAdmin() {
           setRateCard(res.data);
           setStatus(res.data.status);
           // cards saved before the newer charge rows existed get those rows at 0 (= not charged)
-          setOverheadCharges(withMinFreightMoved({ ...defaultOverheadCharges, ...(res.data.overheadCharges || {}) }));
+          showOverheads(withMinFreightMoved({ ...defaultOverheadCharges, ...(res.data.overheadCharges || {}) }));
           setMatrix(buildMatrix(zonesFor(meta, selectedCourier), res.data.rates));
           setMode("view");
         } else {
           setRateCard(null);
-          setOverheadCharges(defaultOverheadCharges);
+          showOverheads(defaultOverheadCharges);
           setMatrix(buildEmptyMatrix(zonesFor(meta, selectedCourier)));
           setMode("create");
         }
@@ -183,12 +194,27 @@ export default function RateCardAdmin() {
       price: Number(c.price),
     }));
 
-    const slabProblem = pkgSlabProblem(overheadCharges);
+    const slabProblem = pkgSlabProblem(overheadCharges) || odaBandProblem(overheadCharges);
     if (slabProblem) {
       Notification(slabProblem, "error");
       return;
     }
-    const overheadsToSave = withShownTypes(overheadCharges);
+    // a charge saved with another type must be checked first: saving re-prices it with its row's type
+    const unchecked = Object.keys(savedAs).filter((k) => !checkedTypes.includes(k));
+    if (unchecked.length) {
+      Notification(
+        `Check these charges first (they were saved with another type): ${unchecked.map(labelOf).join(", ")}. Tick "Checked" on each.`,
+        "error"
+      );
+      return;
+    }
+    const overheadsToSave = withFixedTypes(overheadCharges);
+    // delivery charge: only for the places listed; a charge with no place would never apply
+    const dc = overheadsToSave.deliveryCharge || {};
+    if ((Number(dc.value || 0) > 0 || Number(dc.min || 0) > 0) && !placesOf(dc.places).length) {
+      Notification("Delivery Charges: add at least one city, state or zone it applies to (or set it to 0).", "error");
+      return;
+    }
 
     try {
       setLoading(true);
@@ -209,7 +235,7 @@ export default function RateCardAdmin() {
       const res = await getRateCard(selectedCourier, selectedPlan);
       setRateCard(res.data);
       // show what was actually saved (numbers, slabs sorted)
-      setOverheadCharges(withMinFreightMoved({ ...defaultOverheadCharges, ...(res.data?.overheadCharges || {}) }));
+      showOverheads(withMinFreightMoved({ ...defaultOverheadCharges, ...(res.data?.overheadCharges || {}) }));
       setMatrix(buildMatrix(zonesFor(meta, selectedCourier), res.data.rates));
       setMode("view");
     } catch (err) {
@@ -452,6 +478,9 @@ export default function RateCardAdmin() {
           data={overheadCharges}
           mode={mode}
           onChange={setOverheadCharges}
+          savedAs={savedAs}
+          checked={checkedTypes}
+          onCheck={(key, on) => setCheckedTypes((prev) => (on ? [...new Set([...prev, key])] : prev.filter((k) => k !== key)))}
         />
       )}
 

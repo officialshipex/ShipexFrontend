@@ -189,9 +189,18 @@ const b2bCourierConfigs = {
       { name: "trackingToken", label: "Tracking Token", placeholder: "Security token for tracking (16 characters)", type: "text", optional: true },
     ],
   },
+  // ShipexIndia (B2B): books through ShipexIndia's B2B API with the B2B API key of your ShipexIndia account
+  // (ShipexIndia panel > Settings > Webhook > B2B API & Webhooks). Offered only when your admin enabled it.
+  ShipexIndia: {
+    endpoint: "/b2b/shipexindia/getToken",
+    provider: "ShipexIndia",
+    fields: [
+      { name: "apiKey", label: "B2B API Key", placeholder: "b2b_live_...", type: "password" },
+    ],
+  },
 };
 
-const CourierAdd = ({ provider, onCourierSaved, canAction, existingCouriers, isB2B = false }) => {
+const CourierAdd =({ provider, onCourierSaved, canAction, existingCouriers, isB2B = false }) => {
   const [courierName, setCourierName] = useState("");
   const [codDays, setCodDays] = useState("");
   const [status, setStatus] = useState("");

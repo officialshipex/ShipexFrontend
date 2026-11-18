@@ -72,6 +72,14 @@ export default function CreateNewCourier({ isSidebarAdmin }) {
         case "gati":
           services = ["Gati-surface", "Gati-air"];
           break;
+        case "shipexindia": {
+          // the B2B services active on THIS ShipexIndia account
+          const sxRes = await axios.get(`${REACT_APP_BACKEND_URL}/b2b/couriers/getShipexIndiaCourierServices`, {
+            params: accountName ? { account: accountName } : undefined,
+          });
+          services = sxRes?.data?.data?.flatMap((item) => item.service) || [];
+          break;
+        }
         default:
           services = [];
           break;

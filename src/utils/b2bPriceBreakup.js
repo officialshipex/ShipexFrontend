@@ -23,6 +23,7 @@ export const b2bBreakupRows = (w = {}) => {
     ["Appointment Charges", money(w.appointment_charge), false, w.appointment_charge],
     ["COD Charges", money(w.cod_charges), false, w.cod_charges],
     ["Green Tax", money(w.green_tax), false, w.green_tax],
+    ["Delivery Charges", money(w.delivery_charge), false, w.delivery_charge],
     ["Min. LR Billing Top-up", money(w.min_billing_topup), false, w.min_billing_topup],
     ["GST", money(w.gst), true],
   ];
