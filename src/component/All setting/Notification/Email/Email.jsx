@@ -12,6 +12,7 @@ const Email = () => {
   const { targetUserId, isAdmin } = useOutletContext();
   const [mainEnabled, setMainEnabled] = useState(true);
   const [statusToggles, setStatusToggles] = useState({});
+  const [previews, setPreviews] = useState({}); // what the backend really sends, per status, for this company
   const [statusTemplates, setStatusTemplates] = useState({});
   const [statusSubjects, setStatusSubjects] = useState({});
   const [loading, setLoading] = useState(false);
@@ -73,6 +74,27 @@ const Email = () => {
     };
     fetchStatus();
   }, [token, targetUserId]);
+
+  // The wording and brand shown here come from the backend so they always match what is sent.
+  const BACKEND_KEY = { PickupPending: "Ready To Ship", "In-transit": "In-transit", OutForDelivery: "Out for Delivery", Delivered: "Delivered", Undelivered: "Undelivered", RTO: "RTO", Cancelled: "Cancelled" };
+  useEffect(() => {
+    let cancelled = false;
+    axios
+      .get(`${REACT_APP_BACKEND_URL}/notification/messagePreviews`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => {
+        if (cancelled) return;
+        const byKey = {};
+        (res.data?.items || []).forEach((i) => { byKey[i.key] = i; });
+        const map = {};
+        Object.entries(BACKEND_KEY).forEach(([uiKey, backendKey]) => { if (byKey[backendKey]) map[uiKey] = byKey[backendKey]; });
+        setPreviews(map);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+  const shownText = (key) => previews[key]?.emailBody ?? statusTemplates[key];
+  const shownSubject = (key) => previews[key]?.emailSubject ?? statusSubjects[key];
 
   const handleToggle = async (key) => {
     if (!mainEnabled) return;
@@ -192,9 +214,9 @@ const Email = () => {
                     </Switch>
                   </td>
                   <td className="px-3 py-2 max-w-[300px]">
-                    <p className="font-bold text-gray-700 text-[12px] mb-0.5 truncate">{statusSubjects[status.key]}</p>
+                    <p className="font-bold text-gray-700 text-[12px] mb-0.5 truncate">{shownSubject(status.key)}</p>
                     <p className="text-gray-500 text-[12px] line-clamp-2">
-                       "{statusTemplates[status.key]}"
+                       "{shownText(status.key)}"
                     </p>
                   </td>
                 </tr>
@@ -231,8 +253,8 @@ const Email = () => {
               </Switch>
             </div>
             <div className="bg-gray-50 p-2 rounded-lg border border-gray-100 mb-2">
-                <p className="text-[11px] font-bold text-gray-600 mb-0.5 line-clamp-1">{statusSubjects[status.key]}</p>
-                <p className="text-[10px] text-gray-400 line-clamp-2">"{statusTemplates[status.key]}"</p>
+                <p className="text-[11px] font-bold text-gray-600 mb-0.5 line-clamp-1">{shownSubject(status.key)}</p>
+                <p className="text-[10px] text-gray-400 line-clamp-2">"{shownText(status.key)}"</p>
             </div>
           </div>
         ))}

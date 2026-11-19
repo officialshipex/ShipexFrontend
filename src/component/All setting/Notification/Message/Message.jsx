@@ -12,6 +12,7 @@ const SmsNotification = () => {
   const { targetUserId, isAdmin } = useOutletContext();
   const [mainEnabled, setMainEnabled] = useState(true);
   const [statusToggles, setStatusToggles] = useState({});
+  const [previews, setPreviews] = useState({}); // what the backend really sends, per status, for this company
   const [statusTemplates, setStatusTemplates] = useState({});
   const [loading, setLoading] = useState(false);
   const [adminBlocked, setAdminBlocked] = useState(false);
@@ -68,6 +69,26 @@ const SmsNotification = () => {
     };
     fetchStatus();
   }, [token, targetUserId]);
+
+  // The wording and brand shown here come from the backend so they always match what is sent.
+  const BACKEND_KEY = { PickupPending: "Ready To Ship", "In-transit": "In-transit", OutForDelivery: "Out for Delivery", Delivered: "Delivered", Undelivered: "Undelivered", RTO: "RTO", Cancelled: "Cancelled" };
+  useEffect(() => {
+    let cancelled = false;
+    axios
+      .get(`${REACT_APP_BACKEND_URL}/notification/messagePreviews`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => {
+        if (cancelled) return;
+        const byKey = {};
+        (res.data?.items || []).forEach((i) => { byKey[i.key] = i; });
+        const map = {};
+        Object.entries(BACKEND_KEY).forEach(([uiKey, backendKey]) => { if (byKey[backendKey]) map[uiKey] = byKey[backendKey]; });
+        setPreviews(map);
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+  const shownText = (key) => previews[key]?.sms ?? statusTemplates[key];
 
   const handleToggle = async (key) => {
     if (!mainEnabled) return;
@@ -190,7 +211,7 @@ const SmsNotification = () => {
                   </td>
                   <td className="px-3 py-2 max-w-[350px]">
                     <p className="text-gray-600 text-[12px] line-clamp-2 leading-relaxed">
-                      "{statusTemplates[status.key]}"
+                      "{shownText(status.key)}"
                     </p>
                   </td>
                 </tr>
@@ -227,7 +248,7 @@ const SmsNotification = () => {
               </Switch>
             </div>
              <div className="bg-gray-50 p-3 rounded-lg border border-gray-100 mb-2 text-[10px] text-gray-500 leading-relaxed">
-                "{statusTemplates[status.key]}"
+                "{shownText(status.key)}"
             </div>
           </div>
         ))}
