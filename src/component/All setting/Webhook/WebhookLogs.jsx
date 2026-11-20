@@ -28,6 +28,20 @@ const WebhookLogs = () => {
   const [showErrorsOnly, setShowErrorsOnly] = useState(false);
   const [dateRange, setDateRange] = useState([]);
   const [refresh, setRefresh] = useState(0);
+  const [awbInput, setAwbInput] = useState("");
+  const [awb, setAwb] = useState("");
+
+  // Apply the AWB filter a moment after typing stops
+  useEffect(() => {
+    const t = setTimeout(() => {
+      const next = awbInput.trim();
+      if (next !== awb) {
+        setAwb(next);
+        setPage(1);
+      }
+    }, 500);
+    return () => clearTimeout(t);
+  }, [awbInput]);
 
   const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -50,13 +64,14 @@ const WebhookLogs = () => {
 
   useEffect(() => {
     fetchLogs();
-  }, [showErrorsOnly, dateRange, refresh, page, limit]);
+  }, [showErrorsOnly, dateRange, refresh, page, limit, awb]);
 
   const fetchLogs = async () => {
     try {
       setLoading(true);
       const params = { page, limit };
       if (showErrorsOnly) params.status = "Failure";
+      if (awb) params.awb = awb;
       
       if (dateRange && dateRange[0]) {
         if (dateRange[0].startDate) params.startDate = dateRange[0].startDate;
@@ -95,8 +110,26 @@ const WebhookLogs = () => {
               setDateRange(range);
               setPage(1);
             }} 
-            clearTrigger={refresh} 
+            clearTrigger={refresh}
           />
+          <div className="relative">
+            <input
+              type="text"
+              value={awbInput}
+              onChange={(e) => setAwbInput(e.target.value)}
+              placeholder="Search by AWB"
+              className="h-8 w-44 pl-2.5 pr-7 border border-gray-300 rounded-lg text-[12px] text-gray-700 focus:outline-none focus:border-brand-primary"
+            />
+            {awbInput && (
+              <button
+                onClick={() => setAwbInput("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                title="Clear"
+              >
+                <FiX size={12} />
+              </button>
+            )}
+          </div>
           <div className="flex items-center gap-1.5">
             <span className="text-[11px] sm:text-[12px] font-[600] text-gray-700">Errors Only</span>
             <label className="relative inline-flex items-center cursor-pointer">

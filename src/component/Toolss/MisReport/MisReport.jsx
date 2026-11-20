@@ -18,6 +18,7 @@ const PASSBOOK_DESCRIPTIONS = [
   "RTO Freight Charges Applied",
   "Cancellation Refund",
   "Recharge From Gateway(Razorpay)",
+  "Recharge From Gateway(Cashfree)",
   "Referral Commission Received"
 ];
 

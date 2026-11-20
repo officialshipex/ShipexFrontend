@@ -19,6 +19,10 @@ const RechargeWallet = () => {
   const [walletId, setWalletId] = useState(null);
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
   const navigate = useNavigate();
+  // a payment is being started: the Pay button is locked so a double click cannot open two payments
+  const [paying, setPaying] = useState(false);
+  // Cashfree's own popup is open: this one steps aside so it can never cover it
+  const [gatewayOpen, setGatewayOpen] = useState(false);
 
   // Function to load Razorpay script dynamically
   const loadRazorpayScript = () => {
@@ -32,28 +36,120 @@ const RechargeWallet = () => {
     });
   };
 
+  // ── Cashfree (when the company has switched its recharges to Cashfree: QuickPost > Companies) ──
+  const loadCashfreeScript = () =>
+    new Promise((resolve, reject) => {
+      if (window.Cashfree) return resolve(window.Cashfree);
+      const script = document.createElement("script");
+      script.src = "https://sdk.cashfree.com/js/v3/cashfree.js";
+      script.async = true;
+      script.onload = () => (window.Cashfree ? resolve(window.Cashfree) : reject(new Error("Cashfree SDK did not load")));
+      script.onerror = () => reject(new Error("Failed to load Cashfree SDK"));
+      document.body.appendChild(script);
+    });
+
+  // The backend confirms the order with Cashfree itself and credits the wallet at most once.
+  const verifyCashfree = async (orderId) => {
+    const token = Cookies.get("session");
+    const { data } = await axios.post(
+      `${REACT_APP_BACKEND_URL}/recharge/cashfree/verify`,
+      { orderId },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    return data;
+  };
+
+  // Asked again a few times while still "pending": the popup closes the moment the bank answers, sometimes a
+  // little before Cashfree shows the order as paid.
+  const confirmCashfree = async (orderId, attempts = 4, delayMs = 2000) => {
+    let last = null;
+    for (let i = 0; i < attempts; i++) {
+      if (i > 0) await new Promise((resolve) => setTimeout(resolve, delayMs));
+      last = await verifyCashfree(orderId);
+      if (last?.status !== "pending") return last;
+    }
+    return last;
+  };
+
+  const reportCashfree = (check) => {
+    if (check?.status === "credited" || check?.status === "already_credited") {
+      const added = Number(check.amount) || 0;
+      Notification(`₹${added.toLocaleString("en-IN")} added to your wallet.`, "success");
+      if (typeof check.balance === "number") setBalance(check.balance);
+      else setBalance((b) => (b || 0) + added);
+    } else if (check?.status === "pending") {
+      Notification("Payment is being confirmed. Your wallet will be credited automatically once it is.", "info");
+    } else {
+      Notification(check?.message || "Payment was not completed.", "error");
+    }
+  };
+
+  const payWithCashfree = async (data) => {
+    const Cashfree = await loadCashfreeScript();
+    let result;
+    setGatewayOpen(true);
+    try {
+      result = await Cashfree({ mode: data.mode }).checkout({
+        paymentSessionId: data.paymentSessionId,
+        redirectTarget: "_modal",
+      });
+    } finally {
+      setGatewayOpen(false);
+    }
+    if (result?.redirect) return; // Cashfree took the page over; it comes back here with ?cf_order_id=
+    try {
+      const check = await confirmCashfree(data.orderId);
+      // closed without paying: no message needed
+      if (result?.error && check?.status === "failed") return;
+      reportCashfree(check);
+    } catch {
+      Notification("Could not confirm the payment yet. If money was deducted, it will be credited automatically.", "warning");
+    }
+  };
+
+  // Back from Cashfree's own payment page (its popup could not open): confirm that payment once.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const orderId = params.get("cf_order_id");
+    if (!orderId) return;
+    params.delete("cf_order_id");
+    const rest = params.toString();
+    navigate(`${window.location.pathname}${rest ? `?${rest}` : ""}`, { replace: true });
+    confirmCashfree(orderId)
+      .then(reportCashfree)
+      .catch(() => Notification("Could not confirm the payment yet. If money was deducted, it will be credited automatically.", "warning"));
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const handlePayment = async () => {
     const numericAmount = Number(amount);
     if (numericAmount < 1000) {
       Notification("Minimum amount should be 1000", "warning");
       return;
     }
+    if (paying) return;
+    setPaying(true);
 
     try {
-      if (!window.Razorpay) {
-        await loadRazorpayScript();
-      }
-
       const token = Cookies.get("session");
+      // the backend decides the gateway (QuickPost > Companies > Recharge payment gateway)
       const { data } = await axios.post(
-        `${REACT_APP_BACKEND_URL}/razorpay/create-order`,
-        { amount: Number(amount), walletId },
+        `${REACT_APP_BACKEND_URL}/recharge/create-payment`,
+        { amount: numericAmount, returnUrl: `${window.location.origin}/dashboard/rechargeWallet` },
         {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         }
       );
+
+      if (data.gateway === "cashfree") {
+        await payWithCashfree(data);
+        return;
+      }
+
+      if (!window.Razorpay) {
+        await loadRazorpayScript();
+      }
 
       if (!data.order) {
         throw new Error("Failed to create Razorpay order");
@@ -62,7 +158,7 @@ const RechargeWallet = () => {
       const { id: order_id, amount: orderAmount, currency } = data.order;
 
       const options = {
-        key: process.env.RAZORPAY_KEY_ID,
+        key: data.keyId || process.env.RAZORPAY_KEY_ID,
         amount: orderAmount,
         currency: currency,
         name: companyDisplayName || "Shipex India",
@@ -74,9 +170,12 @@ const RechargeWallet = () => {
       const razorpay = new window.Razorpay(options);
       razorpay.open();
     } catch (error) {
-      deleteSession();
+      // only an expired / invalid login ends the session; a payment problem must not sign the seller out
+      if (error?.response?.status === 401) deleteSession();
       console.error("Payment process failed:", error);
-      Notification("Something went wrong. Please try again.", "error");
+      Notification(error?.response?.data?.message || "Something went wrong. Please try again.", "error");
+    } finally {
+      setPaying(false);
     }
   };
 
@@ -125,6 +224,7 @@ const RechargeWallet = () => {
       onRequestClose={() => navigate(-1)}
       className="modal-content bg-white rounded-2xl shadow-2xl w-[95%] sm:w-[90%] md:w-[60%] lg:w-[45%] xl:w-[35%] max-h-[90vh] overflow-hidden relative outline-none page-slide-in pb-6"
       overlayClassName="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-[9999]"
+      style={gatewayOpen ? { overlay: { visibility: "hidden" } } : undefined}
     >
       {/* Header */}
       <div className="bg-brand-primary p-6 text-center relative">
@@ -194,13 +294,13 @@ const RechargeWallet = () => {
           <div className="pt-4 space-y-2">
             <button
               onClick={handlePayment}
-              disabled={Number(amount) < 1000}
-              className={`w-full py-2 rounded-lg font-bold sm:text-[12px] text-[10px] text-white shadow-sm transition-all duration-300 transform active:scale-95 ${Number(amount) < 1000
+              disabled={Number(amount) < 1000 || paying}
+              className={`w-full py-2 rounded-lg font-bold sm:text-[12px] text-[10px] text-white shadow-sm transition-all duration-300 transform active:scale-95 ${Number(amount) < 1000 || paying
                 ? "bg-gray-300 cursor-not-allowed shadow-none"
                 : "bg-brand-primary hover:bg-[#0aa66d] hover:shadow-xl shadow-green-200"
                 }`}
             >
-              Proceed to Pay ₹ {amount || 0}
+              {paying ? "Processing..." : `Proceed to Pay ₹ ${amount || 0}`}
             </button>
 
             <div className="relative flex items-center py-2">
