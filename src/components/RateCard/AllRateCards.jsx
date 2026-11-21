@@ -11,6 +11,7 @@ import { FaEdit, FaTrash } from "react-icons/fa";
 import { FiChevronDown, FiArrowLeft, FiSearch } from "react-icons/fi";
 import { getCarrierLogo } from "../../Common/getCarrierLogo";
 import NoDataFound from "../../Common/NoDataFound";
+import { Notification } from "../../Notification";
 
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -42,17 +43,42 @@ const RateCard = ({ isSidebarAdmin }) => {
     return () => window.removeEventListener("resize", updateHeight);
   }, []);
 
+  // The plan every newly registered seller gets ("Set as default"; none marked = Bronze)
+  const [defaultPlan, setDefaultPlan] = useState("");
+  const [settingDefault, setSettingDefault] = useState(false);
+
+  const loadPlanNames = async () => {
+    try {
+      const response = await axios.get(`${REACT_APP_BACKEND_URL}/saveRate/getPlanNames`);
+      setPlans(response.data.planNames || []);
+      setDefaultPlan(response.data.defaultPlan || "");
+    } catch (error) {
+      console.error("Failed to fetch plans", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchPlans = async () => {
-      try {
-        const response = await axios.get(`${REACT_APP_BACKEND_URL}/saveRate/getPlanNames`);
-        setPlans(response.data.planNames || []);
-      } catch (error) {
-        console.error("Failed to fetch plans", error);
-      }
-    };
-    fetchPlans();
+    loadPlanNames();
   }, []);
+
+  const handleSetDefaultPlan = async (plan) => {
+    if (!plan || plan === defaultPlan || settingDefault) return;
+    if (!window.confirm(`Give every newly registered seller the "${plan}" plan?\n\nExisting sellers keep their current plans.`)) return;
+    setSettingDefault(true);
+    try {
+      const res = await axios.post(
+        `${REACT_APP_BACKEND_URL}/saveRate/setDefaultPlan`,
+        { planName: plan },
+        { headers: { Authorization: `Bearer ${Cookies.get("session")}` } }
+      );
+      setDefaultPlan(res.data?.defaultPlan || plan);
+      Notification(res.data?.message || `New sellers will now get the "${plan}" plan.`, "success");
+    } catch (error) {
+      Notification(error?.response?.data?.message || "Could not set the default plan.", "error");
+    } finally {
+      setSettingDefault(false);
+    }
+  };
 
   const navigate = useNavigate();
 
@@ -164,9 +190,12 @@ const RateCard = ({ isSidebarAdmin }) => {
                       <div
                         key={index}
                         onClick={() => { setPackageType(plan); setIsPlanOpen(false); }}
-                        className="px-3 py-2 text-[10px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors"
+                        className="px-3 py-2 text-[10px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors flex items-center justify-between gap-2"
                       >
-                        {plan}
+                        <span className="truncate">{plan}</span>
+                        {plan === defaultPlan && (
+                          <span className="shrink-0 px-1.5 py-0.5 rounded bg-amber-50 border border-amber-200 text-amber-700 text-[9px] font-bold">Default</span>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -210,7 +239,24 @@ const RateCard = ({ isSidebarAdmin }) => {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-2 w-full sm:w-auto">
+          <div className="flex gap-2 w-full sm:w-auto flex-wrap sm:flex-nowrap">
+            {packageType && (packageType === defaultPlan ? (
+              <span
+                title="Every newly registered seller gets this plan"
+                className="inline-flex items-center px-3 h-9 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 sm:text-[12px] text-[10px] font-bold whitespace-nowrap"
+              >
+                ★ Default for new sellers
+              </span>
+            ) : (
+              <button
+                className={`border border-gray-300 bg-white text-gray-700 sm:text-[12px] text-[10px] font-bold hover:border-amber-300 hover:text-amber-700 px-3 h-9 rounded-lg transition-all whitespace-nowrap ${canAction && !settingDefault ? "" : "opacity-50 cursor-not-allowed"}`}
+                onClick={() => canAction && handleSetDefaultPlan(packageType)}
+                disabled={!canAction || settingDefault}
+                title={`Give every newly registered seller the "${packageType}" plan`}
+              >
+                {settingDefault ? "Saving…" : "☆ Set as default"}
+              </button>
+            ))}
             <button
               className={`bg-brand-primary sm:text-[12px] text-[10px] font-bold hover:bg-opacity-90 text-white px-3 h-9 rounded-lg transition-all ${canAction ? "" : "opacity-50 cursor-not-allowed"}`}
               onClick={openRateCardForm}
@@ -431,7 +477,7 @@ const RateCard = ({ isSidebarAdmin }) => {
         <AddPlanModal
           isOpen={isAddPlanModalOpen}
           onClose={() => setIsAddPlanModalOpen(false)}
-          onSuccess={refreshRates}
+          onSuccess={() => { refreshRates(); loadPlanNames(); }}
           rateType={rateType}
         />
         <UploadRatecard
