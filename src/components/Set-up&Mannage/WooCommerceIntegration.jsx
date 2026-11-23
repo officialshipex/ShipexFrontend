@@ -4,7 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5";
 // import { toast } from "react-toastify";
 import WooCommerce from "../../assets/woocommerceb.png"
-import CustomDropdown from "./Dropdown"
 import Cookies from "js-cookie";
 import {Notification} from "../../Notification"
 
@@ -16,12 +15,9 @@ const WooCommerceIntegration = () => {
     storeURL: "",
     storeClientId: "",
     storeClientSecret: "",
-    orderSyncFrequency: "",
-    paymentStatusCOD: "",
-    paymentStatusPrepaid: "",
-    multiSeller: false,
-    syncInventory: false,
     syncDate: "",
+    // WooCommerce statuses that are imported (backend Channels/WooCommerce/wooOrderSync.js); "processing" = COD or paid
+    importStatuses: ["processing"],
   });
   const navigate = useNavigate();
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -37,7 +33,16 @@ const WooCommerceIntegration = () => {
           }
         })
         .then((response) => {
-          setStoreDetails(response.data);
+          const ch = response.data?.data || response.data || {};
+          setStoreDetails({
+            channel: "WooCommerce",
+            storeName: ch.storeName || "",
+            storeURL: ch.storeURL || "",
+            storeClientId: ch.storeClientId || "",
+            storeClientSecret: ch.storeClientSecret || "",
+            syncDate: "",
+            importStatuses: ch.importStatuses?.length ? ch.importStatuses : ["processing"],
+          });
         })
         .catch((error) => console.error("Error fetching store details:", error));
     }
@@ -63,7 +68,9 @@ const WooCommerceIntegration = () => {
 
       const method = id ? "put" : "post";
 
-      const response = await axios[method](endpoint, storeDetails, {
+      // past orders are imported once, when the store is connected
+      const body = { ...storeDetails, ...(id || !storeDetails.syncDate ? { syncDate: undefined } : {}) };
+      const response = await axios[method](endpoint, body, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -143,91 +150,62 @@ const WooCommerceIntegration = () => {
               />
             </div>
 
-            <div>
-              <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">Order Sync Frequency</label>
-               <CustomDropdown
-                name="orderSyncFrequency"
-                value={storeDetails.orderSyncFrequency}
-                placeholder="Please Select"
-                onChange={handleChange}
-                options={[
-                  { value: "daily", label: "Daily" },
-                  { value: "weekly", label: "Weekly" },
-                ]}
-              />
-            </div>
           </div>
 
-          {/* Payment Status */}
+          {/* Which WooCommerce orders come in */}
           <div className="mt-4 w-full">
-            <h3 className="font-[600] text-gray-700 text-[10px] sm:text-[12px]">Map Payment Statuses</h3>
-            <div className="flex gap-4 justify-between">
-              <div className="mt-2 w-full">
-              <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">COD</label>
-              <CustomDropdown
-                  name="paymentStatusCOD"
-                  value={storeDetails.paymentStatusCOD}
-                  placeholder="Payment Status"
-                  onChange={handleChange}
-                  options={[
-                    { value: "Pending", label: "Pending" },
-                    { value: "Paid", label: "Paid" },
-                  ]}
-                />
+            <h3 className="font-[600] text-gray-700 text-[10px] sm:text-[12px]">Import orders with status</h3>
+            <p className="text-[10px] sm:text-[11px] text-gray-500 mt-0.5">
+              Orders come in when they reach one of these WooCommerce statuses. <b>Pending payment</b> orders (not paid yet) are never imported.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-2">
+              {[
+                { value: "processing", label: "Processing", hint: "COD orders and paid online orders — recommended" },
+                { value: "on-hold", label: "On hold", hint: "e.g. bank transfer / cheque not confirmed yet" },
+                { value: "completed", label: "Completed", hint: "orders the store already marked complete" },
+              ].map((s) => {
+                const list = storeDetails.importStatuses || ["processing"];
+                const on = list.includes(s.value);
+                return (
+                  <label key={s.value} className={`flex items-start gap-2 border rounded-lg px-2.5 py-2 cursor-pointer ${on ? "border-brand-primary bg-brand-primary/5" : "border-gray-200"}`}>
+                    <input
+                      type="checkbox"
+                      checked={on}
+                      disabled={on && list.length === 1}
+                      onChange={(e) => setStoreDetails((d) => {
+                        const cur = d.importStatuses || ["processing"];
+                        return { ...d, importStatuses: e.target.checked ? [...cur, s.value] : cur.filter((x) => x !== s.value) };
+                      })}
+                      className="mt-0.5 accent-brand-primary"
+                    />
+                    <span>
+                      <span className="block font-[600] text-[10px] sm:text-[12px] text-gray-700">{s.label}</span>
+                      <span className="block text-[10px] text-gray-500">{s.hint}</span>
+                    </span>
+                  </label>
+                );
+              })}
             </div>
-
-            <div className="mt-2 w-full">
-              <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">Prepaid</label>
-              <CustomDropdown
-                  name="paymentStatusPrepaid"
-                  value={storeDetails.paymentStatusPrepaid}
-                  placeholder="Payment Status"
-                  onChange={handleChange}
-                  options={[
-                    { value: "Pending", label: "Pending" },
-                    { value: "Paid", label: "Paid" },
-                  ]}
-                />
-            </div>
-            </div>
+            <p className="text-[10px] text-gray-400 mt-1.5">
+              COD or prepaid is taken from the order's payment method. An order cancelled in WooCommerce before it is shipped is removed here automatically.
+            </p>
           </div>
 
-          {/* Multi Seller */}
-          <div className="mt-4 flex items-center">
-            <input
-              type="checkbox"
-              name="multiSeller"
-              checked={storeDetails.multiSeller}
-              onChange={handleChange}
-              className="mr-2 accent-brand-primary"
-            />
-            <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">Enable Multi Seller</label>
-          </div>
-
-          {/* Inventory Sync */}
-          <div className="mt-4">
-            <h3 className="font-[600] text-gray-700 text-[10px] sm:text-[12px]">Inventory</h3>
-            <div className="flex items-center mt-2">
-              <input
-                type="checkbox"
-                name="syncInventory"
-                checked={storeDetails.syncInventory}
-                onChange={handleChange}
-                className="mr-2 accent-brand-primary"
-              />
-              <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">Enable Inventory Sync</label>
-            </div>
-            <div className="mt-2">
-              <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">Sync From Date</label>
+          {/* Past orders — imported once, when the store is connected */}
+          {!id && (
+            <div className="mt-4">
+              <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">Import past orders from (optional)</label>
               <input
                 type="date"
                 name="syncDate"
                 value={storeDetails.syncDate}
+                max={new Date().toISOString().slice(0, 10)}
                 onChange={handleChange}
                 className="w-full px-3 py-2 h-9 sm:w-48 border rounded-lg text-[12px] focus:outline-none"
               />
+              <p className="text-[10px] text-gray-400 mt-1">Leave empty to bring in only new orders from now on.</p>
             </div>
-          </div>
+          )}
 
           {/* Add Channel Button */}
           <button

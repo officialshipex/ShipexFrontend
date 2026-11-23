@@ -4,7 +4,6 @@ import { useParams, useNavigate } from "react-router-dom";
 import { IoArrowBack } from "react-icons/io5"; // Import back icon
 // import { toast } from "react-toastify";
 import Shopify from "../../assets/shopifyb.png"
-import CustomDropdown from "./Dropdown"
 import Cookies from "js-cookie";
 import {Notification} from "../../Notification"
 import { useBranding } from "../../context/BrandingContext";
@@ -155,99 +154,8 @@ const ShopifyIntegration = () => {
                 placeholder="Provide your consumer secret"
               />
             </div>
-            <div>
-              <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">
-                Order Sync Frequency
-              </label>
-              <CustomDropdown
-                name="orderSyncFrequency"
-                value={storeDetails.orderSyncFrequency}
-                placeholder="Please Select"
-                onChange={handleChange}
-                options={[
-                  { value: "daily", label: "Daily" },
-                  { value: "weekly", label: "Weekly" },
-                ]}
-              />
-            </div>
           </div>
 
-          {/* Payment Status */}
-          <div className="mt-4 w-full">
-            <h3 className="font-[600] text-gray-700 text-[10px] sm:text-[12px]">Map Payment Statuses</h3>
-            <div className="flex gap-4 justify-between">
-              <div className="mt-2 w-full">
-                <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">
-                  COD
-                </label>
-                <CustomDropdown
-                  name="paymentStatusCOD"
-                  value={storeDetails.paymentStatusCOD}
-                  placeholder="Payment Status"
-                  onChange={handleChange}
-                  options={[
-                    { value: "Pending", label: "Pending" },
-                    { value: "Paid", label: "Paid" },
-                  ]}
-                />
-              </div>
-
-              <div className="mt-2 w-full">
-                <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">
-                  Prepaid
-                </label>
-                <CustomDropdown
-                  name="paymentStatusPrepaid"
-                  value={storeDetails.paymentStatusPrepaid}
-                  placeholder="Payment Status"
-                  onChange={handleChange}
-                  options={[
-                    { value: "Pending", label: "Pending" },
-                    { value: "Paid", label: "Paid" },
-                  ]}
-                />
-              </div>
-            </div>
-          </div>
-
-          {/* Multi Seller */}
-          <div className="mt-4 flex items-center">
-            <input
-              type="checkbox"
-              name="multiSeller"
-              checked={storeDetails.multiSeller}
-              onChange={handleChange}
-              className="mr-2 accent-brand-primary"
-            />
-            <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">Enable Multi Seller</label>
-          </div>
-
-          {/* Inventory Sync */}
-          <div className="mt-4">
-            <h3 className="font-[600] text-gray-700 text-[10px] sm:text-[12px]">Inventory</h3>
-            <div className="flex items-center mt-2">
-              <input
-                type="checkbox"
-                name="syncInventory"
-                checked={storeDetails.syncInventory}
-                onChange={handleChange}
-                className="mr-2 accent-brand-primary"
-              />
-              <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">Enable Inventory Sync</label>
-            </div>
-            <div className="mt-2">
-              <label className="font-[600] block text-[10px] sm:text-[12px] text-gray-500">
-                Sync From Date
-              </label>
-              <input
-                type="date"
-                name="syncDate"
-                value={storeDetails.syncDate}
-                onChange={handleChange}
-                className="w-full px-3 py-2 h-9 sm:w-48 border rounded-lg text-[12px] focus:outline-none"
-              />
-            </div>
-          </div>
 
           {/* Add Channel Button */}
           <button

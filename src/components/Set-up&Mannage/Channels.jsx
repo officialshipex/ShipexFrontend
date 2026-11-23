@@ -94,6 +94,23 @@ const Channels = () => {
       } finally {
         setSyncLoading(prev => ({ ...prev, [channelId]: false }));
       }
+    } else if (channel.channel === "WooCommerce") {
+      // pulls this store's orders changed since its last sync (only COD / paid ones — backend wooOrderSync.js)
+      try {
+        const response = await axios.post(
+          `${REACT_APP_BACKEND_URL}/channel/syncWooCommerce/${channelId}`,
+          {},
+          { headers: { Authorization: `Bearer ${Cookies.get("session")}` } }
+        );
+        Notification(response.data?.message || "Orders synced", "success");
+        setIsFetch(!isFetch);
+      } catch (error) {
+        Notification(error?.response?.data?.message || "Error syncing orders", "error");
+      } finally {
+        setSyncLoading(prev => ({ ...prev, [channelId]: false }));
+      }
+    } else {
+      setSyncLoading(prev => ({ ...prev, [channelId]: false }));
     }
   };
 
