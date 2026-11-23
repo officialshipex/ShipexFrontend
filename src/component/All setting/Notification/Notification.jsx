@@ -101,7 +101,7 @@ const Notification = ({ targetUserId = null, basePath = "/dashboard/settings/not
                             />
                         </div>
                         <div>
-                            <p className="text-[10px] sm:text-[12px]">(₹1 = 1 Credit, 1 Notification = ₹1)</p>
+                            <p className="text-[10px] sm:text-[12px]">(₹1 = 1 Credit · credits are used for SMS)</p>
                         </div>
                     </div>
 

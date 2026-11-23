@@ -13,6 +13,7 @@ const Whatsapp = () => {
   const [mainEnabled, setMainEnabled] = useState(true);
   const [statusToggles, setStatusToggles] = useState({});
   const [previews, setPreviews] = useState({}); // what the backend really sends, per status, for this company
+  const [waFee, setWaFee] = useState(null); // what WhatsApp order messages cost this seller (set by the admin): free / price / off
   const [statusTemplates, setStatusTemplates] = useState({});
   const [loading, setLoading] = useState(false);
   const [adminBlocked, setAdminBlocked] = useState(false);
@@ -28,7 +29,6 @@ const Whatsapp = () => {
     { key: "In-transit", label: "In Transit", defaultTemplate: "Hi {customer}, your order {order_id} from {seller} is now In Transit. AWB {awb}. [Track Order button]" },
     { key: "OutForDelivery", label: "Out for Delivery", defaultTemplate: "Hi {customer}, your order {order_id} from {seller} is Out for Delivery. AWB {awb}. [Track Order button]" },
     { key: "Delivered", label: "Delivered", defaultTemplate: "Hi {customer}, your order {order_id} from {seller} has been Delivered. AWB {awb}. [Track Order button]" },
-    { key: "Undelivered", label: "Undelivered", defaultTemplate: "Hi {customer}, your order {order_id} from {seller} could not be delivered today. A re-attempt will follow. [Track Order button]" },
     { key: "RTO", label: "RTO Initiated", defaultTemplate: "Hi {customer}, your order {order_id} from {seller} is being Returned to Sender. [Track Order button]" },
     { key: "Cancelled", label: "Cancelled", defaultTemplate: "Hi {customer}, your order {order_id} from {seller} has been Cancelled." },
   ];
@@ -87,6 +87,17 @@ const Whatsapp = () => {
       .catch(() => {});
     return () => { cancelled = true; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
+  useEffect(() => {
+    let cancelled = false;
+    axios
+      .get(`${REACT_APP_BACKEND_URL}/vas/my/order-notifications`, { headers: { Authorization: `Bearer ${token}` } })
+      .then((res) => {
+        const sv = res.data?.service;
+        if (!cancelled && sv) setWaFee({ enabled: sv.enabled !== false, price: Number(sv.usagePrices?.whatsapp) || 0 });
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
   }, [token]);
   const shownText = (key) => previews[key]?.whatsapp ?? statusTemplates[key];
 
@@ -158,6 +169,11 @@ const Whatsapp = () => {
               Send Test
             </button>
             <span className="text-[12px] font-bold text-gray-600">WhatsApp Notifications</span>
+            {waFee && (
+              <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${!waFee.enabled ? "bg-red-50 text-red-600" : waFee.price > 0 ? "bg-amber-50 text-amber-600" : "bg-green-50 text-green-600"}`}>
+                {!waFee.enabled ? "Switched off by admin" : waFee.price > 0 ? `₹${waFee.price} per message` : "Free"}
+              </span>
+            )}
             <Switch
               checked={mainEnabled}
               onChange={handleMainToggle}
