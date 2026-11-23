@@ -1289,6 +1289,14 @@ const BusinessTypeSelection = () => {
                         }
                         disabled={isLoading || isAadharVerified || digilocker.phase !== "idle"}
                       />
+                      {/* DigiLocker stays disabled until all 12 digits are in — say so instead of a silent grey button */}
+                      {!isAadharVerified && (() => {
+                        const n = String(documentDetails.aadharNo || "").replace(/\D/g, "").length;
+                        if (!n) return <p className="text-[10px] text-gray-400 mt-1">12 digits</p>;
+                        if (n < 12) return <p className="text-[10px] font-[600] text-amber-600 mt-1">{n} of 12 digits — {12 - n} more needed</p>;
+                        if (n > 12) return <p className="text-[10px] font-[600] text-red-500 mt-1">Aadhaar has 12 digits — you entered {n}</p>;
+                        return null;
+                      })()}
                     </div>
 
                     <div className="flex items-end gap-2 sm:col-span-2 flex-wrap">

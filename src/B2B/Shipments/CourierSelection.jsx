@@ -18,6 +18,7 @@ import ThreeDotLoader from "../../Loader";
 import { FaTruck, FaPlane, FaStar, FaInfoCircle } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { b2bBreakupRows, b2bIfApplicable } from "../../utils/b2bPriceBreakup";
+import { chargeableWeightKg, roundKg } from "../../utils/serviceWeight";
 
 const isTouchDevice = () =>
   window.matchMedia("(pointer: coarse)").matches;
@@ -38,10 +39,9 @@ const carrierLogos = {
   Ekart
 };
 
-const getWeightValue = (name, fallback) => {
-  const n = Number(name?.match(/\d+/)?.[0]);
-  return n > 0 ? n : fallback;
-};
+// The service's weight slab from its name WITH its unit ("250GM" = 0.25 kg — the old first-number read showed
+// 250 kg), or the applicable weight if that is higher (utils/serviceWeight.js)
+const getWeightValue = (name, applicableWeight) => roundKg(chargeableWeightKg(name, applicableWeight));
 
 const CarrierSelection = () => {
   const { id } = useParams();
@@ -363,12 +363,7 @@ const CarrierSelection = () => {
                               )}</span>
                             </div>
                             <p className="text-center text-[12px] sm:text-[14px] font-[600] text-gray-500">
-                              {(() => {
-                                const serviceWeight = Number(item?.courierServiceName?.match(/\d+/)?.[0]);
-                                const applicableWeight = item?.working?.billable_weight || 0;
-
-                                return serviceWeight > applicableWeight ? serviceWeight : applicableWeight;
-                              })()}{" "}
+                              {getWeightValue(item?.courierServiceName, item?.working?.billable_weight || 0)}{" "}
                               kg
                             </p>
                           </div>

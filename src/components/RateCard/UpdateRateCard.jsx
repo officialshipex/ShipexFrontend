@@ -37,15 +37,10 @@ const RateCardUpdateForm = () => {
     codCharge: "",
   });
 
-  const [couriers, setCouriers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [services, setServices] = useState([]);
-  const [selectedService, setSelectedService] = useState(null);
   const [plans, setPlans] = useState([]); // State for fetched plans
   const [isPlanOpen, setIsPlanOpen] = useState(false);
-  const [isProviderOpen, setIsProviderOpen] = useState(false);
-  const [isServiceOpen, setIsServiceOpen] = useState(false);
   const [isStatusOpen, setIsStatusOpen] = useState(false);
   const [isShipmentTypeOpen, setIsShipmentTypeOpen] = useState(false);
 
@@ -86,8 +81,6 @@ const RateCardUpdateForm = () => {
           weightPriceAdditional: cleanWeightPriceAdditional,
         });
 
-        setCouriers(response.data.couriers || []);
-        setServices(response.data.services || []);
         setLoading(false);
       })
       .catch((error) => {
@@ -113,31 +106,7 @@ const RateCardUpdateForm = () => {
     fetchPlans();
   }, []);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const token = Cookies.get("session");
-        const response = await axios.get(
-          `${REACT_APP_BACKEND_URL}/courierServices/couriers`,
-          { headers: { Authorization: `Bearer ${token}` } }
-        );
-        setCouriers(response.data); // Set the couriers state with fetched data
-        console.log(response.data); // Optional: Log to verify data
-      } catch (err) {
-        console.error("Error fetching couriers:", err);
-      }
-    };
-    fetchData();
-  }, []);
-
-  useEffect(() => {
-    if (selectedService) {
-      setFormData((prevData) => ({
-        ...prevData,
-        mode: selectedService.courierType || "", // Update mode
-      }));
-    }
-  }, [selectedService]);
+  // Provider, service and mode are not edited here: they belong to the courier service (Courier Services screen).
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -172,28 +141,6 @@ const RateCardUpdateForm = () => {
   };
 
 
-
-  const handleCourierSelect = (e) => {
-    const selectedProvider = e.target.value;
-    setFormData({ ...formData, courierProviderName: selectedProvider });
-
-    const filteredArray = couriers.filter(
-      (item) => item.provider === selectedProvider
-    );
-    const serviceNames =
-      filteredArray.length > 0 ? filteredArray.map((item) => item.name) : [];
-    setServices(serviceNames);
-  };
-
-  const handleServiceSelect = (e) => {
-    const selectedServiceName = e.target.value;
-    setFormData({ ...formData, courierServiceName: selectedServiceName });
-
-    const selectedObject = couriers.find(
-      (item) => item.name === selectedServiceName
-    );
-    setSelectedService(selectedObject || null);
-  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -294,77 +241,26 @@ const RateCardUpdateForm = () => {
             </div>
           )}
 
-          {/* Provider Dropdown */}
+          {/* Provider — read-only: it comes from the courier service (Courier Services screen) */}
           <div className="relative flex-1 sm:w-[200px] sm:max-w-[200px]">
             <div
-              onClick={() => setIsProviderOpen(!isProviderOpen)}
-              className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-brand-primary transition-all group"
+              title="Set on the Courier Services screen — changes there update every rate card"
+              className="flex items-center font-[600] border border-gray-200 bg-gray-50 px-3 py-1.5 h-9 rounded-lg cursor-not-allowed"
             >
-              <span className={`text-[10px] sm:text-[12px] truncate ${formData.courierProviderName ? "text-gray-700" : "text-gray-400"}`}>
-                {formData.courierProviderName || "Select Provider"}
-              </span>
-              <FiChevronDown className={`text-gray-400 group-hover:text-brand-primary transition-transform flex-shrink-0 ${isProviderOpen ? "rotate-180" : ""}`} />
+              <span className="text-[10px] sm:text-[12px] truncate text-gray-500">{formData.courierProviderName || "—"}</span>
             </div>
-            {isProviderOpen && (
-              <div className="absolute font-[600] top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-sm z-[100] animate-in fade-in slide-in-from-top-2 max-h-48 overflow-y-auto">
-                {couriers &&
-                  couriers.length > 0 &&
-                  [...new Set(couriers.map((courier) => courier.provider))].map((provider, index) => (
-                    <div
-                      key={index}
-                      onClick={() => {
-                        const selectedProvider = provider;
-                        setFormData({ ...formData, courierProviderName: selectedProvider });
-                        const filteredArray = couriers.filter((item) => item.provider === selectedProvider);
-                        const serviceNames = filteredArray.length > 0 ? filteredArray.map((item) => item.name) : [];
-                        setServices(serviceNames);
-                        setIsProviderOpen(false);
-                      }}
-                      className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors"
-                    >
-                      {provider}
-                    </div>
-                  ))}
-              </div>
-            )}
           </div>
         </div>
 
         <div className="flex gap-2 w-full">
-          {/* Service Dropdown */}
+          {/* Service — read-only: renaming is done on the Courier Services screen and reaches every rate card */}
           <div className="relative flex-1 sm:max-w-[220px]">
             <div
-              onClick={() => setIsServiceOpen(!isServiceOpen)}
-              className="flex items-center justify-between font-[600] border border-gray-300 bg-white px-3 py-1.5 h-9 rounded-lg cursor-pointer hover:border-brand-primary transition-all group"
+              title="Set on the Courier Services screen — changes there update every rate card"
+              className="flex items-center font-[600] border border-gray-200 bg-gray-50 px-3 py-1.5 h-9 rounded-lg cursor-not-allowed"
             >
-              <span className={`text-[10px] sm:text-[12px] truncate ${formData.courierServiceName ? "text-gray-700" : "text-gray-400"}`}>
-                {formData.courierServiceName || "Select Courier Service"}
-              </span>
-              <FiChevronDown className={`text-gray-400 group-hover:text-brand-primary transition-transform flex-shrink-0 ${isServiceOpen ? "rotate-180" : ""}`} />
+              <span className="text-[10px] sm:text-[12px] truncate text-gray-500">{formData.courierServiceName || "—"}</span>
             </div>
-            {isServiceOpen && (
-              <div className="absolute font-[600] top-full left-0 w-full mt-1 bg-white border border-gray-200 rounded-lg shadow-sm z-[100] animate-in fade-in slide-in-from-top-2 max-h-48 overflow-y-auto">
-                {services.length > 0 ? (
-                  services.map((service, index) => (
-                    <div
-                      key={index}
-                      onClick={() => {
-                        const selectedServiceName = service;
-                        setFormData({ ...formData, courierServiceName: selectedServiceName });
-                        const selectedObject = couriers.find((item) => item.name === selectedServiceName);
-                        setSelectedService(selectedObject || null);
-                        setIsServiceOpen(false);
-                      }}
-                      className="px-3 py-2 text-[10px] sm:text-[12px] hover:bg-brand-primary/10 hover:text-brand-primary cursor-pointer transition-colors"
-                    >
-                      {service}
-                    </div>
-                  ))
-                ) : (
-                  <div className="px-3 py-2 text-[10px] sm:text-[12px] text-gray-400">No services available</div>
-                )}
-              </div>
-            )}
           </div>
 
           {/* Status Dropdown */}

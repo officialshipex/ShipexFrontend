@@ -9,20 +9,12 @@ import { FiInfo } from "react-icons/fi";
 import Cookies from "js-cookie";
 import { getCarrierLogo } from "../Common/getCarrierLogo";
 import SchedulePickupModal from "./SchedulePickupModal";
+import { chargeableWeightKg, roundKg } from "../utils/serviceWeight";
 
-// Some courier service names encode a weight slab, e.g. "Ekart Surface 2KG"
-// or "Dtdc Surface 0.5KG" — only treat a number in the name as a weight when
-// it's actually followed by a KG/G unit (converting grams to kg). A bare
-// number with no unit (e.g. "DelhiveryJF 500", where "500" is just part of
-// the service's name, not a weight) must NOT be misread as "500kg" — fall
-// back to the order's real weight instead.
-const getWeightValue = (name, fallback) => {
-  const match = name?.match(/(\d+(?:\.\d+)?)\s*(kg|g)\b/i);
-  if (!match) return fallback;
-  const value = parseFloat(match[1]);
-  const kgValue = match[2].toLowerCase() === "g" ? value / 1000 : value;
-  return kgValue > 0 ? kgValue : fallback;
-};
+// Some courier service names encode a weight slab ("Ekart Surface 2KG", "Delhivery 250GM", "Dtdc 0.5KG"): only a
+// number followed by a unit counts, grams become kg (utils/serviceWeight.js — "250GM" used to be missed because
+// only "KG"/"G" were recognised). Chargeable = that slab or the order's applicable weight, whichever is higher.
+const getWeightValue = (name, applicableWeight) => roundKg(chargeableWeightKg(name, applicableWeight));
 
 const formatPickupDate = (date) => {
   if (!date) return "—";
@@ -578,12 +570,7 @@ const CarrierSelection = () => {
                               }}
                             >
                               <p className="text-center text-[10px] font-[600] text-gray-500 border-b border-dashed border-gray-400">
-                                {(() => {
-                                  const match = item?.courierServiceName?.match(/(\d+(?:\.\d+)?)\s*(kg|g)\b/i);
-                                  const serviceWeight = match ? (match[2].toLowerCase() === "g" ? parseFloat(match[1]) / 1000 : parseFloat(match[1])) : 0;
-                                  const applicableWeight = orderDetails?.packageDetails?.applicableWeight || 0;
-                                  return serviceWeight > applicableWeight ? serviceWeight : applicableWeight;
-                                })()}{" "}
+                                {getWeightValue(item?.courierServiceName, orderDetails?.packageDetails?.applicableWeight || 0)}{" "}
                                 kg
                               </p>
                               {openPopup === `weight_${idx}` && (
