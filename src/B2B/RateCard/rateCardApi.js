@@ -10,6 +10,9 @@ const API = process.env.REACT_APP_BACKEND_URL;
 const BASE = `${API}/b2b/ratecard`;
 
 export const getMeta = () => axios.get(`${BASE}/getMeta`);
+// the B2B plan every newly registered seller gets (none marked = LITE); same as the B2C "Set as default"
+export const getB2BPlanNames = () => axios.get(`${API}/b2b/saveRate/getPlanNames`);
+export const setB2BDefaultPlan = (planName) => axios.post(`${API}/b2b/saveRate/setDefaultPlan`, { planName });
 export const getRateCard = (courierId, planId) =>
   axios.get(`${BASE}/getRateCard/?courierId=${courierId}&planId=${planId}`);
 export const createRateCard = (data) => axios.post(`${BASE}/createRateCard`, data);

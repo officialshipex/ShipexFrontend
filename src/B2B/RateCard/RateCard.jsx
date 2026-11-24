@@ -5,6 +5,8 @@ import {
   createRateCard,
   updateRateCard,
   deleteRateCard,
+  getB2BPlanNames,
+  setB2BDefaultPlan,
 } from "./rateCardApi";
 import { FiEdit, FiTrash2, FiPlus, FiUpload } from "react-icons/fi";
 import UploadRatesModal from "./UploadRatesModal";
@@ -50,6 +52,35 @@ export default function RateCardAdmin() {
   const [uploadSaved, setUploadSaved] = useState(false);
 
   const openPlanForm = () => setIsAddPlanModalOpen(true);
+
+  // The B2B plan every newly registered seller gets ("Set as default"; none marked = LITE). Separate from the B2C one.
+  const [defaultPlan, setDefaultPlan] = useState("");
+  const [unusableDefault, setUnusableDefault] = useState(""); // marked, but no active rate cards -> sellers get LITE
+  const [settingDefault, setSettingDefault] = useState(false);
+  const loadDefaultPlan = () =>
+    getB2BPlanNames()
+      .then((res) => {
+        setDefaultPlan(res.data?.defaultPlan || "");
+        setUnusableDefault(res.data?.defaultPlanUnusable ? res.data?.defaultPlanMarked || "" : "");
+      })
+      .catch(() => { /* the badge just doesn't show */ });
+  // also after a save / delete / upload (reloadKey): a card can make the default plan usable or not
+  useEffect(() => { loadDefaultPlan(); }, [reloadKey, isPlanNameAdd]); // eslint-disable-line react-hooks/exhaustive-deps
+  const handleSetDefaultPlan = async (plan) => {
+    if (!plan || plan === defaultPlan || settingDefault) return;
+    if (!window.confirm(`Give every newly registered seller the "${plan}" B2B plan?\n\nExisting sellers keep their current plans.`)) return;
+    setSettingDefault(true);
+    try {
+      const res = await setB2BDefaultPlan(plan);
+      setDefaultPlan(res.data?.defaultPlan || plan);
+      setUnusableDefault("");
+      Notification(res.data?.message || `New sellers will now get the "${plan}" B2B plan.`, "success");
+    } catch (error) {
+      Notification(error?.response?.data?.message || "Could not set the default plan.", "error");
+    } finally {
+      setSettingDefault(false);
+    }
+  };
 
   // same defaults as QuickPost's Cargo rate card and the backend (one type per charge)
   const defaultOverheadCharges = {
@@ -238,6 +269,7 @@ export default function RateCardAdmin() {
       showOverheads(withMinFreightMoved({ ...defaultOverheadCharges, ...(res.data?.overheadCharges || {}) }));
       setMatrix(buildMatrix(zonesFor(meta, selectedCourier), res.data.rates));
       setMode("view");
+      loadDefaultPlan(); // a new / (de)activated card can make the default plan usable or not
     } catch (err) {
       Notification(err?.response?.data?.message || "Failed to save rate card", "error");
     } finally {
@@ -253,6 +285,7 @@ export default function RateCardAdmin() {
       setMatrix(buildEmptyMatrix(zonesFor(meta, selectedCourier)));
       setRateCard(null);
       setMode("create");
+      loadDefaultPlan();
     } catch {
       Notification("Delete failed", "error");
     } finally {
@@ -271,6 +304,9 @@ export default function RateCardAdmin() {
     label: p.name,
     value: p._id,
   }));
+  const selectedPlanName = planOptions.find((p) => p.value === selectedPlan)?.label || "";
+  // the dropdown marks the default plan (labels above stay plain: they are also used as the plan's name)
+  const planDropdownOptions = planOptions.map((p) => ({ ...p, label: p.label === defaultPlan ? `${p.label} ★ Default` : p.label }));
 
   const courierOptions = meta.couriers.map((c) => ({
     label: c.name,
@@ -288,10 +324,28 @@ export default function RateCardAdmin() {
       <div className="flex justify-between sm:flex-row flex-col gap-2">
         <div className="flex gap-2 sm:flex-row flex-row">
           <CustomDropdown
-            options={planOptions}
+            options={planDropdownOptions}
             value={selectedPlan}
             onChange={setSelectedPlan}
           />
+          {/* Default B2B plan for new sellers */}
+          {selectedPlanName && (selectedPlanName === defaultPlan ? (
+            <span
+              title="Every newly registered seller gets this B2B plan"
+              className="inline-flex items-center px-3 h-9 rounded-lg bg-amber-50 border border-amber-200 text-amber-700 sm:text-[12px] text-[10px] font-bold whitespace-nowrap"
+            >
+              ★ Default for new sellers
+            </span>
+          ) : (
+            <button
+              className={`border border-gray-300 bg-white text-gray-700 sm:text-[12px] text-[10px] font-bold hover:border-amber-300 hover:text-amber-700 px-3 h-9 rounded-lg transition-all whitespace-nowrap ${settingDefault ? "opacity-50 cursor-not-allowed" : ""}`}
+              onClick={() => handleSetDefaultPlan(selectedPlanName)}
+              disabled={settingDefault}
+              title={`Give every newly registered seller the "${selectedPlanName}" B2B plan`}
+            >
+              {settingDefault ? "Saving…" : "☆ Set as default"}
+            </button>
+          ))}
 
           <CustomDropdown
             options={courierOptions}
@@ -360,6 +414,13 @@ export default function RateCardAdmin() {
           >Add Plan</button>
         </div>
       </div>
+
+      {unusableDefault && (
+        <p className="text-[12px] text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+          The default B2B plan "{unusableDefault}" has no active rate cards, so new sellers get "{defaultPlan}" for now.
+          Add or activate its rate cards, or set another plan as default.
+        </p>
+      )}
 
       {/* ================= RATE CARD TITLE ================= */}
       <div className="py-2 flex items-center">
