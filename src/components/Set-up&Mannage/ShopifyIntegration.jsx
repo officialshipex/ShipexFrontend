@@ -71,6 +71,11 @@ const ShopifyIntegration = () => {
         headers: { Authorization: `Bearer ${token}` },
       });
 
+      // saved, but the store's order sync could not be set up: say why and stay on the form
+      if (response.data?.webhookStatus === "failed") {
+        Notification(`Channel saved, but orders will not sync yet. ${response.data.webhookError || ""}`.trim(), "error");
+        return;
+      }
       if (response.status == 200 || response.status == 201) {
         navigate("/dashboard/Setup&Manage/Channel")
       }
