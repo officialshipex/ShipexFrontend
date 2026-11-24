@@ -4,7 +4,7 @@ import axios from "axios";
 // import { toast } from "react-toastify";
 import Cookies from "js-cookie";
 import { Notification } from "../Notification"
-import { PICKUP_ADDRESS_NEEDS_NUMBER, pickupAddressHasNumber } from "../utils/pickupAddressCheck";
+import { pickupAddressProblem } from "../utils/pickupAddressCheck";
 const AddPickupAddress = ({
   isOpen,
   onClose,
@@ -97,8 +97,9 @@ const AddPickupAddress = ({
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!pickupAddressHasNumber(formData.address)) {
-      Notification(PICKUP_ADDRESS_NEEDS_NUMBER, "error");
+    const problem = pickupAddressProblem(formData);
+    if (problem) {
+      Notification(problem, "error");
       return;
     }
 

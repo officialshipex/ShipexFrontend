@@ -4,7 +4,7 @@ import UpdateSenderAdd from "../../Order/viewOrder/UpdateSenderAdd";
 // import { toast } from "react-toastify";
 import { FiEdit, FiTrash2, FiSearch, FiCopy, FiCheck } from "react-icons/fi"
 import { Notification } from "../../Notification";
-import { PICKUP_ADDRESS_NEEDS_NUMBER, pickupAddressHasNumber } from "../../utils/pickupAddressCheck";
+import { pickupAddressProblem } from "../../utils/pickupAddressCheck";
 import Cookies from "js-cookie";
 import UserFilter from "../../filter/UserFilter";
 import PaginationFooter from "../../Common/PaginationFooter";
@@ -121,8 +121,9 @@ const PickupAddress = ({ isAdminView = false }) => {
   };
 
   const handleSave = async (formData) => {
-    if (!pickupAddressHasNumber(formData?.address)) {
-      Notification(PICKUP_ADDRESS_NEEDS_NUMBER, "error");
+    const problem = pickupAddressProblem(formData);
+    if (problem) {
+      Notification(problem, "error");
       return;
     }
     try {

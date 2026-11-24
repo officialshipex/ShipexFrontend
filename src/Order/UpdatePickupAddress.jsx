@@ -3,7 +3,7 @@ import Modal from "./Modal";
 import axios from "axios";
 // import { toast } from "react-toastify";
 import { Notification } from "../Notification"
-import { PICKUP_ADDRESS_NEEDS_NUMBER, pickupAddressHasNumber } from "../utils/pickupAddressCheck";
+import { pickupAddressProblem } from "../utils/pickupAddressCheck";
 import Cookies from "js-cookie";
 const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => {
     const [pincode, setPincode] = useState("");
@@ -89,8 +89,9 @@ const AddPickupAddress = ({ onClose, setRefresh, setPickupAddress, userId }) => 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!pickupAddressHasNumber(formData.address)) {
-            Notification(PICKUP_ADDRESS_NEEDS_NUMBER, "error");
+        const problem = pickupAddressProblem(formData);
+        if (problem) {
+            Notification(problem, "error");
             return;
         }
 
