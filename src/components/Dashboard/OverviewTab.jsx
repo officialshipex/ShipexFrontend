@@ -10,6 +10,7 @@ import OverviewCardSection from "./OverviewCardSection";
 import Loader from "../../Loader";
 import RevenueBreakdown from "./RevenueBreakdown";
 import Cookies from "js-cookie";
+import { money2 } from "../../utils/money";
 
 const OverviewTab = ({ refresh, selectedUserId, selectedDateRange }) => {
     const [insights, setInsights] = useState(null);
@@ -118,7 +119,7 @@ const OverviewTab = ({ refresh, selectedUserId, selectedDateRange }) => {
                                     </div>
                                     <div>
                                         <p className="text-[14px] font-[600] text-gray-700">
-                                            ₹{insights.avgOrderValue}
+                                            ₹{money2(insights.avgOrderValue)}
                                         </p>
                                         <p className="text-[12px] text-gray-500">
                                             Average Order Value

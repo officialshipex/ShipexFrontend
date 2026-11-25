@@ -17,6 +17,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Loader from "../../../Loader";
 import { getCarrierLogo } from "../../../Common/getCarrierLogo";
+import { money2 } from "../../../utils/money";
 
 function Tracing2() {
   const [input, setInput] = useState(""); // Multi-AWB input
@@ -601,7 +602,7 @@ function TrackingCard({ trackingAwb, statusSteps, CopyableText }) {
                 >
                   <span className="font-[600]">{product.name}</span>
                   <span>
-                    {product.quantity} X ₹{product.unitPrice}
+                    {product.quantity} X ₹{money2(product.unitPrice)}
                   </span>
                 </li>
               ))}

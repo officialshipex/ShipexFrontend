@@ -6,6 +6,7 @@ import { useOutletContext } from "react-router-dom";
 import { Notification } from "../../../../Notification";
 import TestMessageModal from "../TestMessageModal";
 import { useBranding } from "../../../../context/BrandingContext";
+import { money2 } from "../../../../utils/money";
 
 const Whatsapp = () => {
   const { companyDisplayName } = useBranding();
@@ -171,7 +172,7 @@ const Whatsapp = () => {
             <span className="text-[12px] font-bold text-gray-600">WhatsApp Notifications</span>
             {waFee && (
               <span className={`text-[10px] font-bold px-2 py-0.5 rounded-md ${!waFee.enabled ? "bg-red-50 text-red-600" : waFee.price > 0 ? "bg-amber-50 text-amber-600" : "bg-green-50 text-green-600"}`}>
-                {!waFee.enabled ? "Switched off by admin" : waFee.price > 0 ? `₹${waFee.price} per message` : "Free"}
+                {!waFee.enabled ? "Switched off by admin" : waFee.price > 0 ? `₹${money2(waFee.price)} per message` : "Free"}
               </span>
             )}
             <Switch

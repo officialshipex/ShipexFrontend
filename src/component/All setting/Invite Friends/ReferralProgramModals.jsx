@@ -5,6 +5,7 @@ import dayjs from "dayjs";
 import { X, Gift, Coins, Award, Plus, Trash2, Pencil, Search } from "lucide-react";
 import Loader from "../../../Loader";
 import { Notification } from "../../../Notification";
+import { money2 } from "../../../utils/money";
 
 // Admin: the company's user-referral programme (joining bonus + default monthly commission %) and the joining
 // bonuses paid. Backend /referral/settings and /referral/bonuses (admin only).
@@ -281,7 +282,7 @@ export function ReferralPlansModal({ onClose }) {
                     {p.slabs.map((s) => (
                       <tr key={s.minShipments} className="border-t border-gray-100">
                         <td className="py-1 text-gray-500">{slabText(s)} shipments</td>
-                        <td className="py-1 font-bold text-gray-700">₹{s.ratePerShipment} / shipment</td>
+                        <td className="py-1 font-bold text-gray-700">₹{money2(s.ratePerShipment)} / shipment</td>
                         <td className="py-1 text-right"><SlabBadge badge={s.badge} color={s.color} /></td>
                       </tr>
                     ))}
@@ -350,7 +351,7 @@ export function UserPlanModal({ userId, onClose, onSaved }) {
               </div>
               <div className="mt-1 pl-5 flex flex-wrap gap-1">
                 {p.slabs.map((s) => (
-                  <span key={s.minShipments} className="text-[10px] text-gray-600 border rounded-full px-2 py-0.5">{slabText(s)}: <b>₹{s.ratePerShipment}</b> / shipment{s.badge ? ` · ${s.badge}` : ""}</span>
+                  <span key={s.minShipments} className="text-[10px] text-gray-600 border rounded-full px-2 py-0.5">{slabText(s)}: <b>₹{money2(s.ratePerShipment)}</b> / shipment{s.badge ? ` · ${s.badge}` : ""}</span>
                 ))}
               </div>
             </label>

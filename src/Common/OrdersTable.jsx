@@ -7,6 +7,7 @@ import NoDataFound from "../Common/NoDataFound";
 import OrderRowActions from "./OrderRowActions";
 import { handleTrackingByAwb } from "./orderActions";
 import { orderReferenceOf } from "./customerOrderId";
+import { money2 } from "../utils/money";
 
 const OrdersTable = ({
     orders,
@@ -278,9 +279,9 @@ const OrdersTable = ({
                                                                         <td className="py-1 pr-2 break-words">{p.name}</td>
                                                                         <td className="py-1 pr-2 break-words">{p.sku}</td>
                                                                         <td className="py-1 pr-2">{p.quantity}</td>
-                                                                        <td className="py-1 pr-2">₹{p.unitPrice}</td>
+                                                                        <td className="py-1 pr-2">₹{money2(p.unitPrice)}</td>
                                                                         <td className="py-1">
-                                                                            ₹{(p.quantity || 0) * (p.unitPrice || 0)}
+                                                                            ₹{money2((p.quantity || 0) * (p.unitPrice || 0))}
                                                                         </td>
                                                                     </tr>
                                                                 ))}
@@ -290,7 +291,7 @@ const OrdersTable = ({
                                                                     <td colSpan={2} className="pt-1">Total</td>
                                                                     <td className="pt-1">{totalQty}</td>
                                                                     <td />
-                                                                    <td className="pt-1">₹{totalPrice}</td>
+                                                                    <td className="pt-1">₹{money2(totalPrice)}</td>
                                                                 </tr>
                                                             </tbody>
                                                         </table>
@@ -337,7 +338,7 @@ const OrdersTable = ({
 
                             {/* PAYMENT */}
                             <td className="py-2 px-3">
-                                <p>₹ {order.paymentDetails?.amount}</p>
+                                <p>₹ {money2(order.paymentDetails?.amount)}</p>
                                 <span className="text-[10px] bg-brand-secondary/10 text-brand-primary px-2 py-0.5 rounded">
                                     {order.paymentDetails?.method}
                                 </span>

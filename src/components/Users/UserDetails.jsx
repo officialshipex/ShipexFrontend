@@ -26,6 +26,7 @@ import UploadRatecard from "../RateCard/UploadRatecard";
 import UserServiceManagement from "./UserServiceManagement";
 import B2BRateCardsView from "./B2BRateCardsView";
 import Loader from "../../Loader";
+import { money2 } from "../../utils/money";
 
 
 // Change Password Modal
@@ -331,12 +332,12 @@ export default function ProfileCard() {
                   </td>
                   <td className="px-2 py-1.5" rowSpan={2}>{card.mode}</td>
                   <td className="px-2 py-1.5 text-gray-400">Basic: {card.weightPriceBasic?.[0]?.weight}gm</td>
-                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic?.[0]?.zoneA}</td>
-                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic?.[0]?.zoneB}</td>
-                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic?.[0]?.zoneC}</td>
-                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic?.[0]?.zoneD}</td>
-                  <td className="px-2 py-1.5 font-medium">₹{card.weightPriceBasic?.[0]?.zoneE}</td>
-                  <td className="px-2 py-1.5 font-medium" rowSpan={2}>₹{card.codCharge} / {card.codPercent}%</td>
+                  <td className="px-2 py-1.5 font-medium">₹{money2(card.weightPriceBasic?.[0]?.zoneA)}</td>
+                  <td className="px-2 py-1.5 font-medium">₹{money2(card.weightPriceBasic?.[0]?.zoneB)}</td>
+                  <td className="px-2 py-1.5 font-medium">₹{money2(card.weightPriceBasic?.[0]?.zoneC)}</td>
+                  <td className="px-2 py-1.5 font-medium">₹{money2(card.weightPriceBasic?.[0]?.zoneD)}</td>
+                  <td className="px-2 py-1.5 font-medium">₹{money2(card.weightPriceBasic?.[0]?.zoneE)}</td>
+                  <td className="px-2 py-1.5 font-medium" rowSpan={2}>₹{money2(card.codCharge)} / {card.codPercent}%</td>
                   <td className="px-2 py-1.5" rowSpan={2}>
                     <div className="flex justify-center gap-1.5">
                       <button onClick={() => navigate(`/dashboard/ratecard/update/${card._id}?userId=${id}`)} className="text-brand-primary"><FaEdit size={12} /></button>
@@ -346,11 +347,11 @@ export default function ProfileCard() {
                 </tr>
                 <tr className="border-b border-gray-50 text-[10px] sm:text-[11px] text-gray-700">
                   <td className="px-2 py-1.5 text-gray-400">Addl: {card.weightPriceAdditional?.[0]?.weight}gm</td>
-                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional?.[0]?.zoneA}</td>
-                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional?.[0]?.zoneB}</td>
-                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional?.[0]?.zoneC}</td>
-                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional?.[0]?.zoneD}</td>
-                  <td className="px-2 py-1.5">₹{card.weightPriceAdditional?.[0]?.zoneE}</td>
+                  <td className="px-2 py-1.5">₹{money2(card.weightPriceAdditional?.[0]?.zoneA)}</td>
+                  <td className="px-2 py-1.5">₹{money2(card.weightPriceAdditional?.[0]?.zoneB)}</td>
+                  <td className="px-2 py-1.5">₹{money2(card.weightPriceAdditional?.[0]?.zoneC)}</td>
+                  <td className="px-2 py-1.5">₹{money2(card.weightPriceAdditional?.[0]?.zoneD)}</td>
+                  <td className="px-2 py-1.5">₹{money2(card.weightPriceAdditional?.[0]?.zoneE)}</td>
                 </tr>
               </React.Fragment>
             ))

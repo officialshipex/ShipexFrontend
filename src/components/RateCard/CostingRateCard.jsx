@@ -6,6 +6,7 @@ import { Notification } from "../../Notification";
 import Loader from "../../Loader";
 import NoDataFound from "../../Common/NoDataFound";
 import { refreshNotifications } from "../../utils/NotificationListProvider";
+import { money2 } from "../../utils/money";
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -609,12 +610,12 @@ export default function CostingRateCard() {
                       <td className="px-3 py-2">
                         <span className="text-gray-500">Basic:</span> {card.weightPriceBasic?.[0]?.weight}gm
                       </td>
-                      <td className="px-3 py-2 font-medium">₹{card.weightPriceBasic?.[0]?.zoneA ?? "—"}</td>
-                      <td className="px-3 py-2 font-medium">₹{card.weightPriceBasic?.[0]?.zoneB ?? "—"}</td>
-                      <td className="px-3 py-2 font-medium">₹{card.weightPriceBasic?.[0]?.zoneC ?? "—"}</td>
-                      <td className="px-3 py-2 font-medium">₹{card.weightPriceBasic?.[0]?.zoneD ?? "—"}</td>
-                      <td className="px-3 py-2 font-medium">₹{card.weightPriceBasic?.[0]?.zoneE ?? "—"}</td>
-                      <td className="px-3 py-2" rowSpan={2}>₹{card.codCharge}</td>
+                      <td className="px-3 py-2 font-medium">₹{money2(card.weightPriceBasic?.[0]?.zoneA ?? "—")}</td>
+                      <td className="px-3 py-2 font-medium">₹{money2(card.weightPriceBasic?.[0]?.zoneB ?? "—")}</td>
+                      <td className="px-3 py-2 font-medium">₹{money2(card.weightPriceBasic?.[0]?.zoneC ?? "—")}</td>
+                      <td className="px-3 py-2 font-medium">₹{money2(card.weightPriceBasic?.[0]?.zoneD ?? "—")}</td>
+                      <td className="px-3 py-2 font-medium">₹{money2(card.weightPriceBasic?.[0]?.zoneE ?? "—")}</td>
+                      <td className="px-3 py-2" rowSpan={2}>₹{money2(card.codCharge)}</td>
                       <td className="px-3 py-2" rowSpan={2}>{card.codPercent}%</td>
                       <td className="px-3 py-2" rowSpan={2}>
                         <span className={`px-2 py-0.5 rounded text-[10px] tracking-wider ${card.status === "Active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
@@ -645,11 +646,11 @@ export default function CostingRateCard() {
                       <td className="px-3 py-2 border-t border-gray-50">
                         <span className="text-gray-500">Addl:</span> {card.weightPriceAdditional?.[0]?.weight}gm
                       </td>
-                      <td className="px-3 py-2 border-t border-gray-50">₹{card.weightPriceAdditional?.[0]?.zoneA ?? "—"}</td>
-                      <td className="px-3 py-2 border-t border-gray-50">₹{card.weightPriceAdditional?.[0]?.zoneB ?? "—"}</td>
-                      <td className="px-3 py-2 border-t border-gray-50">₹{card.weightPriceAdditional?.[0]?.zoneC ?? "—"}</td>
-                      <td className="px-3 py-2 border-t border-gray-50">₹{card.weightPriceAdditional?.[0]?.zoneD ?? "—"}</td>
-                      <td className="px-3 py-2 border-t border-gray-50">₹{card.weightPriceAdditional?.[0]?.zoneE ?? "—"}</td>
+                      <td className="px-3 py-2 border-t border-gray-50">₹{money2(card.weightPriceAdditional?.[0]?.zoneA ?? "—")}</td>
+                      <td className="px-3 py-2 border-t border-gray-50">₹{money2(card.weightPriceAdditional?.[0]?.zoneB ?? "—")}</td>
+                      <td className="px-3 py-2 border-t border-gray-50">₹{money2(card.weightPriceAdditional?.[0]?.zoneC ?? "—")}</td>
+                      <td className="px-3 py-2 border-t border-gray-50">₹{money2(card.weightPriceAdditional?.[0]?.zoneD ?? "—")}</td>
+                      <td className="px-3 py-2 border-t border-gray-50">₹{money2(card.weightPriceAdditional?.[0]?.zoneE ?? "—")}</td>
                     </tr>
                   </React.Fragment>
                 ))
@@ -687,16 +688,16 @@ export default function CostingRateCard() {
                 <div className="grid grid-cols-2 gap-2 bg-gray-50 rounded p-2">
                   <div>
                     <span className="text-gray-500 block">Basic (Zone A)</span>
-                    <span className="font-bold text-brand-primary">₹{card.weightPriceBasic?.[0]?.zoneA ?? "—"}</span>
+                    <span className="font-bold text-brand-primary">₹{money2(card.weightPriceBasic?.[0]?.zoneA ?? "—")}</span>
                   </div>
                   <div>
                     <span className="text-gray-500 block">Addl (Zone A)</span>
-                    <span className="font-bold text-brand-primary">₹{card.weightPriceAdditional?.[0]?.zoneA ?? "—"}</span>
+                    <span className="font-bold text-brand-primary">₹{money2(card.weightPriceAdditional?.[0]?.zoneA ?? "—")}</span>
                   </div>
                 </div>
                 <div className="flex justify-between items-center">
                   <div className="flex gap-4">
-                    <div><span className="text-gray-500 block">COD Charge</span><span className="font-bold">₹{card.codCharge}</span></div>
+                    <div><span className="text-gray-500 block">COD Charge</span><span className="font-bold">₹{money2(card.codCharge)}</span></div>
                     <div><span className="text-gray-500 block">COD %</span><span className="font-bold">{card.codPercent}%</span></div>
                   </div>
                   <span className={`px-2 py-0.5 rounded text-[10px] ${card.status === "Active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>

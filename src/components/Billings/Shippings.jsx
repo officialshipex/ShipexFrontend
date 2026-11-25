@@ -20,6 +20,7 @@ import Cookies from "js-cookie";
 import PaginationFooter from "../../Common/PaginationFooter";
 import NoDataFound from "../../Common/NoDataFound";
 import B2BBreakupLines from "./B2BBreakupLines";
+import { money2 } from "../../utils/money";
 
 const Shippings = (filterOrder) => {
   const [dropdownOpen, setDropdownOpen] = useState(null);
@@ -903,7 +904,7 @@ const Shippings = (filterOrder) => {
                   <div>
                     <p className="text-gray-700 mb-0.5 text-right">Freight Charges</p>
                     <div className="flex items-center justify-end gap-1">
-                      <p className="text-brand-primary font-bold">₹{row.totalFreightCharges || 0}</p>
+                      <p className="text-brand-primary font-bold">₹{money2(row.totalFreightCharges || 0)}</p>
                       {row.totalFreightCharges && (
                         <button
                           onClick={(e) => {

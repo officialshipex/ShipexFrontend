@@ -11,6 +11,7 @@ import ReferralFilterPanel from "../../../Common/ReferralFilterPanel";
 import NoDataFound from "../../../Common/NoDataFound";
 import UserFilter from "../../../filter/UserFilter";
 import PaginationFooter from "../../../Common/PaginationFooter";
+import { money2 } from "../../../utils/money";
 
 const AdminReferral = () => {
   const [data, setData] = useState([]);
@@ -136,7 +137,7 @@ const AdminReferral = () => {
       return;
     }
 
-    if (!window.confirm(`Transfer ₹${transferAmount} to ${selectedUser.fullname}'s wallet?`)) return;
+    if (!window.confirm(`Transfer ₹${money2(transferAmount)} to ${selectedUser.fullname}'s wallet?`)) return;
 
     try {
       setIsProcessing(true);
@@ -454,11 +455,11 @@ const AdminReferral = () => {
                     </div>
                     <div className="bg-gray-50/50 p-1.5 rounded border border-gray-100/50">
                       <p className="text-gray-400 text-[9px] font-bold uppercase tracking-tight">Freight</p>
-                      <p className="font-bold text-gray-700 text-[11px]">₹{Math.round(row.totalShipping || 0)}</p>
+                      <p className="font-bold text-gray-700 text-[11px]">₹{money2(row.totalShipping || 0)}</p>
                     </div>
                     <div className="bg-brand-secondary/30 p-1.5 rounded border border-brand-secondary/20">
                       <p className="text-gray-400 text-[9px] font-bold uppercase tracking-tight">Reward</p>
-                      <p className="font-bold text-brand-primary text-[11px]">₹{Math.round(row.totalCommission || 0)}</p>
+                      <p className="font-bold text-brand-primary text-[11px]">₹{money2(row.totalCommission || 0)}</p>
                     </div>
                   </div>
 

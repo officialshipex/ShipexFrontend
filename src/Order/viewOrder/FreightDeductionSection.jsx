@@ -1,5 +1,6 @@
 import React from "react";
 import { IndianRupee } from "lucide-react";
+import { money2 } from "../../utils/money";
 
 const FreightDeductionSection = ({ order }) => {
     // Condition for display: 
@@ -42,14 +43,14 @@ const FreightDeductionSection = ({ order }) => {
                                 {order.packageDetails?.applicableWeight || order.B2BPackageDetails?.applicableWeight || 0} Kg
                             </td>
                             {order.paymentDetails?.method === "COD" && (
-                                <td className="py-2 px-3">₹{priceBreakup.cod || 0}</td>
+                                <td className="py-2 px-3">₹{money2(priceBreakup.cod || 0)}</td>
                             )}
-                            <td className="py-2 px-3">₹{priceBreakup.freight || 0}</td>
-                            <td className="py-2 px-3">₹{priceBreakup.gst || 0}</td>
+                            <td className="py-2 px-3">₹{money2(priceBreakup.freight || 0)}</td>
+                            <td className="py-2 px-3">₹{money2(priceBreakup.gst || 0)}</td>
                             {priceBreakup.liability > 0 && (
-                                <td className="py-2 px-3 text-brand-primary">₹{priceBreakup.liability}</td>
+                                <td className="py-2 px-3 text-brand-primary">₹{money2(priceBreakup.liability)}</td>
                             )}
-                            <td className="py-2 px-3 text-brand-primary">₹{priceBreakup.total || 0}</td>
+                            <td className="py-2 px-3 text-brand-primary">₹{money2(priceBreakup.total || 0)}</td>
                         </tr>
                     </tbody>
                 </table>

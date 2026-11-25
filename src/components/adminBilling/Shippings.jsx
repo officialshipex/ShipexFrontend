@@ -18,6 +18,7 @@ import * as XLSX from "xlsx";
 import { getCarrierLogo } from "../../Common/getCarrierLogo";
 import { motion, AnimatePresence } from "framer-motion";
 import B2BBreakupLines from "../Billings/B2BBreakupLines";
+import { money2 } from "../../utils/money";
 
 const Shippings = () => {
   const [transactions, setTransactions] = useState([]);
@@ -458,7 +459,7 @@ const Shippings = () => {
                     </td>
                     {/* Excess Charges */}
                     <td className="py-2 px-3 font-medium text-center">
-                      <span>{row.weightDiscrepancy?.excessWeightCharges?.excessCharges ? `₹${row.weightDiscrepancy.excessWeightCharges.excessCharges}` : "_ _"}</span>
+                      <span>{row.weightDiscrepancy?.excessWeightCharges?.excessCharges ? `₹${money2(row.weightDiscrepancy.excessWeightCharges.excessCharges)}` : "_ _"}</span>
                     </td>
                     <td className="py-2 px-3">
                       {row.orderType === "B2C" ? (
@@ -597,7 +598,7 @@ const Shippings = () => {
                   <div>
                     <p className="text-gray-700 mb-0.5 text-right">Freight Charges</p>
                     <div className="flex items-center justify-end gap-1">
-                      <p className="text-brand-primary font-bold">₹{row.totalFreightCharges || 0}</p>
+                      <p className="text-brand-primary font-bold">₹{money2(row.totalFreightCharges || 0)}</p>
                       {row.totalFreightCharges && (
                         <button
                           onClick={(e) => {

@@ -20,6 +20,7 @@ import {
 } from "react-icons/fa";
 import Cookies from "js-cookie";
 import OverviewWeightDisputeSection from "./OverviewWeightDisputSection";
+import { money2 } from "../../utils/money";
 
 
 
@@ -167,13 +168,13 @@ const Dashboard = ({ selectedUserId, selectedDateRange }) => {
                 />
                 <Card
                     title="Revenue"
-                    value={`₹${data?.todaysRevenue || 0}`}
-                // subtitle={`Yesterday ₹${data?.yesterdaysRevenue || 0}`}
+                    value={`₹${money2(data?.todaysRevenue || 0)}`}
+                // subtitle={`Yesterday ₹${money2(data?.yesterdaysRevenue || 0)}`}
                 // bgColor="bg-brand-secondary/16"
                 />
                 <Card
                     title="Average Shipping Cost"
-                    value={`₹${data?.avgShippingCost || 0}`}
+                    value={`₹${money2(data?.avgShippingCost || 0)}`}
                 // subtitle="Last 30 days"
                 />
                 <Card

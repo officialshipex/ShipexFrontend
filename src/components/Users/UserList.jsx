@@ -12,6 +12,7 @@ import { MdEdit } from "react-icons/md";
 import UserFilterPanel from "../../Common/UserFilterPanel";
 import UserFilter from "../../filter/UserFilter";
 import PaginationFooter from "../../Common/PaginationFooter";
+import { money2 } from "../../utils/money";
 
 // Auto-positioning popup trigger — opens above or below based on available space
 const SmartPopupTrigger = ({ label, children, isOpen, onToggle }) => {
@@ -443,7 +444,7 @@ const UserList2 = ({ isSidebarAdmin }) => {
                           onClick={() => { setSelectedRateCardValue(e.rateCard); setSelectedItemId(e.id); setSelectedItemName(e.fullname); setShowPopup(true); }}
                         />
                         <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${e.walletAmount < 0 ? "text-red-500 bg-red-50" : "text-brand-primary bg-brand-secondary/8"}`}>
-                          ₹{e.walletAmount?.toFixed(0) || "0"}
+                          ₹{money2(e.walletAmount)}
                         </span>
                       </div>
                     </div>

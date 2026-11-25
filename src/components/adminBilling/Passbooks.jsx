@@ -19,6 +19,7 @@ import { FiCopy, FiCheck, FiBookOpen } from "react-icons/fi";
 
 import PassbookFilterPanel from "../../Common/PassbookFilterPanel";
 import B2BBreakupLines from "../Billings/B2BBreakupLines";
+import { money2 } from "../../utils/money";
 
 const Passbooks = () => {
   const [transactions, setTransactions] = useState([]);
@@ -186,7 +187,7 @@ const Passbooks = () => {
   const handleReverse = async (transaction) => {
     if (
       window.confirm(
-        `Are you sure you want to reverse ₹${transaction.amount} for ${transaction.user.name}?`
+        `Are you sure you want to reverse ₹${money2(transaction.amount)} for ${transaction.user.name}?`
       )
     ) {
       try {

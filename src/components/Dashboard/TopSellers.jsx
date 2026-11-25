@@ -2,11 +2,12 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 import Loader from "../../Loader";
+import { money2 } from "../../utils/money";
 
 const headers = ["Total Orders", "Revenue", "Delivery Rate", "COD Amount", "RTO Rate", "Wallet Balance"];
 
 const fmtN = (n) => Number(n || 0).toLocaleString("en-IN");
-const fmt = (n) => `₹${Number(n || 0).toLocaleString("en-IN")}`;
+const fmt = (n) => `₹${money2(Number(n || 0))}`;
 const initials = (name = "") =>
   name.split(" ").filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase() || "?";
 

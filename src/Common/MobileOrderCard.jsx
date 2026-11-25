@@ -7,6 +7,7 @@ import { FiCopy, FiCheck } from "react-icons/fi";
 
 import { handleTrackingByAwb } from "../Common/orderActions";
 import { orderReferenceOf } from "./customerOrderId";
+import { money2 } from "../utils/money";
 const MobileOrderCard = ({
     order,
     index,
@@ -399,8 +400,8 @@ const MobileOrderCard = ({
                                             <td>{p.name}</td>
                                             <td>{p.sku}</td>
                                             <td>{p.quantity}</td>
-                                            <td>₹{p.unitPrice}</td>
-                                            <td>₹{p.quantity * p.unitPrice}</td>
+                                            <td>₹{money2(p.unitPrice)}</td>
+                                            <td>₹{money2(p.quantity * p.unitPrice)}</td>
                                         </tr>
                                     ))}
                                 </tbody>
@@ -416,7 +417,7 @@ const MobileOrderCard = ({
                 <span className="text-gray-500">|</span>
 
                 <p>
-                    ₹ {order?.paymentDetails?.amount || "N/N"}
+                    ₹ {money2(order?.paymentDetails?.amount || "N/N")}
                 </p>
 
             </div >

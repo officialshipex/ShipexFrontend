@@ -2,6 +2,7 @@ import React from "react";
 import dayjs from "dayjs";
 import { FileText } from "lucide-react";
 import { orderReferenceOf } from "../../Common/customerOrderId";
+import { money2 } from "../../utils/money";
 
 
 const OrderDetailsSection = ({ order }) => {
@@ -44,7 +45,7 @@ const OrderDetailsSection = ({ order }) => {
 
                 <div>
                     <span className="font-[600] text-gray-700">Payment Amount:</span>
-                    <p className="text-gray-500">₹{order.paymentDetails?.amount || 0}</p>
+                    <p className="text-gray-500">₹{money2(order.paymentDetails?.amount || 0)}</p>
                 </div>
 
                 <div>

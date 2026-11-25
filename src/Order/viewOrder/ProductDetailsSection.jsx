@@ -3,6 +3,7 @@ import { FaEdit } from "react-icons/fa";
 import { FiTrash2 } from "react-icons/fi";
 import { Package } from "lucide-react";
 import { ChevronDown } from "lucide-react";
+import { money2 } from "../../utils/money";
 
 
 const ProductDetailsSection = ({ order, onUpdate }) => {
@@ -138,7 +139,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                                     <td className="py-2 px-3">{product.name || "0"}</td>
                                     <td className="py-2 px-3">{product.hsn || "0"}</td>
                                     <td className="py-2 px-3">{product.quantity || "0"}</td>
-                                    <td className="py-2 px-3">₹ {product.unitPrice || "0"}</td>
+                                    <td className="py-2 px-3">₹ {money2(product.unitPrice || "0")}</td>
                                     <td className="py-2 px-3">{product.sku || "0"}</td>
                                 </tr>
                             ))}
@@ -374,7 +375,7 @@ const ProductDetailsSection = ({ order, onUpdate }) => {
                             {/* Total Display */}
                             <div className="mt-2 px-3 py-2 bg-brand-secondary/16 rounded-lg flex justify-between items-center">
                                 <span className="sm:text-[12px] text-[10px] font-[600] text-gray-700">Total Amount</span>
-                                <span className="sm:text-[12px] text-[10px] font-[600] text-brand-primary">₹ {calculateTotal()}</span>
+                                <span className="sm:text-[12px] text-[10px] font-[600] text-brand-primary">₹ {money2(calculateTotal())}</span>
                             </div>
                         </div>
                     </div>

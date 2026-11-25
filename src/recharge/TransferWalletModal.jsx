@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Notification } from "../Notification";
+import { money2 } from "../utils/money";
 
 const MIN_TRANSFER = 1000;
 const inr = (n) => `₹${Number(n || 0).toLocaleString("en-IN", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
@@ -46,7 +47,7 @@ export default function TransferWalletModal({ open, onClose, onSuccess }) {
   const toName = direction === "toCargo" ? "Cargo Wallet" : "B2C Wallet";
   const error =
     value > 0 && value < MIN_TRANSFER
-      ? `Minimum transfer is ₹${MIN_TRANSFER.toLocaleString("en-IN")}`
+      ? `Minimum transfer is ₹${money2(MIN_TRANSFER)}`
       : value > available
         ? `Only ${inr(available)} can be transferred from the ${fromName}`
         : "";
@@ -111,7 +112,7 @@ export default function TransferWalletModal({ open, onClose, onSuccess }) {
               inputMode="numeric"
               value={amount}
               onChange={(e) => setAmount(e.target.value.replace(/\D/g, ""))}
-              placeholder={`Minimum ₹${MIN_TRANSFER.toLocaleString("en-IN")}`}
+              placeholder={`Minimum ₹${money2(MIN_TRANSFER)}`}
               className="w-full rounded-lg border border-gray-300 px-3 py-1.5 text-[12px] focus:outline-none focus:border-brand-primary"
             />
             <p className="text-[10px] text-gray-500 mt-1">Available to transfer: {inr(available)}</p>

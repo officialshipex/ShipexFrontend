@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { FiInfo } from "react-icons/fi";
+import { money2 } from "../../utils/money";
 
 /* Overhead charges of a B2B rate card — same sections, rows and rules as QuickPost's Cargo rate card
    (src/pages/cargo/CargoRateCard.tsx). The backend engine (B2B/utils/b2bRateEngine.js) reads these keys.
@@ -53,7 +54,7 @@ export const pkgSlabProblem = (overheads = {}) => {
 const viewPkgSlabs = (slabs) => {
   const charged = slabs.filter((s) => n(s.perKg) > 0 || n(s.min) > 0);
   if (!charged.length) return "Not charged";
-  return charged.map((s) => `${s.from}–${n(s.to) > 0 ? `${s.to} kg` : "above"}: ₹${n(s.perKg)}/kg (min ₹${n(s.min)})`).join(" · ");
+  return charged.map((s) => `${s.from}–${n(s.to) > 0 ? `${s.to} kg` : "above"}: ₹${money2(n(s.perKg))}/kg (min ₹${money2(n(s.min))})`).join(" · ");
 };
 
 // Owner-risk bands (Gati): up to ₹10K, up to ₹25K, up to ₹50L, above ₹50L
@@ -116,10 +117,10 @@ const TYPE_MATTERS = new Set(
 const isSetField = (f) => Boolean(f) && (n(f.value) > 0 || n(f.min) > 0);
 export const typeWords = (f = {}) => {
   const v = f.value ?? 0;
-  const m = n(f.min) > 0 ? ` (min ₹${f.min})` : "";
+  const m = n(f.min) > 0 ? ` (min ₹${money2(f.min)})` : "";
   if (f.type === "percentage") return `${v}%${m}`;
-  if (f.type === "perKg") return `₹${v} per kg${m}`;
-  return `₹${v} flat${m}`;
+  if (f.type === "perKg") return `₹${money2(v)} per kg${m}`;
+  return `₹${money2(v)} flat${m}`;
 };
 /* ODA by the courier's distance, in admin-set bands: each band = "above From km" up to the next band's From (the first
    band also covers 0 km and an unknown distance); charged max(kg × ₹/kg, minimum). A band at 0 / 0 falls back to the
@@ -168,7 +169,7 @@ const odaRangeOf = (bands, i) => {
 const viewOdaBands = (bands) => {
   const charged = bands.map((b, i) => ({ b, i })).filter(({ b }) => n(b.perKg) > 0 || n(b.min) > 0);
   if (!charged.length) return "Not charged";
-  return charged.map(({ b, i }) => `${odaRangeOf(bands, i)}: ₹${n(b.perKg)}/kg (min ₹${n(b.min)})`).join(" · ");
+  return charged.map(({ b, i }) => `${odaRangeOf(bands, i)}: ₹${money2(n(b.perKg))}/kg (min ₹${money2(n(b.min))})`).join(" · ");
 };
 
 // { key: field as saved } for charges saved with another type than their row's, while set
@@ -217,14 +218,14 @@ export const withMinFreightMoved = (overheads = {}) => {
 const viewOverhead = (row, f = {}) => {
   const v = f.value ?? 0;
   const m = Number(f.min ?? 0);
-  const minTxt = m > 0 ? ` (min ₹${m})` : "";
+  const minTxt = m > 0 ? ` (min ₹${money2(m)})` : "";
   switch (row.kind) {
     case "perKgMin":
-      return `₹${v}/kg${minTxt}`;
+      return `₹${money2(v)}/kg${minTxt}`;
     case "pctMin":
-      return `${v}% OR Min ₹${m} (whichever is higher)`;
+      return `${v}% OR Min ₹${money2(m)} (whichever is higher)`;
     case "flat":
-      return `₹${v}`;
+      return `₹${money2(v)}`;
     case "pct":
       return `${v}%`;
     case "kg":
@@ -238,7 +239,7 @@ const viewSlabs = (slabs = []) => {
   const set = slabs.filter((s) => Number(s?.value || 0) > 0 || Number(s?.min || 0) > 0);
   if (!set.length) return "Not set — ROV Owner Risk row applies";
   return set
-    .map((s) => `${Number(s.upto) > 0 ? `≤ ₹${Number(s.upto).toLocaleString("en-IN")}` : "Above"}: ${s.value}% (min ₹${s.min})`)
+    .map((s) => `${Number(s.upto) > 0 ? `≤ ₹${money2(Number(s.upto))}` : "Above"}: ${s.value}% (min ₹${money2(s.min)})`)
     .join(" · ");
 };
 
@@ -418,7 +419,7 @@ export default function OverheadCharges({ data, mode = "view", onChange, savedAs
     if (row.key === "minimumBilling" && Number(data.minimumFreight?.value || 0) > 0) {
       return (
         <span className="text-[10.5px] text-amber-700 leading-snug mt-0.5">
-          This card still has the old Minimum Freight ₹{data.minimumFreight.value}. It applies until you save; saving keeps only Min. LR Billing.
+          This card still has the old Minimum Freight ₹{money2(data.minimumFreight.value)}. It applies until you save; saving keeps only Min. LR Billing.
         </span>
       );
     }

@@ -13,6 +13,7 @@ import {
 import { ResponsiveChoropleth } from "@nivo/geo";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { money2 } from "../utils/money";
 
 const DashboardCards = ({ }) => {
   const [outerRadius, setOuterRadius] = useState(60);
@@ -154,12 +155,12 @@ const DashboardCards = ({ }) => {
     },
     {
       title: "Revenue",
-      value: `₹${dashdata?.totalRevenue ?? 0}`,
+      value: `₹${money2(dashdata?.totalRevenue ?? 0)}`,
       icon: <FaRupeeSign className="text-sm text-brand-primary" />,
     },
     {
       title: "Avg Shipping",
-      value: `₹${dashdata?.averageShipping ?? 0}`,
+      value: `₹${money2(dashdata?.averageShipping ?? 0)}`,
       icon: <FaBox className="text-sm text-brand-primary" />,
     },
   ];
@@ -220,10 +221,10 @@ const DashboardCards = ({ }) => {
 
 
   const revenueData = [
-    { label: "Last 90 Days", value: `₹${dashdata.revenueStats?.last90Days}` },
-    { label: "This Week", value: `₹${dashdata.revenueStats?.thisWeek}` },
-    { label: "This Month", value: `₹${dashdata.revenueStats?.thisMonth}` },
-    { label: "This Quarter", value: `₹${dashdata.revenueStats?.thisQuarter}` },
+    { label: "Last 90 Days", value: `₹${money2(dashdata.revenueStats?.last90Days)}` },
+    { label: "This Week", value: `₹${money2(dashdata.revenueStats?.thisWeek)}` },
+    { label: "This Month", value: `₹${money2(dashdata.revenueStats?.thisMonth)}` },
+    { label: "This Quarter", value: `₹${money2(dashdata.revenueStats?.thisQuarter)}` },
   ];
 
   return (

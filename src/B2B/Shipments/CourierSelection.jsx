@@ -19,6 +19,7 @@ import { FaTruck, FaPlane, FaStar, FaInfoCircle } from "react-icons/fa";
 import Cookies from "js-cookie";
 import { b2bBreakupRows, b2bIfApplicable } from "../../utils/b2bPriceBreakup";
 import { chargeableWeightKg, roundKg } from "../../utils/serviceWeight";
+import { money2 } from "../../utils/money";
 
 const isTouchDevice = () =>
   window.matchMedia("(pointer: coarse)").matches;
@@ -251,7 +252,7 @@ const CarrierSelection = () => {
         <div className="flex flex-col items-center gap-1 flex-1 min-w-[110px] px-4">
           <span className="text-gray-500 text-[12px] sm:text-[14px]">Order Value</span>
           <span className="font-[600] text-gray-700 text-[12px] sm:text-[14px]">
-            ₹{orderDetails?.paymentDetails?.amount || ""}
+            ₹{money2(orderDetails?.paymentDetails?.amount || "")}
           </span>
           <span className="text-gray-500 text-[12px] sm:text-[14px]">
             {orderDetails?.paymentDetails?.method}
@@ -293,7 +294,7 @@ const CarrierSelection = () => {
             <div className="mt-7 flex flex-col items-center">
               <span className="font-[600] text-[12px] text-gray-700">{orderDetails?.paymentDetails?.method?.toUpperCase()}</span>
               <span className="text-gray-500 font-[600] text-[12px] mt-0.5">Order Value</span>
-              <span className="text-[12px] font-[600] text-gray-700 mt-0.5 mb-1">₹{Number(orderDetails?.paymentDetails?.amount || 0).toFixed(1)}</span>
+              <span className="text-[12px] font-[600] text-gray-700 mt-0.5 mb-1">₹{money2(orderDetails?.paymentDetails?.amount || 0)}</span>
             </div>
           </div>
           {/* WEIGHT COLUMN */}
@@ -387,7 +388,7 @@ const CarrierSelection = () => {
 
                       <div className="flex justify-between">
                         <span className="text-gray-500">Charges</span>
-                        <div className="text-gray-700">₹{item.working.grand_total}
+                        <div className="text-gray-700">₹{money2(item.working.grand_total)}
                           <FaInfoCircle
                             className="rate-info-icon inline ml-1 mb-0.5 text-brand-primary cursor-pointer"
                             onMouseEnter={(e) => showRatePopup(e, item.working)}
@@ -472,7 +473,7 @@ const CarrierSelection = () => {
                           {(item?.working?.billable_weight || 0)} kg
                         </td>
                         <td className="text-center font-[600] text-gray-700 text-[12px] relative">
-                          ₹{item.working.grand_total}
+                          ₹{money2(item.working.grand_total)}
                           <FaInfoCircle
                             className="rate-info-icon inline ml-1 mb-0.5 text-brand-primary cursor-pointer"
                             onMouseEnter={(e) => showRatePopup(e, item.working)}

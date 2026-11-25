@@ -12,6 +12,7 @@ import InvoicesFilterPanel from "../../Common/InvoicesFilterPanel";
 import dayjs from "dayjs";
 import { FiCopy, FiCheck } from "react-icons/fi";
 import { FaBars } from "react-icons/fa";
+import { money2 } from "../../utils/money";
 
 const MONTHS = [
   { label: "January", value: "01" },
@@ -344,7 +345,7 @@ const Invoices = () => {
 
                     </td>
                     <td className="px-3 py-2">
-                      <span className="font-medium text-gray-700">₹{inv.amount}</span>
+                      <span className="font-medium text-gray-700">₹{money2(inv.amount)}</span>
                     </td>
                     <td className="px-3 py-2">
                       <p className="text-gray-700 whitespace-nowrap">{dayjs(inv.invoiceDate || inv.createdAt).format("DD MMM YYYY")}</p>
@@ -467,7 +468,7 @@ const Invoices = () => {
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="font-bold text-brand-primary text-[11px]">₹{inv.amount}</div>
+                      <div className="font-bold text-brand-primary text-[11px]">₹{money2(inv.amount)}</div>
                       <span className={`px-2 py-0.5 rounded text-[10px] inline-block mt-0.5 ${getStatusColor(inv.status)}`}>
                         {inv.status}
                       </span>

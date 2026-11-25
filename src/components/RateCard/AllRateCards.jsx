@@ -12,6 +12,7 @@ import { FiChevronDown, FiArrowLeft, FiSearch } from "react-icons/fi";
 import { getCarrierLogo } from "../../Common/getCarrierLogo";
 import NoDataFound from "../../Common/NoDataFound";
 import { Notification } from "../../Notification";
+import { money2 } from "../../utils/money";
 
 
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
@@ -336,12 +337,12 @@ const RateCard = ({ isSidebarAdmin }) => {
                       <td className="px-3 py-2">
                         <span className="text-gray-500">Basic:</span> <span>{card.weightPriceBasic[0]?.weight}gm</span>
                       </td>
-                      <td className="px-3 py-2 font-medium">₹{card.weightPriceBasic[0]?.zoneA || "-"}</td>
-                      <td className="px-3 py-2 font-medium">₹{card.weightPriceBasic[0]?.zoneB || "-"}</td>
-                      <td className="px-3 py-2 font-medium">₹{card.weightPriceBasic[0]?.zoneC || "-"}</td>
-                      <td className="px-3 py-2 font-medium">₹{card.weightPriceBasic[0]?.zoneD || "-"}</td>
-                      <td className="px-3 py-2 font-medium">₹{card.weightPriceBasic[0]?.zoneE || "-"}</td>
-                      <td className="px-3 py-2 text-gray-700" rowSpan={2}>₹{card.codCharge}</td>
+                      <td className="px-3 py-2 font-medium">₹{money2(card.weightPriceBasic[0]?.zoneA || "-")}</td>
+                      <td className="px-3 py-2 font-medium">₹{money2(card.weightPriceBasic[0]?.zoneB || "-")}</td>
+                      <td className="px-3 py-2 font-medium">₹{money2(card.weightPriceBasic[0]?.zoneC || "-")}</td>
+                      <td className="px-3 py-2 font-medium">₹{money2(card.weightPriceBasic[0]?.zoneD || "-")}</td>
+                      <td className="px-3 py-2 font-medium">₹{money2(card.weightPriceBasic[0]?.zoneE || "-")}</td>
+                      <td className="px-3 py-2 text-gray-700" rowSpan={2}>₹{money2(card.codCharge)}</td>
                       <td className="px-3 py-2 text-gray-700" rowSpan={2}>{card.codPercent}%</td>
                       <td className="px-3 py-2" rowSpan={2}>
                         <span className={`px-2 py-0.5 rounded text-[10px] tracking-wider ${card.status === "Active" ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>{card.status}</span>
@@ -371,11 +372,11 @@ const RateCard = ({ isSidebarAdmin }) => {
                       <td className="px-3 py-2 border-t border-gray-50">
                         <span className="text-gray-500">Additional:</span> <span className="">{card.weightPriceAdditional[0]?.weight}gm</span>
                       </td>
-                      <td className="px-3 py-2 border-t border-gray-50">₹{card.weightPriceAdditional[0]?.zoneA || "-"}</td>
-                      <td className="px-3 py-2 border-t border-gray-50">₹{card.weightPriceAdditional[0]?.zoneB || "-"}</td>
-                      <td className="px-3 py-2 border-t border-gray-50">₹{card.weightPriceAdditional[0]?.zoneC || "-"}</td>
-                      <td className="px-3 py-2 border-t border-gray-50">₹{card.weightPriceAdditional[0]?.zoneD || "-"}</td>
-                      <td className="px-3 py-2 border-t border-gray-50">₹{card.weightPriceAdditional[0]?.zoneE || "-"}</td>
+                      <td className="px-3 py-2 border-t border-gray-50">₹{money2(card.weightPriceAdditional[0]?.zoneA || "-")}</td>
+                      <td className="px-3 py-2 border-t border-gray-50">₹{money2(card.weightPriceAdditional[0]?.zoneB || "-")}</td>
+                      <td className="px-3 py-2 border-t border-gray-50">₹{money2(card.weightPriceAdditional[0]?.zoneC || "-")}</td>
+                      <td className="px-3 py-2 border-t border-gray-50">₹{money2(card.weightPriceAdditional[0]?.zoneD || "-")}</td>
+                      <td className="px-3 py-2 border-t border-gray-50">₹{money2(card.weightPriceAdditional[0]?.zoneE || "-")}</td>
                     </tr>
                   </React.Fragment>
                 ))
@@ -443,7 +444,7 @@ const RateCard = ({ isSidebarAdmin }) => {
                   </div>
                   <div className="text-right">
                     <span className="text-gray-700 text-[10px] tracking-wider block">Price (Zone A)</span>
-                    <span className="text-brand-primary font-bold text-[10px]">₹{card.weightPriceBasic[0]?.zoneA || "-"}</span>
+                    <span className="text-brand-primary font-bold text-[10px]">₹{money2(card.weightPriceBasic[0]?.zoneA || "-")}</span>
                   </div>
                 </div>
 
@@ -451,7 +452,7 @@ const RateCard = ({ isSidebarAdmin }) => {
                   <div className="flex gap-5">
                     <div>
                       <span className="text-gray-700 text-[10px] block tracking-tighter">COD Charge</span>
-                      <span className="text-gray-700 font-bold">₹{card.codCharge}</span>
+                      <span className="text-gray-700 font-bold">₹{money2(card.codCharge)}</span>
                     </div>
                     <div>
                       <span className="text-gray-700 text-[10px] block tracking-tighter">COD Percent</span>

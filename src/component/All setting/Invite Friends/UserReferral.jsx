@@ -12,6 +12,7 @@ import NoDataFound from "../../../Common/NoDataFound";
 import PaginationFooter from "../../../Common/PaginationFooter";
 import { useBranding } from "../../../context/BrandingContext";
 import { SlabBadge } from "./ReferralProgramModals";
+import { money2 } from "../../../utils/money";
 
 const Referral = () => {
   const { companyDisplayName } = useBranding();
@@ -216,7 +217,7 @@ const Referral = () => {
   const bonusRule = program?.joiningBonus;
   const fmtDay = (d) => (d ? dayjs(d).format("DD MMM YYYY") : "-");
   const BONUS_LABEL = {
-    credited: (f) => ({ text: `₹${Number(f.bonusAmount || 0).toFixed(0)} credited`, cls: "text-green-700" }),
+    credited: (f) => ({ text: `₹${money2(f.bonusAmount || 0)} credited`, cls: "text-green-700" }),
     processing: () => ({ text: "Being credited", cls: "text-brand-primary" }),
     pending: (f) => ({ text: `Waiting till ${fmtDay(f.bonusDeadline)}`, cls: "text-amber-600" }),
     expired: () => ({ text: "Time limit passed", cls: "text-gray-400" }),
@@ -239,8 +240,8 @@ const Referral = () => {
         <ul className="mt-1.5 space-y-0.5 text-[11px] text-gray-600 max-w-3xl list-disc pl-4">
           {bonusRule?.enabled && Number(bonusRule.amount) > 0 && (
             <li>
-              <span className="font-bold text-brand-primary">₹{Number(bonusRule.amount).toFixed(0)} joining bonus</span> for every friend who
-              {bonusRule.requireKyc ? " completes KYC and" : ""} makes a first recharge of at least ₹{Number(bonusRule.minFirstRecharge).toFixed(0)} within {bonusRule.withinDays} days of signing up.
+              <span className="font-bold text-brand-primary">₹{money2(bonusRule.amount)} joining bonus</span> for every friend who
+              {bonusRule.requireKyc ? " completes KYC and" : ""} makes a first recharge of at least ₹{money2(bonusRule.minFirstRecharge)} within {bonusRule.withinDays} days of signing up.
             </li>
           )}
           {plan && (
@@ -364,7 +365,7 @@ const Referral = () => {
                 <p className="text-[11px] font-bold text-gray-500">This month so far</p>
                 <p className="text-[18px] font-bold text-gray-700">₹{Number(currentMonth.amount || 0).toFixed(2)}</p>
                 <p className="text-[11px] text-gray-500">
-                  {currentMonth.shipments} in-transit shipments × ₹{currentMonth.ratePerShipment}
+                  {currentMonth.shipments} in-transit shipments × ₹{money2(currentMonth.ratePerShipment)}
                 </p>
               </div>
               <SlabBadge badge={currentMonth.badge} color={currentMonth.badgeColor} />
@@ -373,7 +374,7 @@ const Referral = () => {
               <div className="flex justify-between text-[11px]">
                 <span className="font-[600] text-gray-600">
                   {currentMonth.nextSlab
-                    ? `Next: ₹${currentMonth.nextSlab.ratePerShipment} per shipment${currentMonth.nextSlab.badge ? ` (${currentMonth.nextSlab.badge})` : ""} at ${currentMonth.nextSlab.minShipments} shipments`
+                    ? `Next: ₹${money2(currentMonth.nextSlab.ratePerShipment)} per shipment${currentMonth.nextSlab.badge ? ` (${currentMonth.nextSlab.badge})` : ""} at ${currentMonth.nextSlab.minShipments} shipments`
                     : "Top slab reached"}
                 </span>
                 {currentMonth.nextSlab && <span className="text-gray-400">{currentMonth.nextSlab.needed} to go</span>}
@@ -398,7 +399,7 @@ const Referral = () => {
                         {Number(s.minShipments).toLocaleString("en-IN")}
                         {s.maxShipments ? ` - ${Number(s.maxShipments).toLocaleString("en-IN")}` : " and above"} shipments
                       </td>
-                      <td className="py-1.5 px-3 font-bold text-gray-700">₹{s.ratePerShipment} / shipment</td>
+                      <td className="py-1.5 px-3 font-bold text-gray-700">₹{money2(s.ratePerShipment)} / shipment</td>
                       <td className="py-1.5 px-3 text-right">
                         <SlabBadge badge={s.badge} color={s.color} />
                         {on && <span className="ml-1 text-[10px] font-bold text-brand-primary">You're here</span>}
@@ -522,11 +523,11 @@ const Referral = () => {
                     </div>
                     <div className="bg-gray-50/50 p-1.5 rounded border border-gray-100/50">
                       <p className="text-[9px] text-gray-400 font-bold uppercase tracking-tight">Freight</p>
-                      <p className="text-[11px] font-bold text-gray-700">₹{Math.round(row.shippingCharges || 0)}</p>
+                      <p className="text-[11px] font-bold text-gray-700">₹{money2(row.shippingCharges || 0)}</p>
                     </div>
                     <div className="bg-brand-secondary/30 p-1.5 rounded border border-brand-secondary/20">
                       <p className="text-[9px] text-gray-400 font-bold uppercase tracking-tight">Reward</p>
-                      <p className="text-[11px] font-bold text-brand-primary">₹{Math.round(row.commission || 0)}</p>
+                      <p className="text-[11px] font-bold text-brand-primary">₹{money2(row.commission || 0)}</p>
                     </div>
                   </div>
 

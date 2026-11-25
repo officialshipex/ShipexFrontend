@@ -6,6 +6,7 @@ import {getCarrierLogo} from "../../../Common/getCarrierLogo"
 import { b2bBreakupRows, b2bIfApplicable } from "../../../utils/b2bPriceBreakup";
 
 import { useState, useEffect } from "react";
+import { money2 } from "../../../utils/money";
 
 const isTouchDevice = () => window.matchMedia("(pointer: coarse)").matches;
 
@@ -141,12 +142,12 @@ const CourierSelectionRate = ({ plan, loading, hasFetched }) => {
 
                         {item.orderType === "B2C" && (
                           <td className="text-center px-3 py-2 text-gray-700 font-[600]">
-                            ₹{item.forward?.finalCharges ?? "-"}
+                            ₹{money2(item.forward?.finalCharges ?? "-")}
                           </td>
                         )}
                         {item.orderType === "B2B" && (
                           <td className="text-center font-[600] px-3 py-2 text-gray-500">
-                            ₹{item.working.grand_total}
+                            ₹{money2(item.working.grand_total)}
                             <FaInfoCircle
                               className="rate-info-icon inline ml-1 mb-0.5 text-brand-primary cursor-pointer"
                               onMouseEnter={(e) =>
@@ -239,7 +240,7 @@ const CourierSelectionRate = ({ plan, loading, hasFetched }) => {
                     <div className="flex justify-between font-[600] text-[10px] text-gray-500">
                       <span>Charges:</span>
                       <span className="font-[600] text-gray-500">
-                        ₹{item.forward?.finalCharges ?? "-"}
+                        ₹{money2(item.forward?.finalCharges ?? "-")}
                       </span>
                     </div>
                   )}
@@ -248,7 +249,7 @@ const CourierSelectionRate = ({ plan, loading, hasFetched }) => {
                     <div className="flex justify-between font-[600] text-[10px] text-gray-500">
                       <span>Charges:</span>
                       <div className="text-gray-700">
-                        ₹{item.working.grand_total}
+                        ₹{money2(item.working.grand_total)}
                         <FaInfoCircle
                           className="rate-info-icon inline ml-1 mb-0.5 text-brand-primary cursor-pointer"
                           onMouseEnter={(e) => showRatePopup(e, item.working)}

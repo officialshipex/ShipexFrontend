@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { FaRupeeSign, FaArrowDown, FaArrowUp, FaExchangeAlt } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import {Notification} from "../../Notification"
+import { money2 } from "../../utils/money";
 
 const Wallets = ({
   showFilters,
@@ -245,8 +246,8 @@ const navigate=useNavigate()
                     }`}
                 >
                   {row.category.toLowerCase() === "debit"
-                    ? `-₹${row.amount}`
-                    : `+₹${row.amount}`}
+                    ? `-₹${money2(row.amount)}`
+                    : `+₹${money2(row.amount)}`}
                 </div>
                 <div className="flex items-center justify-center">
                   ₹{Number(row.balanceAfterTransaction).toFixed(2)}

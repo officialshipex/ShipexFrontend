@@ -1,5 +1,6 @@
 import React from "react";
 import { FiTrendingUp, FiTrendingDown } from "react-icons/fi";
+import { money2 } from "../../utils/money";
 
 const formatGrowth = (value) => {
     const isPositive = value >= 0;
@@ -18,21 +19,21 @@ const RevenueBreakdown = ({ valueBreakdown = {} }) => (
         <div className="flex justify-between">
             <span>This week (vs last week)</span>
             <span className="flex gap-1 items-center">
-                ₹{valueBreakdown?.week?.orderValue || 0}
+                ₹{money2(valueBreakdown?.week?.orderValue || 0)}
                 {formatGrowth(valueBreakdown?.week?.valueGrowth || 0)}
             </span>
         </div>
         <div className="flex justify-between">
             <span>This month (vs last month)</span>
             <span className="flex gap-1 items-center">
-                ₹{valueBreakdown?.month?.orderValue || 0}
+                ₹{money2(valueBreakdown?.month?.orderValue || 0)}
                 {formatGrowth(valueBreakdown?.month?.valueGrowth || 0)}
             </span>
         </div>
         <div className="flex justify-between">
             <span>This quarter (vs last quarter)</span>
             <span className="flex gap-1 items-center">
-                ₹{valueBreakdown?.quarter?.orderValue || 0}
+                ₹{money2(valueBreakdown?.quarter?.orderValue || 0)}
                 {formatGrowth(valueBreakdown?.quarter?.valueGrowth || 0)}
             </span>
         </div>

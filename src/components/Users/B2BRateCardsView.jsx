@@ -4,6 +4,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
+import { money2 } from "../../utils/money";
 
 const B2BRateCardsView = ({ userId, reloadKey = 0 }) => {
   const [cards, setCards] = useState([]);
@@ -77,7 +78,7 @@ const B2BRateCardsView = ({ userId, reloadKey = 0 }) => {
                         const price = card.zones.prices?.[from]?.[to];
                         return (
                           <td key={to} className="px-2 py-1.5 text-[10px] sm:text-[12px] text-gray-600 whitespace-nowrap">
-                            {price != null ? `₹${price}` : "—"}
+                            {price != null ? `₹${money2(price)}` : "—"}
                           </td>
                         );
                       })}

@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { CheckCircle, Clock, XCircle } from "lucide-react";
 import Cookies from "js-cookie";
 import { CodAdjustmentNotes } from "./CodAdjustments";
+import { money2 } from "../../utils/money";
 const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
 const SellerRemittanceDatas = ({ remittanceId }) => {
@@ -135,7 +136,7 @@ const SellerRemittanceDatas = ({ remittanceId }) => {
           </h2>
 
           <p className="text-[12px] sm:text-[14px] font-[600] text-gray-700 mt-2">
-            Total Amount: ₹{totalAmount}
+            Total Amount: ₹{money2(totalAmount)}
           </p>
 
           {remittance.status === "Pending" && (remittance.reason !== "N/A" || remittance.reason === "") && (
@@ -199,7 +200,7 @@ const SellerRemittanceDatas = ({ remittanceId }) => {
 
                   {/* Order Amount */}
                   <td className="px-3 py-2 text-gray-500">
-                    ₹{item.paymentDetails?.amount || "0.00"}
+                    ₹{money2(item.paymentDetails?.amount || "0.00")}
                   </td>
 
                   <td className="px-3 py-2 text-gray-500 whitespace-nowrap">

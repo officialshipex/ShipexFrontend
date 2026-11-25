@@ -1,6 +1,7 @@
 import React from "react";
 import { X, Mail, Phone, User, Users, Calendar, Truck, Wallet, FileText } from "lucide-react";
 import dayjs from "dayjs";
+import { money2 } from "../../../utils/money";
 
 const ReferralDetailsModal = ({ referral, onClose }) => {
   if (!referral) return null;
@@ -64,11 +65,11 @@ const ReferralDetailsModal = ({ referral, onClose }) => {
                 </div>
                 <div className="text-center p-2 bg-white rounded-lg border border-brand-primary/16">
                   <p className="text-[9px] sm:text-[10px] text-gray-500 font-bold">Freight</p>
-                  <p className="text-[10px] sm:text-[12px] font-bold text-brand-primary">₹{Math.round(referral.totalShipping || 0)}</p>
+                  <p className="text-[10px] sm:text-[12px] font-bold text-brand-primary">₹{money2(referral.totalShipping || 0)}</p>
                 </div>
                 <div className="text-center p-2 bg-white rounded-lg border border-brand-primary/16">
                   <p className="text-[9px] sm:text-[10px] text-gray-500 font-bold">Reward</p>
-                  <p className="text-[10px] sm:text-[12px] font-bold text-brand-primary">₹{Math.round(referral.totalCommission || 0)}</p>
+                  <p className="text-[10px] sm:text-[12px] font-bold text-brand-primary">₹{money2(referral.totalCommission || 0)}</p>
                 </div>
               </div>
             </div>

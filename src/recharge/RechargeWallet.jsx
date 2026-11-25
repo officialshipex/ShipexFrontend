@@ -7,6 +7,7 @@ import { deleteSession } from '../utils/session';
 import { Notification } from "../Notification";
 import { FiCreditCard, FiArrowLeft, FiActivity } from "react-icons/fi";
 import { useBranding } from "../context/BrandingContext";
+import { money2 } from "../utils/money";
 
 const RechargeWallet = () => {
   // Razorpay's checkout renders in its own overlay/iframe and reads this as a real color
@@ -74,7 +75,7 @@ const RechargeWallet = () => {
   const reportCashfree = (check) => {
     if (check?.status === "credited" || check?.status === "already_credited") {
       const added = Number(check.amount) || 0;
-      Notification(`₹${added.toLocaleString("en-IN")} added to your wallet.`, "success");
+      Notification(`₹${money2(added)} added to your wallet.`, "success");
       if (typeof check.balance === "number") setBalance(check.balance);
       else setBalance((b) => (b || 0) + added);
     } else if (check?.status === "pending") {

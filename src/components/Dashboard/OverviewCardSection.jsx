@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Cookies from "js-cookie";
+import { money2 } from "../../utils/money";
 
 const OverviewCardSection = ({ selectedUserId, selectedDateRange }) => {
     const [dashdata, setDashData] = useState({
@@ -56,10 +57,10 @@ const OverviewCardSection = ({ selectedUserId, selectedDateRange }) => {
     ];
 
     const revenueData = [
-        { label: 'Last 90 Days', value: `₹${dashdata.orderValueStats?.last90Days || 0}` },
-        { label: 'This Week', value: `₹${dashdata.orderValueStats?.thisWeek || 0}` },
-        { label: 'This Month', value: `₹${dashdata.orderValueStats?.thisMonth || 0}` },
-        { label: 'This Quarter', value: `₹${dashdata.orderValueStats?.thisQuarter || 0}` },
+        { label: 'Last 90 Days', value: `₹${money2(dashdata.orderValueStats?.last90Days || 0)}` },
+        { label: 'This Week', value: `₹${money2(dashdata.orderValueStats?.thisWeek || 0)}` },
+        { label: 'This Month', value: `₹${money2(dashdata.orderValueStats?.thisMonth || 0)}` },
+        { label: 'This Quarter', value: `₹${money2(dashdata.orderValueStats?.thisQuarter || 0)}` },
     ];
 
     const weightSplitData = dashdata.weightSplit || [];

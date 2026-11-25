@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { FiBox, FiChevronDown, FiTrash2 } from "react-icons/fi";
+import { money2 } from "../utils/money";
 
 const PackageDetails = ({
   deadWeight,
@@ -302,7 +303,7 @@ const PackageDetails = ({
 
           <div className="bg-brand-secondary/15 border border-brand-secondary/30 px-3 py-2 rounded-lg mb-4 flex justify-between items-center">
             <p className="text-[12px] font-[600] text-gray-700">Total Order Value</p>
-            <p className="text-[12px] font-[600] text-brand-secondary">₹{totalPrice}</p>
+            <p className="text-[12px] font-[600] text-brand-secondary">₹{money2(totalPrice)}</p>
           </div>
         </>
       )}
@@ -406,7 +407,7 @@ const PackageDetails = ({
 
           <div className="bg-brand-secondary/15 border border-brand-secondary/30 px-4 py-2 rounded-lg mb-4 flex justify-between items-center">
             <p className="text-[12px] font-[600] text-gray-700">Total Order Value</p>
-            <p className="text-[12px] font-[600] text-brand-secondary">₹{totalPrice}</p>
+            <p className="text-[12px] font-[600] text-brand-secondary">₹{money2(totalPrice)}</p>
           </div>
         </>
       )}
