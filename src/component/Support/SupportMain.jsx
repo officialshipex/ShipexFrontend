@@ -48,15 +48,18 @@ const SupportPage = ({ isSidebarAdmin }) => {
               `${REACT_APP_BACKEND_URL}/staffRole/verify`,
               { headers: { Authorization: `Bearer ${token}` } }
             );
+            // /staffRole/verify answers 200 for EVERY login (it also returns the wallet balances); only a real
+            // employee comes back with an `employee` record. Treating any success as "employee" made every seller
+            // an employee with no rights, so "Create Ticket" showed "Access Denied" for all users of all companies.
+            const employee = empRes.data?.employee;
+            if (!employee) throw new Error("not an employee");
             setIsEmployee(true);
-            const employee = empRes.data.employee;
-            const canCreate =
-              !!employee?.accessRights?.support?.["Create Ticket"]?.view;
-            const canFeedbackView =
-              !!employee?.accessRights?.support?.["Feedbacks"]?.view;
-            const canManageTickets =
-              !!employee?.accessRights?.support?.["Manage ticket"]?.view ||
-              !!employee?.accessRights?.support?.["Manage Ticket"]?.view;
+            // per item (this panel's employee form) or per module (QuickPost's form: support.view)
+            const support = employee.accessRights?.support || {};
+            const moduleView = support.view === true;
+            const canCreate = moduleView || !!support["Create Ticket"]?.view;
+            const canFeedbackView = moduleView || !!support["Feedbacks"]?.view;
+            const canManageTickets = !!support["Manage ticket"]?.view || !!support["Manage Ticket"]?.view;
 
             setEmployeeAccess({ canCreate, canFeedbackView, canManageTickets });
             setShowEmployeeAuthModal(!canCreate && !canFeedbackView);
