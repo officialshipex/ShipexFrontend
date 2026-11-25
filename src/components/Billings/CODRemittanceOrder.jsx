@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
-import { ChevronDown, Wallet, Banknote, Minus, Send, Filter, X, Download, Search, Upload, Clock, CheckCircle, FileSpreadsheet } from "lucide-react";
+import { ChevronDown, Wallet, Banknote, Minus, Send, Filter, X, Download, Search, Upload, Clock, CheckCircle, FileSpreadsheet, XCircle } from "lucide-react";
 import dayjs from "dayjs";
 import ThreeDotLoader from "../../Loader";
 import Cookies from "js-cookie";
@@ -311,6 +311,32 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
     }
   };
 
+  // Cancel Bank Export — only for a bank file that was NOT sent to the bank: its remittances can then be paid again
+  const handleCancelBankExport = async () => {
+    if (selectedRemittanceIds.length === 0) {
+      Notification("Please select at least one remittance in the table first", "warning");
+      return;
+    }
+    const sure = window.confirm(
+      `Cancel the bank export of ${selectedRemittanceIds.length} remittance(s)?
+
+Only do this if the bank file was NOT sent to the bank. They can then be paid again (Transfer COD or a new bank file). Remittances the bank already paid are not touched.`
+    );
+    if (!sure) return;
+    try {
+      const token = Cookies.get("session");
+      const res = await axios.post(
+        `${REACT_APP_BACKEND_URL}/cod/cancelBankExport`,
+        { selectedRemittanceIds },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      Notification(res.data?.message || "Bank export cancelled", res.data?.cancelled?.length ? "success" : "info");
+      setRefresh(prev => !prev);
+    } catch (error) {
+      Notification(error?.response?.data?.message || "Failed to cancel the bank export", "error");
+    }
+  };
+
   // Parse bank response file and send to backend
   const handleBankResponseSubmit = () => {
     if (!selectedBankFile) return;
@@ -343,11 +369,13 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
           { headers: { Authorization: `Bearer ${token}` } }
         );
 
-        const { successCount, skippedCount, errorCount } = response.data;
+        const { successCount = 0, failedCount = 0, skippedCount = 0, errorCount = 0, results = [] } = response.data;
         Notification(
-          `Bank response processed: ${successCount} paid, ${skippedCount} skipped, ${errorCount} errors`,
+          `Bank response processed: ${successCount} paid, ${failedCount} failed at the bank (can be paid again), ${skippedCount} skipped, ${errorCount} errors`,
           successCount > 0 ? "success" : "info"
         );
+        // why rows were not paid (wrong amount, unknown remittance, still pending at the bank ...), first few
+        results.filter(r => r.status === "error" && r.reason).slice(0, 3).forEach(r => Notification(`${r.remittanceId || r.beneficiaryAccount}: ${r.reason}`, "error"));
         setShowBankResponseUpload(false);
         setSelectedBankFile(null);
         setRefresh(prev => !prev);
@@ -458,6 +486,9 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                 <div className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-bold text-gray-700 flex items-center gap-2 border-b border-gray-50 transition-colors" onClick={() => { handleOpenBankResponseUpload(); setBulkActionOpen(false); }}>
                   <Upload className="w-4 h-4 text-orange-500" /> Upload Bank Response
                 </div>
+                <div className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-bold text-gray-700 flex items-center gap-2 border-b border-gray-50 transition-colors" onClick={() => { handleCancelBankExport(); setBulkActionOpen(false); }}>
+                  <XCircle className="w-4 h-4 text-red-500" /> Cancel Bank Export
+                </div>
                 <div className="px-4 py-2 hover:bg-brand-secondary/8 cursor-pointer font-bold text-gray-700 flex items-center gap-2 transition-colors" onClick={() => { handleTransferCOD(); setBulkActionOpen(false); }}>
                   <Send className="w-4 h-4 text-brand-primary" /> Transfer COD
                 </div>
@@ -543,6 +574,12 @@ const CODRemittanceOrder = ({ isSidebarAdmin }) => {
                   className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-orange-50 hover:text-orange-600 flex items-center gap-2.5 transition-colors border-b border-gray-50"
                 >
                   <Upload className="w-3 h-3 text-orange-500" /> Bank Response
+                </button>
+                <button
+                  onClick={() => { handleCancelBankExport(); setBulkActionOpen(false); }}
+                  className="w-full px-4 py-2 text-[12px] font-bold text-gray-700 hover:bg-red-50 hover:text-red-600 flex items-center gap-2.5 transition-colors border-b border-gray-50"
+                >
+                  <XCircle className="w-3 h-3 text-red-500" /> Cancel Bank Export
                 </button>
                 <button
                   onClick={() => { handleTransferCOD(); setBulkActionOpen(false); }}
