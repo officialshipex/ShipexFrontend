@@ -6,6 +6,10 @@ import { Notification } from "../Notification";
 const UserAgreement = () => {
   const [agreements, setAgreements] = useState([]);
   const [loading, setLoading] = useState(true);
+  // The agreement shown inside the page (html null = still loading). It used to open in a new tab after the request
+  // came back: browsers block a tab opened that late (always on phones), so the seller saw nothing at all.
+  const [viewer, setViewer] = useState(null);
+  const [accepting, setAccepting] = useState(false);
 
   const REACT_APP_BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 
@@ -32,20 +36,22 @@ const UserAgreement = () => {
 
   const handleMarkAsRead = async (agreement) => {
     const token = Cookies.get("session");
+    setViewer({ ag: agreement, html: null });
+    let html;
     try {
       const res = await axios.get(
         `${REACT_APP_BACKEND_URL}/agreement/user/preview/${agreement._id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        { headers: { Authorization: `Bearer ${token}` }, responseType: "text" }
       );
-      const newWindow = window.open("", "_blank");
-      if (newWindow) {
-        newWindow.document.write(res.data);
-        newWindow.document.close();
-      }
+      html = String(res.data);
     } catch (error) {
       console.error("Failed to load agreement preview:", error);
+      setViewer(null);
       Notification("Failed to load agreement", "error");
+      return;
     }
+    // marked read BEFORE it is shown: the server accepts only an agreement marked read, so the Accept button
+    // under the agreement can never be refused for being too quick
     try {
       const res = await axios.get(
         `${REACT_APP_BACKEND_URL}/agreement/user/read/${agreement._id}`,
@@ -61,6 +67,15 @@ const UserAgreement = () => {
     } catch (error) {
       console.error("Failed to mark as read:", error);
     }
+    setViewer((v) => (v && v.ag._id === agreement._id ? { ag: agreement, html } : v));
+  };
+
+  const acceptFromViewer = async () => {
+    if (!viewer) return;
+    setAccepting(true);
+    await handleAccept(viewer.ag._id);
+    setAccepting(false);
+    setViewer(null);
   };
 
   const handleAccept = async (agreementId) => {
@@ -157,9 +172,13 @@ const UserAgreement = () => {
                   <td className="border-b border-gray-300 px-3 py-2 text-left text-gray-500">{formatDate(ag.createdAt)}</td>
                   <td className="border-b border-gray-300 px-3 py-2 text-center">
                     {ag.isRead ? (
-                      <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-secondary/10 text-brand-primary">
-                        Read
-                      </span>
+                      <button
+                        onClick={() => handleMarkAsRead(ag)}
+                        title="Read the agreement again"
+                        className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-brand-secondary/10 text-brand-primary hover:bg-brand-secondary/20"
+                      >
+                        Read · View again
+                      </button>
                     ) : (
                       <button
                         onClick={() => handleMarkAsRead(ag)}
@@ -240,9 +259,12 @@ const UserAgreement = () => {
                 </div>
                 <div className="flex gap-2">
                   {ag.isRead ? (
-                    <span className="flex-1 text-center px-2 py-1 rounded-full text-[10px] font-bold bg-brand-secondary/10 text-brand-primary">
-                      Read
-                    </span>
+                    <button
+                      onClick={() => handleMarkAsRead(ag)}
+                      className="flex-1 text-center px-2 py-1 rounded-full text-[10px] font-bold bg-brand-secondary/10 text-brand-primary"
+                    >
+                      Read · View again
+                    </button>
                   ) : (
                     <button
                       onClick={() => handleMarkAsRead(ag)}
@@ -274,6 +296,39 @@ const UserAgreement = () => {
           ))
         )}
       </div>
+
+      {/* Agreement viewer: the contract inside the page (no new tab), with Accept right under it */}
+      {viewer && (
+        <div className="fixed inset-0 z-[300] flex items-center justify-center p-2 sm:p-4">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setViewer(null)} />
+          <div role="dialog" aria-modal="true" aria-label={`Agreement ${viewer.ag.versionName}`}
+            className="relative w-full max-w-4xl h-[92vh] bg-white rounded-xl shadow-2xl flex flex-col overflow-hidden animate-popup-in">
+            <div className="flex items-center justify-between gap-3 px-4 py-3 border-b">
+              <div className="min-w-0">
+                <h2 className="text-[13px] font-bold text-gray-800 truncate">Merchant Agreement · {viewer.ag.versionName}</h2>
+                <p className="text-[11px] text-gray-500">{viewer.ag.isAccepted ? "Accepted" : "Please read the agreement, then accept it below."}</p>
+              </div>
+              <button onClick={() => setViewer(null)} aria-label="Close" className="w-8 h-8 rounded-full flex items-center justify-center text-gray-400 hover:bg-gray-100 text-[16px] font-bold">×</button>
+            </div>
+            <div className="flex-1 min-h-0 bg-gray-50">
+              {viewer.html === null ? (
+                <div className="h-full flex items-center justify-center text-[12px] font-bold text-gray-500">Loading agreement…</div>
+              ) : (
+                <iframe title="Agreement" srcDoc={viewer.html} sandbox="" className="w-full h-full bg-white border-0" />
+              )}
+            </div>
+            <div className="flex items-center justify-end gap-2 px-4 py-2.5 border-t">
+              <button onClick={() => setViewer(null)} className="px-3 py-1.5 rounded-lg border text-[11px] font-bold text-gray-600 hover:bg-gray-50">Close</button>
+              {!viewer.ag.isAccepted && (
+                <button onClick={acceptFromViewer} disabled={viewer.html === null || accepting}
+                  className="px-3 py-1.5 rounded-lg bg-brand-primary text-white text-[11px] font-bold hover:bg-opacity-90 disabled:opacity-50">
+                  {accepting ? "Accepting…" : "I accept this agreement"}
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
