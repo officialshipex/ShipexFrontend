@@ -32,11 +32,11 @@ const OtherDetails = ({ amount, otherDetails, setOtherDetails }) => {
                             e.target.value = e.target.value.replace(/\s/g, "");
                             handleChange(e);
                         }}
-                        maxLength={(otherDetails.customerOrderId || "").length > 10 ? 100 : 10}
+                        maxLength={100}
                         className="w-full border rounded-lg px-3 py-2 text-[12px] outline-none focus:ring-1 focus:ring-brand-primary"
                         placeholder="e.g. ORD-1001"
                     />
-                    <p className="text-[10px] text-gray-400 font-[500] mt-1">Max 10 characters, no spaces, must include a number</p>
+                    <p className="text-[10px] text-gray-400 font-[500] mt-1">Max 100 characters, no spaces, must include a number</p>
                 </div>
 
                 {/* Reseller Name */}

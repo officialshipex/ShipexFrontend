@@ -7,6 +7,7 @@ import NoDataFound from "../Common/NoDataFound";
 import OrderRowActions from "./OrderRowActions";
 import { handleTrackingByAwb } from "./orderActions";
 import { orderReferenceOf } from "./customerOrderId";
+import OrderRefId from "./OrderRefId";
 import { money2 } from "../utils/money";
 
 const OrdersTable = ({
@@ -213,7 +214,7 @@ const OrdersTable = ({
                                         synced orders may not have channelOrderName yet, so fall back to the
                                         raw channelId rather than showing nothing. */}
                                     {orderReferenceOf(order) && (
-                                        <p className="text-gray-500 text-[10px]">({orderReferenceOf(order)})</p>
+                                        <OrderRefId value={orderReferenceOf(order)} brackets className="text-gray-500 text-[10px]" iconSize={10} />
                                     )}
                                 </div>
                             </td>

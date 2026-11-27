@@ -7,6 +7,7 @@ import { FiCopy, FiCheck } from "react-icons/fi";
 
 import { handleTrackingByAwb } from "../Common/orderActions";
 import { orderReferenceOf } from "./customerOrderId";
+import OrderRefId from "./OrderRefId";
 import { money2 } from "../utils/money";
 const MobileOrderCard = ({
     order,
@@ -197,7 +198,7 @@ const MobileOrderCard = ({
                     {dayjs(order.createdAt).format("hh:mm A")}
                 </p>
                 <div className="flex justify-center items-center gap-2">
-                    <p>{orderReferenceOf(order)}</p>
+                    <OrderRefId value={orderReferenceOf(order)} max={14} />
                     <span className="uppercase text-brand-primary bg-brand-secondary/26 px-2 rounded">
                         {order.channel || "CUSTOM"}
                     </span>

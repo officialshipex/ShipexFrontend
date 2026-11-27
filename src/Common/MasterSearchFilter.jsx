@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import OrderRefId from "./OrderRefId";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -110,7 +111,7 @@ const MasterSearchFilter = ({ isMobile = false }) => {
                 )}
                 {order.clientOrderId && (
                     <div>
-                        Customer Order ID: <span className="font-[600]">{order.clientOrderId}</span>
+                        Customer Order ID: <OrderRefId value={order.clientOrderId} max={16} className="font-[600]" iconSize={10} />
                     </div>
                 )}
             </>

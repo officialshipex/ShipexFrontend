@@ -218,14 +218,14 @@ const PaymentDetails = ({ packageData, initialData, userId, updateId }) => {
       return;
     }
 
-    // Customer Order ID (optional): no spaces, max 10 characters, must include a number. Checked here for a new
+    // Customer Order ID (optional): no spaces, max 100 characters, must include a number. Checked here for a new
     // order; on update the server checks it only when it was changed (an older id can be kept as it is).
     const coid = (orderData.otherDetails?.customerOrderId || "").trim();
     if (coid && !updateId) {
       const problem = /\s/.test(coid)
         ? "Customer Order ID must not contain spaces"
-        : coid.length > 10
-          ? "Customer Order ID can be at most 10 characters"
+        : coid.length > 100
+          ? "Customer Order ID can be at most 100 characters"
           : !/\d/.test(coid)
             ? "Customer Order ID must include at least one number"
             : null;

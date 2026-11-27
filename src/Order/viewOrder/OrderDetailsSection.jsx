@@ -2,6 +2,7 @@ import React from "react";
 import dayjs from "dayjs";
 import { FileText } from "lucide-react";
 import { orderReferenceOf } from "../../Common/customerOrderId";
+import OrderRefId from "../../Common/OrderRefId";
 import { money2 } from "../../utils/money";
 
 
@@ -35,9 +36,7 @@ const OrderDetailsSection = ({ order }) => {
 
                         {/* Customer order id: bulk upload / API id, else the channel's order name (no background) */}
                         {orderReferenceOf(order) && (
-                            <span className="text-[10px] font-[600] text-gray-500">
-                                ({orderReferenceOf(order)})
-                            </span>
+                            <OrderRefId value={orderReferenceOf(order)} max={16} brackets className="text-[10px] font-[600] text-gray-500" iconSize={10} />
                         )}
                     </div>
                 </div>
